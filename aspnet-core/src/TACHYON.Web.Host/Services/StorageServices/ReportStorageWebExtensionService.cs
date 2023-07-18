@@ -62,7 +62,7 @@ namespace TACHYON.Web.Services.StorageServices
             using var reportStream = new MemoryStream(reportData);
             var report = new XtraReport();
             report.LoadLayoutFromXml(reportStream);
-            report.ReplaceService(new JsonSourceCustomizationService());
+          //  report.ReplaceService(new JsonSourceCustomizationService());
             return GetReportData(report);
         }
 

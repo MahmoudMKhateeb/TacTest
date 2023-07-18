@@ -103,9 +103,11 @@ using TACHYON.PricePackages.PricePackageOffers;
 using TACHYON.Reports;
 using TACHYON.Reports.JsonDataSourceStorages;
 using TACHYON.Reports.ReportDataSources;
+using TACHYON.Reports.ReportDefinitionPermissions;
 using TACHYON.Reports.ReportDefinitions;
 using TACHYON.Reports.ReportParameterDefinitions;
 using TACHYON.Reports.ReportParameters;
+using TACHYON.Reports.ReportPermissions;
 using TACHYON.Reports.ReportTemplates;
 using TACHYON.Tracking.AdditionalSteps;
 
@@ -366,6 +368,10 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<ReportParameter> ReportParameters { get; set; }
 
         public DbSet<Report> Reports { get; set; }
+
+        public DbSet<ReportPermission> ReportPermissions { get; set; }
+        
+        public DbSet<ReportDefinitionPermission> ReportDefinitionPermissions { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

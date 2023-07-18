@@ -3434,5 +3434,58 @@
     <text name="ValueOfGoods">Value of goods</text>
     <text name="InsuranceCoverage">Insurance coverage</text>
     
+		
+	<text name="AllReports">All Reports</text>
+    <text name="CreateReportType">Create Report Type</text>
+    <text name="MyReports">My Reports</text>
+    <text name="CreateReport">Create Report</text>
+    <text name="Reporting">Reporting</text>
+    <text name="EnterValue">Enter Value</text>
+    <text name="SelectRole">Select Role</text>
+    <text name="ReportDetails">Report Details</text>
+    <text name="ReportSetup">Report Setup</text>
+    <text name="SelectAtLeastOneOfTheFilters">Select at least one of the filters</text>
+    <text name="SelectFilters">Select Filters</text>
+    <text name="ReportDesigner">Report Designer</text>
+    <text name="PleaseSelectExcludedCompanies">Please select excluded companies</text>
+    <text name="PleaseSelectEditionType">Please select edition type</text>
+    <text name="ReportAccessSetup">Report Access Setup</text>
+    <text name="FilterName">Filter Name</text>
+    <text name="PleaseEnterReportName">Please enter report name</text>
+    <text name="NameAlreadyUsedBefore">Name already used before</text>
+    <text name="EnterReportName">Enter report name</text>
+    <text name="ExcludedCompanies">Excluded Companies</text>
+    <text name="GrantedEditions">Granted Editions</text>
+    <text name="CreateNewReportType">Create New Report Type</text>
+    <text name="AllReportTypes">All Report Types</text>
+    <text name="ReportFile">Report File</text>
+    <text name="ExcludedUsers">Excluded Users</text>
+    <text name="GrantedRoles">Granted Roles</text>
+    <text name="ReportFormat">Report Format</text>
+    <text name="ReportName">Report Name</text>
+    <text name="ReportType">Report Type</text>
+	<text name="TripDetailsReport">Trip Details Report</text>
+	<text name="ReportTypeSetup">Report Type Setup</text>
+	<text name="SelectReportType">Select a report type</text>
+	<text name="PleaseSelectReportType">Please select a report type</text>
+	<text name="GrantedEditionType">Granted Edition Type</text>
+	<text name="SelectAnExcludedCompany">Select an excluded company</text>
+	<text name="DeliveryDate">Date of delivery</text>
+	<text name="IsPodSubmitted">Is proof of delivery submitted</text>
+	<text name="InvoiceIssued">Is invoice issued</text>
+	<text name="CreateNewReport">Create A New Report</text>
+	<text name="PleaseSelectRole">Please select a role</text>
+	<text name="SelectAnExcludedUser">Select an excluded user</text>
+	<text name="PleaseSelectExcludedUsers">Please select an excluded user</text>
+	<text name="PleaseSelectFormat">Please select the report file format</text>
+	<text name="SelectFormat">Select a format</text>
+	<text name="PodPerformanceReport">Pod Performance Report</text>
+	<text name="InvoiceStatus">Invoice Status</text>
+	<text name="InvoiceNotIssued">Invoice Not Issued</text>
+	<text name="FinancialReport">Financial Report</text>
+	<text name="PodStatus">Pod Status</text>
+	<text name="Submitted">Submitted</text>
+	<text name="NotSubmitted">Not Submitted</text>
+		
 	</texts>
 </localizationDictionary>

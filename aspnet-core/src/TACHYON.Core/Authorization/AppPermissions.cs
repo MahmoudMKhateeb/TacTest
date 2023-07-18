@@ -706,6 +706,14 @@
         public const string Pages_Administration_Users_View = "Pages.Administration.Users.View";
         public const string Pages_Penalties = "Pages.Penalties";
         public const string Pages_Invoices_View = "Pages.Invoices.View";
+        public const string Pages_Reports = "Pages.Reports";
+        public const string Pages_Reports_Create = "Pages.Reports.Create";
+        public const string Pages_Reports_Delete = "Pages.Reports.Delete";
+        public const string Pages_ReportDefinitions = "Pages.ReportDefinitions";
+        public const string Pages_ReportDefinitions_Create = "Pages.ReportDefinitions.Create";
+        public const string Pages_ReportDefinitions_Clone = "Pages.ReportDefinitions.Clone";
+        public const string Pages_ReportDefinitions_Activate = "Pages.ReportDefinitions.Activate";
+        public const string Pages_ReportDefinitions_Deactivate = "Pages.ReportDefinitions.Deactivate";
 
         #endregion
 

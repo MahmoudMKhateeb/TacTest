@@ -12,37 +12,31 @@ const routes: Routes = [
     path: 'create-report-type',
     component: CreateReportTypeComponent,
     data: {
-      permission: '',
+      permission: 'Pages.ReportDefinitions.Create',
     },
   },
   {
     path: 'report-types',
     component: AllReportTypesComponent,
     data: {
-      permission: '',
+      permission: 'Pages.ReportDefinitions',
     },
   },
   {
     path: 'generate-report',
     component: GenerateReportByCompanyComponent,
     data: {
-      permission: '',
+      permission: 'Pages.Reports.Create',
     },
   },
   {
     path: 'all-reports',
     component: TenantAllReportComponent,
     data: {
-      permission: '',
+      permission: 'Pages.Reports',
     },
   },
-  {
-    path: 'my-automated-reports',
-    component: TenantMyAutomatedReportsComponent,
-    data: {
-      permission: '',
-    },
-  },
+
   { path: '', redirectTo: '/app/main/page-not-found', pathMatch: 'full' },
 ];
 

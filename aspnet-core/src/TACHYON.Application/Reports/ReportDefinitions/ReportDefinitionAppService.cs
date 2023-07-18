@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Authorization;
+using Abp.Domain.Repositories;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.DataFilters;
 using TACHYON.Dto;
@@ -19,21 +21,24 @@ using TACHYON.Reports.ReportTemplates.Dto;
 
 namespace TACHYON.Reports.ReportDefinitions
 {
+    [AbpAuthorize(AppPermissions.Pages_ReportDefinitions)]
     public class ReportDefinitionAppService : TACHYONAppServiceBase
     {
         private readonly IRepository<ReportDefinition> _reportDefinitionRepository;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IReportTemplateManager _reportTemplateManager;
-
+        private readonly IReportParameterDefinitionProvider _definitionProvider;
 
         public ReportDefinitionAppService(
             IRepository<ReportDefinition> reportDefinitionRepository,
             IRepository<Tenant> tenantRepository,
-            IReportTemplateManager reportTemplateManager)
+            IReportTemplateManager reportTemplateManager, 
+            IReportParameterDefinitionProvider definitionProvider)
         {
             _reportDefinitionRepository = reportDefinitionRepository;
             _tenantRepository = tenantRepository;
             _reportTemplateManager = reportTemplateManager;
+            _definitionProvider = definitionProvider;
         }
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
@@ -54,6 +59,7 @@ namespace TACHYON.Reports.ReportDefinitions
             await Create(input);
         }
 
+        [AbpAuthorize(AppPermissions.Pages_ReportDefinitions_Create)]
         protected virtual async Task Create(CreateOrEditReportDefinitionDto input)
         {
             await ValidateReportTypeInput(input);
@@ -65,7 +71,7 @@ namespace TACHYON.Reports.ReportDefinitions
 
             // todo move this logic to a Manager 
             var reportParameterDefinitions =
-                ReportParameterDefinitionProvider.GetParameterDefinitions(createdReportDefinition.Type);
+                _definitionProvider.GetParameterDefinitions(createdReportDefinition.Type);
 
             bool anySelectedParameterDefinitionNotRegistered = input.ParameterDefinitions.Any(selectedParameterDefinition =>
                 reportParameterDefinitions.All(predefinedParameterDefinition =>
@@ -82,6 +88,7 @@ namespace TACHYON.Reports.ReportDefinitions
         }
 
 
+        [AbpAuthorize(AppPermissions.Pages_ReportDefinitions_Clone)]
         public async Task<ClonedReportDefinitionDto> GetReportDefinitionForClone(int reportDefinitionId)
         {
             DisableTenancyFilters();
@@ -93,7 +100,7 @@ namespace TACHYON.Reports.ReportDefinitions
         }
         public List<ReportParameterDefinitionItemDto> GetReportFilters(ReportType reportType)
         {
-            var reportFiltersList = ReportParameterDefinitionProvider.GetParameterDefinitions(reportType);
+            var reportFiltersList = _definitionProvider.GetParameterDefinitions(reportType);
             return ObjectMapper.Map<List<ReportParameterDefinitionItemDto>>(reportFiltersList);
         }
 
@@ -103,14 +110,27 @@ namespace TACHYON.Reports.ReportDefinitions
         /// <param name="type"></param>
         /// <param name="reportName"></param>
         /// <returns></returns>
+         [AbpAuthorize(AppPermissions.Pages_ReportDefinitions_Create)]
         public async Task<ReportTemplateUrlDto> CreateTemplateByName(CreateReportTemplateByNameInput input)
         {
             string createdReportTemplateUrl = await _reportTemplateManager.CreateReportTemplate(input.ReportDefinitionType, input.ReportDefinitionName);
             return new ReportTemplateUrlDto { Url = createdReportTemplateUrl };
         }
 
+        [AbpAuthorize(AppPermissions.Pages_ReportDefinitions_Create)]
+        public async Task<bool> IsReportDefinitionNameUsedBefore(string definitionName)
+        {
+            bool isNameUsedBefore = await _reportDefinitionRepository.GetAll()
+                .AnyAsync(x => x.DisplayName.Trim().ToLower().Equals(definitionName.Trim().ToLower()));
+            
+            bool isDuplicatedUrl = await _reportTemplateManager.IsUrlDuplicated(definitionName.Trim());
+
+            return isNameUsedBefore || isDuplicatedUrl;
+        }
+        [AbpAuthorize(AppPermissions.Pages_ReportDefinitions_Activate)]
         public async Task Activate(int reportDefinitionId)
         => await ChangeActiveStatus(reportDefinitionId, true);
+        [AbpAuthorize(AppPermissions.Pages_ReportDefinitions_Deactivate)]
         public async Task Deactivate(int reportDefinitionId)
         => await ChangeActiveStatus(reportDefinitionId, false);
 

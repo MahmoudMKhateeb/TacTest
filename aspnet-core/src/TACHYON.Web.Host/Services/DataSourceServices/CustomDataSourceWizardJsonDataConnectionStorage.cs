@@ -18,10 +18,12 @@ namespace TACHYON.Web.Services.DataSourceServices
     {
         private readonly IJsonDataSourceStorageManager _jsonDataSourceStorageManager;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IWebUrlService _webUrlService;
 
         public CustomDataSourceWizardJsonDataConnectionStorage(IHttpContextAccessor contextAccessor)
         {
             _jsonDataSourceStorageManager = IocManager.Instance.Resolve<IJsonDataSourceStorageManager>();
+            _webUrlService = IocManager.Instance.Resolve<IWebUrlService>();
             _contextAccessor = contextAccessor;
         }
 
@@ -44,7 +46,7 @@ namespace TACHYON.Web.Services.DataSourceServices
             var connections = GetConnections();
             string authorizationHeaderValue = GetAuthorizationHeaderValue();
             var connectionsResult = connections.IsNullOrEmpty() ? new List<JsonDataConnection>()
-                : connections.Select(x => CreateJsonDataConnectionFromString(x.Key, x.Value,authorizationHeaderValue));
+                : connections.Select(x => CreateJsonDataConnectionFromString(x.Key, x.Value,authorizationHeaderValue,_webUrlService.ServerRootAddressFormat));
             return connectionsResult;
         }
 
@@ -54,7 +56,7 @@ namespace TACHYON.Web.Services.DataSourceServices
             if (dataSourceStorage is null)
                 throw new UserFriendlyException("Data source not found");
             
-            return CreateJsonDataConnectionFromString(dataSourceStorage.ConnectionName, dataSourceStorage.ConnectionValue,GetAuthorizationHeaderValue());
+            return CreateJsonDataConnectionFromString(dataSourceStorage.ConnectionName, dataSourceStorage.ConnectionValue,GetAuthorizationHeaderValue(),_webUrlService.ServerRootAddressFormat);
         }
 
         public string GetAuthorizationHeaderValue()
@@ -74,14 +76,19 @@ namespace TACHYON.Web.Services.DataSourceServices
 
 
         public static JsonDataConnection CreateJsonDataConnectionFromString(string connectionName,
-            string connectionString,string authorizationHeader)
+            string connectionString,string authorizationHeader, string baseUrl)
         {
             string connectionUrl = connectionString.Replace("Uri=", "");
-            UriJsonSource jsonSource = new UriJsonSource(new Uri(connectionUrl));
-            // todo replace baseUrl (absolute path)
+            var uri = new Uri(connectionUrl);
+            string actionUrlPath = uri.AbsolutePath.Split(';')[0];
+            string dataSourceUrl = baseUrl.TrimEnd('/') + actionUrlPath;
+            UriJsonSource jsonSource = new UriJsonSource(new Uri(dataSourceUrl));
+            
             jsonSource.HeaderParameters.Add(new HeaderParameter("Authorization",authorizationHeader));
-
             return new JsonDataConnection(jsonSource) { StoreConnectionNameOnly = false, Name = connectionName };
         }
+
+        public string GetServerBaseUrl()
+            => _webUrlService.ServerRootAddressFormat;
     }
 }

@@ -47,20 +47,16 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       // start of reporting
       //for host only
       // ---------------------------------------------------------------------------------------------------------------------
-      //TODO: Need Permission
       new AppMenuItem(
         'Reporting',
-        'Pages.Administration.Host.Dashboard',
+        'Pages.ReportDefinitions',
         'report.svg',
         '',
         [],
         [
-          new AppMenuItem('CreateReportType', '', '', '/app/main/reporting/create-report-type'),
-          new AppMenuItem('AllReports', '', '', '/app/main/reporting/report-types'),
+          new AppMenuItem('CreateReportType', 'Pages.ReportDefinitions.Create', '', '/app/main/reporting/create-report-type'),
+          new AppMenuItem('AllReportTypes', '', '', '/app/main/reporting/report-types'),
         ]
-        // undefined,
-        // undefined,
-        // () => !this.isEnabled('App.TachyonDealer')
       ),
       //end of reporting
       // ---------------------------------------------------------------------------------------------------------------------

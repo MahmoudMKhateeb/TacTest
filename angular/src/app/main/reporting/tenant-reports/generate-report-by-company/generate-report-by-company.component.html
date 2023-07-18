@@ -69,7 +69,7 @@
                             [(value)]="reportDto.reportDefinitionId"
                             [dataSource]="reportDefinitions"
                             [searchEnabled]="true"
-                            placeholder="{{ l('SelectType') }}"
+                            placeholder="{{ l('SelectReportType') }}"
                           >
                             <!--                                                    displayExpr="displayName"-->
                             <!--                                                    valueExpr="id"-->
@@ -80,7 +80,7 @@
                               ></dxi-validation-rule>
                             </dx-validator>
                           </dx-select-box>
-                          <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                          <span class="form-text text-muted">{{ 'PleaseSelectReportType' | localize }}</span>
                         </div>
                         <div class="form-group w-50 ml-4">
                           <label>{{ 'ReportName' | localize }}</label>
@@ -119,7 +119,6 @@
                             <div *dxTemplate="let data of 'content'">
                               <dx-data-grid
                                 [dataSource]="allRoles"
-                                [columns]="['displayName']"
                                 [selection]="{ mode: 'multiple' }"
                                 [hoverStateEnabled]="true"
                                 [paging]="{ enabled: true, pageSize: 10 }"
@@ -129,6 +128,7 @@
                                 keyExpr="id"
                                 [(selectedRowKeys)]="reportDto.grantedRoles"
                               >
+                                <dxi-column dataField="displayName" [caption]="l('DisplayName')"></dxi-column>
                               </dx-data-grid>
                             </div>
                             <dx-validator [validationGroup]="'step1FormGroup'">
@@ -138,17 +138,17 @@
                               ></dxi-validation-rule>
                             </dx-validator>
                           </dx-drop-down-box>
-                          <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                          <span class="form-text text-muted">{{ 'PleaseSelectRole' | localize }}</span>
                         </div>
                         <div class="form-group w-50 ml-4">
-                          <label>{{ 'ExcludingUsers' | localize }}</label>
+                          <label>{{ 'ExcludedUsers' | localize }}</label>
                           <dx-drop-down-box
                             id="excludingUsers"
                             name="excludingUsers"
                             displayExpr="displayName"
                             valueExpr="id"
                             formControlName="excludedUsers"
-                            placeholder="{{ l('SelectExcludingUsers') }}"
+                            placeholder="{{ l('SelectAnExcludedUser') }}"
                             [(value)]="reportDto.excludedUsers"
                             [showClearButton]="true"
                             [dataSource]="allUsers"
@@ -156,7 +156,6 @@
                             <div *dxTemplate="let data of 'content'">
                               <dx-data-grid
                                 [dataSource]="allUsers"
-                                [columns]="['displayName']"
                                 [selection]="{ mode: 'multiple' }"
                                 [hoverStateEnabled]="true"
                                 [paging]="{ enabled: true, pageSize: 10 }"
@@ -166,16 +165,11 @@
                                 keyExpr="id"
                                 [(selectedRowKeys)]="reportDto.excludedUsers"
                               >
+                                <dxi-column dataField="displayName" [caption]="l('DisplayName')"></dxi-column>
                               </dx-data-grid>
                             </div>
-                            <dx-validator [validationGroup]="'step1FormGroup'">
-                              <dxi-validation-rule
-                                type="required"
-                                message="{{ 'ExcludingUsers' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
-                              ></dxi-validation-rule>
-                            </dx-validator>
                           </dx-drop-down-box>
-                          <span class="form-text text-muted">{{ 'PleaseSelectExcludingUsers' | localize }}</span>
+                          <span class="form-text text-muted">{{ 'PleaseSelectExcludedUsers' | localize }}</span>
                         </div>
                       </div>
                       <div class="d-flex">
@@ -235,74 +229,74 @@
                       >
                         <dxo-filter-row [visible]="false"></dxo-filter-row>
                         <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"> </dxo-editing>
-                        <dxi-column dataField="filterName" caption="{{ l('FilterName') }}"></dxi-column>
-                        <dxi-column dataField="filterData" cellTemplate="filterDataTemplate" caption="{{ l('FilterData') }}"></dxi-column>
+                        <dxi-column dataField="parameterName" cellTemplate="parameterNameTemplate" caption="{{ l('FilterName') }}"></dxi-column>
+                        <dxi-column dataField="parameterType" cellTemplate="filterDataTemplate" caption="{{ l('FilterData') }}"></dxi-column>
+                        <div *dxTemplate="let options of 'parameterNameTemplate'">{{ options.data.displayName }}</div>
                         <div *dxTemplate="let cell of 'filterDataTemplate'">
-                          <ng-container *ngIf="isArray(cell.data.filterSource)">
-                            <dx-select-box
-                              [id]="cell.data.filterName"
-                              [name]="cell.data.filterName"
-                              [(value)]="cell.data.filterData"
-                              [dataSource]="cell.data.filterSource"
-                              [searchEnabled]="true"
-                              displayExpr="displayName"
-                              valueExpr="id"
-                              required
-                              placeholder="{{ l('Select') }}"
-                            >
-                            </dx-select-box>
-                          </ng-container>
-                          <ng-container *ngIf="!isArray(cell.data.filterSource)">
-                            <div class="d-flex" *ngIf="cell.data.filterSource === 'dateRange'">
-                              <div class="w-50">
-                                <dx-date-box
-                                  [id]="cell.data.filterName + 'from'"
-                                  [name]="cell.data.filterName + 'from'"
-                                  [(value)]="cell.data.filterData.from"
-                                  placeholder="{{ l('SelectDate') }}"
-                                  displayFormat="dd/MM/yyyy"
-                                  type="datetime"
-                                >
-                                </dx-date-box>
+                          <ng-container [ngSwitch]="cell.data.parameterType">
+                            <ng-container *ngSwitchCase="reportParameterTypeEnum.String">
+                              <dx-text-box
+                                [id]="cell.data.parameterName"
+                                [name]="cell.data.parameterName"
+                                placeholder="{{ l('EnterValue') }}"
+                                [value]="getParameter(cell.data.parameterName)"
+                                (onValueChanged)="setParameter(cell.data.parameterName, $event.value)"
+                              ></dx-text-box>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="reportParameterTypeEnum.Number">
+                              <dx-number-box
+                                [id]="cell.data.parameterName"
+                                [name]="cell.data.parameterName"
+                                placeholder="{{ l('EnterValue') }}"
+                                [value]="getParameter(cell.data.parameterName)"
+                                (onValueChanged)="setParameter(cell.data.parameterName, $event.value)"
+                              ></dx-number-box>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="reportParameterTypeEnum.Boolean">
+                              <dx-check-box
+                                [id]="cell.data.parameterName"
+                                [name]="cell.data.parameterName"
+                                [value]="getParameter(cell.data.parameterName)"
+                                (onValueChanged)="setParameter(cell.data.parameterName, $event.value)"
+                              ></dx-check-box>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="reportParameterTypeEnum.DateTime">
+                              <div class="d-flex">
+                                <div class="w-100">
+                                  <dx-date-box
+                                    [id]="cell.data.parameterName"
+                                    [name]="cell.data.parameterName"
+                                    placeholder="{{ l('SelectDate') }}"
+                                    displayFormat="dd/MM/yyyy"
+                                    type="date"
+                                    [value]="getParameter(cell.data.parameterName)"
+                                    (onValueChanged)="setParameter(cell.data.parameterName, $event.value)"
+                                  >
+                                  </dx-date-box>
+                                </div>
                               </div>
-                              <div class="w-50 ml-4">
-                                <dx-date-box
-                                  [id]="cell.data.filterName + 'to'"
-                                  [name]="cell.data.filterName + 'to'"
-                                  [(value)]="cell.data.filterData.to"
-                                  placeholder="{{ l('SelectDate') }}"
-                                  displayFormat="dd/MM/yyyy"
-                                  type="datetime"
-                                >
-                                </dx-date-box>
-                              </div>
-                            </div>
-                            <div class="d-flex" *ngIf="cell.data.filterSource === 'date'">
-                              <div class="w-100">
-                                <dx-date-box
-                                  [id]="cell.data.filterName + 'date'"
-                                  [name]="cell.data.filterName + 'date'"
-                                  [(value)]="cell.data.filterData"
-                                  placeholder="{{ l('SelectDate') }}"
-                                  displayFormat="dd/MM/yyyy"
-                                  type="date"
-                                >
-                                </dx-date-box>
-                              </div>
-                            </div>
-                            <div class="d-flex" *ngIf="cell.data.filterSource === 'dateTime'">
-                              <div class="w-100">
-                                <dx-date-box
-                                  [id]="cell.data.filterName + 'date'"
-                                  [name]="cell.data.filterName + 'date'"
-                                  [(value)]="cell.data.filterData"
-                                  placeholder="{{ l('Select') }}"
-                                  displayFormat="dd/MM/yyyy"
-                                  type="datetime"
-                                >
-                                </dx-date-box>
-                              </div>
-                            </div>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="reportParameterTypeEnum.List">
+                              <dx-select-box
+                                [id]="cell.data.parameterName"
+                                [name]="cell.data.parameterName"
+                                [value]="getParameter(cell.data.parameterName)"
+                                (onValueChanged)="setParameter(cell.data.parameterName, $event.value)"
+                                [dataSource]="cell.data.listData"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('Select') }}"
+                              >
+                              </dx-select-box>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="reportParameterTypeEnum.Unknown">
+                              <div>{{ 'UnknownType' | localize }}</div>
+                            </ng-container>
+                            <ng-container *ngSwitchDefault>
+                              <div>{{ 'UnSupportedType' | localize }}</div>
+                            </ng-container>
                           </ng-container>
                         </div>
                       </dx-data-grid>
@@ -315,7 +309,10 @@
                 <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form_step3" [formGroup]="step3Form">
                   <div class="pb-5" data-wizard-type="step-content">
                     <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportDetails' | localize }}</h4>
-                    <!-- TODO: ADD REPORT VIEWER HERE-->
+                    <dx-report-viewer *ngIf="activeStep == 3 && reportDto.id" [reportUrl]="reportUrl" height="800px">
+                      <dxrv-request-options [invokeAction]="invokeAction" [host]="hostUrl"></dxrv-request-options>
+                      <dxrv-callbacks (CustomizeLocalization)="customizeLocalization($event)"> </dxrv-callbacks>
+                    </dx-report-viewer>
                   </div>
                 </form>
                 <!--end: Wizard Step 3-->
@@ -341,15 +338,20 @@
                 <div class="d-flex justify-content-between border-top mt-5 pt-10">
                   <div class="mr-2">
                     <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">
-                      Previous
+                      {{ 'Previous' | localize }}
                     </button>
                   </div>
                   <div>
-                    <button type="button" class="btn btn-success font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-submit">
-                      Submit
+                    <button
+                      type="button"
+                      class="btn btn-success font-weight-bolder text-uppercase px-9 py-4"
+                      (click)="publish()"
+                      data-wizard-type="action-submit"
+                    >
+                      {{ 'Submit' | localize }}
                     </button>
                     <button type="button" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next">
-                      Next
+                      {{ 'Next' | localize }}
                     </button>
                   </div>
                 </div>
@@ -371,4 +373,4 @@
     <!--end::Container-->
   </div>
 </div>
-<app-automation-setup-modal #automationSetupModal (modalSave)="automationSetupModalSave($event)"></app-automation-setup-modal>
+<!--<app-automation-setup-modal #automationSetupModal (modalSave)="automationSetupModalSave($event)"></app-automation-setup-modal>-->

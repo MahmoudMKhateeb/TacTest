@@ -9,20 +9,30 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import {
   API_BASE_URL,
   CreateOrEditReportDto,
-  EditionServiceProxy,
   ReportFormat,
+  ReportParameterDto,
+  ReportParameterType,
   ReportServiceProxy,
   SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { AutomationSetupModalComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/automation-setup-modal/automation-setup-modal.component';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { ajaxSetup } from '@node_modules/@devexpress/analytics-core/core/internal/ajaxSetup';
+import * as ko from '@node_modules/knockout';
+import localAnalyticMessages from '../../../../../dx-analytics-core.ar.json';
+import localReportingMessages from '../../../../../dx-reporting.ar.json';
 
 @Component({
   selector: 'app-generate-report-by-company',
   templateUrl: './generate-report-by-company.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./generate-report-by-company.component.scss'],
+  styleUrls: [
+    './generate-report-by-company.component.scss',
+    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css',
+    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.light.css',
+    '../../../../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css',
+  ],
   animations: [appModuleAnimation()],
 })
 export class GenerateReportByCompanyComponent extends AppComponentBase implements OnInit, AfterViewInit, OnDestroy {
@@ -35,7 +45,6 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
     reportType: [null, Validators.required],
     reportName: [null, Validators.required],
     grantedRoles: [null, Validators.required],
-    excludedUsers: [null, Validators.required],
     reportFormat: [null, Validators.required],
   });
 
@@ -44,6 +53,14 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
   step3Form = this.fb.group({});
 
   // end of form groups and form models
+  koReportUrl = ko.observable('');
+  get reportUrl() {
+    return this.koReportUrl();
+  }
+
+  set reportUrl(newUrl) {
+    this.koReportUrl(newUrl);
+  }
 
   private wizard: KTWizard;
   stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['completedSteps'];
@@ -54,6 +71,10 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
   allUsers: SelectItemDto[] = [];
   reportDto: CreateOrEditReportDto;
   allFormats;
+  reportParameterTypeEnum = ReportParameterType;
+  parameters: Map<string, any>;
+  invokeAction = '/DXXRDV';
+  hostUrl: string;
 
   constructor(
     injector: Injector,
@@ -61,15 +82,21 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
     private _router: Router,
     private fb: FormBuilder,
     @Inject(API_BASE_URL) hostUrl: string,
-    private _editionService: EditionServiceProxy,
     private _reportService: ReportServiceProxy,
     private _enumToArray: EnumToArrayPipe
   ) {
     super(injector);
+    this.hostUrl = hostUrl;
   }
 
   ngOnInit(): void {
+    this.parameters = new Map<string, string>();
     this.reportDto = new CreateOrEditReportDto();
+    ajaxSetup.ajaxSettings = {
+      headers: {
+        Authorization: `Bearer ${abp.auth.getToken()}`,
+      },
+    };
     this.allFormats = this._enumToArray.transform(ReportFormat).map((item) => {
       item.key = Number(item.key);
       return item;
@@ -160,6 +187,7 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
    */
   private createOrEditStep1() {
     this.updateRoutingQueries(1);
+    this.loadReportUrl();
   }
 
   /**
@@ -168,6 +196,9 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
    */
   private createOrEditStep2() {
     this.updateRoutingQueries(2);
+    if (!this.reportDto.id) {
+      this.createOrEdit();
+    }
   }
 
   /**
@@ -185,10 +216,9 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
     let self = this;
     this.selectAttributesDataSource = {};
     this.selectAttributesDataSource.store = new CustomStore({
-      key: 'id',
+      key: 'parameterName',
       load() {
-        // todo call backend end point
-        return undefined;
+        return self._reportService.getReportFilters(self.reportDto.reportDefinitionId).toPromise();
       },
     });
   }
@@ -213,10 +243,6 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
     // }
   }
 
-  automationSetupModalSave($event: any) {
-    console.log('event', $event);
-  }
-
   isArray(item: any): boolean {
     return Array.isArray(item);
   }
@@ -229,9 +255,6 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
 
   private loadUsers() {
     if (isNotNullOrUndefined(this.reportDto.grantedRoles)) {
-      // const selectedRoles: number[] = [];
-
-      // selectedRoles.push(Number(this.reportDto.grantedRoles as any));
       this._reportService.getTenantUsers(this.reportDto.grantedRoles).subscribe((result) => {
         this.allUsers = result;
       });
@@ -246,5 +269,51 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
   validateGroup(params) {
     console.log('params', params);
     params.validationGroup.validate();
+  }
+
+  setParameter(name: string, value) {
+    this.parameters.set(name, value);
+    console.log('parameters Value');
+    console.log(this.parameters);
+  }
+  getParameter(name: string): any {
+    return this.parameters.get(name);
+  }
+
+  createOrEdit() {
+    const parameterKeys = Array.from(this.parameters.keys());
+    const selectedParameters = parameterKeys
+      .filter((paraKey) => {
+        return isNotNullOrUndefined(this.parameters.get(paraKey));
+      })
+      .map((paraKey) => {
+        const item = new ReportParameterDto();
+        item.name = paraKey;
+        item.value = this.parameters.get(paraKey);
+        return item;
+      });
+    this.reportDto.parameters = selectedParameters;
+    this._reportService.createOrEdit(this.reportDto).subscribe((reportId) => {
+      this.reportDto.id = reportId;
+      this.reportUrl = `${this.reportUrl}?reportId=${reportId}`;
+    });
+  }
+
+  private loadReportUrl() {
+    this._reportService.getReportUrl(this.reportDto.reportDefinitionId).subscribe((result) => {
+      this.reportUrl = result;
+    });
+  }
+
+  publish() {
+    this._reportService.publish(this.reportDto.id).subscribe(() => {
+      this.notify.success(this.l('CreatedSuccessfully'));
+      this._router.navigate(['app/main/reporting/all-reports']);
+    });
+  }
+
+  customizeLocalization($event) {
+    $event.args.LoadMessages(localAnalyticMessages);
+    $event.args.LoadMessages(localReportingMessages);
   }
 }

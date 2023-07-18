@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TACHYON.Reports.ReportDataSources
+﻿namespace TACHYON.Reports.ReportModels
 {
     public class TripDetailsItem
     {
@@ -12,11 +8,11 @@ namespace TACHYON.Reports.ReportDataSources
 
         public string TripStatus { get; set; }
 
-        public DateTime? ExpectedPickupDate { get; set; }
-        public DateTime? ActualPickupDate { get; set; }
+        public string ExpectedPickupDate { get; set; }
+        public string ActualPickupDate { get; set; }
 
-        public DateTime? ExpectedDeliveryDate { get; set; }
-        public DateTime? ActualDeliveryDate { get; set; }
+        public string ExpectedDeliveryDate { get; set; }
+        public string ActualDeliveryDate { get; set; }
 
         public string CarrierName { get; set; }
 
@@ -40,7 +36,7 @@ namespace TACHYON.Reports.ReportDataSources
 
         public int NumberOfDrops { get; set; }
 
-        public IEnumerable<long?> SubWaybills { get; set; }
+        public string SubWaybills { get; set; }
 
         public string RouteType { get; set; }
 

@@ -6,6 +6,8 @@ namespace TACHYON.Reports
 {
     public enum ReportType
     {
-        TripDetailsReport = 1
+        TripDetailsReport = 1,
+        PodPerformanceReport = 2,
+        FinancialReport = 3,
     }
 }

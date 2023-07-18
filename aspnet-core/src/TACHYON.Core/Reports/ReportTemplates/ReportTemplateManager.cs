@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Reports.Templates;
 using TACHYON.Web.Reports;
 
 namespace TACHYON.Reports.ReportTemplates
@@ -20,14 +21,21 @@ namespace TACHYON.Reports.ReportTemplates
             _reportTemplateRepository = reportTemplateRepository;
         }
 
+
         public async Task<string> CreateReportTemplate(ReportType type, string reportDefinitionName)
         {
-            if (string.IsNullOrEmpty(reportDefinitionName))
+            if (string.IsNullOrEmpty(reportDefinitionName)) 
                 throw new UserFriendlyException("ReportTypeNameIsRequired");
+            
+            bool isUrlDuplicated = await IsUrlDuplicated(reportDefinitionName);
+            if (isUrlDuplicated) 
+                throw new UserFriendlyException(L("ReportTemplateUrlAlreadyUsedBefore"));
             
             XtraReport report = type switch
             {
                 ReportType.TripDetailsReport => new TripDetailsReport(),
+                ReportType.PodPerformanceReport => new PodPerformanceReport(),
+                ReportType.FinancialReport => new FinancialReport(),
                 // add your other types here if exists
                 _ => throw new UserFriendlyException(L("NotSupportedReportType"))
             };
@@ -60,31 +68,54 @@ namespace TACHYON.Reports.ReportTemplates
             
             return reportTemplate;
         }
+        
+        public async Task UpdateReportTemplate(string url, XtraReport report)
+        {
+            var reportTemplate = await GetReportTemplateByUrl(url);
+            using var memoryStream = new MemoryStream();
+            report.SaveLayoutToXml(memoryStream);
+            reportTemplate.Data = memoryStream.ToArray();
+        }
+
+        public async Task<bool> IsUrlDuplicated(string reportDefinitionName)
+        {
+            string generatedUrl = GenerateReportUrl(reportDefinitionName);
+            return await _reportTemplateRepository.GetAll().AnyAsync(x => x.Url == generatedUrl);
+        }
 
         #region Helpers
 
-        private string GenerateReportUrl(string reportDefinitionName)
+        /// <summary>
+        /// this method used to generate an unique url for report template
+        /// </summary>
+        /// <param name="reportDefinitionName"></param>
+        /// <returns></returns>
+        private static string GenerateReportUrl(string reportDefinitionName)
         {
-            string modifiedName = reportDefinitionName.Replace(" ", "_");
+            string modifiedName = reportDefinitionName.Trim().Replace(" ", "_");
             // Remove dots and special characters
             modifiedName = RemoveSpecialCharacters(modifiedName);
             return modifiedName;
         }
 
-        private string RemoveSpecialCharacters(string input)
+        /// <summary>
+        /// This method used to remove special character from string except underscore
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private static string RemoveSpecialCharacters(string text)
         {
             StringBuilder sb = new();
 
-            foreach (char c in input)
+            foreach (char c in text)
             {
                 if (char.IsLetterOrDigit(c) || c == '_')
                 {
                     sb.Append(c);
+                    continue;
                 }
-                else
-                {
-                    sb.Append("_");
-                }
+                sb.Append("_");
+
             }
 
             return sb.ToString();

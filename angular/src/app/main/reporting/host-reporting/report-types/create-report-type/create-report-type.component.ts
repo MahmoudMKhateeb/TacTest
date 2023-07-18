@@ -23,6 +23,8 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { ActionId } from '@node_modules/devexpress-reporting/designer/actions/actionId';
+import localAnalyticMessages from '../../../../../../dx-analytics-core.ar.json';
+import localReportingMessages from '../../../../../../dx-reporting.ar.json';
 
 @Component({
   selector: 'app-create-report-type',
@@ -68,12 +70,10 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   step2Form = this.fb.group({
     filters: [null, Validators.required],
-    // excludingCompanies: [null, Validators.required],
   });
 
   step3Form = this.fb.group({
     editionType: [null, Validators.required],
-    excludingCompanies: [null, Validators.required],
   });
   // end of form groups and form models
 
@@ -101,16 +101,6 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   };
 
   isExcludingCompaniesInvalid: boolean;
-  excludingCompaniesCallbacks: any[] = [];
-  excludingCompaniesAdapterConfig = {
-    getValue: () => {
-      return this.selectedExcludedTenantIds?.length > 0;
-    },
-    applyValidationResults: (e) => {
-      this.isExcludingCompaniesInvalid = !e.isValid;
-    },
-    validationRequestsCallbacks: this.excludingCompaniesCallbacks,
-  };
 
   isFiltersInvalid: boolean;
   filtersCallbacks: any[] = [];
@@ -126,6 +116,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   selectAttributesDataSource: any = {};
   selectedGrantedEditionIds: number[];
   selectedExcludedTenantIds: number[];
+  isReportDefinitionNameDuplicated: boolean;
 
   constructor(
     injector: Injector,
@@ -148,6 +139,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   ngOnInit(): void {
     this.reportDefinitionDto = new CreateOrEditReportDefinitionDto();
+    this.isReportDefinitionNameDuplicated = false;
     this.reportUrl = '';
     const clonedReportDefinitionId = this._activatedRoute.snapshot.queryParams['clonedReportDefinitionId'];
 
@@ -249,11 +241,12 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     reportTemplateInput.reportDefinitionType = this.reportDefinitionDto.type;
     reportTemplateInput.reportDefinitionName = this.reportDefinitionDto.displayName;
     if (isNotNullOrUndefined(this.reportDefinitionDto.reportTemplateUrl) && this.reportDefinitionDto.reportTemplateUrl !== '') {
-      this._reportDefinitionService.createTemplateByName(reportTemplateInput).subscribe((result) => {
-        this.reportDefinitionDto.reportTemplateUrl = result.url;
-        this.reportUrl = result.url;
-      });
+      return;
     }
+    this._reportDefinitionService.createTemplateByName(reportTemplateInput).subscribe((result) => {
+      this.reportDefinitionDto.reportTemplateUrl = result.url;
+      this.reportUrl = result.url;
+    });
   }
 
   /**
@@ -274,7 +267,9 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   createOrEdit(): void {
     this.reportDefinitionDto.grantedEditionIds = (this.selectedGrantedEditionIds as any[]).map((x) => x.id);
-    this.reportDefinitionDto.excludedTenantIds = (this.selectedExcludedTenantIds as any[]).map((x) => x.id);
+    if (isNotNullOrUndefined(this.reportDefinitionDto.excludedTenantIds)) {
+      this.reportDefinitionDto.excludedTenantIds = (this.selectedExcludedTenantIds as any[]).map((x) => x.id);
+    }
     this._reportDefinitionService.createOrEdit(this.reportDefinitionDto).subscribe(() => {
       this.notify.success('SavedSuccessfully');
       this._router.navigate(['app/main/reporting/report-types']);
@@ -349,11 +344,6 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
       func();
     });
   }
-  revalidateExcludingCompanies() {
-    this.excludingCompaniesCallbacks.forEach((func) => {
-      func();
-    });
-  }
 
   revalidateFilters() {
     this.filtersCallbacks.forEach((func) => {
@@ -383,6 +373,26 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     args.GetById(ActionId.OpenReport).visible = false;
     args.GetById(ActionId.SaveAs).visible = false;
     args.GetById(ActionId.Exit).visible = false;
-    args.GetById(ActionId.Preview).visible = true;
+    args.GetById(ActionId.Preview).visible = false;
+  }
+
+  // check definition name duplication
+
+  checkNameDuplication(name: string) {
+    if (this.reportDefinitionDto.id) {
+      return;
+    }
+    this._reportDefinitionService.isReportDefinitionNameUsedBefore(name).subscribe((isNameDuplicated) => {
+      this.isReportDefinitionNameDuplicated = isNameDuplicated;
+      if (isNameDuplicated) {
+        this.step1Form.controls['reportName'].setErrors({ invalid: true });
+        this.step1Form.controls['reportName'].markAsTouched();
+      }
+    });
+  }
+
+  customizeLocalization($event) {
+    $event.args.LoadMessages(localAnalyticMessages);
+    $event.args.LoadMessages(localReportingMessages);
   }
 }

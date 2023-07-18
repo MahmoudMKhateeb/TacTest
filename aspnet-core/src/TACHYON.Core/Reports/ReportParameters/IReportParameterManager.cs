@@ -8,6 +8,5 @@ namespace TACHYON.Reports.ReportParameters
     public interface IReportParameterManager : IDomainService
     {
         Task<List<ReportParameterItem>> GetReportParameters(Guid reportId);
-        Task<List<ReportParameterItem>> GetReportParameters(string reportUrl);
     }
 }

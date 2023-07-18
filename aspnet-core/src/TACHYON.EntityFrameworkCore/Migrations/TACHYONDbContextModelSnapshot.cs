@@ -5986,7 +5986,13 @@ namespace TACHYON.Migrations
                     b.Property<int>("Format")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("GeneratedFileId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -6002,6 +6008,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GeneratedFileId");
 
                     b.HasIndex("ReportDefinitionId");
 
@@ -10989,6 +10997,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Reports.Report", b =>
                 {
+                    b.HasOne("TACHYON.Storage.BinaryObject", "GeneratedFile")
+                        .WithMany()
+                        .HasForeignKey("GeneratedFileId");
+
                     b.HasOne("TACHYON.Reports.ReportDefinitions.ReportDefinition", "ReportDefinition")
                         .WithMany()
                         .HasForeignKey("ReportDefinitionId")

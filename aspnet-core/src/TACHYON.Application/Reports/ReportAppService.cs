@@ -1,65 +1,95 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Authorization;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Authorization.Roles;
+using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Reports.Dto;
 using TACHYON.Reports.ReportDefinitions;
+using TACHYON.Reports.ReportParameterDefinitions;
 
 namespace TACHYON.Reports;
 
-// todo add permission for all actions 
+[AbpAuthorize(AppPermissions.Pages_Reports)]
 public class ReportAppService : TACHYONAppServiceBase
 {
     private readonly RoleManager _roleManager;
-    private readonly IRepository<ReportDefinition> _reportDefinitionRepository;
     private readonly IReportManager _reportManager;
+    private readonly IReportParameterDefinitionManager _parameterDefinitionManager;
+    private readonly IReportDefinitionManager _definitionManager;
 
     public ReportAppService(
         RoleManager roleManager,
-        IRepository<ReportDefinition> reportDefinitionRepository,
-        IReportManager reportManager)
+        IReportManager reportManager,
+        IReportParameterDefinitionManager parameterDefinitionManager,
+        IReportDefinitionManager definitionManager)
     {
         _roleManager = roleManager;
-        _reportDefinitionRepository = reportDefinitionRepository;
         _reportManager = reportManager;
+        _parameterDefinitionManager = parameterDefinitionManager;
+        _definitionManager = definitionManager;
     }
 
-    public async Task CreateOrEdit(CreateOrEditReportDto input)
+    public async Task<LoadResult> GetAll(LoadOptionsInput input)
     {
-        if (input.Id.HasValue)
+        if (AbpSession.UserId == null)
+            throw new AbpAuthorizationException(L("MustBeAuthorized"));
+        
+        var reports = _reportManager.GetAll(AbpSession.UserId.Value)
+            .ProjectTo<ReportListItemDto>(AutoMapperConfigurationProvider);
+
+        return await LoadResultAsync(reports, input.LoadOptions);
+    }
+    public async Task<Guid> CreateOrEdit(CreateOrEditReportDto input)
+    {
+        if (!input.Id.HasValue)
         {
-            await Create(input);
-            return;
+            return await Create(input);
         }
 
-        await Update(input);
+        return await Update(input);
     }
 
-    protected virtual async Task Create(CreateOrEditReportDto input)
+    [AbpAuthorize(AppPermissions.Pages_Reports_Create)]
+    protected virtual async Task<Guid> Create(CreateOrEditReportDto input)
     {
         // add mapping configurations
         var createdReport = ObjectMapper.Map<Report>(input);
 
-        await _reportManager.CreateReport(createdReport, input.GrantedRoles, input.ExcludedUsers, input.Parameters);
+        return await _reportManager.CreateReport(createdReport, input.GrantedRoles, input.ExcludedUsers, input.Parameters);
     }    
-    protected virtual async Task Update(CreateOrEditReportDto input)
+    protected virtual async Task<Guid> Update(CreateOrEditReportDto input)
     {
+        // note: add permission when implement this action
         throw new UserFriendlyException(L("UpdateReportNotSupportedYet"));
     }
-    
+
+    public async Task<List<ReportParameterDefinitionItem>> GetReportFilters(int reportDefinitionId) 
+        => await _parameterDefinitionManager.GetParameterDefinition(reportDefinitionId);
+
+    public async Task<string> GetReportUrl(int reportDefinitionId) 
+        => await _definitionManager.GetReportUrl(reportDefinitionId);
+
+    [AbpAuthorize(AppPermissions.Pages_Reports_Create)]
+    public async Task Publish(Guid reportId) 
+        => await _reportManager.Publish(reportId);
+
+    [AbpAuthorize(AppPermissions.Pages_Reports_Delete)]
+    public async Task Delete(Guid reportId)
+        => await _reportManager.Delete(reportId);
+
     #region Drop-Downs
 
     public async Task<List<SelectItemDto>> GetReportDefinitionsForDropdown()
     {
-        var reportDefinitionList = await _reportDefinitionRepository.GetAll()
-            .Select(x => new SelectItemDto { DisplayName = x.DisplayName, Id = x.Id.ToString() })
-            .ToListAsync();
-        return reportDefinitionList;
+        return await _definitionManager.GetReportDefinitionsByPermission(AbpSession.TenantId);
     }
     public async Task<List<SelectItemDto>> GetTenantRoles()
     {
@@ -71,8 +101,9 @@ public class ReportAppService : TACHYONAppServiceBase
     public async Task<List<SelectItemDto>> GetTenantUsers(params int[] roleIds)
     {
         return await UserManager.Users.Where(x=> x.Roles.Any(r=> roleIds.Contains(r.RoleId)) && !x.IsDriver)
-            .Select(x => new SelectItemDto { DisplayName = $"{x.Name} {x.Surname}" }).ToListAsync();
+            .Select(x => new SelectItemDto { DisplayName = $"{x.Name} {x.Surname}" , Id = x.Id.ToString()}).ToListAsync();
     }
 
     #endregion
+    
 }

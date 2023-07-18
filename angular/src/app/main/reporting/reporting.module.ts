@@ -31,7 +31,7 @@ import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area'
 import { CreateReportTypeComponent } from '@app/main/reporting/host-reporting/report-types/create-report-type/create-report-type.component';
 import { ReportingRouteModule } from '@app/main/reporting/reporting-route.module';
 import { AllReportTypesComponent } from '@app/main/reporting/host-reporting/report-types/all-report-types/all-report-types.component';
-import { DxReportDesignerModule } from '@node_modules/devexpress-reporting-angular';
+import { DxReportDesignerModule, DxReportViewerModule } from '@node_modules/devexpress-reporting-angular';
 import { GenerateReportByCompanyComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/generate-report-by-company.component';
 import { AutomationSetupModalComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/automation-setup-modal/automation-setup-modal.component';
 import { TenantAllReportComponent } from '@app/main/reporting/tenant-reports/all-report/all-report.component';
@@ -76,7 +76,7 @@ const dxImports = [
 ];
 
 @NgModule({
-  imports: [...imports, ...dxImports, ReportingRouteModule, DxReportDesignerModule, DxListModule, MultiSelectModule],
+  imports: [...imports, ...dxImports, ReportingRouteModule, DxReportDesignerModule, DxListModule, MultiSelectModule, DxReportViewerModule],
   declarations: [
     CreateReportTypeComponent,
     AllReportTypesComponent,

@@ -39,7 +39,7 @@
                 <!--begin::Wizard Step 4 Nav-->
                 <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
                   <div class="wizard-label">
-                    <h3 class="wizard-title"><span>4.</span> {{ 'ReportDesigner' }}</h3>
+                    <h3 class="wizard-title"><span>4.</span> {{ 'ReportDesigner' | localize }}</h3>
                     <div class="wizard-bar"></div>
                   </div>
                 </div>
@@ -69,7 +69,7 @@
                             [searchEnabled]="true"
                             displayExpr="value"
                             valueExpr="key"
-                            placeholder="{{ l('SelectType') }}"
+                            placeholder="{{ l('SelectReportType') }}"
                             required
                           >
                             <dx-validator [validationGroup]="'step1FormGroup'">
@@ -79,7 +79,7 @@
                               ></dxi-validation-rule>
                             </dx-validator>
                           </dx-select-box>
-                          <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                          <span class="form-text text-muted">{{ 'PleaseSelectReportType' | localize }}</span>
                         </div>
                         <div class="form-group w-50 ml-4">
                           <label>{{ 'ReportName' | localize }}</label>
@@ -90,6 +90,7 @@
                             maxLength="120"
                             formControlName="reportName"
                             [(value)]="reportDefinitionDto.displayName"
+                            (onValueChanged)="checkNameDuplication($event.value)"
                             placeholder="{{ l('EnterReportName') }}"
                             required
                           >
@@ -101,6 +102,7 @@
                             </dx-validator>
                           </dx-text-box>
                           <span class="form-text text-muted">{{ 'PleaseEnterReportName' | localize }}</span>
+                          <span *ngIf="isReportDefinitionNameDuplicated" class="form-text text-danger">{{ 'NameAlreadyUsedBefore' | localize }}</span>
                         </div>
                       </div>
                     </div>
@@ -127,7 +129,6 @@
                       <h4 class="mb-10 font-weight-bold text-dark">{{ 'SelectFilters' | localize }}</h4>
                       <div class="d-flex">
                         <dx-data-grid
-                          #selectAttributesGrid
                           id="selectAttributesGrid"
                           [dataSource]="selectAttributesDataSource"
                           [remoteOperations]="false"
@@ -140,12 +141,12 @@
                           <dxo-filter-row [visible]="false"></dxo-filter-row>
                           <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'onClick'" mode="multiple"></dxo-selection>
                           <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"> </dxo-editing>
-                          <dxi-column dataField="name" caption="{{ l('FilterName') }}"></dxi-column>
+                          <dxi-column dataField="name" cellTemplate="filterNameTemplate" caption="{{ l('FilterName') }}"></dxi-column>
+                          <div *dxTemplate="let options of 'filterNameTemplate'">{{ options.data.displayName }}</div>
                         </dx-data-grid>
                       </div>
                       <dx-validator [validationGroup]="'step2FormGroup'" [adapter]="filtersAdapterConfig">
-                        <dxi-validation-rule type="required" message="{{ 'Filters' | localize }}: {{ 'SelectAtLeastOneOfTheFilters' | localize }}">
-                        </dxi-validation-rule>
+                        <dxi-validation-rule type="required" message="{{ 'SelectAtLeastOneOfTheFilters' | localize }}"> </dxi-validation-rule>
                       </dx-validator>
                     </div>
                     <div class="row pt-4">
@@ -170,7 +171,7 @@
                       <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportAccessSetup' | localize }}</h4>
                       <div class="d-flex">
                         <div class="form-group w-50">
-                          <label>{{ 'EditionType' | localize }}</label>
+                          <label>{{ 'GrantedEditionType' | localize }}</label>
                           <p-multiSelect
                             dropdownIcon="fa fa-caret-down"
                             name="editionType"
@@ -196,45 +197,27 @@
                           </p-multiSelect>
                           <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
                           <dx-validator [validationGroup]="'step3FormGroup'" [adapter]="editionTypeAdapterConfig">
-                            <dxi-validation-rule type="required" message="{{ 'EditionType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}">
+                            <dxi-validation-rule type="required" message="{{ 'Edition' | localize }}: {{ 'ThisFieldIsRequired' | localize }}">
                             </dxi-validation-rule>
                           </dx-validator>
                         </div>
                         <div class="form-group w-50 ml-4">
-                          <label>{{ 'ExcludingCompanies' | localize }}</label>
+                          <label>{{ 'ExcludedCompanies' | localize }}</label>
                           <p-multiSelect
                             dropdownIcon="fa fa-caret-down"
                             id="excludingCompanies"
                             name="excludingCompanies"
                             [options]="allCompanies"
                             [(ngModel)]="selectedExcludedTenantIds"
-                            formControlName="excludingCompanies"
-                            (onChange)="revalidateExcludingCompanies()"
                             [selectedItemsLabel]="'{0} items selected'"
                             [style]="{ width: '100%' }"
                             styleClass="form-control pt-1"
                             [dataKey]="'id'"
-                            required
-                            placeholder="{{ l('SelectACompany') }}"
+                            placeholder="{{ l('SelectAnExcludedCompany') }}"
                             optionLabel="displayName"
-                            [ngClass]="{
-                              'is-invalid':
-                                (isExcludingCompaniesInvalid || step3Form.get('excludingCompanies').invalid) &&
-                                (step3Form.get('excludingCompanies').dirty || step3Form.get('excludingCompanies').touched),
-                              'is-valid':
-                                (!isExcludingCompaniesInvalid || step3Form.get('excludingCompanies').valid) &&
-                                (step3Form.get('excludingCompanies').dirty || step3Form.get('excludingCompanies').touched)
-                            }"
                           >
                           </p-multiSelect>
-                          <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
-                          <dx-validator [validationGroup]="'step3FormGroup'" [adapter]="excludingCompaniesAdapterConfig">
-                            <dxi-validation-rule
-                              type="required"
-                              message="{{ 'ExcludingCompanies' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
-                            >
-                            </dxi-validation-rule>
-                          </dx-validator>
+                          <span class="form-text text-muted">{{ 'PleaseSelectExcludedCompanies' | localize }}</span>
                         </div>
                       </div>
                     </div>
@@ -265,6 +248,7 @@
                       <dxrd-callbacks
                         (CustomizeMenuActions)="customizeMenuActions($event.args)"
                         (ReportSaved)="reportDefinitionDto.reportTemplateUrl = reportUrl"
+                        (CustomizeLocalization)="customizeLocalization($event)"
                       ></dxrd-callbacks>
                     </dx-report-designer>
                   </ng-container>
@@ -275,7 +259,7 @@
                 <div class="d-flex justify-content-between border-top mt-5 pt-10">
                   <div class="mr-2">
                     <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">
-                      Previous
+                      {{ 'Previous' | localize }}
                     </button>
                   </div>
                   <div>
@@ -285,10 +269,10 @@
                       class="btn btn-success font-weight-bolder text-uppercase px-9 py-4"
                       data-wizard-type="action-submit"
                     >
-                      Submit
+                      {{ 'Submit' | localize }}
                     </button>
                     <button type="button" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next">
-                      Next
+                      {{ 'Next' | localize }}
                     </button>
                   </div>
                 </div>

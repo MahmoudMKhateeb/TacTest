@@ -25,14 +25,13 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       //TODO: Need Permission
       new AppMenuItem(
         'Reporting',
-        '',
+        'Pages.Reports',
         'report.svg',
         '',
         [],
         [
-          new AppMenuItem('CreateReport', '', '', '/app/main/reporting/generate-report'),
+          new AppMenuItem('CreateReport', 'Pages.Reports.Create', '', '/app/main/reporting/generate-report'),
           new AppMenuItem('MyReports', '', '', '/app/main/reporting/all-reports'),
-          new AppMenuItem('MyAutomatedReports', '', '', '/app/main/reporting/my-automated-reports'),
         ]
         // undefined,
         // undefined,

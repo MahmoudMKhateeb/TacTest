@@ -1239,7 +1239,23 @@ namespace TACHYON.Features
 
             #endregion
 
-            
+            #region Reporting
+
+            var reportingFeature = context.Create(AppFeatures.Reporting,
+                "false", L("ReportingFeature"),
+                inputType: new CheckboxInputType());
+
+            reportingFeature.CreateChildFeature(AppFeatures.TripDetailsReport, "false", L("TripDetailsReport"),
+                inputType: new CheckboxInputType());
+
+            reportingFeature.CreateChildFeature(AppFeatures.PodPerformanceReport, "false", L("PodPerformanceReport"),
+                inputType: new CheckboxInputType());
+
+            reportingFeature.CreateChildFeature(AppFeatures.FinancialReportFeature, "false", L("FinancialReport"),
+                inputType: new CheckboxInputType());
+
+            #endregion
+
 
         }
 
