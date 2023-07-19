@@ -1,9 +1,10 @@
-﻿using Abp.BackgroundJobs;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Reflection.Extensions;
 using Abp.UI;
 using DevExpress.XtraRichEdit;
+using DevExpress.XtraRichEdit.API.Native;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,20 +14,19 @@ using System.Threading.Tasks;
 using TACHYON.PricePackages.PricePackageProposals.Jobs;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Storage;
-using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
 
 namespace TACHYON.PricePackages.PricePackageProposals
 {
     public class PricePackageProposalManager : TACHYONDomainServiceBase, IPricePackageProposalManager
     {
         private readonly IRepository<PricePackageProposal> _proposalRepository;
-        private readonly IRepository<PricePackage,long> _pricePackageRepository;
-        private readonly IRepository<BinaryObject,Guid> _binaryObjectRepository;
+        private readonly IRepository<PricePackage, long> _pricePackageRepository;
+        private readonly IRepository<BinaryObject, Guid> _binaryObjectRepository;
         private readonly IBackgroundJobManager _jobManager;
 
         public PricePackageProposalManager(
             IRepository<PricePackageProposal> proposalRepository,
-            IRepository<PricePackage,long> pricePackageRepository, 
+            IRepository<PricePackage, long> pricePackageRepository,
             IRepository<BinaryObject, Guid> binaryObjectRepository,
             IBackgroundJobManager jobManager)
         {
@@ -36,7 +36,8 @@ namespace TACHYON.PricePackages.PricePackageProposals
             _jobManager = jobManager;
         }
 
-        public async Task<int> CreateProposal(PricePackageProposal createdProposal,List<long> pricePackages,string emailAddress)
+        public async Task<int> CreateProposal(PricePackageProposal createdProposal, List<long> pricePackages,
+            string emailAddress)
         {
             DisableTenancyFilters();
             // check items if them used in any another proposal
@@ -46,17 +47,17 @@ namespace TACHYON.PricePackages.PricePackageProposals
 
             if (anyItemUsedInAnotherProposal)
                 throw new UserFriendlyException(L("YouCanNotAddItemUsedInAnotherProposal"));
-            
+
             // check items if them for another shipper 
             bool anyItemNotForSelectedShipper = await _pricePackageRepository.GetAll()
                 .AnyAsync(x => pricePackages.Any(i => i == x.Id) && x.DestinationTenantId != createdProposal.ShipperId);
-            
-            if (anyItemNotForSelectedShipper) 
+
+            if (anyItemNotForSelectedShipper)
                 throw new UserFriendlyException(L("YouMustSelectItemForSelectedShipper"));
-            
+
             var createdProposalId = await _proposalRepository.InsertAndGetIdAsync(createdProposal);
-            
-            pricePackages.ForEach(tmsPricePackageId=>
+
+            pricePackages.ForEach(tmsPricePackageId =>
             {
                 _pricePackageRepository.Update(tmsPricePackageId, x => x.ProposalId = createdProposalId);
             });
@@ -70,82 +71,89 @@ namespace TACHYON.PricePackages.PricePackageProposals
 
         public async Task UpdateProposal(PricePackageProposal updatedProposal, string emailAddress)
         {
-            if (updatedProposal.ProposalFileId.HasValue) 
+            if (updatedProposal.ProposalFileId.HasValue)
                 await _binaryObjectRepository.DeleteAsync(updatedProposal.ProposalFileId.Value);
 
             var jobArgument = new GenerateProposalFileJobArgument()
             {
-                ProposalId = updatedProposal.Id,
-                ProposalReceiverEmailAddress = emailAddress
+                ProposalId = updatedProposal.Id, ProposalReceiverEmailAddress = emailAddress
             };
-            
+
             await _jobManager.EnqueueAsync<GenerateProposalFileJob, GenerateProposalFileJobArgument>(jobArgument);
-            
         }
 
         public async Task<BinaryObject> GenerateProposalPdfFile(PricePackageProposal proposal)
         {
             using var documentProcessor = new RichEditDocumentServer();
             await using var documentStream = GetResourceStream(TACHYONConsts.ProposalTemplateFullNamespace);
-            await documentProcessor.LoadDocumentAsync(documentStream, DocumentFormat.Rtf);
+            documentProcessor.LoadDocument(documentStream, DocumentFormat.Rtf);
             var document = documentProcessor.Document;
             string proposalDate = proposal.ProposalDate?.ToString("dd-MM-yyyy");
             var truckTypes = proposal.PricePackages?.Select(x => x.TrucksTypeFk?.Key)
                 .Distinct().ToArray();
             var routeTypes = proposal.PricePackages
-                ?.Where(x=> x.RouteType.HasValue).Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))
+                ?.Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))
                 .Distinct().ToArray();
-            
+
             var shippingTypes = proposal.PricePackages?
-                .Select(x => LocalizationSource.GetString(x.ShippingTypeId.ToString()))
+                .Select(x => Enum.GetName(typeof(ShippingTypeEnum), x.ShippingTypeId))
                 .Distinct().ToArray();
-            
-            document.ReplaceAll(TACHYONConsts.ProposalTemplateCompanyName, proposal.Shipper?.companyName,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.ProposalTemplateDate,proposalDate ,SearchOptions.None);
+
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateCompanyName, proposal.Shipper?.companyName,
+                SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateDate, proposalDate, SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.ProposalTemplateScopeOverview, proposal.ScopeOverview,
                 SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.ProposalTemplateNotes, proposal.Notes, SearchOptions.None);
-            
-            
-                document.ReplaceAll(TACHYONConsts.ProposalTemplateTruckType, string.Join(", ", truckTypes ?? new[]{string.Empty}),
-                    SearchOptions.None);
-            
-                document.ReplaceAll(TACHYONConsts.ProposalTemplateRouteType, string.Join(", ", routeTypes ?? new[]{string.Empty}),
-                    SearchOptions.None);
-            
-            
-                document.ReplaceAll(TACHYONConsts.ProposalTemplateShippingType, string.Join(", ", shippingTypes ?? new[]{string.Empty}),
-                    SearchOptions.None);
+
+
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateTruckType,
+                string.Join(", ", truckTypes ?? new[] { string.Empty }),
+                SearchOptions.None);
+
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateRouteType,
+                string.Join(", ", routeTypes ?? new[] { string.Empty }),
+                SearchOptions.None);
+
+
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateShippingType,
+                string.Join(", ", shippingTypes ?? new[] { string.Empty }),
+                SearchOptions.None);
 
             var routeDetailsTable = document.Tables[1];
 
             var routeDetails = proposal.PricePackages?.Select(x => new
             {
-                OriginCity = x.OriginCity?.DisplayName,DestinationCity = x.DestinationCity?.DisplayName,
-                x.TotalPrice, TruckType = x.TrucksTypeFk?.DisplayName 
+                OriginCity = x.OriginCity?.DisplayName,
+                DestinationCity = x.DestinationCity?.DisplayName,
+                x.TotalPrice,
+                TruckType = x.TrucksTypeFk?.DisplayName
             }).ToArray();
-            
+
             for (int i = 0; i < routeDetails?.Length; i++)
             {
                 int rowLenght = routeDetailsTable.Rows.Count;
-                if (i > 0) routeDetailsTable.Rows.InsertAfter(rowLenght- 1);
+                if (i > 0) routeDetailsTable.Rows.InsertAfter(rowLenght - 1);
                 var currentColumn = i == 0 ? rowLenght - 1 : rowLenght;
                 document.InsertText(routeDetailsTable[currentColumn, 0].Range.Start, $"{i + 1}");
                 document.InsertText(routeDetailsTable[currentColumn, 1].Range.Start, routeDetails[i].OriginCity);
                 document.InsertText(routeDetailsTable[currentColumn, 2].Range.Start, routeDetails[i].DestinationCity);
                 document.InsertText(routeDetailsTable[currentColumn, 3].Range.Start, routeDetails[i].TruckType);
-                document.InsertText(routeDetailsTable[currentColumn, 4].Range.Start, $"{routeDetails[i].TotalPrice} SR");
+                document.InsertText(routeDetailsTable[currentColumn, 4].Range.Start,
+                    $"{routeDetails[i].TotalPrice} SR");
             }
+
             await using var memoryStream = new MemoryStream();
-            await documentProcessor.ExportToPdfAsync(memoryStream);
+            documentProcessor.ExportToPdf(memoryStream);
 
             BinaryObject pdfProposal = new BinaryObject(null, memoryStream.ToArray());
-            
+
             var fileId = await _binaryObjectRepository.InsertAndGetIdAsync(pdfProposal);
-            
+
             _proposalRepository.Update(proposal.Id, x => x.ProposalFileId = fileId);
             return pdfProposal;
         }
+
         private static Stream GetResourceStream(string resourceName)
         {
             return typeof(PricePackageProposalManager).GetAssembly().GetManifestResourceStream(resourceName);

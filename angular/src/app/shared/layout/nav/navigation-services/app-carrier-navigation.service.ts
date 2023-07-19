@@ -20,6 +20,25 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
     console.log('AppCarrierNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
+      // start of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
+      //TODO: Need Permission
+      new AppMenuItem(
+        'Reporting',
+        'Pages.Reports',
+        'report.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('CreateReport', 'Pages.Reports.Create', '', '/app/main/reporting/generate-report'),
+          new AppMenuItem('MyReports', '', '', '/app/main/reporting/all-reports'),
+        ]
+        // undefined,
+        // undefined,
+        // () => !this.isEnabled('App.TachyonDealer')
+      ),
+      //end of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(

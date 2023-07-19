@@ -19,6 +19,10 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'Dashboards.svg', '/app/main/dashboard'),
+      // start of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
+
+      // ---------------------------------------------------------------------------------------------------------------------
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(

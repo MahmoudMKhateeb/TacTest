@@ -21,6 +21,18 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
     console.log('AppTMSNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
+      new AppMenuItem(
+        'Reporting',
+        'Pages.ReportDefinitions',
+        'report.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('CreateReportType', 'Pages.ReportDefinitions.Create', '', '/app/main/reporting/create-report-type'),
+          new AppMenuItem('AllReportTypes', '', '', '/app/main/reporting/report-types'),
+        ]
+      ),
+
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Invoices
       new AppMenuItem(

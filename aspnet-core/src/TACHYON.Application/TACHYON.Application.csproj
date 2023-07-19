@@ -75,6 +75,7 @@
     <PackageReference Include="QRCoder" Version="1.4.2" />
     <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.15" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TACHYON.Application.Shared\TACHYON.Application.Shared.csproj" />

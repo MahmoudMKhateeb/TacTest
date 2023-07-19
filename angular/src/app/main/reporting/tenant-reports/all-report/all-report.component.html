@@ -1,0 +1,87 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'MyReports' | localize" [description]="'' | localize">
+      <div role="actions">
+        <button *ngIf="isGranted('Pages.Reports.Create')" class="btn btn-primary btn-sm" (click)="goToCreateNewReportType()">
+          {{ 'CreateNewReport' | localize }}
+        </button>
+      </div>
+    </sub-header>
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <dx-data-grid
+            id="allReportTypesDataSource"
+            [dataSource]="allReportsDataSource"
+            [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
+            [showColumnLines]="true"
+            [showRowLines]="false"
+            [showBorders]="true"
+            [rowAlternationEnabled]="true"
+            [wordWrapEnabled]="true"
+            [allowColumnReordering]="true"
+            [allowColumnResizing]="true"
+            [columnAutoWidth]="true"
+            keyExpr="id"
+          >
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+            <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-paging [pageSize]="20"></dxo-paging>
+
+            <dxi-column
+              *ngIf="!isTachyonDealer"
+              cellTemplate="cellTemplateActions"
+              [allowFiltering]="false"
+              [allowSorting]="false"
+              [allowEditing]="false"
+              [editorOptions]="{ visible: false }"
+              [width]="120"
+              [fixed]="true"
+              [alignment]="'center'"
+            ></dxi-column>
+            <dxi-column dataField="definitionName" caption="{{ l('ReportType') }}"></dxi-column>
+            <dxi-column dataField="displayName" caption="{{ l('ReportName') }}"></dxi-column>
+            <dxi-column dataField="formatTitle" caption="{{ l('ReportFormat') }}"></dxi-column>
+            <dxi-column dataField="creationTime" cellTemplate="creationTimeTemplate" caption="{{ l('GenerationDate') }}"></dxi-column>
+            <dxi-column
+              alignment="center"
+              cellTemplate="cellTemplateReportFile"
+              dataField="generatedFileId"
+              caption="{{ l('ReportFile') }}"
+            ></dxi-column>
+            <dxi-column dataField="grantedRoles" caption="{{ l('GrantedRoles') }}"></dxi-column>
+            <dxi-column dataField="excludedUsers" caption="{{ l('ExcludedUsers') }}"></dxi-column>
+
+            <div *dxTemplate="let optoins of 'creationTimeTemplate'">
+              <span>{{ optoins.data.creationTime | momentFormat: 'DD/MM/yyyy' }}</span>
+            </div>
+            <div *dxTemplate="let options of 'cellTemplateActions'">
+              <div class="btn-group dropdown" dropdown container="body">
+                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                  <i class="fa fa-cog"></i><span class="caret"></span>
+                  {{ 'Actions' | localize }}
+                </button>
+                <ul class="dropdown-menu z-index-1000" *dropdownMenu>
+                  <li *ngIf="isGranted('Pages.Reports.Delete')">
+                    <a href="javascript:;" class="dropdown-item" (click)="deleteReport(options.data.id)">
+                      {{ 'Delete' | localize }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div *dxTemplate="let options of 'cellTemplateReportFile'">
+              <div *ngIf="options.data.generatedFileId" class="btn-group dropdown" dropdown container="body">
+                <button class="icon btn btn-sm btn-outline-primary" (click)="downloadReport(options.data)">
+                  <i class="fa fa-download"></i>
+                </button>
+              </div>
+            </div>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

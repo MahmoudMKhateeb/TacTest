@@ -44,6 +44,22 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       ),
       //end of report
       // ---------------------------------------------------------------------------------------------------------------------
+      // start of reporting
+      //for host only
+      // ---------------------------------------------------------------------------------------------------------------------
+      new AppMenuItem(
+        'Reporting',
+        'Pages.ReportDefinitions',
+        'report.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('CreateReportType', 'Pages.ReportDefinitions.Create', '', '/app/main/reporting/create-report-type'),
+          new AppMenuItem('AllReportTypes', '', '', '/app/main/reporting/report-types'),
+        ]
+      ),
+      //end of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
       //start of Invoices
       new AppMenuItem(
         'Financials',

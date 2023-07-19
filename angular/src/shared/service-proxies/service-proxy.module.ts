@@ -4,6 +4,12 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
+import {
+  DedicatedDynamicActorInvoicesServiceProxy,
+  DedicatedDynamiceInvoicesServiceProxy,
+  ReportDefinitionServiceProxy,
+  TruckAttendancesServiceProxy,
+} from './service-proxies';
 
 @NgModule({
   providers: [
@@ -172,6 +178,8 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.BrokerDashboardServiceProxy,
     ApiServiceProxies.TMSAndHostDashboardServiceProxy,
     ApiServiceProxies.ForceDeliverTripsServiceProxy,
+    ApiServiceProxies.ReportDefinitionServiceProxy,
+    ApiServiceProxies.ReportServiceProxy,
 
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
