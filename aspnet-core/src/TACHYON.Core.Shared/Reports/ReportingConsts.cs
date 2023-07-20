@@ -4,12 +4,19 @@
     {
 
         public const string TripDetailsReport = "TripDetailsReport";
+        public const string PodPerformanceReport = "PodPerformanceReport";
+        public const string FinancialReport = "TripDetailsReport";
 
     }
 
-    public static class ReportConnectionNames
+    /// <summary>
+    /// This class is used to provide default data source in case of there is no data source is a report
+    /// </summary>
+    public static class ReportDataSourcePaths
     {
-        public const string ReportDbConnectionName = "REPORT_DB_CONNECTION";
+        public const string TripDetailsDataSourcePath = "/api/services/app/TripDetailsReportDataSource/GetAll";
+        public const string FinancialDataSourcePath = "/api/services/app/TripDetailsReportDataSource/GetAll";
+        public const string PodPerformanceDataSourcePath = "/api/services/app/TripDetailsReportDataSource/GetAll";
     }
 
     public static class ReportParameterNames

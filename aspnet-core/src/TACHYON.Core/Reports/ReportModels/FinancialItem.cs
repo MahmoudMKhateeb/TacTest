@@ -6,7 +6,7 @@
 
         public string RequestCreationDate { get; set; }
 
-        public long? WaybillNumber { get; set; }
+        public string WaybillNumber { get; set; }
 
         public string TripCreationDate { get; set; }
 

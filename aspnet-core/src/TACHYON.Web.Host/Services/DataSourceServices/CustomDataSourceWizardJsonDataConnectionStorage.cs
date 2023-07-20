@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TACHYON.Reports;
 using TACHYON.Reports.ReportDataSources;
 using TACHYON.Url;
 
@@ -46,7 +47,7 @@ namespace TACHYON.Web.Services.DataSourceServices
             var connections = GetConnections();
             string authorizationHeaderValue = GetAuthorizationHeaderValue();
             var connectionsResult = connections.IsNullOrEmpty() ? new List<JsonDataConnection>()
-                : connections.Select(x => CreateJsonDataConnectionFromString(x.Key, x.Value,authorizationHeaderValue,_webUrlService.ServerRootAddressFormat));
+                : connections.Select(x => CreateJsonDataConnectionFromString(x.Key, x.Value,authorizationHeaderValue,GetServerBaseUrl()));
             return connectionsResult;
         }
 
@@ -56,7 +57,7 @@ namespace TACHYON.Web.Services.DataSourceServices
             if (dataSourceStorage is null)
                 throw new UserFriendlyException("Data source not found");
             
-            return CreateJsonDataConnectionFromString(dataSourceStorage.ConnectionName, dataSourceStorage.ConnectionValue,GetAuthorizationHeaderValue(),_webUrlService.ServerRootAddressFormat);
+            return CreateJsonDataConnectionFromString(dataSourceStorage.ConnectionName, dataSourceStorage.ConnectionValue,GetAuthorizationHeaderValue(),GetServerBaseUrl());
         }
 
         public string GetAuthorizationHeaderValue()
@@ -88,6 +89,22 @@ namespace TACHYON.Web.Services.DataSourceServices
             return new JsonDataConnection(jsonSource) { StoreConnectionNameOnly = false, Name = connectionName };
         }
 
+        public UriJsonSource CreateDefaultDataSourceByReportType(ReportType reportType)
+        {
+            string dataSourceUrlPath = reportType switch
+            {
+                ReportType.TripDetailsReport => ReportDataSourcePaths.TripDetailsDataSourcePath,
+                ReportType.PodPerformanceReport => ReportDataSourcePaths.PodPerformanceDataSourcePath,
+                ReportType.FinancialReport => ReportDataSourcePaths.FinancialDataSourcePath,
+                _ => throw new UserFriendlyException("Not Supported Report Type")
+            };
+            string dataSourceUrl = GetServerBaseUrl().TrimEnd('/') + dataSourceUrlPath;
+            UriJsonSource jsonSource = new UriJsonSource(new Uri(dataSourceUrl));
+
+            jsonSource.HeaderParameters.Add(new HeaderParameter("Authorization",GetAuthorizationHeaderValue()));
+            return jsonSource;
+        }
+        
         public string GetServerBaseUrl()
             => _webUrlService.ServerRootAddressFormat;
     }

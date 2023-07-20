@@ -42,6 +42,9 @@ namespace TACHYON.Reports.ReportDefinitions
         public async Task<ReportType> GetReportDefinitionType(int reportDefinitionId) 
             => await _reportDefinitionRepository.GetAll().Where(x => x.Id == reportDefinitionId)
                 .Select(x => x.Type).SingleAsync();
+        public async Task<ReportType> GetReportDefinitionType(Guid templateId) 
+            => await _reportDefinitionRepository.GetAll().Where(x => x.ReportTemplateId == templateId)
+                .Select(x => x.Type).SingleAsync();
 
         #region Helpers
 

@@ -63,7 +63,10 @@ public class PodPerformanceReportDataSourceAppService : TACHYONAppServiceBase
                            .Select(p=> p.CreationTime).OrderByDescending(x=> x).First(),
                        LastCompletedPointFinishOffloadingDate = trip.RoutPoints.Where(p=> p.PickingType == PickingType.Dropoff)
                            .SelectMany(p=> p.RoutPointStatusTransitions).Where(p=> !p.IsReset && p.Status == RoutePointStatus.FinishOffLoadShipment)
-                           .Select(p=> p.CreationTime).OrderByDescending(x=> x).First()
+                           .Select(p=> p.CreationTime).OrderByDescending(x=> x).FirstOrDefault(),
+                       LoadingDate = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Pickup)
+                           .SelectMany(x=> x.RoutPointStatusTransitions).Where(x=> x.Status == RoutePointStatus.StartLoading)
+                           .Select(x=> x.CreationTime).FirstOrDefault()
                    })
                .Select(x=> new PodPerformanceItem
             {
@@ -86,8 +89,8 @@ public class PodPerformanceReportDataSourceAppService : TACHYONAppServiceBase
                 RequestReferenceNumber = x.Trip.ShippingRequestId.HasValue ? x.Trip.ShippingRequestFk.ReferenceNumber : EmptyField,
                 ShipperNumber = x.Trip.ShippingRequestFk.ShipperReference,
                 Origin = x.Trip.OriginFacilityFk.CityFk.DisplayName,
-                OffloadingDate = x.Trip.EndWorking.HasValue ? x.Trip.EndWorking.Value.ToString("dd/MM/yyyy") : EmptyField, // todo review this value 
-                LoadingDate = x.Trip.EndWorking.HasValue ? x.Trip.EndWorking.Value.ToString("dd/MM/yyyy") : EmptyField,// todo review this value 
+                OffloadingDate = x.LastCompletedPointFinishOffloadingDate != null ? x.LastCompletedPointFinishOffloadingDate.ToString("dd/MM/yyyy") : EmptyField,
+                LoadingDate = x.LoadingDate != null ? x.LoadingDate.ToString("dd/MM/yyyy") : EmptyField,
                 PodStatus = x.Trip.RoutPoints.Where(p=> p.PickingType == PickingType.Dropoff).All(p=> p.IsPodUploaded) 
                     ? LocalizationSource.GetString("Submitted") : LocalizationSource.GetString("NotSubmitted"),
                 PlateNumber = x.Trip.AssignedTruckId.HasValue ? x.Trip.AssignedTruckFk.PlateNumber : EmptyField,

@@ -61,14 +61,23 @@ public class FinancialReportDataSourceAppService : TACHYONAppServiceBase
                 from shipperInvoice in _invoiceTripRepository.GetAll().Where(i => trip.Id == i.TripId
                     && ((trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.TenantId : trip.ShipperTenantId) ==
                         i.InvoiceFK.TenantId)).DefaultIfEmpty()
-                select new { Trip = trip, CarrierInvoice = carrierInvoice, ShipperInvoice = shipperInvoice, })
+                select new
+                {
+                    Trip = trip, CarrierInvoice = carrierInvoice, ShipperInvoice = shipperInvoice,
+                    LastCompletedPointFinishOffloadingDate = trip.RoutPoints.Where(p=> p.PickingType == PickingType.Dropoff)
+                        .SelectMany(p=> p.RoutPointStatusTransitions).Where(p=> !p.IsReset && p.Status == RoutePointStatus.FinishOffLoadShipment)
+                        .Select(p=> p.CreationTime).OrderByDescending(x=> x).FirstOrDefault(),
+                    LoadingDate = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Pickup)
+                        .SelectMany(x=> x.RoutPointStatusTransitions).Where(x=> x.Status == RoutePointStatus.StartLoading)
+                        .Select(x=> x.CreationTime).FirstOrDefault()
+                })
             .Select(x => new FinancialItem
             {
                 Destination = x.Trip.DestinationFacilityFk.CityFk.DisplayName,
                 Origin = x.Trip.OriginFacilityFk.CityFk.DisplayName,
-                TripOffloadingDate = x.Trip.EndWorking.HasValue ? x.Trip.EndWorking.ToString() : EmptyField, // todo review this value 
-                TripLoadingDate = x.Trip.EndWorking.HasValue ? x.Trip.EndWorking.ToString() : EmptyField,// todo review this value 
-                WaybillNumber = x.Trip.WaybillNumber,
+                TripOffloadingDate = x.LastCompletedPointFinishOffloadingDate != null ? x.LastCompletedPointFinishOffloadingDate.ToString("dd/MM/yyyy") : EmptyField,
+                TripLoadingDate = x.LoadingDate != null ? x.LoadingDate.ToString("dd/MM/yyyy") : EmptyField,
+                WaybillNumber = x.Trip.WaybillNumber.ToString(),
                 ShipperName = x.Trip.ShippingRequestId.HasValue ?  x.Trip.ShippingRequestFk.Tenant.Name : x.Trip.ShipperTenantFk.Name,
                 CarrierName = x.Trip.ShippingRequestId.HasValue ? (x.Trip.ShippingRequestFk.CarrierTenantId.HasValue ? x.Trip.ShippingRequestFk.CarrierTenantFk.Name : EmptyField) 
                     : (x.Trip.CarrierTenantId.HasValue ? x.Trip.CarrierTenantFk.Name : EmptyField),
