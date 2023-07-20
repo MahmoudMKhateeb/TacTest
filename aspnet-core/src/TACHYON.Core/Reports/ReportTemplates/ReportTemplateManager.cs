@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Reports.ReportDefinitions;
 using TACHYON.Reports.Templates;
 using TACHYON.Web.Reports;
 

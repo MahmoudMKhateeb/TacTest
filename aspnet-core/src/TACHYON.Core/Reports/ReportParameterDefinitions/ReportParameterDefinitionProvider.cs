@@ -157,74 +157,74 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              {
                  Name = ReportParameterNames.MinCostWithVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.TotalAmount >= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.TotalAmount >= decimal.Parse(args.ParameterValue)
              };             
              var minCostWithoutVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MinCostWithoutVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.SubTotalAmount >= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.SubTotalAmount >= decimal.Parse(args.ParameterValue)
              };             
              var minSellingWithVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MinSellingWithVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.TotalAmountWithCommission >= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.TotalAmountWithCommission >= decimal.Parse(args.ParameterValue)
              };             
              var minSellingWithoutVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MinSellingWithoutVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.SubTotalAmountWithCommission >= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.SubTotalAmountWithCommission >= decimal.Parse(args.ParameterValue)
              };             
              var minProfitWithVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MinProfitWithVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.VatAmountWithCommission >= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.VatAmountWithCommission >= decimal.Parse(args.ParameterValue)
              };             
              var minProfitWithoutVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MinProfitWithoutVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.CommissionAmount >= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.CommissionAmount >= decimal.Parse(args.ParameterValue)
              };
              
              var maxCostWithVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MaxCostWithVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.TotalAmount <= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.TotalAmount <= decimal.Parse(args.ParameterValue)
              };             
              var maxCostWithoutVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MaxCostWithoutVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.SubTotalAmount <= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.SubTotalAmount <= decimal.Parse(args.ParameterValue)
              };             
              var maxSellingWithVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MaxSellingWithVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.TotalAmountWithCommission <= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.TotalAmountWithCommission <= decimal.Parse(args.ParameterValue)
              };             
              var maxSellingWithoutVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MaxSellingWithoutVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.SubTotalAmountWithCommission <= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.SubTotalAmountWithCommission <= decimal.Parse(args.ParameterValue)
              };             
              var maxProfitWithVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MaxProfitWithVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.VatAmountWithCommission <= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.VatAmountWithCommission <= decimal.Parse(args.ParameterValue)
              };             
              var maxProfitWithoutVatParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.MaxProfitWithoutVat,
                  Type = typeof(int),
-                 ExpressionCallback = (args) => x=> x.CommissionAmount <= int.Parse(args.ParameterValue)
+                 ExpressionCallback = (args) => x=> x.CommissionAmount <= decimal.Parse(args.ParameterValue)
              };
 
              #endregion
