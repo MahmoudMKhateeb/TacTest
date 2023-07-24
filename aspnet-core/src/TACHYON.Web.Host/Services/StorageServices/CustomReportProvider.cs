@@ -49,9 +49,7 @@ namespace TACHYON.Web.Services.StorageServices
             var reportTemplate = AsyncHelper.RunSync(() => _reportTemplateManager.GetReportTemplateByUrl(reportUrl));
             using var reportTemplateStream = new MemoryStream(reportTemplate.Data);
             report.LoadLayoutFromXml(reportTemplateStream);
-            // for test purpose only 
-            var ds = DataSourceManager.GetDataSources<JsonDataSource>(report).ToList();
-            
+
             report.Parameters["ReportId"].Value = parameters["reportId"];
 
             
