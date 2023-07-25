@@ -67,7 +67,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              };
              var truckTypeParameterDefinition = new StaticReportParameterDefinition
              {
-                 Name = ReportParameterNames.TruckType, Type = typeof(long?), ListDataCallback = GetTruckTypes,
+                 Name = ReportParameterNames.TruckType, Type = typeof(long), ListDataCallback = GetTruckTypes,
                  ExpressionCallback = (args) => x=> (x.ShippingRequestId.HasValue
                      ? x.ShippingRequestFk.TrucksTypeId
                      : x.AssignedTruckFk.TrucksTypeId) == long.Parse(args.ParameterValue)
@@ -90,7 +90,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              var requestTypeParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.RequestType,
-                 Type = typeof(ShippingRequestType?),
+                 Type = typeof(ShippingRequestType),
                  ListDataCallback = GetEnumAsList<ShippingRequestType>,
                  ExpressionCallback = (args) => x=> x.ShippingRequestId.HasValue && x.ShippingRequestFk.RequestType ==
                      (ShippingRequestType)byte.Parse(args.ParameterValue)
@@ -98,7 +98,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              var routeTypeParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.RouteType,
-                 Type = typeof(ShippingRequestRouteType?),
+                 Type = typeof(ShippingRequestRouteType),
                  ListDataCallback = GetEnumAsList<ShippingRequestRouteType>,
                  ExpressionCallback = (args) => x=> (x.ShippingRequestId.HasValue ? x.ShippingRequestFk.RouteTypeId : x.RouteType) ==
                                                               (ShippingRequestRouteType)byte.Parse(args.ParameterValue)
@@ -119,7 +119,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              };
              var isPodSubmittedParameterDefinition = new StaticReportParameterDefinition
              {
-                 Name = ReportParameterNames.IsPodSubmitted, Type = typeof(bool?),
+                 Name = ReportParameterNames.IsPodSubmitted, Type = typeof(bool),
                  ExpressionCallback = (args) => x=> x.RoutPoints != null && x.RoutPoints.Any() && x.RoutPoints
                      .Where(p => p.PickingType == PickingType.Dropoff).All(p =>
                          p.IsPodUploaded == bool.Parse(args.ParameterValue))
@@ -127,19 +127,19 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              
              var invoiceIssuedParameterDefinition = new StaticReportParameterDefinition
              {
-                 Name = ReportParameterNames.InvoiceIssued, Type = typeof(bool?),
+                 Name = ReportParameterNames.InvoiceIssued, Type = typeof(bool),
                  ExpressionCallback = (args) => x=> bool.Parse(args.ParameterValue) && ((args.IsCarrier && x.IsCarrierHaveInvoice) || (args.IsShipper && x.IsShipperHaveInvoice))
              };
              var deliveryDateParameterDefinition = new StaticReportParameterDefinition
              {
-                 Name = ReportParameterNames.DeliveryDate, Type = typeof(DateTime?),
+                 Name = ReportParameterNames.DeliveryDate, Type = typeof(DateTime),
                  ExpressionCallback = (args) => x=> x.EndWorking.HasValue && DateTime.Parse(args.ParameterValue).Date == x.EndWorking.Value.Date
              };
              
              var invoiceStatusParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.InvoiceStatus,
-                 Type = typeof(ReportInvoiceStatus?),
+                 Type = typeof(ReportInvoiceStatus),
                  ListDataCallback = GetEnumAsList<ReportInvoiceStatus>,
                  ExpressionCallback = (args) => x=> (ReportInvoiceStatus.InvoiceIssued == (ReportInvoiceStatus)int.Parse(args.ParameterValue) && ((args.IsCarrier && x.IsCarrierHaveInvoice) || (args.IsShipper && x.IsShipperHaveInvoice)))
                  || (ReportInvoiceStatus.InvoiceNotIssued == (ReportInvoiceStatus)int.Parse(args.ParameterValue) && ((args.IsCarrier && !x.IsCarrierHaveInvoice) || (args.IsShipper && !x.IsShipperHaveInvoice)))
@@ -147,7 +147,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              var podStatusParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.PodStatus,
-                 Type = typeof(ReportPodStatus?),
+                 Type = typeof(ReportPodStatus),
                  ListDataCallback = GetEnumAsList<ReportPodStatus>,
                  ExpressionCallback = (args) => x=> (ReportPodStatus.PodSubmitted == (ReportPodStatus)int.Parse(args.ParameterValue) && x.RoutPoints.Where(p=> p.PickingType == PickingType.Dropoff).All(p=> p.IsPodUploaded))
                  || (ReportPodStatus.PodNotSubmitted == (ReportPodStatus)int.Parse(args.ParameterValue) && x.RoutPoints.Where(p=> p.PickingType == PickingType.Dropoff).Any(p=> !p.IsPodUploaded))
@@ -240,8 +240,8 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              Register(ReportType.TripDetailsReport, routeTypeParameterDefinition);
              Register(ReportType.TripDetailsReport, originParameterDefinition);
              Register(ReportType.TripDetailsReport, destinationParameterDefinition);             
-             Register(ReportType.TripDetailsReport, isPodSubmittedParameterDefinition );
-             Register(ReportType.TripDetailsReport, invoiceIssuedParameterDefinition );
+             Register(ReportType.TripDetailsReport, isPodSubmittedParameterDefinition);
+             Register(ReportType.TripDetailsReport, invoiceIssuedParameterDefinition);
              Register(ReportType.TripDetailsReport, deliveryDateParameterDefinition);
              
              #endregion
