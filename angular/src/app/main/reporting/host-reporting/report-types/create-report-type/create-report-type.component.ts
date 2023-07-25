@@ -117,6 +117,8 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   selectedGrantedEditionIds: number[];
   selectedExcludedTenantIds: number[];
   isReportDefinitionNameDuplicated: boolean;
+  isStepLoading: boolean;
+  isReportDefinitionCreated: boolean;
 
   constructor(
     injector: Injector,
@@ -140,6 +142,8 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   ngOnInit(): void {
     this.reportDefinitionDto = new CreateOrEditReportDefinitionDto();
     this.isReportDefinitionNameDuplicated = false;
+    this.isStepLoading = false;
+    this.isReportDefinitionCreated = false;
     this.reportUrl = '';
     const clonedReportDefinitionId = this._activatedRoute.snapshot.queryParams['clonedReportDefinitionId'];
 
@@ -186,7 +190,9 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.createOrEditStep1();
             this.getFilters();
             this.getEditionTypes();
+            console.log('Before Step 1 Next');
             wizardObj.goNext();
+            console.log('After Step 1 Next');
           }
           break;
         }
@@ -199,7 +205,9 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep2();
+            console.log('Before Step 2 Next');
             wizardObj.goNext();
+            console.log('After Step 2 Next');
           }
           break;
         }
@@ -212,12 +220,24 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep3();
-            wizardObj.goNext();
+            if (this.isReportDefinitionCreated) {
+              wizardObj.goNext();
+              return;
+            }
+            this.isStepLoading = true;
+            this.reportDefinitionDto.grantedEditionIds = (this.selectedGrantedEditionIds as any[]).map((x) => x.id);
+            if (isNotNullOrUndefined(this.reportDefinitionDto.excludedTenantIds)) {
+              this.reportDefinitionDto.excludedTenantIds = (this.selectedExcludedTenantIds as any[]).map((x) => x.id);
+            }
+            this._reportDefinitionService.createOrEdit(this.reportDefinitionDto).subscribe(() => {
+              wizardObj.goNext();
+              this.isStepLoading = false;
+              this.isReportDefinitionCreated = true;
+            });
           }
           break;
         }
         case 4: {
-          this.createOrEdit();
           break;
         }
         default: {
@@ -265,16 +285,6 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     this.updateRoutingQueries(3);
   }
 
-  createOrEdit(): void {
-    this.reportDefinitionDto.grantedEditionIds = (this.selectedGrantedEditionIds as any[]).map((x) => x.id);
-    if (isNotNullOrUndefined(this.reportDefinitionDto.excludedTenantIds)) {
-      this.reportDefinitionDto.excludedTenantIds = (this.selectedExcludedTenantIds as any[]).map((x) => x.id);
-    }
-    this._reportDefinitionService.createOrEdit(this.reportDefinitionDto).subscribe(() => {
-      this.notify.success('SavedSuccessfully');
-      this._router.navigate(['app/main/reporting/report-types']);
-    });
-  }
   /**
    * Updates Router Query Parameters
    * @param step
@@ -394,5 +404,10 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   customizeLocalization($event) {
     $event.args.LoadMessages(localAnalyticMessages);
     $event.args.LoadMessages(localReportingMessages);
+  }
+
+  submit() {
+    this.notify.success('SavedSuccessfully');
+    this._router.navigate(['app/main/reporting/report-types']);
   }
 }

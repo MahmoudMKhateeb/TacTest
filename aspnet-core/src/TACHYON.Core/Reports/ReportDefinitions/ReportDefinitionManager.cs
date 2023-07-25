@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.DataFilters;
 using TACHYON.Dto;
 using TACHYON.MultiTenancy;
 using TACHYON.Reports.ReportDefinitionPermissions;
@@ -42,9 +43,12 @@ namespace TACHYON.Reports.ReportDefinitions
         public async Task<ReportType> GetReportDefinitionType(int reportDefinitionId) 
             => await _reportDefinitionRepository.GetAll().Where(x => x.Id == reportDefinitionId)
                 .Select(x => x.Type).SingleAsync();
-        public async Task<ReportType> GetReportDefinitionType(Guid templateId) 
-            => await _reportDefinitionRepository.GetAll().Where(x => x.ReportTemplateId == templateId)
+        public async Task<ReportType> GetReportDefinitionType(Guid templateId)
+        {
+            CurrentUnitOfWork.DisableFilter(TACHYONDataFilters.ActiveReportDefinition);
+            return await _reportDefinitionRepository.GetAll().Where(x => x.ReportTemplateId == templateId)
                 .Select(x => x.Type).SingleAsync();
+        }
 
         #region Helpers
 

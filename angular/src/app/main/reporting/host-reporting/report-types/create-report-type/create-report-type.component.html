@@ -242,7 +242,7 @@
                 <div class="pb-5" data-wizard-type="step-content">
                   <!--  here will be the designer  -->
                   <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportDesigner' | localize }}</h4>
-                  <ng-container *ngIf="reportUrl.length > 0">
+                  <ng-container *ngIf="activeStep === 4">
                     <dx-report-designer [reportUrl]="reportUrl" height="700px">
                       <dxrd-request-options [getDesignerModelAction]="getDesignerModelAction" [host]="hostUrl"></dxrd-request-options>
                       <dxrd-callbacks
@@ -265,13 +265,18 @@
                   <div>
                     <button
                       type="button"
-                      (click)="createOrEdit()"
+                      (click)="submit()"
                       class="btn btn-success font-weight-bolder text-uppercase px-9 py-4"
                       data-wizard-type="action-submit"
                     >
                       {{ 'Submit' | localize }}
                     </button>
-                    <button type="button" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next">
+                    <button
+                      type="button"
+                      [disabled]="isStepLoading"
+                      class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4"
+                      data-wizard-type="action-next"
+                    >
                       {{ 'Next' | localize }}
                     </button>
                   </div>
