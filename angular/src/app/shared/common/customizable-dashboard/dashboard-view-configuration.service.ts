@@ -82,6 +82,7 @@ import { SaasInvoicesComponent } from '@app/shared/common/customizable-dashboard
 import { GoodTypesUsageComponent } from '@app/shared/common/customizable-dashboard/widgets/host/good-types-usage/good-types-usage.component';
 import { CostVsSellingVsProfitOfTruckAggregationTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/cost-vs-selling-vs-profit-of-truck-aggregation-trips/cost-vs-selling-vs-profit-of-truck-aggregation-trips.component';
 import { NewRegisteredCompaniesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/new-registered-companies/new-registered-companies.component';
+import { NumberOfDedicatedTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-dedicated-trips/number-of-dedicated-trips.component';
 
 @Injectable({
   providedIn: 'root',
@@ -490,6 +491,12 @@ export class DashboardViewConfigurationService {
       14,
       12
     );
+    let NumberOfDedicatedTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.NumberOfDedicatedTrips,
+      NumberOfDedicatedTripsComponent,
+      9,
+      10
+    );
 
     let InvoicesVsPaidInvoices_Host = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.InvoicesVsPaidInvoices,
@@ -717,6 +724,12 @@ export class DashboardViewConfigurationService {
       14,
       12
     );
+    let NumberOfDedicatedTrips_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfDedicatedTrips,
+      NumberOfDedicatedTripsComponent,
+      9,
+      10
+    );
 
     let InvoicesVsPaidInvoices_TMS = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.TachyonDealer.InvoicesVsPaidInvoices,
@@ -900,6 +913,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(NewRegisteredCompanies_TMS);
     this.WidgetViewDefinitions.push(InvoicesVsPaidInvoices_TMS);
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid_TMS);
+    this.WidgetViewDefinitions.push(NumberOfDedicatedTrips_TMS);
     //Host
     //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
 
@@ -948,6 +962,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(NewRegisteredCompanies);
     this.WidgetViewDefinitions.push(InvoicesVsPaidInvoices_Host);
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid_Host);
+    this.WidgetViewDefinitions.push(NumberOfDedicatedTrips);
 
     // broker
     this.WidgetViewDefinitions.push(NewActorsThisMonth_Broker);

@@ -1153,6 +1153,14 @@ namespace TACHYON.Configuration
                                   PositionX = 0,
                                   PositionY = 115,
                                 },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfDedicatedTrips,
+                                    Height = 10,
+                                    Width = 9,
+                                    PositionX = 9,
+                                    PositionY = 115,
+                                },
                             }
                         },
                         new Page()
@@ -1394,6 +1402,14 @@ namespace TACHYON.Configuration
                                   Width = 9,
                                   PositionX = 0,
                                   PositionY = 115,
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfDedicatedTrips,
+                                    Height = 10,
+                                    Width = 9,
+                                    PositionX = 9,
+                                    PositionY = 115,
                                 },
                             }
                         },

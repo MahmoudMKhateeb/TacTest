@@ -131,6 +131,7 @@
                 public const string NewRegisteredCompanies = "Widgets_Tenant_TachyonDealer_NewRegisteredCompanies";
                 public const string InvoicesVsPaidInvoices = "Widgets_Tenant_TachyonDealer_InvoicesVsPaidInvoicesComponent";
                 public const string ClaimedInvoicesVsPaidInvoices = "Widgets_Tenant_TachyonDealer_ClaimedInvoicesVsPaidInvoices";
+                public const string NumberOfDedicatedTrips = "Widgets_Tenant_TachyonDealer_NumberOfDedicatedTrips";
             }
 
             public class Host
@@ -180,6 +181,7 @@
                 public const string NewRegisteredCompanies = "Widgets_Tenant_Host_NewRegisteredCompanies";
                 public const string InvoicesVsPaidInvoices = "Widgets_Tenant_Host_InvoicesVsPaidInvoicesComponent";
                 public const string ClaimedInvoicesVsPaidInvoices = "Widgets_Tenant_Host_ClaimedInvoicesVsPaidInvoices";
+                public const string NumberOfDedicatedTrips = "Widgets_Tenant_Host_NumberOfDedicatedTrips";
             }
             
             public class Broker

@@ -3433,6 +3433,7 @@
 
     <text name="ValueOfGoods">Value of goods</text>
     <text name="InsuranceCoverage">Insurance coverage</text>
+    <text name="NumberOfDedicatedTrips">Number Of Dedicated Trips</text>
     
 	</texts>
 </localizationDictionary>

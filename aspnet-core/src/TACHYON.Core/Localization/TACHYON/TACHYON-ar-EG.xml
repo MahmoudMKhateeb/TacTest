@@ -3144,6 +3144,7 @@
 	<text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
     <text name="ValueOfGoods">قيمة البضائع</text>
     <text name="InsuranceCoverage">تغطية الحمل</text>
+    <text name="NumberOfDedicatedTrips">NumberOfDedicatedTrips</text>
 		
 	</texts>
 </localizationDictionary>
