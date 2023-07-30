@@ -103,11 +103,11 @@ namespace TACHYON.Dashboards.Broker
             {
                 CarrierActorsPercentage =
                     totalActorsForCurrentMonth > 0
-                        ? ((carrierActorsCount / totalActorsForCurrentMonth) * 100)
+                        ? ((Convert.ToDecimal(carrierActorsCount) / Convert.ToDecimal(totalActorsForCurrentMonth)) * 100)
                         : totalActorsForCurrentMonth,
                 ShipperActorsPercentage =
                     totalActorsForCurrentMonth > 0
-                        ? ((shipperActorsCount / totalActorsForCurrentMonth) * 100)
+                        ? ((Convert.ToDecimal(shipperActorsCount) / Convert.ToDecimal(totalActorsForCurrentMonth)) * 100)
                         : totalActorsForCurrentMonth,
                 TotalActorsForCurrentMonth = totalActorsForCurrentMonth,
                 GrowthChangePercentage = growthAverageِInLastMonths > 0
