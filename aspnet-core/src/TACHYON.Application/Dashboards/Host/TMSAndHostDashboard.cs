@@ -16,6 +16,9 @@ using TACHYON.Dashboards.Carrier;
 using TACHYON.Dashboards.Host.Dto;
 using TACHYON.Dashboards.Host.TMS_HostDto;
 using TACHYON.Dashboards.Shipper.Dto;
+using TACHYON.Dto;
+using TACHYON.Goods.GoodCategories;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
@@ -38,10 +41,11 @@ namespace TACHYON.Dashboards.Host
         private readonly IRepository<Invoice, long> _invoiceRepository;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
         private readonly IRepository<RoutPoint, long> _routePointRepository;
+        private readonly IRepository<GoodCategory> _goodCategoryRepository;
 
 
 
-        public TMSAndHostDashboard(IRepository<Tenant> tenantRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Truck, long> truckRepository, UserManager userManager, IRepository<Invoice, long> invoiceRepository, IRepository<SubmitInvoice, long> submitInvoiceRepository, IRepository<RoutPoint, long> routePointRepository)
+        public TMSAndHostDashboard(IRepository<Tenant> tenantRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Truck, long> truckRepository, UserManager userManager, IRepository<Invoice, long> invoiceRepository, IRepository<SubmitInvoice, long> submitInvoiceRepository, IRepository<RoutPoint, long> routePointRepository, IRepository<GoodCategory> goodCategoryRepository)
         {
             _tenantRepository = tenantRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -51,6 +55,7 @@ namespace TACHYON.Dashboards.Host
             _invoiceRepository = invoiceRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
             _routePointRepository = routePointRepository;
+            _goodCategoryRepository = goodCategoryRepository;
         }
 
         public async Task<GetRegisteredCompaniesNumberOutput> GetRegisteredCompaniesNumber()
@@ -793,6 +798,13 @@ namespace TACHYON.Dashboards.Host
         }
 
 
+        public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetMainGoodCategories()
+        {
+            var list = await _goodCategoryRepository.GetAll()
+                    .Where(x => x.IsActive).Where(x=> !x.FatherId.HasValue)
+                    .Include(x => x.Translations).ToListAsync();
+            return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
+        }
             // public async Task Get
             #region Helper
             private async Task<GetOverallAmountForAlltripsOutput> GetInvoicesCostAndSelling(bool isSaas)
