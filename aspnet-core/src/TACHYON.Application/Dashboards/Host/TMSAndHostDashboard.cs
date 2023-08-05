@@ -142,21 +142,28 @@ namespace TACHYON.Dashboards.Host
         public async Task<long> GetDeliveredTripsInCurrentMonth()
         {
             DisableTenancyFilters();
-            return await _shippingRequestTripRepository.GetAll().Where(x => ((x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
-                           (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId)) &&
-                           x.CreationTime.Month == Clock.Now.Month && (
-                           x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
-                           .CountAsync();
+            return await (from trip in _shippingRequestTripRepository.GetAll().AsNoTracking()
+                where ((trip.ShippingRequestId.HasValue &&
+                        trip.ShippingRequestFk.TenantId != trip.ShippingRequestFk.CarrierTenantId) ||
+                       (!trip.ShippingRequestId.HasValue && trip.ShipperTenantId != trip.CarrierTenantId)) &&
+                      (trip.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
+                       trip.Status == ShippingRequestTripStatus.Delivered) &&
+                      trip.RoutPoints.Any(p =>
+                          p.RoutPointStatusTransitions.Any(t => t.CreationTime.Month == Clock.Now.Month))
+                select trip).CountAsync();
         }
 
         public async Task<long> GetInTransitTripsInCurrentMonth()
         {
             DisableTenancyFilters();
-            return await _shippingRequestTripRepository.GetAll().Where(x => ((x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
-                            (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId)) &&
-                            x.CreationTime.Month == Clock.Now.Month && 
-                            x.Status == ShippingRequestTripStatus.InTransit)
-                            .CountAsync();
+            return await (from trip in _shippingRequestTripRepository.GetAll().AsNoTracking()
+                where ((trip.ShippingRequestId.HasValue &&
+                        trip.ShippingRequestFk.TenantId != trip.ShippingRequestFk.CarrierTenantId) ||
+                       (!trip.ShippingRequestId.HasValue && trip.ShipperTenantId != trip.CarrierTenantId)) &&
+                      trip.Status == ShippingRequestTripStatus.InTransit  &&
+                      trip.RoutPoints.Any(p =>
+                          p.RoutPointStatusTransitions.Any(t => t.CreationTime.Month == Clock.Now.Month))
+                select trip).CountAsync();
         }
 
         public async Task<DriversAndTrucksDto> GetDriversAndTrucksCount(DateRangeInput input)
