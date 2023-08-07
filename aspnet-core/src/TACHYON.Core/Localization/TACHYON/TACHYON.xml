@@ -3496,6 +3496,7 @@
 	<text name="MaxSellingWithoutVat">Max Selling Without Vat</text>
 	<text name="MaxProfitWithVat">Max Profit With Vat</text>
 	<text name="MaxProfitWithoutVat">Max Profit Without Vat</text>
-		
+	
+	<text name="ReportBeingGeneratedInTheBackGround">Report is Being Generated in the Background,The page will update once ready</text>
 	</texts>
 </localizationDictionary>
