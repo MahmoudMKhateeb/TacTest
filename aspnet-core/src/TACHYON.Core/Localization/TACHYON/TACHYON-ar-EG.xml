@@ -3207,6 +3207,9 @@
 	<text name="MaxSellingWithoutVat">ماكس بيع بدون ضريبة القيمة المضافة</text>
 	<text name="MaxProfitWithVat">أقصى ربح مع ضريبة القيمة المضافة</text>
 	<text name="MaxProfitWithoutVat">أقصى ربح بدون ضريبة القيمة المضافة</text>
+    <text name="SubmitOffer">إرسال العرض</text>
+    <text name="SendPriceOnBehalfCarrier">إرسال سعر نيابةً عن الناقل </text>
+    <text name="SendRequest">إرسال الطلب</text>
 		
 	</texts>
 </localizationDictionary>
