@@ -1275,21 +1275,25 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    this._dedicatedShippingRequestService.getAllDriversForDropDown(undefined).subscribe((res) => {
-      this.allDrivers = res.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
+    this._dedicatedShippingRequestService
+      .getAllDriversForDropDown(undefined, this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId)
+      .subscribe((res) => {
+        this.allDrivers = res.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
-    });
   }
 
   /**
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    this._dedicatedShippingRequestService.getAllTrucksWithDriversList(truckTypeId, undefined).subscribe((res) => {
-      this.allTrucks = res;
-    });
+    this._dedicatedShippingRequestService
+      .getAllTrucksWithDriversList(truckTypeId, undefined, this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId)
+      .subscribe((res) => {
+        this.allTrucks = res;
+      });
   }
 
   getAllGoodCategories() {

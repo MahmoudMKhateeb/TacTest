@@ -264,22 +264,24 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
 
-        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(int? tenantId)
+        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(int? tenantId, int? actorId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_userRepository.GetAll()
                 .WhereIf(await IsTachyonDealer(), x=>x.TenantId == tenantId.Value)
+                .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
                 .Where(e => e.IsDriver == true)
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
                 .ToListAsync();
         }
 
-        public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long? truckTypeId, int? tenantId)
+        public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long? truckTypeId, int? tenantId, int? actorId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _truckRepository.GetAll()
                 .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
                 .WhereIf(truckTypeId.HasValue , x => x.TrucksTypeId == truckTypeId)
+                .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
                 .Select(x => new GetAllTrucksWithDriversListDto
                 {
                     TruckName = x.GetDisplayName(),

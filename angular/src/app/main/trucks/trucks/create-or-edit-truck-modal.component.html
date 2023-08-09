@@ -64,6 +64,7 @@
                     valueExpr="id"
                     [required]="true"
                     placeholder="{{ l('SelectActor') }}"
+                    (onValueChanged)="LoadDrivers()"
                   >
                   </dx-select-box>
                   <validation-messages [formCtrl]="carrierActorId"></validation-messages>
