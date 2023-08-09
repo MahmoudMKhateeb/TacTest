@@ -3212,5 +3212,8 @@
     <text name="SendRequest">إرسال الطلب</text>
     <text name="LastWeek">الأسبوع الماضي</text>
 
+    <text name="IsPODUploaded">اثبات التسليم مرفوعة</text>
+    <text name="IsInvoiceIssued">الفاتورة مصدرة</text>
+		
 	</texts>
 </localizationDictionary>

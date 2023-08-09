@@ -3437,6 +3437,8 @@
     <text name="SubmitOffer">Submit offer</text>
     <text name="SendPriceOnBehalfCarrier">Send price on behalf carrier</text>
     <text name="SendRequest">Send request</text>
+    <text name="IsPODUploaded">Is POD uploaded</text>
+    <text name="IsInvoiceIssued">Is invoice issued</text>
     
 		
 	<text name="AllReports">All Reports</text>
