@@ -98,7 +98,7 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
         if (this.selectedOption == FilterDatePeriod.Daily) {
           categories = [this.l('Sun'), this.l('Mon'), this.l('Tue'), this.l('Wed'), this.l('Thu'), this.l('Fri'), this.l('Sat')];
         }
-        const acceptedSeries = categories.map((item) => {
+        let acceptedSeries = categories.map((item) => {
           const foundFromResponse = result.acceptedOffers.find((accepted) => {
             accepted.x = this.selectedOption != FilterDatePeriod.Weekly ? accepted?.x?.slice(0, 3) : accepted?.x;
             return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
@@ -108,7 +108,7 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
-        const rejectedSeries = categories.map((item) => {
+        let rejectedSeries = categories.map((item) => {
           const foundFromResponse = result.rejectedOffers.find((rejected) => {
             rejected.x = this.selectedOption != FilterDatePeriod.Weekly ? rejected?.x?.slice(0, 3) : rejected?.x;
             return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
@@ -118,6 +118,10 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
+        if (this.selectedOption == FilterDatePeriod.Yearly) {
+          acceptedSeries = result.acceptedOffers;
+          rejectedSeries = result.rejectedOffers;
+        }
         this.chartOptions = {
           series: [
             {

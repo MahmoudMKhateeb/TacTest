@@ -1,54 +1,61 @@
 <!--begin::Card-->
 <div class="card card-custom card-stretch w-100 h-100" [busyIf]="loading">
-  <div class="card-header border-0 d-flex justify-content-between align-items-center">
-    <div class="card-title text-center">
-      <h3 class="card-label" *ngIf="!isForActor">
-        {{ isShipper || isTachyonDealerOrHost ? l('InvoicesVsPaidInvoices') : 'Paid Vs Claimed Invoices' }}
-      </h3>
-      <h3 class="card-label" *ngIf="isForActor">{{ l('NewInvoicesVsPaidInvoices') }}</h3>
-    </div>
-    <div class="row border-left pl-4" *ngIf="!isForActor">
-      <ng-container *ngIf="!isTachyonDealerOrHost">
-        <div class="col-6 d-flex">
-          <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
-          {{ (isShipper ? 'UnPaidInvoice' : 'Paid') | localize }}
-        </div>
-        <div class="col-6 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ (isShipper ? 'PaidInvoice' : 'Claimed') | localize }}</div>
-      </ng-container>
-      <ng-container *ngIf="isTachyonDealerOrHost">
-        <div class="col-5 d-flex">
-          <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
+  <div class="card-header border-0">
+    <div class="d-flex flex-row justify-content-between align-items-center w-100">
+      <div class="card-title text-center">
+        <h3 class="card-label" *ngIf="!isForActor">
+          {{ isShipper || isTachyonDealerOrHost ? l('InvoicesVsPaidInvoices') : 'Paid Vs Claimed Invoices' }}
+        </h3>
+        <h3 class="card-label" *ngIf="isForActor">{{ l('NewInvoicesVsPaidInvoices') }}</h3>
+      </div>
+      <div class="d-flex align-items-center border-left" *ngIf="!isForActor">
+        <ng-container *ngIf="!isTachyonDealerOrHost">
+          <div class="col-4 d-flex align-items-center p-0 pl-2">
+            <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
+            {{ (isShipper ? 'UnPaidInvoice' : 'Paid') | localize }}
+          </div>
+          <div class="col-4 d-flex align-items-center">
+            <i class="fa fa-circle text-gray mx-1"></i> {{ (isShipper ? 'PaidInvoice' : 'Claimed') | localize }}
+          </div>
+          <div class="col-4 p-0">
+            <app-daily-monthly-yearly (optionSelected)="filterOptionSelected($event)"></app-daily-monthly-yearly>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isTachyonDealerOrHost">
+          <div class="col-5 d-flex align-items-center p-0 pl-2">
+            <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
+            {{ 'Paid' | localize }}
+          </div>
+          <div class="col-5 d-flex align-items-center"><i class="fa fa-circle text-gray mx-1"></i> {{ 'UnPaid' | localize }}</div>
+          <div class="col-2 d-flex align-items-center text-right">
+            <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+          </div>
+        </ng-container>
+      </div>
+      <div class="d-flex align-items-center border-left" *ngIf="isForActor">
+        <div class="col-4 d-flex align-items-center p-0 pl-2">
+          <i class="fa fa-circle text-dark mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
           {{ 'Paid' | localize }}
         </div>
-        <div class="col-5 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'UnPaid' | localize }}</div>
-        <div class="col-2 d-flex text-right">
-          <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+        <div class="col-4 d-flex align-items-center">
+          <i class="fa fa-circle text-gray mx-1"></i>
+          {{ 'New' | localize }}
         </div>
-      </ng-container>
-    </div>
-    <div class="row border-left pl-4" *ngIf="isForActor">
-      <div class="col-4 d-flex">
-        <i class="fa fa-circle text-dark mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
-        {{ 'Paid' | localize }}
-      </div>
-      <div class="col-4 d-flex">
-        <i class="fa fa-circle text-gray mx-1"></i>
-        {{ 'New' | localize }}
-      </div>
-      <div class="col-4">
-        <dx-select-box
-          id="shipperActorId"
-          name="shipperActorId"
-          [(value)]="selectedShipperActor"
-          [dataSource]="shipperActors"
-          [searchEnabled]="true"
-          [wrapItemText]="true"
-          displayExpr="displayName"
-          valueExpr="id"
-          (onValueChanged)="fetchData()"
-          placeholder="{{ l('SelectActor') }}"
-        >
-        </dx-select-box>
+        <div class="col-4 p-0">
+          <dx-select-box
+            id="shipperActorId"
+            name="shipperActorId"
+            [(value)]="selectedShipperActor"
+            [dataSource]="shipperActors"
+            [searchEnabled]="true"
+            [wrapItemText]="true"
+            displayExpr="displayName"
+            valueExpr="id"
+            (onValueChanged)="fetchData()"
+            placeholder="{{ l('SelectActor') }}"
+          >
+          </dx-select-box>
+        </div>
       </div>
     </div>
   </div>

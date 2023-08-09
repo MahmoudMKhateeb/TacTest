@@ -6,6 +6,7 @@ import {
   ActorTypesEnum,
   BrokerDashboardServiceProxy,
   ChartCategoryPairedValuesDto,
+  FilterDatePeriod,
   GetInvoicesPaidVsUnpaidOutput,
   InvoicesVsPaidInvoicesDto,
   SelectItemDto,
@@ -40,6 +41,7 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
   ];
   shipperActors: SelectItemDto[];
   selectedShipperActor: any;
+  private selectedOption = FilterDatePeriod.Monthly;
 
   constructor(
     injector: Injector,
@@ -74,7 +76,7 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
   getInvoices() {
     this.loading = true;
     this._shipperDashboardServiceProxy
-      .getInvoicesVSPaidInvoices()
+      .getInvoicesVSPaidInvoices(this.selectedOption)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -113,45 +115,45 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
       unpaid,
       total: paid + unpaid,
     };
-    const categories = [
-      this.l('Jan'),
-      this.l('Feb'),
-      this.l('Mar'),
-      this.l('Apr'),
-      this.l('May'),
-      this.l('Jun'),
-      this.l('Jul'),
-      this.l('Aug'),
-      this.l('Sep'),
-      this.l('Oct'),
-      this.l('Nov'),
-      this.l('Dec'),
-    ];
+    // const categories = [
+    //   this.l('Jan'),
+    //   this.l('Feb'),
+    //   this.l('Mar'),
+    //   this.l('Apr'),
+    //   this.l('May'),
+    //   this.l('Jun'),
+    //   this.l('Jul'),
+    //   this.l('Aug'),
+    //   this.l('Sep'),
+    //   this.l('Oct'),
+    //   this.l('Nov'),
+    //   this.l('Dec'),
+    // ];
     let paidSeries = result.paidInvoices;
     let unpaidSeries = result instanceof InvoicesVsPaidInvoicesDto ? result.shipperInvoices : result.unPaidInvoices;
-    if (!this.isTachyonDealerOrHost) {
-      paidSeries = categories.map((item) => {
-        const foundFromResponse = result.paidInvoices.find((accepted) => {
-          accepted.x = accepted?.x?.slice(0, 3);
-          return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
-        });
-        return ChartCategoryPairedValuesDto.fromJS({
-          x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
-          y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
-        });
-      });
-      unpaidSeries = categories.map((item) => {
-        const unpaidArray = result instanceof InvoicesVsPaidInvoicesDto ? result.shipperInvoices : result.unPaidInvoices;
-        const foundFromResponse = unpaidArray.find((rejected) => {
-          rejected.x = rejected?.x?.slice(0, 3);
-          return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
-        });
-        return ChartCategoryPairedValuesDto.fromJS({
-          x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
-          y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
-        });
-      });
-    }
+    // if (!this.isTachyonDealerOrHost) {
+    //   paidSeries = categories.map((item) => {
+    //     const foundFromResponse = result.paidInvoices.find((accepted) => {
+    //       accepted.x = accepted?.x?.slice(0, 3);
+    //       return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+    //     });
+    //     return ChartCategoryPairedValuesDto.fromJS({
+    //       x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+    //       y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+    //     });
+    //   });
+    //   unpaidSeries = categories.map((item) => {
+    //     const unpaidArray = result instanceof InvoicesVsPaidInvoicesDto ? result.shipperInvoices : result.unPaidInvoices;
+    //     const foundFromResponse = unpaidArray.find((rejected) => {
+    //       rejected.x = rejected?.x?.slice(0, 3);
+    //       return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+    //     });
+    //     return ChartCategoryPairedValuesDto.fromJS({
+    //       x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+    //       y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+    //     });
+    //   });
+    // }
     this.chartOptions = {
       series: [
         {
@@ -186,7 +188,8 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
       },
       xaxis: {
         type: 'category',
-        categories: result instanceof InvoicesVsPaidInvoicesDto ? categories : result.paidInvoices.map((item) => item.x),
+        categories:
+          result instanceof InvoicesVsPaidInvoicesDto ? result.shipperInvoices.map((item) => item.x) : result.paidInvoices.map((item) => item.x),
       },
     };
     (this.chartOptions.chart.locales as any[]) = [
@@ -228,5 +231,10 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
 
   selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
     this.getInvoicesHostOrTMS(event);
+  }
+
+  filterOptionSelected($event: FilterDatePeriod) {
+    this.selectedOption = $event;
+    this.fetchData();
   }
 }

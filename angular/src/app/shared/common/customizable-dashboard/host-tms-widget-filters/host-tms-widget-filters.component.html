@@ -4,8 +4,11 @@
   </div>
   <div class="dropdown" [class.open]="isDropdownOpen">
     <ul class="options text-left" *ngIf="isDateDropDown">
-      <li (click)="selectOption(1)">{{ 'Last6Months' | localize }}</li>
-      <li (click)="selectOption(2)">{{ 'Last12Months' | localize }}</li>
+      <li *ngIf="!showCurrentMonth" (click)="selectOption(1)">{{ 'Last6Months' | localize }}</li>
+      <li *ngIf="!showCurrentMonth" (click)="selectOption(2)">{{ 'Last12Months' | localize }}</li>
+      <li *ngIf="showCurrentMonth" (click)="selectOption(5)">{{ 'LastWeek' | localize }}</li>
+      <li *ngIf="showCurrentMonth" (click)="selectOption(6)">{{ 'CurrentMonth' | localize }}</li>
+      <li *ngIf="showCurrentMonth" (click)="selectOption(7)">{{ 'LastMonth' | localize }}</li>
       <li (click)="selectOption(3)">{{ 'LastYear' | localize }}</li>
       <li (click)="selectOption(4)">{{ 'DateRange' | localize }}</li>
     </ul>

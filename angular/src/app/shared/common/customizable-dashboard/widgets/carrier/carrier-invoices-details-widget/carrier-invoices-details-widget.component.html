@@ -7,26 +7,29 @@
     </div>
     <div class="row border-left pl-4" *ngIf="!isForActor">
       <ng-container *ngIf="!isTachyonDealerOrHost">
-        <div class="col-6 d-flex">
+        <div class="col-4 d-flex align-items-center">
           <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
         </div>
-        <div class="col-6 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+        <div class="col-4 d-flex align-items-center"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+        <div class="col-4 p-0">
+          <app-daily-monthly-yearly (optionSelected)="filterOptionSelected($event)"></app-daily-monthly-yearly>
+        </div>
       </ng-container>
       <ng-container *ngIf="isTachyonDealerOrHost">
-        <div class="col-5 d-flex">
+        <div class="col-5 d-flex align-items-center">
           <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
         </div>
-        <div class="col-5 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+        <div class="col-5 d-flex align-items-center"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
         <div class="col-2 d-flex">
           <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
         </div>
       </ng-container>
     </div>
     <div class="row border-left pl-4" *ngIf="isForActor">
-      <div class="col-4 d-flex">
+      <div class="col-4 d-flex align-items-center">
         <i class="fa fa-circle text-dark mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
       </div>
-      <div class="col-4 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+      <div class="col-4 d-flex align-items-center"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
       <div class="col-4">
         <dx-select-box
           id="carrierActorId"

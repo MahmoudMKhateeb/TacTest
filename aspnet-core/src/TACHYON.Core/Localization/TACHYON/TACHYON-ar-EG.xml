@@ -3210,6 +3210,7 @@
     <text name="SubmitOffer">إرسال العرض</text>
     <text name="SendPriceOnBehalfCarrier">إرسال سعر نيابةً عن الناقل </text>
     <text name="SendRequest">إرسال الطلب</text>
-		
+    <text name="LastWeek">الأسبوع الماضي</text>
+
 	</texts>
 </localizationDictionary>
