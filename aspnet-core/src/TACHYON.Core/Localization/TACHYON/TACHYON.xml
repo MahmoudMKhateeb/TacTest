@@ -3319,7 +3319,7 @@
   <text name="CarrierInvoiceNumber">Carrier invoice number</text>
 
     <text name="NewWaybill">New waybill</text>
-    <text name="directShipments">Direct shipments</text>
+    <text name="directShipments">SaaS Shipment</text>
     <text name="DeliveryNote">Delivery note</text>
     <text name="SealNumber">Seal number</text>
     <text name="SaasInvoicingActivation">SAAS invoicing activation</text>
