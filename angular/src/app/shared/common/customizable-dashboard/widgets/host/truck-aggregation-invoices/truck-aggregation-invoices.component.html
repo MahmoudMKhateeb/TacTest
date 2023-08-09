@@ -2,11 +2,16 @@
   <div class="col-sm">
     <!--begin::Card-->
     <div class="card card-custom card-stretch border-bottom-5 border-bottom-dark">
-      <div class="card-header border-bottom-0 pl-4">
-        <div class="card-title w-50">
+      <div class="card-header border-bottom-0 pl-4 d-flex w-100 flex-row">
+        <div class="card-title w-50 m-0">
           <h3 class="w-100">
             {{ l('TruckAggregationInvoices') }}
           </h3>
+        </div>
+        <div class="w-50 d-flex justify-content-end align-items-center">
+          <span class="text-dark custom-current-month">
+            {{ 'CurrentMonth' | localize }}
+          </span>
         </div>
       </div>
       <div class="card-body ribbon ribbon-left pt-0 pl-3 w-100 d-flex justify-content-center flex-column">
