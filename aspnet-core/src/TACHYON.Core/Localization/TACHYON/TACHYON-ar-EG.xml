@@ -3214,6 +3214,8 @@
 
     <text name="IsPODUploaded">اثبات التسليم مرفوعة</text>
     <text name="IsInvoiceIssued">الفاتورة مصدرة</text>
+    <text name="AcknowledgeOnBehalfOfShipper">موافقة بالنيابة عن الشاحن</text>
+    <text name="AcknowledgeOnBehalfOfCarrier">موافقة بالنيابة عن الناقل</text>
 		
 	</texts>
 </localizationDictionary>

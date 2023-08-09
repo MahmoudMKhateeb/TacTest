@@ -3439,6 +3439,8 @@
     <text name="SendRequest">Send request</text>
     <text name="IsPODUploaded">Is POD uploaded</text>
     <text name="IsInvoiceIssued">Is invoice issued</text>
+    <text name="AcknowledgeOnBehalfOfShipper">Acknowledge on behalf of shipper</text>
+    <text name="AcknowledgeOnBehalfOfCarrier">Acknowledge on behalf of carrier</text>
     
 		
 	<text name="AllReports">All Reports</text>
@@ -3503,5 +3505,6 @@
 	<text name="MaxProfitWithVat">Max Profit With Vat</text>
 	<text name="MaxProfitWithoutVat">Max Profit Without Vat</text>
 		
+    
 	</texts>
 </localizationDictionary>
