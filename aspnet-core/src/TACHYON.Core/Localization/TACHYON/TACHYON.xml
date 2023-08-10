@@ -3441,6 +3441,9 @@
     <text name="IsInvoiceIssued">Is invoice issued</text>
     <text name="AcknowledgeOnBehalfOfShipper">Acknowledge on behalf of shipper</text>
     <text name="AcknowledgeOnBehalfOfCarrier">Acknowledge on behalf of carrier</text>
+    <text name="Hour">Hour</text>
+    <text name="Minute">Minute</text>
+    <text name="Before">Before</text>
     
 		
 	<text name="AllReports">All Reports</text>

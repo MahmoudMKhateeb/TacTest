@@ -3231,6 +3231,9 @@
 	<text name="CostVsSellingVsProfitOfSaasTripsWidget">التكلفة مقابل البيع مقابل الربح من أداة رحلات Saas</text>
 	<text name="NeedsActions">يحتاج إلى إجراءات</text>
 	<text name="ClaimedInvoicesVsPaidInvoices">الفواتير المطالب بها مقابل الفواتير المدفوعة</text>
+    <text name="Hour">ساعة</text>
+    <text name="Minute">دقيقة</text>
+    <text name="Before">قبل</text>
 		
 	</texts>
 </localizationDictionary>
