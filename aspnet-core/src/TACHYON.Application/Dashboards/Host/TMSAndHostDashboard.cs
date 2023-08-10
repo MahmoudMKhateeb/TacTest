@@ -714,36 +714,16 @@ namespace TACHYON.Dashboards.Host
                 .WhereIf(filter == 2, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId) ||
                             (x.ShippingRequestFk == null && x.ShipperTenantId == x.CarrierTenantId))
                 .WhereIf(filter == 3, x => x.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
-                .Include(x=>x.ShippingRequestDestinationCities).ThenInclude(x=>x.CityFk)
-                .Select(x => new
+                .Select(trip => new GetUpcomingTripsOutput
                 {
-                    requestOriginCity = x.ShippingRequestFk.OriginCityFk != null ? x.ShippingRequestFk.OriginCityFk.DisplayName : x.ShippingRequestFk.OriginFacility.Name + "- " + x.ShippingRequestFk.OriginFacility.CityFk.DisplayName,
-                    tripOrigin = x.OriginCityFk != null ? x.OriginCityFk.DisplayName : x.OriginFacilityFk.Name + "- " + x.OriginFacilityFk.CityFk.DisplayName,
-                    x.WaybillNumber, x.StartTripDate, x.ShippingRequestDestinationCities
-                })
-                .ToListAsync();
-
-            var dto = new List<GetUpcomingTripsOutput>();
-
-            foreach(var trip in trips)
-            {
-                var origin = trip.requestOriginCity != null ? trip.requestOriginCity : trip.tripOrigin;
-                var destination = "";
-                int index = 1;
-                foreach(var dest in trip.ShippingRequestDestinationCities)
-                {
-                    if (index == 1)
-                        destination = dest.CityFk.DisplayName;
-                    else
-                        destination = destination + "," + dest.CityFk.DisplayName;
-                    index++;
-                }
-
-                dto.Add(new GetUpcomingTripsOutput { OrigiCity = origin, DestinationCity = destination, StartTripDate =trip.StartTripDate, WaybillNumber=trip.WaybillNumber.ToString() });
-            }
-
-            return dto;
-
+                    OrigiCity = trip.ShippingRequestId.HasValue ? (trip.ShippingRequestFk.OriginCityId.HasValue ? trip.ShippingRequestFk.OriginCityFk.DisplayName : trip.ShippingRequestFk.OriginFacility.Name + "- " + trip.ShippingRequestFk.OriginFacility.CityFk.DisplayName) 
+                        : (trip.OriginCityId.HasValue ? trip.OriginCityFk.DisplayName : trip.OriginFacilityFk.Name + "- " + trip.OriginFacilityFk.CityFk.DisplayName),
+                    WaybillNumber = trip.WaybillNumber.HasValue ? trip.WaybillNumber.Value.ToString() : string.Empty,
+                    DestinationCity = trip.ShippingRequestId.HasValue ? string.Join(", ",trip.ShippingRequestFk.ShippingRequestDestinationCities.Select(c=> c.CityFk.DisplayName).ToList())
+                        : string.Join(", ",trip.ShippingRequestDestinationCities.Select(c=> c.CityFk.DisplayName).ToList()),
+                    StartTripDate = trip.StartTripDate,
+                }).ToListAsync(); 
+            return trips;
 
         }
 
