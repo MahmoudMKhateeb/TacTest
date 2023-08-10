@@ -285,7 +285,7 @@ namespace TACHYON.Dashboards.Carrier
             var inTransitTrucks = await _shippingRequestTripRepository
                 .GetAll()
                 .Where(x => x.Status == ShippingRequestTripStatus.InTransit)
-                .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
                 .Select(x => x.AssignedDriverUserId)
                 .Distinct()
                 .CountAsync();
@@ -408,7 +408,7 @@ namespace TACHYON.Dashboards.Carrier
             var inTransitTrucks = await _shippingRequestTripRepository
                 .GetAll()
                 .Where(x => x.Status == ShippingRequestTripStatus.InTransit)
-                .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
                 .Select(x => x.AssignedTruckId)
                 .Distinct()
                 .CountAsync();
