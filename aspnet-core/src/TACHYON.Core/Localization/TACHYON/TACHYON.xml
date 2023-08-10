@@ -3444,6 +3444,7 @@
     <text name="Hour">Hour</text>
     <text name="Minute">Minute</text>
     <text name="Before">Before</text>
+    <text name="NumberOfDedicatedTrips">Number Of Dedicated Trips</text>
     
 		
 	<text name="AllReports">All Reports</text>

@@ -1,4 +1,4 @@
-﻿namespace TACHYON
+namespace TACHYON
 {
     public class TACHYONDashboardCustomizationConsts
     {
@@ -112,6 +112,7 @@
                 public const string NeedsActions = "Widgets_Tenant_TachyonDealer_NeedsActionsWidget";
                 public const string CostVsSellingVsProfitOfSaasTripsWidget = "Widgets_Tenant_TachyonDealer_CostVsSellingVsProfitOfSaasTripsWidget";
                 public const string NumberOfRegisteredCompaniesWidget = "Widgets_Tenant_TachyonDealer_NumberOfRegisteredCompaniesWidget";
+                public const string NumberOfDedicatedTrips = "Widgets_Tenant_TachyonDealer_NumberOfDedicatedTrips";
             }
 
             public class Host
@@ -142,6 +143,7 @@
                 public const string UpcomingTrips = "Widgets_Tenant_Host_UpcomingTripsWidget";
                 public const string NeedsActions = "Widgets_Tenant_Host_NeedsActionsWidget";
                 public const string CostVsSellingVsProfitOfSaasTripsWidget = "Widgets_Tenant_Host_CostVsSellingVsProfitOfSaasTripsWidget";
+                public const string NumberOfDedicatedTrips = "Widgets_Tenant_Host_NumberOfDedicatedTrips";
             }
             
             public class Broker

@@ -3234,6 +3234,7 @@
     <text name="Hour">ساعة</text>
     <text name="Minute">دقيقة</text>
     <text name="Before">قبل</text>
+    <text name="NumberOfDedicatedTrips">NumberOfDedicatedTrips</text>
 		
 	</texts>
 </localizationDictionary>

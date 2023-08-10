@@ -837,6 +837,33 @@ namespace TACHYON.Dashboards.Host
 
         }
 
+        public async Task<List<ChartCategoryPairedValuesDto>> GetNumberOfDedicatedTrips(DateRangeInput input)
+        {
+            await DisableTenancyFiltersIfTachyonDealer();
+            var list = (await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated && x.CreationTime.Date > input.StartDate && x.CreationTime < input.EndDate)
+                .Select(x => x.CreationTime)
+                .ToListAsync())
+                            .Select(creationTime => new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+                            .GroupBy(x => x.y)
+                            .Select(x => new { X = x.Key, Y = x.Count() });
+
+            var dto = new List<ChartCategoryPairedValuesDto>();
+            foreach (var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
+            {
+                var item = list.FirstOrDefault(x => x.X == monthWithYear);
+                if (item != null)
+                {
+                    dto.Add(new ChartCategoryPairedValuesDto { X = item.X, Y = item.Y });
+                }
+                else
+                {
+                    dto.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+            }
+            return dto;
+        }
+
 
             // public async Task Get
             #region Helper

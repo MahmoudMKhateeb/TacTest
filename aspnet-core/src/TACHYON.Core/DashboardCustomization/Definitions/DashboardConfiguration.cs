@@ -70,6 +70,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             var NewRegisteredCompanies = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NewRegisteredCompanies, "NewRegisteredCompanies", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var InvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.InvoicesVsPaidInvoices, "InvoicesVsPaidInvoices", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var ClaimedInvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.ClaimedInvoicesVsPaidInvoices, "ClaimedInvoicesVsPaidInvoices", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NumberOfDedicatedTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfDedicatedTrips, "NumberOfDedicatedTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
 
 
             WidgetDefinitions.Add(hostNumberOfDeliveredTripsWidget);
@@ -98,6 +99,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(NewRegisteredCompanies);
             WidgetDefinitions.Add(InvoicesVsPaidInvoices);
             WidgetDefinitions.Add(ClaimedInvoicesVsPaidInvoices);
+            WidgetDefinitions.Add(NumberOfDedicatedTrips);
 
 
             #endregion
@@ -208,6 +210,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             var tachyonDealerNewRegisteredCompanies = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NewRegisteredCompanies, "NewRegisteredCompanies", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerInvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.InvoicesVsPaidInvoices, "InvoicesVsPaidInvoices", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerClaimedInvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.ClaimedInvoicesVsPaidInvoices, "ClaimedInvoicesVsPaidInvoices", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
+            var tachyonDealerNumberOfDedicatedTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfDedicatedTrips, "ClaimedInvoicesVsPaidInvoices", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
 
               WidgetDefinitions.Add(tachyonDealerNumberOfDeliveredTripsWidget);  
               WidgetDefinitions.Add(tachyonDealerNumberOfOngoingTripsWidget);
@@ -235,6 +238,7 @@ namespace TACHYON.DashboardCustomization.Definitions
               WidgetDefinitions.Add(tachyonDealerNewRegisteredCompanies);
               WidgetDefinitions.Add(tachyonDealerInvoicesVsPaidInvoices);
               WidgetDefinitions.Add(tachyonDealerClaimedInvoicesVsPaidInvoices); 
+              WidgetDefinitions.Add(tachyonDealerNumberOfDedicatedTrips); 
 
             #endregion
 
@@ -362,6 +366,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     tachyonDealerNewRegisteredCompanies.Id,
                     tachyonDealerInvoicesVsPaidInvoices.Id,
                     tachyonDealerClaimedInvoicesVsPaidInvoices.Id,
+                    tachyonDealerNumberOfDedicatedTrips.Id,
                 });
             DashboardDefinitions.Add(defaultTachyonMangedServiceDashboard);
 
@@ -398,6 +403,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     NewRegisteredCompanies.Id,
                     InvoicesVsPaidInvoices.Id,
                     ClaimedInvoicesVsPaidInvoices.Id,
+                    NumberOfDedicatedTrips.Id,
                 });
 
             DashboardDefinitions.Add(defaultHostDashboard);

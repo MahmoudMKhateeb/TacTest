@@ -94,6 +94,7 @@ export class DashboardCustomizationConst {
       InvoicesVsPaidInvoices: 'Widgets_Tenant_TachyonDealer_InvoicesVsPaidInvoicesComponent',
       ClaimedInvoicesVsPaidInvoices: 'Widgets_Tenant_TachyonDealer_ClaimedInvoicesVsPaidInvoices',
       GoodTypesUsageWidget: 'Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget',
+      NumberOfDedicatedTrips: 'Widgets_Tenant_TachyonDealer_NumberOfDedicatedTrips',
     },
     //Widgets For Host Only
     host: {
@@ -145,6 +146,7 @@ export class DashboardCustomizationConst {
       NewRegisteredCompanies: 'Widgets_Tenant_Host_NewRegisteredCompanies',
       InvoicesVsPaidInvoices: 'Widgets_Tenant_Host_InvoicesVsPaidInvoicesComponent',
       ClaimedInvoicesVsPaidInvoices: 'Widgets_Tenant_Host_ClaimedInvoicesVsPaidInvoices',
+      NumberOfDedicatedTrips: 'Widgets_Tenant_Host_NumberOfDedicatedTrips',
     },
     Broker: {
       NewActorsThisMonthWidget: 'Widgets_Tenant_Broker_New_Actors_This_Month',
@@ -738,6 +740,13 @@ export class DashboardCustomizationConst {
               positionX: 0,
               positionY: 0,
             },
+            {
+              widgetId: 'Widgets_Tenant_Host_NumberOfDedicatedTrips',
+              height: 10,
+              width: 9,
+              positionX: 9,
+              positionY: 115,
+            },
           ],
         },
         {
@@ -962,6 +971,13 @@ export class DashboardCustomizationConst {
               width: 6,
               positionX: 0,
               positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_TachyonDealer_NumberOfDedicatedTrips',
+              height: 10,
+              width: 9,
+              positionX: 9,
+              positionY: 115,
             },
           ],
         },
