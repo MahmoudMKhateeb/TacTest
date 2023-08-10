@@ -207,8 +207,9 @@ namespace TACHYON.Dashboards.Shipper
         {
             DisableTenancyFilters();
             var offers = await _priceOffersRepository.GetAll()
-                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && x.Status == PriceOfferStatus.New
-                    && (x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction))
+                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction)
+                .Where(x=> (x.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService && x.Status == PriceOfferStatus.AcceptedAndWaitingForShipper && x.Tenant.EditionId == TachyonEditionId) ||
+                           (x.ShippingRequestFk.RequestType != ShippingRequestType.TachyonManageService && x.Status == PriceOfferStatus.New && x.Tenant.EditionId == CarrierEditionId) )
                 .Select(x => new NewPriceOfferListDto()
                 {
                     ReferenceNumber = x.ShippingRequestFk.ReferenceNumber,
