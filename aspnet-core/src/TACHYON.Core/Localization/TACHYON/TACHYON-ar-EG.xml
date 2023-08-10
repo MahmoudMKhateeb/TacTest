@@ -3216,6 +3216,21 @@
     <text name="IsInvoiceIssued">الفاتورة مصدرة</text>
     <text name="AcknowledgeOnBehalfOfShipper">موافقة بالنيابة عن الشاحن</text>
     <text name="AcknowledgeOnBehalfOfCarrier">موافقة بالنيابة عن الناقل</text>
+	<text name="NumberOfDeliveredTripsWidget">أداة عدد الرحلات التي تم تسليمها</text>
+	<text name="NumberOfOngoingTripsWidget">أداة عدد الرحلات الجارية</text>
+	<text name="RouteTypesUsageWidget">أداة استخدام أنواع الطريق</text>
+	<text name="NumberOfRequestsPerAreaOrCityWidget">عدد الطلبات لكل أداة مدينة</text>
+	<text name="NumberOfRegisteredCompaniesWidget">أداة عدد الشركات المسجلة</text>
+	<text name="NumberOfDriversAndTrucksWidget">عدد السائقين والشاحنات القطعة</text>
+	<text name="TopRatedShippersAndCarriersWidget">أعلى الشاحنين وشركات القطعة</text>
+	<text name="NormalRequestsVSDedicatedRequestsWidget">الطلبات العادية مقابل أداة الطلبات المخصصة</text>
+	<text name="MostTruckTypeUsedWidget">القطعة الأكثر استخدامًا من نوع الشاحنات</text>
+	<text name="NumberOfTripsWidget">أداة عدد الرحلات</text>
+	<text name="NumberOfTruckAggregationTripsVsSaasTrips">عدد رحلات تجميع الشاحنات مقابل رحلات Saas</text>
+	<text name="TopWorstRatedPerTrip">الأعلى تصنيفًا لكل أداة مصغر للرحلة</text>
+	<text name="CostVsSellingVsProfitOfSaasTripsWidget">التكلفة مقابل البيع مقابل الربح من أداة رحلات Saas</text>
+	<text name="NeedsActions">يحتاج إلى إجراءات</text>
+	<text name="ClaimedInvoicesVsPaidInvoices">الفواتير المطالب بها مقابل الفواتير المدفوعة</text>
 		
 	</texts>
 </localizationDictionary>

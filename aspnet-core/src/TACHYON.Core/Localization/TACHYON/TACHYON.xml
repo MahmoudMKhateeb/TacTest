@@ -3506,5 +3506,22 @@
 	<text name="MaxProfitWithoutVat">Max Profit Without Vat</text>
 		
     
+
+	<text name="NumberOfDeliveredTripsWidget">Number Of Delivered Trips Widget</text>
+	<text name="NumberOfOngoingTripsWidget">Number Of Ongoing Trips Widget</text>
+	<text name="RouteTypesUsageWidget">Route Types Usage Widget</text>
+	<text name="NumberOfRequestsPerAreaOrCityWidget">Number Of Requests For Each City Widget</text>
+	<text name="NumberOfRegisteredCompaniesWidget">Number Of Registered Companies Widget</text>
+	<text name="NumberOfDriversAndTrucksWidget">Number Of Drivers And Trucks Widget</text>
+	<text name="TopRatedShippersAndCarriersWidget">Top Shippers And Carriers Widget</text>
+	<text name="NormalRequestsVSDedicatedRequestsWidget">Normal Requests VS Dedicated Requests Widget</text>
+	<text name="MostTruckTypeUsedWidget">Most Truck Type Used Widget</text>
+	<text name="NumberOfTripsWidget">Number Of Trips Widget</text>
+	<text name="NumberOfTruckAggregationTripsVsSaasTrips">Number Of Truck Aggregation Trips Vs Saas Trips</text>
+	<text name="TopWorstRatedPerTrip">Top Worst Rated Per Trip Widget</text>
+	<text name="CostVsSellingVsProfitOfSaasTripsWidget">Cost Vs Selling Vs Profit Of Saas Trips Widget</text>
+	<text name="NeedsActions">Needs Actions</text>
+	<text name="ClaimedInvoicesVsPaidInvoices">Claimed Invoices Vs Paid Invoices</text>
+
 	</texts>
 </localizationDictionary>
