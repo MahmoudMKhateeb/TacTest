@@ -64,7 +64,7 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
   }
 
   private getAllGoodTypes() {
-    this.shippingRequestsServiceProxy.getAllGoodCategoriesForTableDropdown().subscribe((res) => {
+    this._TMSAndHostDashboardServiceProxy.getMainGoodCategories().subscribe((res) => {
       this.allGoodTypes = res.map((item) => {
         return item;
       });
