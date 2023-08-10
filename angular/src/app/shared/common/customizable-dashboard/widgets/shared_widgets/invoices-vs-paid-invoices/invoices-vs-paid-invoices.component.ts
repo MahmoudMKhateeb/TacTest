@@ -159,11 +159,11 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
         {
           name: this.isShipper || this.isTachyonDealerOrHost ? this.l('UnPaidInvoice') : this.l('Claimed'),
           data: unpaidSeries,
-          color: this.dashboardCustomizationService.unpaidColor,
+          color: this.isForActor ? this.dashboardCustomizationService.unpaidColor : '#dc2434',
         },
         {
           name: this.isShipper || this.isTachyonDealerOrHost ? this.l('PaidInvoice') : this.l('Paid'),
-          color: this.dashboardCustomizationService.paidColor,
+          color: this.isForActor ? this.dashboardCustomizationService.paidColor : '#d7dadc',
           data: paidSeries,
         },
       ],
