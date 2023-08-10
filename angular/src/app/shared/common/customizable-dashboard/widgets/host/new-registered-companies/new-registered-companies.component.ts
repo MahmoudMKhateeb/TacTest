@@ -52,9 +52,19 @@ export class NewRegisteredCompaniesComponent extends AppComponentBase implements
       this.chartOptions = {
         series: [
           {
-            name: this.l('Companies'),
-            data: res.map((item) => item.y),
+            name: this.l('ShipperCompanies'),
+            data: res.shippersList.map((item) => item.y),
             color: '#dc2434',
+          },
+          {
+            name: this.l('CarrierCompanies'),
+            data: res.carriersList.map((item) => item.y),
+            color: '#231f20',
+          },
+          {
+            name: this.l('SAASCompanies'),
+            data: res.saasList.map((item) => item.y),
+            color: '#53555c',
           },
         ],
         chart: {
@@ -77,7 +87,7 @@ export class NewRegisteredCompaniesComponent extends AppComponentBase implements
           colors: ['transparent'],
         },
         xaxis: {
-          categories: res.map((item) => item.x),
+          categories: res.shippersList.map((item) => item.x),
         },
         yaxis: {
           title: {},
