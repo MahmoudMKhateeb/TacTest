@@ -829,11 +829,14 @@ namespace TACHYON.Dashboards.Shipper
                                 x.DueDate <= Clock.Now.Date.AddDays(7) && x.DueDate > Clock.Now.Date).Select(x=>x.DueDate);
                     var count = await submitInvoice.CountAsync();
                     if(count > 1) { return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" }; }
-                    else
-                    { 
-                        var RemainingDays = submitInvoice.FirstOrDefault() != null ? (submitInvoice.FirstOrDefault().Value.Date - Clock.Now.Date).Days :0;
-                        return new GetDueDateInDaysOutput { Count = count, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days" };
+
+                    int remainingDays = 0;
+                    if (await submitInvoice.AnyAsync())
+                    {
+                        var nextSubmitInvoiceDate = await submitInvoice.FirstOrDefaultAsync();
+                        remainingDays = nextSubmitInvoiceDate.HasValue && Clock.Now.Date < nextSubmitInvoiceDate.Value.Date ? (nextSubmitInvoiceDate.Value.Date - Clock.Now.Date).Days : 0;
                     }
+                    return new GetDueDateInDaysOutput { Count = count, TimeUnit = remainingDays == 1 ? "Day" : remainingDays + " Days" };
                 }
             
             else
@@ -843,11 +846,15 @@ namespace TACHYON.Dashboards.Shipper
                     .Where(r => r.TenantId == AbpSession.TenantId && !r.IsPaid && r.DueDate <= Clock.Now.Date.AddDays(7) && r.DueDate.Date > Clock.Now.Date).Select(x => x.DueDate);
                 var count = await invoice.CountAsync();
                 if (count > 1) { return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" }; }
-                else
+
+                int remainingDays = 0;
+                if (await invoice.AnyAsync())
                 {
-                    var RemainingDays = invoice.FirstOrDefault()!= null ? (invoice.FirstOrDefault().Date - Clock.Now.Date).Days :0;
-                    return new GetDueDateInDaysOutput { Count = count, TimeUnit = RemainingDays == 1 ? "a Day" : RemainingDays + " Days" };
+                    var nextInvoiceDate = await invoice.FirstOrDefaultAsync();
+                    remainingDays =  Clock.Now.Date < nextInvoiceDate.Date ? (nextInvoiceDate.Date - Clock.Now.Date).Days : 0;
                 }
+                
+                return new GetDueDateInDaysOutput { Count = count, TimeUnit = remainingDays == 1 ? "a Day" : remainingDays + " Days" };
 
             }
        
