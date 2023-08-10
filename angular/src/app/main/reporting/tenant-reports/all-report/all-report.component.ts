@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { ReportFormat, ReportServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -17,9 +17,13 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 export class TenantAllReportComponent extends AppComponentBase implements OnInit {
   allReportsDataSource: any = {};
 
+  private readonly REPORT_NOTIFICATION_DURATION = 6000; // in milliseconds
+  private readonly NAVIGATION_DELAY = 8000; // in milliseconds
+  private timeoutId?: number;
   constructor(
     injector: Injector,
     private _router: Router,
+    private _activeRoute: ActivatedRoute,
     private _reportService: ReportServiceProxy,
     private _fileDownloadService: FileDownloadService
   ) {
@@ -55,6 +59,7 @@ export class TenantAllReportComponent extends AppComponentBase implements OnInit
           });
       },
     });
+    this.checkIfNewReportIsCreated();
   }
 
   deleteReport(id) {
@@ -89,6 +94,27 @@ export class TenantAllReportComponent extends AppComponentBase implements OnInit
         return 'text/html';
       case ReportFormat.Image:
         return 'image/png';
+    }
+  }
+
+  /**
+   * checks if a new report is created to show the download button in the table after a set amount of time
+   * @private
+   */
+  private checkIfNewReportIsCreated(): void {
+    const isNewReportCreated = Boolean(this._activeRoute.snapshot.queryParams['newReportCreated']);
+
+    if (isNewReportCreated) {
+      this.notify.info(this.l('ReportBeingGeneratedInTheBackGround'), '', { timer: this.REPORT_NOTIFICATION_DURATION });
+
+      if (this.timeoutId !== undefined) {
+        clearTimeout(this.timeoutId);
+      }
+
+      this.timeoutId = window.setTimeout(() => {
+        this._router.navigate(['app/main/reporting/all-reports']);
+        this.getAllReports();
+      }, this.NAVIGATION_DELAY);
     }
   }
 

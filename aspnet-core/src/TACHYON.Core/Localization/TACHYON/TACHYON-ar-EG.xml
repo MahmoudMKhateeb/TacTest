@@ -3236,5 +3236,6 @@
     <text name="Before">قبل</text>
     <text name="NumberOfDedicatedTrips">NumberOfDedicatedTrips</text>
 		
+	<text name="ReportBeingGeneratedInTheBackGround">جاري العمل على انشاء التقرير سيتم تحديث الصفحة فور الانتهاء ...</text>
 	</texts>
 </localizationDictionary>

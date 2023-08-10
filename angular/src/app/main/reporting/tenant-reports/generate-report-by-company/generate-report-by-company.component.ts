@@ -308,7 +308,7 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
   publish() {
     this._reportService.publish(this.reportDto.id).subscribe(() => {
       this.notify.success(this.l('CreatedSuccessfully'));
-      this._router.navigate(['app/main/reporting/all-reports']);
+      this._router.navigate(['app/main/reporting/all-reports'], { queryParams: { newReportCreated: 'true' } });
     });
   }
 
