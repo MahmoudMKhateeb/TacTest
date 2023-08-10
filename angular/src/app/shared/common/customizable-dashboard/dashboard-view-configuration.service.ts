@@ -280,12 +280,12 @@ export class DashboardViewConfigurationService {
       10
     );
 
-    let NumberOfTruckAggregationTripsVsSaasTrips = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.NumberOfTruckAggregationTripsVsSaasTrips,
-      NumberOfTruckAggregationTripsVsSaasTripsComponent,
-      12,
-      10
-    );
+    // let NumberOfTruckAggregationTripsVsSaasTrips = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.host.NumberOfTruckAggregationTripsVsSaasTrips,
+    //   NumberOfTruckAggregationTripsVsSaasTripsComponent,
+    //   12,
+    //   10
+    // );
 
     let NumberOfRegisteredShippers = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfRegisteredShippersWidget,
@@ -600,12 +600,12 @@ export class DashboardViewConfigurationService {
       10
     );
 
-    let NumberOfTruckAggregationTripsVsSaasTrips_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfTruckAggregationTripsVsSaasTrips,
-      NumberOfTruckAggregationTripsVsSaasTripsComponent,
-      12,
-      10
-    );
+    // let NumberOfTruckAggregationTripsVsSaasTrips_TMS = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.TachyonDealer.NumberOfTruckAggregationTripsVsSaasTrips,
+    //   NumberOfTruckAggregationTripsVsSaasTripsComponent,
+    //   12,
+    //   10
+    // );
 
     let NewAccounts_TMS = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.TachyonDealer.NewAccountsRegisteredWidget,
@@ -886,7 +886,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(NumberOfTrips_TMS);
     this.WidgetViewDefinitions.push(NumberOfSaasTrips_TMS);
     this.WidgetViewDefinitions.push(NumberOfTruckAggregationTrips_TMS);
-    this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips_TMS);
+    // this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips_TMS);
     this.WidgetViewDefinitions.push(TopWorstRatedPerTripWidget_TMS);
     this.WidgetViewDefinitions.push(PaidInvoicesBeforeDueDateWidget_TMS);
     this.WidgetViewDefinitions.push(CostVsSellingVsProfitOfSaasTrips_TMS);
@@ -914,7 +914,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(numberOfRegisteredCarriers);
     this.WidgetViewDefinitions.push(NumberOfSaasTrips);
     this.WidgetViewDefinitions.push(NumberOfTruckAggregationTrips);
-    this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips);
+    // this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips);
 
     this.WidgetViewDefinitions.push(hostNewAccounts);
     this.WidgetViewDefinitions.push(hostNewTrips);
