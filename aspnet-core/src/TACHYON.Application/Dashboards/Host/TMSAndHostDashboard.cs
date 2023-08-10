@@ -208,7 +208,7 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<GetTopOWorstRatedTenantsOutput>> GetTopOWorstRatedTenants(GetTopOWorstRatedTenantsInput input)
         {
             await DisableTenancyFiltersIfTachyonDealer();
-            var tenants = _tenantRepository.GetAll().Where(r => !r.Name.Equals("Default")).AsNoTracking();
+            var tenants = _tenantRepository.GetAll().Where(r => !r.Name.Equals("Default") && r.Rate > 0).AsNoTracking();
             var tenantList = default(List<Tenant>);
 
             switch (input.EditionType)
