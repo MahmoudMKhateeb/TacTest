@@ -78,6 +78,8 @@ namespace TACHYON.Tracking.Dto
         public DateTime StartTripDate { get; set; }
         public string ActualDeliveryDate { get; set; }
         public string ActualPickupDate { get; set; }
+        public bool IsPODUploaded { get; set; }
+        public bool IsInvoiceIssued { get; set; }
 
     }
 }

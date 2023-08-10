@@ -67,6 +67,9 @@
         <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}" cellTemplate="statusTitleCellTemplate"></dxi-column>
         <dxi-column dataField="actualPickupDate" caption="{{ 'PickupDate' | localize }}"></dxi-column>
         <dxi-column dataField="actualDeliveryDate" caption="{{ 'DeliveryDate' | localize }}"></dxi-column>
+        <dxi-column dataField="isPODUploaded" caption="{{ 'IsPODUploaded' | localize }}"></dxi-column>
+        <dxi-column dataField="isInvoiceIssued" caption="{{ 'IsInvoiceIssued' | localize }}"></dxi-column>
+
         <dxi-column [allowExporting]="false" dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
 
         <dxo-master-detail [enabled]="true" template="masterDetail"></dxo-master-detail>

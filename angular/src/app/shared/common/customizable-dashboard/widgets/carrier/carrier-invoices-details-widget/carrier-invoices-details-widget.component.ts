@@ -7,6 +7,7 @@ import {
   BrokerDashboardServiceProxy,
   CarrierDashboardServiceProxy,
   ChartCategoryPairedValuesDto,
+  FilterDatePeriod,
   GetCarrierInvoicesDetailsOutput,
   SelectItemDto,
   TMSAndHostDashboardServiceProxy,
@@ -14,6 +15,7 @@ import {
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-carrier-invoices-details-widget',
@@ -38,6 +40,7 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
 
   carrierActors: SelectItemDto[];
   selectedCarrierActor: any;
+  private selectedOption = FilterDatePeriod.Monthly;
 
   constructor(
     injector: Injector,
@@ -74,7 +77,7 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
     this.loading = true;
 
     this._carrierDashboardServiceProxy
-      .getCarrierInvoicesDetails()
+      .getCarrierInvoicesDetails(this.selectedOption)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -128,28 +131,28 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
     ];
     let paidSeries = result.paidInvoices;
     let unpaidSeries = result.claimed;
-    if (!this.isTachyonDealerOrHost) {
-      paidSeries = categories.map((item) => {
-        const foundFromResponse = result.paidInvoices.find((accepted) => {
-          accepted.x = accepted?.x.slice(0, 3);
-          return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
-        });
-        return ChartCategoryPairedValuesDto.fromJS({
-          x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
-          y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
-        });
-      });
-      unpaidSeries = categories.map((item) => {
-        const foundFromResponse = unpaidResult.find((rejected) => {
-          rejected.x = rejected?.x.slice(0, 3);
-          return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
-        });
-        return ChartCategoryPairedValuesDto.fromJS({
-          x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
-          y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
-        });
-      });
-    }
+    // if (!this.isTachyonDealerOrHost) {
+    //   paidSeries = categories.map((item) => {
+    //     const foundFromResponse = result.paidInvoices.find((accepted) => {
+    //       accepted.x = accepted?.x.slice(0, 3);
+    //       return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+    //     });
+    //     return ChartCategoryPairedValuesDto.fromJS({
+    //       x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+    //       y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+    //     });
+    //   });
+    //   unpaidSeries = categories.map((item) => {
+    //     const foundFromResponse = unpaidResult.find((rejected) => {
+    //       rejected.x = rejected?.x.slice(0, 3);
+    //       return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+    //     });
+    //     return ChartCategoryPairedValuesDto.fromJS({
+    //       x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+    //       y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+    //     });
+    //   });
+    // }
     this.chartOptions = {
       series: [
         {
@@ -179,7 +182,7 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
       },
       xaxis: {
         type: 'category',
-        categories: !this.isTachyonDealerOrHost ? categories : result.paidInvoices.map((item) => item.x),
+        categories: /* !this.isTachyonDealerOrHost ? categories : */ result.paidInvoices.map((item) => item.x),
       },
       yaxis: {
         opposite: this.isRtl,
@@ -233,5 +236,10 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
       .subscribe((result) => {
         this.fillChart(result);
       });
+  }
+
+  filterOptionSelected($event: FilterDatePeriod) {
+    this.selectedOption = $event;
+    this.fetchData();
   }
 }

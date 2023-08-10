@@ -82,6 +82,7 @@ import { SaasInvoicesComponent } from '@app/shared/common/customizable-dashboard
 import { GoodTypesUsageComponent } from '@app/shared/common/customizable-dashboard/widgets/host/good-types-usage/good-types-usage.component';
 import { CostVsSellingVsProfitOfTruckAggregationTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/cost-vs-selling-vs-profit-of-truck-aggregation-trips/cost-vs-selling-vs-profit-of-truck-aggregation-trips.component';
 import { NewRegisteredCompaniesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/new-registered-companies/new-registered-companies.component';
+import { NumberOfDedicatedTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-dedicated-trips/number-of-dedicated-trips.component';
 
 @Injectable({
   providedIn: 'root',
@@ -273,19 +274,19 @@ export class DashboardViewConfigurationService {
 
     let NumberOfTrips = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.NumberOfTripsWidget, NumberOfTripsComponent, 9, 10);
 
-    let NormalRequestsVSDedicatedRequests = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.NormalRequestsVSDedicatedRequestsWidget,
-      NormalRequestsVSDedicatedRequestsComponent,
-      12,
-      10
-    );
+    // let NormalRequestsVSDedicatedRequests = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.host.NormalRequestsVSDedicatedRequestsWidget,
+    //   NormalRequestsVSDedicatedRequestsComponent,
+    //   12,
+    //   10
+    // );
 
-    let NumberOfTruckAggregationTripsVsSaasTrips = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.NumberOfTruckAggregationTripsVsSaasTrips,
-      NumberOfTruckAggregationTripsVsSaasTripsComponent,
-      12,
-      10
-    );
+    // let NumberOfTruckAggregationTripsVsSaasTrips = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.host.NumberOfTruckAggregationTripsVsSaasTrips,
+    //   NumberOfTruckAggregationTripsVsSaasTripsComponent,
+    //   12,
+    //   10
+    // );
 
     let NumberOfRegisteredShippers = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfRegisteredShippersWidget,
@@ -490,6 +491,12 @@ export class DashboardViewConfigurationService {
       14,
       12
     );
+    let NumberOfDedicatedTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.NumberOfDedicatedTrips,
+      NumberOfDedicatedTripsComponent,
+      9,
+      10
+    );
 
     let InvoicesVsPaidInvoices_Host = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.InvoicesVsPaidInvoices,
@@ -593,19 +600,19 @@ export class DashboardViewConfigurationService {
       10
     );
 
-    let NormalRequestsVSDedicatedRequests_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.NormalRequestsVSDedicatedRequestsWidget,
-      NormalRequestsVSDedicatedRequestsComponent,
-      12,
-      10
-    );
+    // let NormalRequestsVSDedicatedRequests_TMS = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.TachyonDealer.NormalRequestsVSDedicatedRequestsWidget,
+    //   NormalRequestsVSDedicatedRequestsComponent,
+    //   12,
+    //   10
+    // );
 
-    let NumberOfTruckAggregationTripsVsSaasTrips_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfTruckAggregationTripsVsSaasTrips,
-      NumberOfTruckAggregationTripsVsSaasTripsComponent,
-      12,
-      10
-    );
+    // let NumberOfTruckAggregationTripsVsSaasTrips_TMS = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.TachyonDealer.NumberOfTruckAggregationTripsVsSaasTrips,
+    //   NumberOfTruckAggregationTripsVsSaasTripsComponent,
+    //   12,
+    //   10
+    // );
 
     let NewAccounts_TMS = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.TachyonDealer.NewAccountsRegisteredWidget,
@@ -716,6 +723,12 @@ export class DashboardViewConfigurationService {
       CostVsSellingVsProfitOfTruckAggregationTripsComponent,
       14,
       12
+    );
+    let NumberOfDedicatedTrips_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfDedicatedTrips,
+      NumberOfDedicatedTripsComponent,
+      9,
+      10
     );
 
     let InvoicesVsPaidInvoices_TMS = new WidgetViewDefinition(
@@ -881,12 +894,12 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(numberOfRegisteredCompanies_TMS);
     this.WidgetViewDefinitions.push(NumberOfDriversAndTrucks_TMS);
     this.WidgetViewDefinitions.push(TopRatedShippersAndCarriersWidget_TMS);
-    this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests_TMS);
+    // this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests_TMS);
     this.WidgetViewDefinitions.push(HostMostTruckTypeUsed_TMS);
     this.WidgetViewDefinitions.push(NumberOfTrips_TMS);
     this.WidgetViewDefinitions.push(NumberOfSaasTrips_TMS);
     this.WidgetViewDefinitions.push(NumberOfTruckAggregationTrips_TMS);
-    this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips_TMS);
+    // this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips_TMS);
     this.WidgetViewDefinitions.push(TopWorstRatedPerTripWidget_TMS);
     this.WidgetViewDefinitions.push(PaidInvoicesBeforeDueDateWidget_TMS);
     this.WidgetViewDefinitions.push(CostVsSellingVsProfitOfSaasTrips_TMS);
@@ -900,12 +913,13 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(NewRegisteredCompanies_TMS);
     this.WidgetViewDefinitions.push(InvoicesVsPaidInvoices_TMS);
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid_TMS);
+    this.WidgetViewDefinitions.push(NumberOfDedicatedTrips_TMS);
     //Host
     //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
 
     this.WidgetViewDefinitions.push(NumberOfDriversAndTrucks);
     this.WidgetViewDefinitions.push(NumberOfTrips);
-    this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests);
+    // this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests);
     this.WidgetViewDefinitions.push(NumberOfRegisteredTrucks);
     this.WidgetViewDefinitions.push(numberOfRegisteredCompanies);
     this.WidgetViewDefinitions.push(NumberOfRegisteredShippers);
@@ -914,7 +928,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(numberOfRegisteredCarriers);
     this.WidgetViewDefinitions.push(NumberOfSaasTrips);
     this.WidgetViewDefinitions.push(NumberOfTruckAggregationTrips);
-    this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips);
+    // this.WidgetViewDefinitions.push(NumberOfTruckAggregationTripsVsSaasTrips);
 
     this.WidgetViewDefinitions.push(hostNewAccounts);
     this.WidgetViewDefinitions.push(hostNewTrips);
@@ -948,6 +962,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(NewRegisteredCompanies);
     this.WidgetViewDefinitions.push(InvoicesVsPaidInvoices_Host);
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid_Host);
+    this.WidgetViewDefinitions.push(NumberOfDedicatedTrips);
 
     // broker
     this.WidgetViewDefinitions.push(NewActorsThisMonth_Broker);

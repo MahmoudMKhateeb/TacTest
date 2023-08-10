@@ -91,29 +91,52 @@
       <div class="col-6">
         <div class="form-group">
           <label>{{ 'Country' | localize }}</label>
-          <select
-            (change)="CountryChanged($event)"
-            #countrySelect="ngModel"
-            class="form-control"
+          <!--          <select-->
+          <!--            (change)="CountryChanged($event)"-->
+          <!--            #countrySelect="ngModel"-->
+          <!--            class="form-control"-->
+          <!--            name="tenant.countryId"-->
+          <!--            [(ngModel)]="model.countryId"-->
+          <!--            required-->
+          <!--          >-->
+          <!--            <option value="" selected disabled>{{ l('Select') }} {{ l('Country') }}</option>-->
+          <!--            <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>-->
+          <!--          </select>-->
+          <!--          <validation-messages [formCtrl]="countrySelect"></validation-messages>-->
+          <dx-select-box
             name="tenant.countryId"
-            [(ngModel)]="model.countryId"
+            [(value)]="model.countryId"
+            [dataSource]="allCountries"
+            [searchEnabled]="true"
+            (onSelectionChanged)="CountryChanged($event)"
+            displayExpr="displayName"
+            valueExpr="id"
             required
+            placeholder="{{ l('Select') }} {{ l('Country') }}"
           >
-            <option value="" selected disabled>{{ l('Select') }} {{ l('Country') }}</option>
-            <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
-          </select>
-          <validation-messages [formCtrl]="countrySelect"></validation-messages>
+          </dx-select-box>
         </div>
       </div>
 
       <div class="col-6">
         <div class="form-group">
           <label>{{ 'City' | localize }}</label>
-          <select [disabled]="!isCountySelected" #citySelect="ngModel" class="form-control" name="tenant.cityId" [(ngModel)]="model.cityId" required>
-            <option value="" selected disabled>{{ l('Select') }} {{ l('City') }}</option>
-            <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
-          </select>
-          <validation-messages [formCtrl]="citySelect"></validation-messages>
+          <!--          <select [disabled]="!isCountySelected" #citySelect="ngModel" class="form-control" name="tenant.cityId" [(ngModel)]="model.cityId" required>-->
+          <!--            <option value="" selected disabled>{{ l('Select') }} {{ l('City') }}</option>-->
+          <!--            <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>-->
+          <!--          </select>-->
+          <!--          <validation-messages [formCtrl]="citySelect"></validation-messages>-->
+          <dx-select-box
+            name="tenant.cityId"
+            [(value)]="model.cityId"
+            [dataSource]="allCities"
+            [searchEnabled]="true"
+            displayExpr="displayName"
+            valueExpr="id"
+            required
+            placeholder="{{ l('Select') }} {{ l('City') }}"
+          >
+          </dx-select-box>
         </div>
       </div>
     </div>
@@ -372,8 +395,8 @@
         !isEmailAvailable ||
         !isCompanyNameAvailable ||
         !registerForm.form.valid ||
-        citySelect.value == -2 ||
-        countrySelect.value == -2 ||
+        model.cityId == -2 ||
+        model.countryId == -2 ||
         (!approvedHostTerms && isAvailableTermsAndConditons)
       "
       [buttonBusy]="saving"

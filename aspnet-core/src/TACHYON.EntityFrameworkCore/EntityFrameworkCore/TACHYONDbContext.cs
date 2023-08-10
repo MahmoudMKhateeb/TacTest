@@ -1,3 +1,4 @@
+using Abp.Domain.Entities;
 using TACHYON.Integration.BayanIntegration;
 using TACHYON.Regions;
 using TACHYON.Actors;
@@ -99,6 +100,15 @@ using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
 using TACHYON.PricePackages.PricePackageOffers;
+using TACHYON.Reports;
+using TACHYON.Reports.JsonDataSourceStorages;
+using TACHYON.Reports.ReportDataSources;
+using TACHYON.Reports.ReportDefinitionPermissions;
+using TACHYON.Reports.ReportDefinitions;
+using TACHYON.Reports.ReportParameterDefinitions;
+using TACHYON.Reports.ReportParameters;
+using TACHYON.Reports.ReportPermissions;
+using TACHYON.Reports.ReportTemplates;
 using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.EntityFrameworkCore
@@ -347,6 +357,22 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<PricePackageOffer> TmsPricePackageOffers { get; set; }
         public DbSet<AdditionalStepTransition> AdditionalStepTransitions { get; set; }
 
+        public DbSet<ReportTemplate> ReportTemplates { get; set; }
+
+        public DbSet<ReportDefinition> ReportDefinitions { get; set; }
+
+        public DbSet<JsonDataSourceStorage> JsonDataSourceStorages { get; set; }
+
+        public DbSet<ReportParameterDefinition> ReportParameterDefinitions { get; set; }
+        
+        public DbSet<ReportParameter> ReportParameters { get; set; }
+
+        public DbSet<Report> Reports { get; set; }
+
+        public DbSet<ReportPermission> ReportPermissions { get; set; }
+        
+        public DbSet<ReportDefinitionPermission> ReportDefinitionPermissions { get; set; }
+
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
 
@@ -357,6 +383,8 @@ namespace TACHYON.EntityFrameworkCore
             CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsDrafted") == true;
         protected virtual bool IsInvoiceStatusFilterEnabled =>
             CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(TACHYONDataFilters.HaveInvoiceStatus) == true;
+        protected virtual bool IsActiveReportDefinitionEnabled =>
+            CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(TACHYONDataFilters.ActiveReportDefinition) == true;
 
         #region Mobile
 
@@ -391,6 +419,10 @@ namespace TACHYON.EntityFrameworkCore
             if (typeof(IHaveInvoiceStatus).IsAssignableFrom(typeof(TEntity)))
             {
                 return true;
+            }            
+            if (typeof(TEntity) == typeof(ReportDefinition))
+            {
+                return true; 
             }
 
             return base.ShouldFilterEntity<TEntity>(entityType);
@@ -420,6 +452,12 @@ namespace TACHYON.EntityFrameworkCore
                     ((IHaveInvoiceStatus)e).Status == InvoiceStatus.Confirmed ||
                     (((IHaveInvoiceStatus)e).Status == InvoiceStatus.Confirmed) == IsInvoiceStatusFilterEnabled;
                 expression = expression == null ? mustHaveInvoiceStatus : CombineExpressions(expression, mustHaveInvoiceStatus);
+            }
+            else if (typeof(TEntity) == typeof(ReportDefinition))
+            {
+                Expression<Func<TEntity, bool>> mustReportDefinitionActive = e =>
+                    ((IPassivable)e).IsActive || (((IPassivable)e).IsActive == IsActiveReportDefinitionEnabled);
+                expression = expression == null ? mustReportDefinitionActive : CombineExpressions(expression, mustReportDefinitionActive);
             }
 
             return expression;

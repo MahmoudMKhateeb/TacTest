@@ -21,6 +21,21 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
     console.log('AppShipperNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
+      // start of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
+      new AppMenuItem(
+        'Reporting',
+        'Pages.Reports',
+        'report.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('CreateReport', 'Pages.Reports.Create', '', '/app/main/reporting/generate-report'),
+          new AppMenuItem('MyReports', '', '', '/app/main/reporting/all-reports'),
+        ]
+      ),
+      //end of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(

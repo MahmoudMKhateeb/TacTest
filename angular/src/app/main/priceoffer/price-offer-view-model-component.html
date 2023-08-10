@@ -28,15 +28,14 @@
           <!--       -->
           <!--          </ng-template>-->
           <ng-template [ngIf]="offerForEditOutput.priceOfferViewDto.status==2 || offerForEditOutput.priceOfferViewDto.status==5">
-            <div class="infoBasic alert alert-warning">
-              <div class="alert alert-warning" role="alert">{{offerForEditOutput.priceOfferViewDto.rejectedReason}}</div>
+            <div class="infoBasic alert alert-primary">
+              <div class="alert alert-primary" role="alert">{{offerForEditOutput.priceOfferViewDto.rejectedReason}}</div>
             </div>
             <div class="divirCard"></div>
           </ng-template>
           <div
             *ngIf="isTachyonDealer && CarrierInsuranceCoverage && ShipperValueOfGoods && CarrierInsuranceCoverage < ShipperValueOfGoods"
-            class="row alert alert-warning"
-            style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
+            class="alert alert-primary custom-primary-outline"
             role="alert"
           >
             {{l('Note that Carrier insurance coverage {0} less than shipper value of goods {1}', CarrierInsuranceCoverage, ShipperValueOfGoods)}}
@@ -149,7 +148,7 @@
           {{l('Delete')}}
         </button>
         <button
-          class="btn btn-warning"
+          class="btn btn-dark"
           (click)="ModelReject.show(offerForEditOutput.priceOfferViewDto.id,isPostPriceOffer)"
           *ngIf="offerForEditOutput.canIAcceptOffer"
         >
@@ -174,7 +173,7 @@
           <i class="fas fa-check"></i>
           {{l('SendOffer')}}
         </button>
-        <button class="btn btn-warning" (click)="CancelAccepted()" *ngIf="canSendOfferOrCancel()">
+        <button class="btn btn-dark" (click)="CancelAccepted()" *ngIf="canSendOfferOrCancel()">
           <i class="fas fa-check"></i>
           {{l('Cancel')}}
         </button>

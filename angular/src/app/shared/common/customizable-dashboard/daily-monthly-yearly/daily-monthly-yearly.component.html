@@ -1,0 +1,12 @@
+<div class="filter-box">
+  <dx-select-box
+    id="shipperActorId"
+    name="shipperActor"
+    [(value)]="selectedOption"
+    [dataSource]="options"
+    [searchEnabled]="true"
+    displayExpr="value"
+    valueExpr="key"
+    (onValueChanged)="selectOption()"
+  ></dx-select-box>
+</div>

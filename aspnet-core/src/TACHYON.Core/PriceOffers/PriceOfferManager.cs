@@ -100,7 +100,7 @@ namespace TACHYON.PriceOffers
         /// <param name="IsCreatedOnBehalfOfCarrierUsingPP"></param>
         /// <param name="shippingRequestDirectRequest"></param>
         /// <returns></returns>
-        public async Task AcknowledgeOfferOnBehalfOfCarrier(CreateOrEditPriceOfferInput input, 
+        public async Task<long> AcknowledgeOfferOnBehalfOfCarrier(CreateOrEditPriceOfferInput input, 
           ShippingRequest shippingRequest, ShippingRequestDirectRequest shippingRequestDirectRequest)
         {
              await GetOrValidateShippingRequestForOffer(input, shippingRequest);
@@ -111,6 +111,7 @@ namespace TACHYON.PriceOffers
             offer.TenantId = input.CarrierTenantId.Value;
 
             await _AcceptOffer(offer, shippingRequest);
+            return offer.Id;
         }
 
         public async Task<PriceOffer> InitPriceOffer(CreateOrEditPriceOfferInput input)

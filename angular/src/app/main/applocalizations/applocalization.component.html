@@ -81,9 +81,20 @@
               <div class="row mb-4">
                 <div class="col-xl-6">
                   <label for="EditionDropdown">{{ 'Edition' | localize }}</label>
-                  <select class="form-control" name="editionId" [(ngModel)]="this.input.editionId">
-                    <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
-                  </select>
+                  <dx-select-box
+                    id="EditionDropdown"
+                    name="editionId"
+                    [(value)]="input.editionId"
+                    [dataSource]="editions"
+                    [searchEnabled]="true"
+                    displayExpr="displayText"
+                    valueExpr="value"
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select class="form-control" name="editionId" [(ngModel)]="this.input.editionId">-->
+                  <!--                    <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>-->
+                  <!--                  </select>-->
                 </div>
                 <div class="col-xl-6">
                   <label for="Pages">{{ 'Pages' | localize }}</label>
@@ -101,45 +112,89 @@
                 <div class="col-xl-6">
                   <div class="form-group">
                     <label for="PlatForm">{{ l('PlatForm') }}</label>
-                    <select name="PlatForm" [(ngModel)]="input.platForm" class="form-control">
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="code.key" *ngFor="let code of terminologyPlatForm">
-                        {{ code.value | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="PlatForm"
+                      name="PlatForm"
+                      [(value)]="input.platForm"
+                      [dataSource]="terminologyPlatForm"
+                      [searchEnabled]="true"
+                      displayExpr="value"
+                      valueExpr="key"
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="PlatForm" [(ngModel)]="input.platForm" class="form-control">-->
+                    <!--                      <option value="">{{ l('All') }}</option>-->
+                    <!--                      <option [value]="code.key" *ngFor="let code of terminologyPlatForm">-->
+                    <!--                        {{ code.value | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div class="col-xl-6">
                   <div class="form-group">
                     <label for="AppVersion">{{ l('AppVersion') }}</label>
-                    <select name="AppVersion" [(ngModel)]="input.appVersion" class="form-control">
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="code.key" *ngFor="let code of terminologyAppVersion">
-                        {{ code.value | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="AppVersion"
+                      name="AppVersion"
+                      [(value)]="input.appVersion"
+                      [dataSource]="terminologyAppVersion"
+                      [searchEnabled]="true"
+                      displayExpr="value"
+                      valueExpr="key"
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="AppVersion" [(ngModel)]="input.appVersion" class="form-control">-->
+                    <!--                      <option value="">{{ l('All') }}</option>-->
+                    <!--                      <option [value]="code.key" *ngFor="let code of terminologyAppVersion">-->
+                    <!--                        {{ code.value | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div class="col-xl-6">
                   <div class="form-group">
                     <label for="version">{{ l('TerminologyVersion') }}</label>
-                    <select name="version" [(ngModel)]="input.version" class="form-control">
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="code.key" *ngFor="let code of terminologyVersion">
-                        {{ code.value | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="version"
+                      name="version"
+                      [(value)]="input.version"
+                      [dataSource]="terminologyVersion"
+                      [searchEnabled]="true"
+                      displayExpr="value"
+                      valueExpr="key"
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="version" [(ngModel)]="input.version" class="form-control">-->
+                    <!--                      <option value="">{{ l('All') }}</option>-->
+                    <!--                      <option [value]="code.key" *ngFor="let code of terminologyVersion">-->
+                    <!--                        {{ code.value | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div class="col-xl-6">
                   <div class="form-group">
                     <label for="section">{{ l('TerminologySection') }}</label>
-                    <select name="section" [(ngModel)]="input.section" class="form-control">
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="code.key" *ngFor="let code of terminologySection">
-                        {{ code.value | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="section"
+                      name="section"
+                      [(value)]="input.section"
+                      [dataSource]="terminologySection"
+                      [searchEnabled]="true"
+                      displayExpr="value"
+                      valueExpr="key"
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="section" [(ngModel)]="input.section" class="form-control">-->
+                    <!--                      <option value="">{{ l('All') }}</option>-->
+                    <!--                      <option [value]="code.key" *ngFor="let code of terminologySection">-->
+                    <!--                        {{ code.value | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
               </div>

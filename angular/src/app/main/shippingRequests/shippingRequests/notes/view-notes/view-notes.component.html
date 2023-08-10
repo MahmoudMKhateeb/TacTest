@@ -68,12 +68,30 @@
             <div class="col-lg-12" *ngIf="open && item.visibility != visibility.Internal" hidden>
               <div class="form-group">
                 <label for="otherSelect">{{ 'Others' | localize }}</label>
-                <select class="form-control" name="otherSelect" disabled [(ngModel)]="item.visibility">
-                  <option value="{{ visibility.TMSAndCarrier }}">{{ 'TMSAndCarrier' | localize }}</option>
-                  <option value="{{ visibility.CarrierOnly }}">{{ 'CarrierOnly' | localize }}</option>
-                  <option value="{{ visibility.TMSOnly }}">{{ 'TMSOnly' | localize }}</option>
-                  <option value="{{ visibility.ShipperOnly }}">{{ 'ShipperOnly' | localize }}</option>
-                </select>
+                <dx-select-box
+                  id="otherSelect"
+                  name="otherSelect"
+                  [(value)]="item.visibility"
+                  [dataSource]="[
+                    { displayName: l('TMSAndCarrier'), value: visibility.TMSAndCarrier },
+                    { displayName: l('CarrierOnly'), value: visibility.CarrierOnly },
+                    { displayName: l('TMSOnly'), value: visibility.TMSOnly },
+                    { displayName: l('ShipperOnly'), value: visibility.ShipperOnly }
+                  ]"
+                  [searchEnabled]="true"
+                  disabled
+                  displayExpr="displayName"
+                  valueExpr="value"
+                  required
+                  placeholder="{{ l('Select') }} {{ l('Country') }}"
+                >
+                </dx-select-box>
+                <!--                <select class="form-control" name="otherSelect" disabled [(ngModel)]="item.visibility">-->
+                <!--                  <option value="{{ visibility.TMSAndCarrier }}">{{ 'TMSAndCarrier' | localize }}</option>-->
+                <!--                  <option value="{{ visibility.CarrierOnly }}">{{ 'CarrierOnly' | localize }}</option>-->
+                <!--                  <option value="{{ visibility.TMSOnly }}">{{ 'TMSOnly' | localize }}</option>-->
+                <!--                  <option value="{{ visibility.ShipperOnly }}">{{ 'ShipperOnly' | localize }}</option>-->
+                <!--                </select>-->
               </div>
             </div>
 

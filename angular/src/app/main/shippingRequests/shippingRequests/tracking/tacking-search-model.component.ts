@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, Output, EventEmitter } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -9,8 +9,6 @@ import {
   GetShippingRequestSearchListDto,
   ComboboxItemDto,
   ShippingRequestRouteType,
-  PriceOfferChannel,
-  ShippingRequestType,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
@@ -51,6 +49,15 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
     super(injector);
   }
   ngOnInit(): void {
+    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    const obj = {
+      value: this.l('All'),
+      key: '',
+    };
+    this.routeTypes.unshift(obj);
     this.getRoutTypes();
     this.getRequestStatus();
   }

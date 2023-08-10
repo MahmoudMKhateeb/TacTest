@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -18,6 +18,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Dashboards.Host.Dto;
+using TACHYON.Dashboards.Host.TMS_HostDto;
 using TACHYON.Dashboards.Shipper;
 using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Documents.DocumentFiles;
@@ -165,7 +166,7 @@ namespace TACHYON.Dashboards.Shipper
             return upcomingTrips;
         }
         
-        public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips()
+        public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips(DateRangeInput input)
         {
             bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
             if (isBroker) DisableTenancyFilters();
@@ -175,7 +176,10 @@ namespace TACHYON.Dashboards.Shipper
                     (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
                      point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)))
                       && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
-                      && point.PickingType == PickingType.Dropoff && !point.IsComplete && (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
+                      && point.PickingType == PickingType.Dropoff && !point.IsComplete && 
+                      (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue
+                      && point.ShippingRequestTripFk.CreationTime.Date > input.StartDate && point.ShippingRequestTripFk.CreationTime.Date < input.EndDate)
+                      
                 select new NeedsActionTripDto()
                 {
                     Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
@@ -194,6 +198,8 @@ namespace TACHYON.Dashboards.Shipper
                     NeedsReceiverCode = !point.ShippingRequestTripFk.EndWorking.HasValue
                 }).ToListAsync();
 
+
+
             return trips;
         }
 
@@ -201,8 +207,9 @@ namespace TACHYON.Dashboards.Shipper
         {
             DisableTenancyFilters();
             var offers = await _priceOffersRepository.GetAll()
-                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && x.Status == PriceOfferStatus.New
-                    && (x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction))
+                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction)
+                .Where(x=> (x.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService && x.Status == PriceOfferStatus.AcceptedAndWaitingForShipper && x.Tenant.EditionId == TachyonEditionId) ||
+                           (x.ShippingRequestFk.RequestType != ShippingRequestType.TachyonManageService && x.Status == PriceOfferStatus.New && x.Tenant.EditionId == CarrierEditionId) )
                 .Select(x => new NewPriceOfferListDto()
                 {
                     ReferenceNumber = x.ShippingRequestFk.ReferenceNumber,
@@ -316,6 +323,45 @@ namespace TACHYON.Dashboards.Shipper
                     .ToList();
             }
 
+            if (period == FilterDatePeriod.Yearly)
+            {
+                var allYears = new int[(Clock.Now.Year - 2020) + 1];
+
+                int Year = 2020;
+                for (var i = 0; i <= Clock.Now.Year - 2020; i++)
+                {
+                    allYears[i] = Year;
+                    Year++;
+                }
+
+                foreach (var year in allYears)
+                {
+                    var groupedPaid = accepted.GroupBy(x => x.CreationTime.Date.Year);
+                    var groupedRejected = rejected.GroupBy(x => x.CreationTime.Year);
+
+                    if (groupedPaid.Select(x => x.Key).ToList().Contains(year))
+                    {
+                        acceptedOffers.Add(groupedPaid.Where(x => x.Key == year)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"{x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        acceptedOffers.Add(new ChartCategoryPairedValuesDto { X = $"{year}", Y = 0 });
+                    }
+                    if (groupedRejected.Select(x => x.Key).ToList().Contains(year))
+                    {
+                        rejectedOffers.Add(groupedRejected.Where(x => x.Key == year)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"{x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        rejectedOffers.Add(new ChartCategoryPairedValuesDto { X = $"{year}", Y = 0 });
+                    }
+                }
+            }
+
             return new AcceptedAndRejectedRequestsListDto
             {
                 AcceptedOffers = acceptedOffers,
@@ -391,7 +437,6 @@ namespace TACHYON.Dashboards.Shipper
             
             var total = await query.Where(x => x.Status == ShippingRequestTripStatus.Delivered).Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
                 
-            
             var podTripsList = new List<ChartCategoryPairedValuesDto>();
             var totalList = new List<ChartCategoryPairedValuesDto>();
             if (period == FilterDatePeriod.Daily)
@@ -470,6 +515,45 @@ namespace TACHYON.Dashboards.Shipper
                 
             }
 
+            if (period == FilterDatePeriod.Yearly)
+            {
+                var allYears = new int[(Clock.Now.Year - 2020) + 1];
+
+                int Year = 2020;
+                for (var i = 0; i <= Clock.Now.Year - 2020; i++)
+                {
+                    allYears[i] = Year;
+                    Year++;
+                }
+
+                foreach (var year in allYears)
+                {
+                    var groupedPaid = podTrips.GroupBy(x => x.CreationTime.Date.Year);
+                    var groupedTotal = total.GroupBy(x => x.CreationTime.Year);
+
+                    if (groupedPaid.Select(x => x.Key).ToList().Contains(year))
+                    {
+                        podTripsList.Add(groupedPaid.Where(x => x.Key == year)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"{x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        podTripsList.Add(new ChartCategoryPairedValuesDto { X = $"{year}", Y = 0 });
+                    }
+                    if (groupedTotal.Select(x => x.Key).ToList().Contains(year))
+                    {
+                        totalList.Add(groupedTotal.Where(x => x.Key == year)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"{x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalList.Add(new ChartCategoryPairedValuesDto { X = $"{year}", Y = 0 });
+                    }
+                }
+            }
+
             return new CompletedTripVsPodListDto
             {
                 CompletedTrips = totalList,
@@ -482,57 +566,149 @@ namespace TACHYON.Dashboards.Shipper
 
 
 
-        public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices()
+        public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices(FilterDatePeriod period)
         {
             DisableTenancyFilters();
 
+            DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
+            DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
 
             var query = _invoiceRepository
                 .GetAll()
                 .AsNoTracking()
-                .Where(x => x.TenantId == AbpSession.TenantId && ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year ) || (
-                Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))));
-            var paid = (await query
+                .Where(x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(period == FilterDatePeriod.Monthly, x => ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year) || (
+                Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))))
+                .WhereIf(period == FilterDatePeriod.Daily, x => x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek)
+                .WhereIf(period == FilterDatePeriod.Weekly, x => x.CreationTime.Year == Clock.Now.Year &&
+                x.CreationTime.Date >= Clock.Now.AddDays(-28).Date);
+
+            var paid = await query
                     .Where(x => x.IsPaid)
-                    .ToListAsync());
+                    .ToListAsync();
 
 
-            var total = (await query
-                    .ToListAsync()).GroupBy(x => x.CreationTime.Month);
+            var total = await query
+                    .ToListAsync();
 
             var PaidInvoicesList = new List<ChartCategoryPairedValuesDto>();
             var totalInvoicesList = new List<ChartCategoryPairedValuesDto>();
-            var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
-
-            foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+            if (period == FilterDatePeriod.Daily)
             {
-                if (groupedPaid.Select(x => x.Key).ToList().Contains(date.Month))
-                {
-                    PaidInvoicesList.Add(groupedPaid.Where(x => x.Key == date.Month)
-               .Select(g => new ChartCategoryPairedValuesDto
-               {
-                   X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
-                   Y = g.Count()
-               })
-                .FirstOrDefault());
-                }
-                else
-                {
-                    PaidInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
-                }
+                PaidInvoicesList = paid.GroupBy(x => x.CreationTime.DayOfWeek)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
+                    .ToList();
 
-                if (total.Select(x => x.Key).ToList().Contains(date.Month))
+                totalInvoicesList = total.GroupBy(x => x.CreationTime.DayOfWeek)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
+                    .ToList();
+            }
+            if (period == FilterDatePeriod.Monthly)
+            {
+                var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
+                var groupedTotal = total.GroupBy(x => x.CreationTime.Month);
+
+                foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
                 {
-                    totalInvoicesList.Add(total.Where(x => x.Key == date.Month)
-                .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
-                .FirstOrDefault());
-                }
-                else
-                {
-                    totalInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    if (groupedPaid.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        PaidInvoicesList.Add(groupedPaid.Where(x => x.Key == date.Month)
+                   .Select(g => new ChartCategoryPairedValuesDto
+                   {
+                       X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
+                       Y = g.Count()
+                   })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        PaidInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+                   
+                    if (groupedTotal.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        totalInvoicesList.Add(groupedTotal.Where(x => x.Key == date.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
                 }
             }
 
+            if (period == FilterDatePeriod.Weekly)
+            {
+
+                DateTime firstDayInWeeks = Clock.Now.AddDays(-28);
+                var AllWeeks = new List<int> { 1, 2, 3, 4 };
+                foreach (var week in AllWeeks)
+                {
+                    var groupedTrips = paid.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    if (groupedTrips.Select(x => x.Key).ToList().Contains(week))
+                    {
+                        PaidInvoicesList.Add(groupedTrips.Where(x => x.Key == week)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        PaidInvoicesList.Add(new ChartCategoryPairedValuesDto { X = $"Week {week}", Y = 0 });
+                    }
+                    var groupedTotal = total.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    if (groupedTotal.Select(x => x.Key).ToList().Contains(week))
+                    {
+                        totalInvoicesList.Add(groupedTotal.Where(x => x.Key == week)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalInvoicesList.Add(new ChartCategoryPairedValuesDto { X = $"Week {week}", Y = 0 });
+                    }
+                }
+
+            }
+
+            if(period == FilterDatePeriod.Yearly)
+            {
+                var allYears = new int[(Clock.Now.Year - 2020)+ 1];
+
+                int Year = 2020;
+                for (var i = 0; i <= Clock.Now.Year - 2020 ; i++)
+                {
+                    allYears[i] = Year;
+                    Year ++;
+                }
+
+                foreach(var year in allYears)
+                {
+                    var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Year);
+                    var groupedTotal = total.GroupBy(x => x.CreationTime.Year);
+
+                    if (groupedPaid.Select(x => x.Key).ToList().Contains(year))
+                    {
+                        PaidInvoicesList.Add(groupedPaid.Where(x => x.Key == year)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"{x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        PaidInvoicesList.Add(new ChartCategoryPairedValuesDto { X = $"{year}", Y = 0 });
+                    }
+                    if (groupedTotal.Select(x => x.Key).ToList().Contains(year))
+                    {
+                        totalInvoicesList.Add(groupedTotal.Where(x => x.Key == year)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"{x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalInvoicesList.Add(new ChartCategoryPairedValuesDto { X = $"{year}", Y = 0 });
+                    }
+                }
+            }
 
             return new InvoicesVsPaidInvoicesDto
             {
@@ -654,11 +830,14 @@ namespace TACHYON.Dashboards.Shipper
                                 x.DueDate <= Clock.Now.Date.AddDays(7) && x.DueDate > Clock.Now.Date).Select(x=>x.DueDate);
                     var count = await submitInvoice.CountAsync();
                     if(count > 1) { return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" }; }
-                    else
-                    { 
-                        var RemainingDays = submitInvoice.FirstOrDefault() != null ? (submitInvoice.FirstOrDefault().Value.Date - Clock.Now.Date).Days :0;
-                        return new GetDueDateInDaysOutput { Count = count, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days" };
+
+                    int remainingDays = 0;
+                    if (await submitInvoice.AnyAsync())
+                    {
+                        var nextSubmitInvoiceDate = await submitInvoice.FirstOrDefaultAsync();
+                        remainingDays = nextSubmitInvoiceDate.HasValue && Clock.Now.Date < nextSubmitInvoiceDate.Value.Date ? (nextSubmitInvoiceDate.Value.Date - Clock.Now.Date).Days : 0;
                     }
+                    return new GetDueDateInDaysOutput { Count = count, TimeUnit = remainingDays == 1 ? "Day" : remainingDays + " Days" };
                 }
             
             else
@@ -668,11 +847,15 @@ namespace TACHYON.Dashboards.Shipper
                     .Where(r => r.TenantId == AbpSession.TenantId && !r.IsPaid && r.DueDate <= Clock.Now.Date.AddDays(7) && r.DueDate.Date > Clock.Now.Date).Select(x => x.DueDate);
                 var count = await invoice.CountAsync();
                 if (count > 1) { return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" }; }
-                else
+
+                int remainingDays = 0;
+                if (await invoice.AnyAsync())
                 {
-                    var RemainingDays = invoice.FirstOrDefault()!= null ? (invoice.FirstOrDefault().Date - Clock.Now.Date).Days :0;
-                    return new GetDueDateInDaysOutput { Count = count, TimeUnit = RemainingDays == 1 ? "a Day" : RemainingDays + " Days" };
+                    var nextInvoiceDate = await invoice.FirstOrDefaultAsync();
+                    remainingDays =  Clock.Now.Date < nextInvoiceDate.Date ? (nextInvoiceDate.Date - Clock.Now.Date).Days : 0;
                 }
+                
+                return new GetDueDateInDaysOutput { Count = count, TimeUnit = remainingDays == 1 ? "a Day" : remainingDays + " Days" };
 
             }
        

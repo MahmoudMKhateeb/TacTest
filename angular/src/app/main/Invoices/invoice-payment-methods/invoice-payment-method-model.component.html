@@ -36,12 +36,24 @@
           </div>
 
           <div class="form-group m-form__group">
-            <label for="periodType">{{ l('PaymentType') }}</label>
-            <select name="paymentMethod.paymentType" [(ngModel)]="paymentMethod.paymentType" class="form-control" required>
-              <option [value]="code.key" *ngFor="let code of PaymentType">
-                {{ code.value | localize }}
-              </option>
-            </select>
+            <label for="paymentType">{{ l('PaymentType') }}</label>
+            <dx-select-box
+              id="paymentType"
+              name="paymentMethod.paymentType"
+              [(value)]="paymentMethod.paymentType"
+              [dataSource]="PaymentType"
+              [searchEnabled]="true"
+              displayExpr="value"
+              valueExpr="key"
+              required
+              placeholder="{{ l('Select') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="paymentMethod.paymentType" [(ngModel)]="paymentMethod.paymentType" class="form-control" required>-->
+            <!--              <option [value]="code.key" *ngFor="let code of PaymentType">-->
+            <!--                {{ code.value | localize }}-->
+            <!--              </option>-->
+            <!--            </select>-->
           </div>
           <ng-template [ngIf]="paymentMethod.paymentType == 3">
             <div class="form-group">

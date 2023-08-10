@@ -35,8 +35,8 @@
       </ng-container>
       <hr class="custom-hr" *ngIf="!(hasCarrierClients && hasShipperClients)" />
       <app-invoice-due-date [invoiceType]="invoiceType" *ngIf="!(hasCarrierClients && hasShipperClients)"></app-invoice-due-date>
-      <hr class="custom-hr" />
-      <app-shipper-due-date-in-days></app-shipper-due-date-in-days>
+      <hr class="custom-hr" *ngIf="!(hasCarrierClients && hasShipperClients)" />
+      <app-shipper-due-date-in-days *ngIf="!(hasCarrierClients && hasShipperClients)"></app-shipper-due-date-in-days>
     </div>
   </div>
 </div>

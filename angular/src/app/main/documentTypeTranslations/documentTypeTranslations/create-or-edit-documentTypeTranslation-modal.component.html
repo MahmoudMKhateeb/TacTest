@@ -1,4 +1,4 @@
-﻿<div
+<div
   bsModal
   #createOrEditModal="bs-modal"
   class="modal fade"
@@ -23,10 +23,22 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="DocumentTypeDisplayName">{{ l('DocumentType') }}</label>
-            <select name="documentTypeTranslation.coreId" [(ngModel)]="documentTypeTranslation.coreId" class="form-control" required>
-              <option value="{{ -1 }}">{{ l('Select') }} {{ l('DocumentType') }}</option>
-              <option *ngFor="let item of allDocumentTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="DocumentTypeDisplayName"
+              name="documentTypeTranslation.coreId"
+              [(value)]="documentTypeTranslation.coreId"
+              [dataSource]="allDocumentTypes"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('Select') }} {{ l('DocumentType') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="documentTypeTranslation.coreId" [(ngModel)]="documentTypeTranslation.coreId" class="form-control" required>-->
+            <!--              <option value="{{ -1 }}"> {{ l('Select') }} {{ l('DocumentType') }}</option>-->
+            <!--              <option *ngFor="let item of allDocumentTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group">
@@ -45,9 +57,21 @@
 
           <div class="form-group">
             <label for="DocumentTypeTranslation_Language">{{ l('Language') }} <span class="required-fileds"> *</span></label>
-            <select id="DocumentTypeTranslation_Language" name="Language" [(ngModel)]="documentTypeTranslation.language" class="form-control">
-              <option *ngFor="let language of languages" value="{{ language.name }}">{{ language.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="DocumentTypeTranslation_Language"
+              name="documentTypeTranslation.language"
+              [(value)]="documentTypeTranslation.language"
+              [dataSource]="languages"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="name"
+              required
+              placeholder="{{ l('Select') }}"
+            >
+            </dx-select-box>
+            <!--            <select id="DocumentTypeTranslation_Language" name="Language" [(ngModel)]="documentTypeTranslation.language" class="form-control">-->
+            <!--              <option *ngFor="let language of languages" value="{{ language.name }}">{{ language.displayName }}</option>-->
+            <!--            </select>-->
           </div>
         </div>
         <div class="modal-footer">

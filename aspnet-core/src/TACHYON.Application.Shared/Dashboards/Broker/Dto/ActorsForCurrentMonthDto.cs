@@ -6,8 +6,8 @@ namespace TACHYON.Dashboards.Broker
         
         public int GrowthChangePercentage { get; set; }
 
-        public int CarrierActorsPercentage { get; set; }
+        public decimal CarrierActorsPercentage { get; set; }
         
-        public int ShipperActorsPercentage { get; set; }
+        public decimal ShipperActorsPercentage { get; set; }
     }
 }

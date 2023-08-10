@@ -248,7 +248,7 @@ export class LoginService {
     }
 
     if (loginProvider.name === ExternalLoginProvider.FACEBOOK) {
-      new ScriptLoaderService().load('//connect.facebook.net/en_US/sdk.js').then(() => {
+      new ScriptLoaderService().load().then(() => {
         FB.init({
           appId: loginProvider.clientId,
           cookie: false,
@@ -264,8 +264,8 @@ export class LoginService {
         });
       });
     } else if (loginProvider.name === ExternalLoginProvider.GOOGLE) {
-      new ScriptLoaderService().load('https://apis.google.com/js/api.js').then(() => {
-        gapi.load('client:auth2', () => {
+      new ScriptLoaderService().load().then(() => {
+        gapi.load(() => {
           gapi.client
             .init({
               clientId: loginProvider.clientId,

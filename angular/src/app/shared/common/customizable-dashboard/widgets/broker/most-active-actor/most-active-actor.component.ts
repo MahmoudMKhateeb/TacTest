@@ -1,6 +1,6 @@
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
-import { ChartComponent } from '@node_modules/ng-apexcharts';
+import { ApexTooltip, ChartComponent } from '@node_modules/ng-apexcharts';
 
 import { ApexLegend, ApexOptions } from '@node_modules/ng-apexcharts/lib/model/apex-types';
 import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
@@ -18,6 +18,8 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ApexOptions>;
   legend: ApexLegend = {};
+  tooltip: ApexTooltip = {};
+
   DateRangeType = DateRangeType;
   selectionList: any[];
   selectedDateRangeType: DateRangeType;
@@ -75,6 +77,7 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
   }
 
   fillChart(items: ActiveActorDto[]) {
+    const that = this;
     this.colors = [];
     this.chartOptions = {
       series: [
@@ -106,11 +109,12 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
       yaxis: {
         opposite: this.isRtl,
         min: 0,
-        tickAmount: 1,
         floating: false,
         decimalsInFloat: 0,
-        title: {
-          text: this.l('Trips'),
+        labels: {
+          formatter(val) {
+            return val.toFixed(0);
+          },
         },
       },
       dataLabels: {
@@ -130,6 +134,21 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
       show: false,
       formatter: function (legendName: string, opts?: any) {
         return legendName;
+      },
+    };
+    this.tooltip = {
+      x: {
+        show: false,
+      },
+      y: {
+        title: {
+          formatter(seriesName: string) {
+            return '';
+          },
+        },
+        formatter(val: number, opts?: any) {
+          return `${that.l('Trips')}: ${val.toString()}`;
+        },
       },
     };
   }

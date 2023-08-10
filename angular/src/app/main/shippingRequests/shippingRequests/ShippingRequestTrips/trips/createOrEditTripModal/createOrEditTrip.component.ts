@@ -279,14 +279,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     ) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
-      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+        item.value = this.l(item.value);
+        return item;
+      });
     }
     if (!shippingRequestForView) {
       //console.log('!shippingRequestForView');
       this.getAllDrivers();
       this.getAllTrucks(undefined);
       this.getAllGoodCategories();
-      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+        item.value = this.l(item.value);
+        return item;
+      });
       this.getActors();
     }
     if (this.shippingRequest) {
@@ -1154,7 +1160,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._dedicatedShippingRequestsServiceProxy
         .getAllDedicatedDriversForDropDown(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
         .subscribe((res) => {
-          this.allDedicatedDrivers = res;
+          this.allDedicatedDrivers = res.map((item) => {
+            (item as any).disabled = !item.isAvailable;
+            return item;
+          });
         });
     }
   }
@@ -1167,7 +1176,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._dedicatedShippingRequestsServiceProxy
         .getAllDedicateTrucksForDropDown(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
         .subscribe((res) => {
-          this.allDedicatedTrucks = res;
+          this.allDedicatedTrucks = res.map((item) => {
+            (item as any).disabled = !item.isAvailable;
+            return item;
+          });
         });
     }
   }
@@ -1275,21 +1287,25 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    this._dedicatedShippingRequestService.getAllDriversForDropDown(undefined).subscribe((res) => {
-      this.allDrivers = res.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
+    this._dedicatedShippingRequestService
+      .getAllDriversForDropDown(undefined, this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId)
+      .subscribe((res) => {
+        this.allDrivers = res.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
-    });
   }
 
   /**
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    this._dedicatedShippingRequestService.getAllTrucksWithDriversList(truckTypeId, undefined).subscribe((res) => {
-      this.allTrucks = res;
-    });
+    this._dedicatedShippingRequestService
+      .getAllTrucksWithDriversList(truckTypeId, undefined, this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId)
+      .subscribe((res) => {
+        this.allTrucks = res;
+      });
   }
 
   getAllGoodCategories() {

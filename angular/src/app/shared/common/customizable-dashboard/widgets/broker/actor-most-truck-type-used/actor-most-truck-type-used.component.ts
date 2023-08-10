@@ -23,7 +23,7 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
   public chartOptions: Partial<ApexOptions>;
   plotOptions: ApexPlotOptions = {
     bar: {
-      barHeight: '10px',
+      barHeight: '50px',
       columnWidth: '10px',
       distributed: true,
       horizontal: true,
@@ -37,6 +37,8 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
   allTransportTypes: ISelectItemDto[] = [];
   selectedTransportTypeId: string;
   loading: boolean;
+  private start: moment.Moment;
+  private end: moment.Moment;
 
   constructor(
     injector: Injector,
@@ -104,12 +106,14 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
       },
       xaxis: {
         categories,
+        tickAmount: 1,
       },
       yaxis: {
         opposite: this.isRtl,
         labels: {
           show: true,
         },
+        tickAmount: 1,
       },
       tooltip: {
         theme: 'dark',
@@ -121,6 +125,9 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
             formatter: function () {
               return '';
             },
+          },
+          formatter: (val, opts) => {
+            return val + ' ' + this.l('Trip');
           },
         },
       },
@@ -145,7 +152,7 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
       });
       return;
     }
-    this.brokerDashboardServiceProxy.getMostTruckTypesUsed(Number(this.selectedTransportTypeId)).subscribe((res) => {
+    this.brokerDashboardServiceProxy.getMostTruckTypesUsed(Number(this.selectedTransportTypeId), this.start, this.end).subscribe((res) => {
       this.fillChart(res);
       this.loading = false;
     });
@@ -153,6 +160,12 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
 
   selectTransportType(transportType: ISelectItemDto) {
     this.selectedTransportTypeId = transportType.id;
+    this.fetchData();
+  }
+
+  selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
+    this.start = event.start;
+    this.end = event.end;
     this.fetchData();
   }
 }

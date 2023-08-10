@@ -13,7 +13,9 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
   <ItemGroup>
+
     <Compile Remove="App_Data\**" />
+
     <Content Remove="App_Data\**" />
     <EmbeddedResource Remove="App_Data\**" />
     <None Remove="App_Data\**" />
@@ -43,12 +45,15 @@
     <ProjectReference Include="..\TACHYON.Web.Core\TACHYON.Web.Core.csproj" />
     <EmbeddedResource Include="wwwroot\Comoon\Static\*" />
   </ItemGroup>
-  <ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.10.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.1.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.1" />
     <PackageReference Include="CrystalQuartz.AspNetCore" Version="6.8.1" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="21.2.5" />
     <PackageReference Include="FirebaseAdmin" Version="2.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Xml\" />
+    <Folder Include="Reports\" />
     <Folder Include="wwwroot\Plugins\" />
   </ItemGroup>
 </Project>

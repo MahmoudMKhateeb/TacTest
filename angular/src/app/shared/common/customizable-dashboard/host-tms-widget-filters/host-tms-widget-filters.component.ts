@@ -18,6 +18,7 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
   @Output() filterSelected: EventEmitter<number> = new EventEmitter<number>();
   @Input() isDateDropDown = true;
   @Input() isForTripType = false;
+  @Input() showCurrentMonth = false;
   isDropdownOpen = false;
   showCustomStartEnd = false;
   start: Date;
@@ -94,6 +95,39 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
       }
       case 4: {
         this.showCustomStartEnd = !this.showCustomStartEnd;
+        break;
+      }
+      case 5: {
+        const startDate = moment().startOf('week');
+        const endDate = moment().endOf('week');
+
+        this.optionSelected.emit({ start: startDate, end: endDate });
+        console.log('Start Date:', startDate);
+        console.log('End Date:', endDate);
+        this.showCustomStartEnd = false;
+        this.toggleDropdown();
+        break;
+      }
+      case 6: {
+        const startDate = moment().startOf('month');
+        const endDate = moment().endOf('month');
+
+        this.optionSelected.emit({ start: startDate, end: endDate });
+        console.log('Start Date:', startDate);
+        console.log('End Date:', endDate);
+        this.showCustomStartEnd = false;
+        this.toggleDropdown();
+        break;
+      }
+      case 7: {
+        const startDate = moment().subtract(1, 'month').startOf('month');
+        const endDate = moment().subtract(1, 'month').endOf('month');
+
+        this.optionSelected.emit({ start: startDate, end: endDate });
+        console.log('Start Date:', startDate);
+        console.log('End Date:', endDate);
+        this.showCustomStartEnd = false;
+        this.toggleDropdown();
         break;
       }
       default:

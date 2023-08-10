@@ -130,35 +130,99 @@
                 </div>
                 <div class="col-md-3">
                   <label for="IsLiftgateFilterSelect">{{ l('IsLiftgate') }}</label>
-                  <select class="form-control" name="IsLiftgateFilter" id="IsLiftgateFilterSelect" [(ngModel)]="isLiftgateFilter">
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="0">{{ l('False') }}</option>
-                    <option value="1">{{ l('True') }}</option>
-                  </select>
+                  <dx-select-box
+                    id="IsLiftgateFilterSelect"
+                    name="IsLiftgateFilter"
+                    [(value)]="isLiftgateFilter"
+                    [dataSource]="[
+                      { displayName: l('All'), value: -1 },
+                      { displayName: l('False'), value: 0 },
+                      { displayName: l('True'), value: 1 }
+                    ]"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="value"
+                    required
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select class="form-control" name="IsLiftgateFilter" id="IsLiftgateFilterSelect" [(ngModel)]="isLiftgateFilter">-->
+                  <!--                    <option value="-1">{{ l('All') }}</option>-->
+                  <!--                    <option value="0">{{ l('False') }}</option>-->
+                  <!--                    <option value="1">{{ l('True') }}</option>-->
+                  <!--                  </select>-->
                 </div>
                 <div class="col-md-3">
                   <label for="IsReeferFilterSelect">{{ l('IsReefer') }}</label>
-                  <select class="form-control" name="IsReeferFilter" id="IsReeferFilterSelect" [(ngModel)]="isReeferFilter">
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="0">{{ l('False') }}</option>
-                    <option value="1">{{ l('True') }}</option>
-                  </select>
+                  <dx-select-box
+                    id="IsReeferFilterSelect"
+                    name="IsReeferFilter"
+                    [(value)]="isReeferFilter"
+                    [dataSource]="[
+                      { displayName: l('All'), value: -1 },
+                      { displayName: l('False'), value: 0 },
+                      { displayName: l('True'), value: 1 }
+                    ]"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="value"
+                    required
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select class="form-control" name="IsReeferFilter" id="IsReeferFilterSelect" [(ngModel)]="isReeferFilter">-->
+                  <!--                    <option value="-1">{{ l('All') }}</option>-->
+                  <!--                    <option value="0">{{ l('False') }}</option>-->
+                  <!--                    <option value="1">{{ l('True') }}</option>-->
+                  <!--                  </select>-->
                 </div>
                 <div class="col-md-3">
                   <label for="IsVentedFilterSelect">{{ l('IsVented') }}</label>
-                  <select class="form-control" name="IsVentedFilter" id="IsVentedFilterSelect" [(ngModel)]="isVentedFilter">
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="0">{{ l('False') }}</option>
-                    <option value="1">{{ l('True') }}</option>
-                  </select>
+                  <dx-select-box
+                    id="IsVentedFilterSelect"
+                    name="IsVentedFilter"
+                    [(value)]="isVentedFilter"
+                    [dataSource]="[
+                      { displayName: l('All'), value: -1 },
+                      { displayName: l('False'), value: 0 },
+                      { displayName: l('True'), value: 1 }
+                    ]"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="value"
+                    required
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select class="form-control" name="IsVentedFilter" id="IsVentedFilterSelect" [(ngModel)]="isVentedFilter">-->
+                  <!--                    <option value="-1">{{ l('All') }}</option>-->
+                  <!--                    <option value="0">{{ l('False') }}</option>-->
+                  <!--                    <option value="1">{{ l('True') }}</option>-->
+                  <!--                  </select>-->
                 </div>
                 <div class="col-md-3">
                   <label for="IsRollDoorFilterSelect">{{ l('IsRollDoor') }}</label>
-                  <select class="form-control" name="IsRollDoorFilter" id="IsRollDoorFilterSelect" [(ngModel)]="isRollDoorFilter">
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="0">{{ l('False') }}</option>
-                    <option value="1">{{ l('True') }}</option>
-                  </select>
+                  <dx-select-box
+                    id="IsRollDoorFilterSelect"
+                    name="IsRollDoorFilter"
+                    [(value)]="isRollDoorFilter"
+                    [dataSource]="[
+                      { displayName: l('All'), value: -1 },
+                      { displayName: l('False'), value: 0 },
+                      { displayName: l('True'), value: 1 }
+                    ]"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="value"
+                    required
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select class="form-control" name="IsRollDoorFilter" id="IsRollDoorFilterSelect" [(ngModel)]="isRollDoorFilter">-->
+                  <!--                    <option value="-1">{{ l('All') }}</option>-->
+                  <!--                    <option value="0">{{ l('False') }}</option>-->
+                  <!--                    <option value="1">{{ l('True') }}</option>-->
+                  <!--                  </select>-->
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">

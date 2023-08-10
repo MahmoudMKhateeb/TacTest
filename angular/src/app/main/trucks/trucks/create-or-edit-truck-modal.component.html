@@ -27,22 +27,35 @@
             <div class="col-sm-12" *ngIf="isTruckTenantRequired">
               <div class="form-group">
                 <label>{{ 'Carrier' | localize }}<span class="text-danger">*</span> </label>
-                <select
-                  #TruckTenantId="ngModel"
-                  class="form-control"
+                <dx-select-box
                   name="TruckTenantId"
                   id="TruckTenantId"
-                  [(ngModel)]="truck.tenantId"
-                  [ngClass]="{
-                    'is-valid': TruckTenantId.touched && TruckTenantId.valid,
-                    'is-invalid': TruckTenantId.touched && !TruckTenantId.valid
-                  }"
-                  [required]="isTruckTenantRequired"
-                  (change)="LoadDrivers()"
+                  [(value)]="truck.tenantId"
+                  [dataSource]="carriers"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  (onSelectionChanged)="LoadDrivers()"
+                  [attr.required]="isTruckTenantRequired"
+                  placeholder="{{ l('SelectACarrier') }}"
                 >
-                  <option [ngValue]="null" selected disabled>{{ l('SelectACarrier') }}</option>
-                  <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  #TruckTenantId="ngModel"-->
+                <!--                  class="form-control"-->
+                <!--                  name="TruckTenantId"-->
+                <!--                  id="TruckTenantId"-->
+                <!--                  [(ngModel)]="truck.tenantId"-->
+                <!--                  [ngClass]="{-->
+                <!--                    'is-valid': TruckTenantId.touched && TruckTenantId.valid,-->
+                <!--                    'is-invalid': TruckTenantId.touched && !TruckTenantId.valid-->
+                <!--                  }"-->
+                <!--                  [required]="isTruckTenantRequired"-->
+                <!--                  (change)="LoadDrivers()"-->
+                <!--                >-->
+                <!--                  <option [ngValue]="null" selected disabled>{{ l('SelectACarrier') }}</option>-->
+                <!--                  <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                <!--                </select>-->
               </div>
             </div>
             <div class="col-sm-12" *ngIf="this.feature.isEnabled('App.CarrierClients')">
@@ -64,6 +77,7 @@
                     valueExpr="id"
                     [required]="true"
                     placeholder="{{ l('SelectActor') }}"
+                    (onValueChanged)="LoadDrivers()"
                   >
                   </dx-select-box>
                   <validation-messages [formCtrl]="carrierActorId"></validation-messages>
@@ -79,45 +93,70 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading
                   }"
                 >
-                  <select
+                  <dx-select-box
                     id="driverUserId"
-                    #driverUserId="ngModel"
-                    [(ngModel)]="truck.driverUserId"
-                    class="form-control"
                     name="truck.driverUserId"
-                    [ngClass]="{
-                      'is-valid': driverUserId.valid,
-                      'is-invalid': truckForm.submitted && driverUserId.invalid
-                    }"
+                    [(value)]="truck.driverUserId"
+                    [dataSource]="allDrivers"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    required
+                    placeholder="{{ l('SelectDriver') }}"
                   >
-                    <option [ngValue]="null" disabled>{{ l('SelectDriver') }}</option>
-                    <option *ngFor="let item of allDrivers" value="{{ item.id }}">{{ item.displayName }}</option>
-                  </select>
+                  </dx-select-box>
+                  <!--                  <select-->
+                  <!--                    id="driverUserId"-->
+                  <!--                    #driverUserId="ngModel"-->
+                  <!--                    [(ngModel)]="truck.driverUserId"-->
+                  <!--                    class="form-control"-->
+                  <!--                    name="truck.driverUserId"-->
+                  <!--                    [ngClass]="{-->
+                  <!--                      'is-valid': driverUserId.valid,-->
+                  <!--                      'is-invalid': truckForm.submitted && driverUserId.invalid-->
+                  <!--                    }"-->
+                  <!--                  >-->
+                  <!--                    <option [ngValue]="null" disabled>{{ l('SelectDriver') }}</option>-->
+                  <!--                    <option *ngFor="let item of allDrivers" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                  <!--                  </select>-->
                 </div>
-                <validation-messages [formCtrl]="capacityId"></validation-messages>
+                <!--                <validation-messages [formCtrl]="driverUserId"></validation-messages>-->
                 <span class="form-text text-muted">{{ l('SelectTrucksTypeToOpenCapacity') }} </span>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="transportTypeId">{{ l('TransportType') }}<span class="text-danger">*</span> </label>
-                <select
+                <dx-select-box
                   id="transportTypeId"
-                  #transportTypeId="ngModel"
-                  [(ngModel)]="truck.transportTypeId"
-                  class="form-control"
                   name="truck.transportTypeId"
-                  (change)="transportTypeSelectChange(truck.transportTypeId)"
+                  [(value)]="truck.transportTypeId"
+                  [dataSource]="allTransportTypes"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="transportTypeSelectChange(truck.transportTypeId)"
+                  displayExpr="displayName"
+                  valueExpr="id"
                   required
-                  [ngClass]="{
-                    'is-valid': transportTypeId.valid,
-                    'is-invalid': truckForm.submitted && transportTypeId.invalid
-                  }"
+                  placeholder="{{ l('Select') }} {{ l('TransportType') }}"
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}</option>
-                  <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
-                <validation-messages [formCtrl]="transportTypeId"></validation-messages>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  id="transportTypeId"-->
+                <!--                  #transportTypeId="ngModel"-->
+                <!--                  [(ngModel)]="truck.transportTypeId"-->
+                <!--                  class="form-control"-->
+                <!--                  name="truck.transportTypeId"-->
+                <!--                  (change)="transportTypeSelectChange(truck.transportTypeId)"-->
+                <!--                  required-->
+                <!--                  [ngClass]="{-->
+                <!--                    'is-valid': transportTypeId.valid,-->
+                <!--                    'is-invalid': truckForm.submitted && transportTypeId.invalid-->
+                <!--                  }"-->
+                <!--                >-->
+                <!--                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}</option>-->
+                <!--                  <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                <!--                </select>-->
+                <!--                <validation-messages [formCtrl]="transportTypeId"></validation-messages>-->
                 <span class="form-text text-muted">{{ l('SelectaTransportType') }} </span>
               </div>
 
@@ -156,25 +195,39 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading
                   }"
                 >
-                  <select
+                  <dx-select-box
                     id="trucksTypeId"
-                    #trucksTypeId="ngModel"
-                    [(ngModel)]="truck.trucksTypeId"
-                    class="form-control"
                     name="truck.trucksTypeId"
-                    (change)="trucksTypeSelectChange(truck.trucksTypeId)"
-                    [disabled]="truck.transportTypeId != null && allTransportTypes != null ? null : true"
+                    [(value)]="truck.trucksTypeId"
+                    [dataSource]="allTruckTypesByTransportType"
+                    [searchEnabled]="true"
+                    (onSelectionChanged)="trucksTypeSelectChange(truck.trucksTypeId)"
+                    displayExpr="displayName"
+                    valueExpr="id"
                     required
-                    [ngClass]="{
-                      'is-valid': trucksTypeId.valid,
-                      'is-invalid': truckForm.submitted && trucksTypeId.invalid
-                    }"
+                    [disabled]="truck.transportTypeId != null && allTransportTypes != null ? null : true"
+                    placeholder="{{ l('Select') }} {{ l('TruckType') }}"
                   >
-                    <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
-                    <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}">{{ item.displayName }}</option>
-                  </select>
+                  </dx-select-box>
+                  <!--                  <select-->
+                  <!--                    id="trucksTypeId"-->
+                  <!--                    #trucksTypeId="ngModel"-->
+                  <!--                    [(ngModel)]="truck.trucksTypeId"-->
+                  <!--                    class="form-control"-->
+                  <!--                    name="truck.trucksTypeId"-->
+                  <!--                    (change)="trucksTypeSelectChange(truck.trucksTypeId)"-->
+                  <!--                    [disabled]="truck.transportTypeId != null && allTransportTypes != null ? null : true"-->
+                  <!--                    required-->
+                  <!--                    [ngClass]="{-->
+                  <!--                      'is-valid': trucksTypeId.valid,-->
+                  <!--                      'is-invalid': truckForm.submitted && trucksTypeId.invalid-->
+                  <!--                    }"-->
+                  <!--                  >-->
+                  <!--                    <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>-->
+                  <!--                    <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                  <!--                  </select>-->
                 </div>
-                <validation-messages [formCtrl]="trucksTypeId"></validation-messages>
+                <!--                <validation-messages [formCtrl]="trucksTypeId"></validation-messages>-->
                 <span class="form-text text-muted">{{ l('SelectTransportTypeToOpenTrucksType') }} </span>
               </div>
               <div class="form-group m-form__group" [hidden]="!IfOther(allTruckTypesByTransportType, truck.trucksTypeId)">
@@ -211,13 +264,16 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading
                   }"
                 >
-                  <select
+                  <dx-select-box
                     id="capacityId"
-                    #capacityId="ngModel"
-                    [(ngModel)]="truck.capacityId"
-                    class="form-control"
                     name="truck.capacityId"
-                    [attr.disabled]="
+                    [(value)]="truck.capacityId"
+                    [dataSource]="allTrucksCapByTruckTypeId"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    required
+                    [disabled]="
                       capacityLoading
                         ? true
                         : null || truck.transportTypeId == null
@@ -228,17 +284,37 @@
                         ? true
                         : null
                     "
-                    required
-                    [ngClass]="{
-                      'is-valid': capacityId.valid,
-                      'is-invalid': truckForm.submitted && capacityId.invalid
-                    }"
+                    placeholder="{{ l('Select') }} {{ l('CapacityCategory') }}"
                   >
-                    <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
-                    <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
-                  </select>
+                  </dx-select-box>
+                  <!--                  <select-->
+                  <!--                    id="capacityId"-->
+                  <!--                    #capacityId="ngModel"-->
+                  <!--                    [(ngModel)]="truck.capacityId"-->
+                  <!--                    class="form-control"-->
+                  <!--                    name="truck.capacityId"-->
+                  <!--                    [attr.disabled]="-->
+                  <!--                      capacityLoading-->
+                  <!--                        ? true-->
+                  <!--                        : null || truck.transportTypeId == null-->
+                  <!--                        ? true-->
+                  <!--                        : null || allTransportTypes == null-->
+                  <!--                        ? true-->
+                  <!--                        : null || allTrucksCapByTruckTypeId == null-->
+                  <!--                        ? true-->
+                  <!--                        : null-->
+                  <!--                    "-->
+                  <!--                    required-->
+                  <!--                    [ngClass]="{-->
+                  <!--                      'is-valid': capacityId.valid,-->
+                  <!--                      'is-invalid': truckForm.submitted && capacityId.invalid-->
+                  <!--                    }"-->
+                  <!--                  >-->
+                  <!--                    <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>-->
+                  <!--                    <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                  <!--                  </select>-->
                 </div>
-                <validation-messages [formCtrl]="capacityId"></validation-messages>
+                <!--                <validation-messages [formCtrl]="capacityId"></validation-messages>-->
                 <span class="form-text text-muted">{{ l('SelectTrucksTypeToOpenCapacity') }} </span>
               </div>
             </div>
@@ -292,22 +368,34 @@
           <div class="row">
             <div class="form-group col-md-6">
               <label for="TruckStatus">{{ l('TruckStatus') }}<span class="text-danger">*</span> </label>
-              <select
-                #TruckStatus="ngModel"
+              <dx-select-box
                 id="TruckStatus"
-                [(ngModel)]="truck.truckStatusId"
-                class="form-control"
                 name="truck.truckStatusId"
+                [(value)]="truck.truckStatusId"
+                [dataSource]="allTruckStatuss"
+                [searchEnabled]="true"
+                displayExpr="translatedDisplayName"
+                valueExpr="id"
                 required
-                [ngClass]="{
-                  'is-valid': TruckStatus.valid,
-                  'is-invalid': truckForm.submitted && TruckStatus.invalid
-                }"
+                placeholder="{{ l('Select') }} {{ l('TruckStatus') }}"
               >
-                <option [ngValue]="null">{{ l('Select') }} {{ l('TruckStatus') }}</option>
-                <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ l(item.translatedDisplayName) }}</option>
-              </select>
-              <validation-messages [formCtrl]="TruckStatus"></validation-messages>
+              </dx-select-box>
+              <!--              <select-->
+              <!--                #TruckStatus="ngModel"-->
+              <!--                id="TruckStatus"-->
+              <!--                [(ngModel)]="truck.truckStatusId"-->
+              <!--                class="form-control"-->
+              <!--                name="truck.truckStatusId"-->
+              <!--                required-->
+              <!--                [ngClass]="{-->
+              <!--                  'is-valid': TruckStatus.valid,-->
+              <!--                  'is-invalid': truckForm.submitted && TruckStatus.invalid-->
+              <!--                }"-->
+              <!--              >-->
+              <!--                <option [ngValue]="null">{{ l('Select') }} {{ l('TruckStatus') }}</option>-->
+              <!--                <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ l(item.translatedDisplayName) }}</option>-->
+              <!--              </select>-->
+              <!--              <validation-messages [formCtrl]="TruckStatus"></validation-messages>-->
             </div>
             <div class="form-group col-md-6">
               <label for="PlateTypeId"> {{ l('PlateType') }}<span class="text-danger">*</span></label>
@@ -316,28 +404,40 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': plateTypesLoading
                 }"
               >
-                <select
-                  #PlateTypeId="ngModel"
+                <dx-select-box
                   id="PlateTypeId"
-                  [(ngModel)]="truck.plateTypeId"
-                  class="form-control"
                   name="truck.plateTypeId"
+                  [(value)]="truck.plateTypeId"
+                  [dataSource]="allPlateTypes"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
                   required
-                  [ngClass]="{
-                    'is-valid': PlateTypeId.valid,
-                    'is-invalid': truckForm.submitted && PlateTypeId.invalid
-                  }"
+                  placeholder="{{ l('SelectPlateType') }}"
                 >
-                  <option [ngValue]="null">{{ l('SelectPlateType') }}</option>
-                  <option
-                    *ngFor="let item of allPlateTypes"
-                    [value]="item.id"
-                    [selected]="item.isDefault && (!truck.plateTypeId || truck.plateTypeId == item.id)"
-                  >
-                    {{ item.displayName }}
-                  </option>
-                </select>
-                <validation-messages [formCtrl]="PlateTypeId"></validation-messages>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  #PlateTypeId="ngModel"-->
+                <!--                  id="PlateTypeId"-->
+                <!--                  [(ngModel)]="truck.plateTypeId"-->
+                <!--                  class="form-control"-->
+                <!--                  name="truck.plateTypeId"-->
+                <!--                  required-->
+                <!--                  [ngClass]="{-->
+                <!--                    'is-valid': PlateTypeId.valid,-->
+                <!--                    'is-invalid': truckForm.submitted && PlateTypeId.invalid-->
+                <!--                  }"-->
+                <!--                >-->
+                <!--                  <option [ngValue]="null">{{ l('SelectPlateType') }}</option>-->
+                <!--                  <option-->
+                <!--                    *ngFor="let item of allPlateTypes"-->
+                <!--                    [value]="item.id"-->
+                <!--                    [selected]="item.isDefault && (!truck.plateTypeId || truck.plateTypeId == item.id)"-->
+                <!--                  >-->
+                <!--                    {{ item.displayName }}-->
+                <!--                  </option>-->
+                <!--                </select>-->
+                <!--                <validation-messages [formCtrl]="PlateTypeId"></validation-messages>-->
               </div>
             </div>
 

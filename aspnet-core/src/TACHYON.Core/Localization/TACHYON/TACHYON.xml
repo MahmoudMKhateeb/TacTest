@@ -3255,8 +3255,8 @@
 	<text name="NumberOfActiveActors">Number Of Active Actors</text>
 	<text name="NumberOfNonActiveActors">Number Of Non Active Actors</text>
 	<text name="Shippers">Shippers</text>
-	<text name="NewInvoicesVsPaidInvoices">New Invoices Vs Paid Invoices</text>
-	<text name="PaidInvoiceVsClaimedInvoice">Paid Invoice Vs Claimed Invoice</text>
+	<text name="NewInvoicesVsPaidInvoices">New Invoices Vs Paid Invoices - Shipper Client </text>
+	<text name="PaidInvoiceVsClaimedInvoice">Paid Invoice Vs Claimed Invoice - Carrier Client</text>
 	<text name="Claimed">Claimed</text>
 	<text name="Week">Week</text>
 	<text name="Sun">Sun</text>
@@ -3319,7 +3319,7 @@
   <text name="CarrierInvoiceNumber">Carrier invoice number</text>
 
     <text name="NewWaybill">New waybill</text>
-    <text name="directShipments">Direct shipments</text>
+    <text name="directShipments">SaaS Shipment</text>
     <text name="DeliveryNote">Delivery note</text>
     <text name="SealNumber">Seal number</text>
     <text name="SaasInvoicingActivation">SAAS invoicing activation</text>
@@ -3382,7 +3382,7 @@
     <text name="withinAWeek">with in a Week</text>
     <text name="IsTaxVatIncluded">Is tax vat included</text>
     <text name="ExperienceFacility">How Were your experience on this Facility?</text>
-    <text name="ClickToRateTheShippingExperiencewith">Click to rate the shipping experience with</text>
+    <text name="ClickToRateTheShippingExperiencewith">How Was The Shipping Experience with</text>
     <text name="ClickToRateTheShippingExperience">Click to rate the shipping experience</text>
     <text name="DeliveryDate">Delivery date</text>
     
@@ -3430,9 +3430,104 @@
     <text name="Top">Top</text>
     <text name="Worst">Worst</text>
     <text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
+    <text name="LastWeek">Last Week</text>
 
     <text name="ValueOfGoods">Value of goods</text>
     <text name="InsuranceCoverage">Insurance coverage</text>
+    <text name="SubmitOffer">Submit offer</text>
+    <text name="SendPriceOnBehalfCarrier">Send price on behalf carrier</text>
+    <text name="SendRequest">Send request</text>
+    <text name="IsPODUploaded">Is POD uploaded</text>
+    <text name="IsInvoiceIssued">Is invoice issued</text>
+    <text name="AcknowledgeOnBehalfOfShipper">Acknowledge on behalf of shipper</text>
+    <text name="AcknowledgeOnBehalfOfCarrier">Acknowledge on behalf of carrier</text>
+    <text name="Hour">Hour</text>
+    <text name="Minute">Minute</text>
+    <text name="Before">Before</text>
+    <text name="NumberOfDedicatedTrips">Number Of Dedicated Trips</text>
     
+		
+	<text name="AllReports">All Reports</text>
+    <text name="CreateReportType">Create Report Type</text>
+    <text name="MyReports">My Reports</text>
+    <text name="CreateReport">Create Report</text>
+    <text name="Reporting">Reporting</text>
+    <text name="EnterValue">Enter Value</text>
+    <text name="SelectRole">Select Role</text>
+    <text name="ReportDetails">Report Details</text>
+    <text name="ReportSetup">Report Setup</text>
+    <text name="SelectAtLeastOneOfTheFilters">Select at least one of the filters</text>
+    <text name="SelectFilters">Select Filters</text>
+    <text name="ReportDesigner">Report Designer</text>
+    <text name="PleaseSelectExcludedCompanies">Please select excluded companies</text>
+    <text name="PleaseSelectEditionType">Please select edition type</text>
+    <text name="ReportAccessSetup">Report Access Setup</text>
+    <text name="FilterName">Filter Name</text>
+    <text name="PleaseEnterReportName">Please enter report name</text>
+    <text name="NameAlreadyUsedBefore">Name already used before</text>
+    <text name="EnterReportName">Enter report name</text>
+    <text name="ExcludedCompanies">Excluded Companies</text>
+    <text name="GrantedEditions">Granted Editions</text>
+    <text name="CreateNewReportType">Create New Report Type</text>
+    <text name="AllReportTypes">All Report Types</text>
+    <text name="ReportFile">Report File</text>
+    <text name="ExcludedUsers">Excluded Users</text>
+    <text name="GrantedRoles">Granted Roles</text>
+    <text name="ReportFormat">Report Format</text>
+    <text name="ReportName">Report Name</text>
+    <text name="ReportType">Report Type</text>
+	<text name="TripDetailsReport">Trip Details Report</text>
+	<text name="ReportTypeSetup">Report Type Setup</text>
+	<text name="SelectReportType">Select a report type</text>
+	<text name="PleaseSelectReportType">Please select a report type</text>
+	<text name="GrantedEditionType">Granted Edition Type</text>
+	<text name="SelectAnExcludedCompany">Select an excluded company</text>
+	<text name="IsPodSubmitted">Is proof of delivery submitted</text>
+	<text name="InvoiceIssued">Is invoice issued</text>
+	<text name="CreateNewReport">Create A New Report</text>
+	<text name="PleaseSelectRole">Please select a role</text>
+	<text name="SelectAnExcludedUser">Select an excluded user</text>
+	<text name="PleaseSelectExcludedUsers">Please select an excluded user</text>
+	<text name="PleaseSelectFormat">Please select the report file format</text>
+	<text name="SelectFormat">Select a format</text>
+	<text name="PodPerformanceReport">Pod Performance Report</text>
+	<text name="InvoiceStatus">Invoice Status</text>
+	<text name="InvoiceNotIssued">Invoice Not Issued</text>
+	<text name="FinancialReport">Financial Report</text>
+	<text name="PodStatus">Pod Status</text>
+	<text name="Submitted">Submitted</text>
+	<text name="MinCostWithVat">Min Cost With Vat</text>
+	<text name="MinCostWithoutVat">Min Cost Without Vat</text>
+	<text name="MinSellingWithVat">Min Selling With Vat</text>
+	<text name="MinSellingWithoutVat">Min Selling Without Vat</text>
+	<text name="MinProfitWithVat">Min Profit With Vat</text>
+	<text name="MinProfitWithoutVat">Min Profit Without Vat</text>
+	<text name="MaxCostWithVat">Max Cost With Vat</text>
+	<text name="MaxCostWithoutVat">Max Cost Without Vat</text>
+	<text name="MaxSellingWithVat">Max Selling With Vat</text>
+	<text name="MaxSellingWithoutVat">Max Selling Without Vat</text>
+	<text name="MaxProfitWithVat">Max Profit With Vat</text>
+	<text name="MaxProfitWithoutVat">Max Profit Without Vat</text>
+		
+    
+
+	<text name="NumberOfDeliveredTripsWidget">Number Of Delivered Trips Widget</text>
+	<text name="NumberOfOngoingTripsWidget">Number Of Ongoing Trips Widget</text>
+	<text name="RouteTypesUsageWidget">Route Types Usage Widget</text>
+	<text name="NumberOfRequestsPerAreaOrCityWidget">Number Of Requests For Each City Widget</text>
+	<text name="NumberOfRegisteredCompaniesWidget">Number Of Registered Companies Widget</text>
+	<text name="NumberOfDriversAndTrucksWidget">Number Of Drivers And Trucks Widget</text>
+	<text name="TopRatedShippersAndCarriersWidget">Top Shippers And Carriers Widget</text>
+	<text name="NormalRequestsVSDedicatedRequestsWidget">Normal Requests VS Dedicated Requests Widget</text>
+	<text name="MostTruckTypeUsedWidget">Most Truck Type Used Widget</text>
+	<text name="NumberOfTripsWidget">Number Of Trips Widget</text>
+	<text name="NumberOfTruckAggregationTripsVsSaasTrips">Number Of Truck Aggregation Trips Vs Saas Trips</text>
+	<text name="TopWorstRatedPerTrip">Top Worst Rated Per Trip Widget</text>
+	<text name="CostVsSellingVsProfitOfSaasTripsWidget">Cost Vs Selling Vs Profit Of Saas Trips Widget</text>
+	<text name="NeedsActions">Needs Actions</text>
+	<text name="ClaimedInvoicesVsPaidInvoices">Claimed Invoices Vs Paid Invoices</text>
+
+	
+	<text name="ReportBeingGeneratedInTheBackGround">Report is Being Generated in the Background,The page will update once ready</text>
 	</texts>
 </localizationDictionary>

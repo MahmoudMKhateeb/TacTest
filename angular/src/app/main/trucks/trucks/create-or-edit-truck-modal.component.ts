@@ -145,7 +145,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
       });
 
-    this._trucksServiceProxy.getAllDriversForDropDown(null).subscribe((result) => {
+    this._trucksServiceProxy.getAllDriversForDropDown(null, null).subscribe((result) => {
       this.allDrivers = result;
     });
 
@@ -410,9 +410,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     );
   }
   LoadDrivers() {
-    this._trucksServiceProxy.getAllDriversForDropDown(this.isTachyonDealer ? this.truck.tenantId : null).subscribe((result) => {
-      this.allDrivers = result;
-    });
+    this._trucksServiceProxy
+      .getAllDriversForDropDown(this.isTachyonDealer ? this.truck.tenantId : null, this.truck.carrierActorId)
+      .subscribe((result) => {
+        this.allDrivers = result;
+      });
   }
   // plateNumberNoramlize() {
   //   this.truck.plateNumber = this.truck.plateNumber
