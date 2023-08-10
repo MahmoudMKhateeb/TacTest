@@ -40,17 +40,30 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="templateTypeFilter">{{ l('TemplateType') }}</label>
-                    <select
-                      class="form-control"
+                    <dx-select-box
                       id="templateTypeFilter"
                       name="templateTypeFilter"
-                      [(ngModel)]="templateTypeFilter"
-                      ngModel
-                      (ngModelChange)="getTemplates()"
+                      [(value)]="templateTypeFilter"
+                      [dataSource]="availableEntityTypes"
+                      [searchEnabled]="true"
+                      (onSelectionChanged)="getTemplates()"
+                      displayExpr="value"
+                      valueExpr="key"
+                      required
+                      placeholder="{{ l('Select') }}"
                     >
-                      <option value="" selected>{{ l('All') }}</option>
-                      <option *ngFor="let item of availableEntityTypes" value="{{ item.key }}">{{ l(item.value) }}</option>
-                    </select>
+                    </dx-select-box>
+                    <!--                    <select-->
+                    <!--                      class="form-control"-->
+                    <!--                      id="templateTypeFilter"-->
+                    <!--                      name="templateTypeFilter"-->
+                    <!--                      [(ngModel)]="templateTypeFilter"-->
+                    <!--                      ngModel-->
+                    <!--                      (ngModelChange)="getTemplates()"-->
+                    <!--                    >-->
+                    <!--                      <option value="" selected>{{ l('All') }}</option>-->
+                    <!--                      <option *ngFor="let item of availableEntityTypes" value="{{ item.key }}">{{ l(item.value) }}</option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
               </div>

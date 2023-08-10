@@ -52,14 +52,26 @@
           <div class="form-group row" *ngIf="CanShowCommissions">
             <div class="col-lg-4">
               <label>{{ l('CommissionType') }}:</label>
-              <select
-                class="form-control"
+              <dx-select-box
+                id="commissionType"
                 name="CommissionType"
-                [(ngModel)]="offer.commissionType"
-                (change)="changeItemComissionValue();calculator()"
+                [(value)]="offer.commissionType"
+                [dataSource]="priceOfferCommissionType"
+                [searchEnabled]="true"
+                (onSelectionChanged)="changeItemComissionValue();calculator()"
+                displayExpr="value"
+                valueExpr="key"
+                placeholder="{{ l('Select') }}"
               >
-                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
-              </select>
+              </dx-select-box>
+              <!--              <select-->
+              <!--                class="form-control"-->
+              <!--                name="CommissionType"-->
+              <!--                [(ngModel)]="offer.commissionType"-->
+              <!--                (change)="changeItemComissionValue();calculator()"-->
+              <!--              >-->
+              <!--                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>-->
+              <!--              </select>-->
             </div>
             <div class="col-lg-4">
               <label>{{ l('CommissionTypeValue') }}:</label>
@@ -76,15 +88,26 @@
           <div class="form-group row" *ngIf="CanShowCommissions">
             <div class="col-lg-4">
               <label>{{ l('VasCommissionType') }}:</label>
-
-              <select
-                class="form-control form-control-sm"
-                name="vasCommissionType"
-                [(ngModel)]="offer.vasCommissionType"
-                (change)="changeVasComissionValue();calculator()"
+              <dx-select-box
+                id="vasCommissionType"
+                name="offer.vasCommissionType"
+                [(value)]="offer.vasCommissionType"
+                [dataSource]="priceOfferCommissionType"
+                [searchEnabled]="true"
+                (onSelectionChanged)="changeVasComissionValue();calculator()"
+                displayExpr="value"
+                valueExpr="key"
+                placeholder="{{ l('Select') }}"
               >
-                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
-              </select>
+              </dx-select-box>
+              <!--              <select-->
+              <!--                class="form-control form-control-sm"-->
+              <!--                name="vasCommissionType"-->
+              <!--                [(ngModel)]="offer.vasCommissionType"-->
+              <!--                (change)="changeVasComissionValue();calculator()"-->
+              <!--              >-->
+              <!--                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>-->
+              <!--              </select>-->
             </div>
             <div class="col-lg-4">
               <label>{{ l('VasCommissionPercentageOrAddValue') }}:</label>

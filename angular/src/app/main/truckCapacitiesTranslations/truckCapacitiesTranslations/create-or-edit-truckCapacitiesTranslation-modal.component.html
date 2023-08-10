@@ -23,10 +23,22 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="CapacityDisplayName">{{ l('Capacity') }}</label>
-            <select name="truckCapacitiesTranslation.coreId" [(ngModel)]="truckCapacitiesTranslation.coreId" class="form-control" required>
-              <option value="">{{ l('SelectACapacity') }}</option>
-              <option *ngFor="let item of allCapacitys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="CapacityDisplayName"
+              name="truckCapacitiesTranslation.coreId"
+              [(value)]="truckCapacitiesTranslation.coreId"
+              [dataSource]="allCapacitys"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectACapacity') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="truckCapacitiesTranslation.coreId" [(ngModel)]="truckCapacitiesTranslation.coreId" class="form-control" required>-->
+            <!--              <option value="">{{ l('SelectACapacity') }}</option>-->
+            <!--              <option *ngFor="let item of allCapacitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group">

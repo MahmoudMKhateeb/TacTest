@@ -43,7 +43,10 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
   entityType: SavedEntityType = SavedEntityType.ShippingRequestTemplate;
-  availableEntityTypes = this.enumToArray.transform(SavedEntityType);
+  availableEntityTypes = this.enumToArray.transform(SavedEntityType).map((item) => {
+    item.value = this.l(item.value);
+    return item;
+  });
 
   private entityTypesEnum = SavedEntityType;
 
@@ -87,7 +90,9 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
     this.createOrEditFacilityModal.show();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.availableEntityTypes.unshift({ key: '', value: this.l('All') });
+  }
 
   /**
    * Deletes a Template

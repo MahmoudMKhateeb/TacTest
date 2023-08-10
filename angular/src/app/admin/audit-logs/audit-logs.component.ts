@@ -94,6 +94,7 @@ export class AuditLogsComponent extends AppComponentBase implements AfterViewIni
   getEntityChanges(event?: LazyLoadEvent) {
     this._auditLogService.getEntityHistoryObjectTypes().subscribe((result) => {
       this.objectTypes = result;
+      this.objectTypes.unshift(NameValueDto.fromJS({ name: this.l('All'), value: undefined }));
     });
 
     if (this.primengTableHelperEntityChanges.shouldResetPaging(event)) {

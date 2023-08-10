@@ -51,9 +51,21 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="LanguageFilter">{{ l('Language') }}</label>
-                    <select id="LanguageFilter" name="languageFilter" [(ngModel)]="languageFilter" class="form-control">
-                      <option *ngFor="let language of languages" value="{{ language.name }}">{{ language.displayName }}</option>
-                    </select>
+                    <dx-select-box
+                      id="LanguageFilter"
+                      name="languageFilter"
+                      [(value)]="languageFilter"
+                      [dataSource]="languages"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="name"
+                      required
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select id="LanguageFilter" name="languageFilter" [(ngModel)]="languageFilter" class="form-control">-->
+                    <!--                      <option *ngFor="let language of languages" value="{{ language.name }}">{{ language.displayName }}</option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div class="col-md-3">

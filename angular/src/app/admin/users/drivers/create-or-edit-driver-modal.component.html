@@ -146,21 +146,32 @@
                 <div class="col-sm-12" *ngIf="isUserTenantRequired">
                   <div class="form-group">
                     <label>{{ 'Carrier' | localize }}<span class="text-danger">*</span> </label>
-                    <select
-                      #DriverTenantId="ngModel"
-                      class="form-control"
+                    <dx-select-box
                       name="DriverTenantId"
-                      id="DriverTenantId"
-                      [(ngModel)]="user.tenantId"
-                      [ngClass]="{
-                        'is-valid': DriverTenantId.touched && DriverTenantId.valid,
-                        'is-invalid': DriverTenantId.touched && !DriverTenantId.valid
-                      }"
-                      [required]="isUserTenantRequired"
+                      [(value)]="user.tenantId"
+                      [dataSource]="carriers"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      required
+                      placeholder="{{ l('SelectaCarrier') }}"
                     >
-                      <option [ngValue]="null" selected disabled>{{ l('SelectaCarrier') }}</option>
-                      <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>
-                    </select>
+                    </dx-select-box>
+                    <!--                    <select-->
+                    <!--                      #DriverTenantId="ngModel"-->
+                    <!--                      class="form-control"-->
+                    <!--                      name="DriverTenantId"-->
+                    <!--                      id="DriverTenantId"-->
+                    <!--                      [(ngModel)]="user.tenantId"-->
+                    <!--                      [ngClass]="{-->
+                    <!--                        'is-valid': DriverTenantId.touched && DriverTenantId.valid,-->
+                    <!--                        'is-invalid': DriverTenantId.touched && !DriverTenantId.valid-->
+                    <!--                      }"-->
+                    <!--                      [required]="isUserTenantRequired"-->
+                    <!--                    >-->
+                    <!--                      <option [ngValue]="null" selected disabled>{{ l('SelectaCarrier') }}</option>-->
+                    <!--                      <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
 
@@ -201,21 +212,33 @@
                 <div class="col-6">
                   <div class="form-group">
                     <label for="Nationality"> {{ 'Nationality' | localize }}<span class="text-danger">*</span> </label>
-                    <select
+                    <dx-select-box
                       id="Nationality"
-                      #Nationality="ngModel"
                       name="Nationality"
-                      [(ngModel)]="user.nationalityId"
+                      [(value)]="user.nationalityId"
+                      [dataSource]="nationalities"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
                       required
-                      class="form-control form-control-lg custom-select mr-sm-2"
-                      [ngClass]="{
-                        'is-valid': userForm.submitted && Nationality.valid,
-                        'is-invalid': userForm.submitted && !Nationality.valid
-                      }"
+                      placeholder="{{ l('Select') }}"
                     >
-                      <option *ngFor="let nationality of nationalities" [value]="nationality.id">{{ nationality.displayName }}</option>
-                    </select>
-                    <validation-messages [formCtrl]="Nationality"></validation-messages>
+                    </dx-select-box>
+                    <!--                    <select-->
+                    <!--                      id="Nationality"-->
+                    <!--                      #Nationality="ngModel"-->
+                    <!--                      name="Nationality"-->
+                    <!--                      [(ngModel)]="user.nationalityId"-->
+                    <!--                      required-->
+                    <!--                      class="form-control form-control-lg custom-select mr-sm-2"-->
+                    <!--                      [ngClass]="{-->
+                    <!--                        'is-valid': userForm.submitted && Nationality.valid,-->
+                    <!--                        'is-invalid': userForm.submitted && !Nationality.valid-->
+                    <!--                      }"-->
+                    <!--                    >-->
+                    <!--                      <option *ngFor="let nationality of nationalities" [value]="nationality.id">{{ nationality.displayName }}</option>-->
+                    <!--                    </select>-->
+                    <!--                    <validation-messages [formCtrl]="Nationality"></validation-messages>-->
                   </div>
                 </div>
                 <div class="col-6">
@@ -280,22 +303,34 @@
                 <div class="col-6">
                   <div class="form-group">
                     <label for="driverLicenseTypeId"> {{ 'DriverLicenseType' | localize }}<span class="text-danger">*</span> </label>
-                    <select
+                    <dx-select-box
                       id="driverLicenseTypeId"
-                      #driverLicenseTypeId="ngModel"
                       name="driverLicenseTypeId"
-                      [(ngModel)]="user.driverLicenseTypeId"
+                      [(value)]="user.driverLicenseTypeId"
+                      [dataSource]="driverLicenseTypes"
+                      [searchEnabled]="true"
+                      displayExpr="name"
+                      valueExpr="id"
                       required
-                      class="form-control form-control-lg custom-select mr-sm-2"
-                      [ngClass]="{
-                        'is-valid': userForm.submitted && driverLicenseTypeId.valid,
-                        'is-invalid': userForm.submitted && !driverLicenseTypeId.valid
-                      }"
+                      placeholder="{{ l('SelectALicenseType') }}"
                     >
-                      <option selected disabled [ngValue]="null">{{ l('SelectALicenseType') }}</option>
-                      <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.name }}</option>
-                    </select>
-                    <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>
+                    </dx-select-box>
+                    <!--                    <select-->
+                    <!--                      id="driverLicenseTypeId"-->
+                    <!--                      #driverLicenseTypeId="ngModel"-->
+                    <!--                      name="driverLicenseTypeId"-->
+                    <!--                      [(ngModel)]="user.driverLicenseTypeId"-->
+                    <!--                      required-->
+                    <!--                      class="form-control form-control-lg custom-select mr-sm-2"-->
+                    <!--                      [ngClass]="{-->
+                    <!--                        'is-valid': userForm.submitted && driverLicenseTypeId.valid,-->
+                    <!--                        'is-invalid': userForm.submitted && !driverLicenseTypeId.valid-->
+                    <!--                      }"-->
+                    <!--                    >-->
+                    <!--                      <option selected disabled [ngValue]="null">{{ l('SelectALicenseType') }}</option>-->
+                    <!--                      <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.name }}</option>-->
+                    <!--                    </select>-->
+                    <!--                    <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>-->
                   </div>
                 </div>
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -28,7 +28,7 @@ import { NgForm } from '@angular/forms';
   animations: [appModuleAnimation()],
   providers: [EnumToArrayPipe],
 })
-export class PriceOfferModelComponent extends AppComponentBase {
+export class PriceOfferModelComponent extends AppComponentBase implements OnInit {
   @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
   @Output() offerRepriced = new EventEmitter();
@@ -70,7 +70,10 @@ export class PriceOfferModelComponent extends AppComponentBase {
   }
 
   ngOnInit(): void {
-    this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType);
+    this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
     this.offer.commissionSettings = new PriceOfferTenantCommissionSettings();
     this.isPostPriceOffer = false;
     this.hasMatchesPricePackage = false;
