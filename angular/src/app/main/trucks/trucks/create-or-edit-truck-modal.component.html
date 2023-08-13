@@ -28,13 +28,14 @@
               <div class="form-group">
                 <label>{{ 'Carrier' | localize }}<span class="text-danger">*</span> </label>
                 <dx-select-box
-                  name="TruckTenantId"
-                  id="TruckTenantId"
+                  name="tenantId"
+                  id="tenantId"
                   [(value)]="truck.tenantId"
                   [dataSource]="carriers"
                   [searchEnabled]="true"
                   displayExpr="displayName"
                   valueExpr="id"
+                  (onValueChanged)="onValueChanged($event, 'tenantId')"
                   (onSelectionChanged)="LoadDrivers()"
                   [attr.required]="isTruckTenantRequired"
                   placeholder="{{ l('SelectACarrier') }}"
@@ -71,6 +72,7 @@
                     name="truck.carrierActorId"
                     #carrierActorId="ngModel"
                     [(ngModel)]="truck.carrierActorId"
+                    (onValueChanged)="onValueChanged($event, 'carrierActorId')"
                     [dataSource]="AllActorsCarriers"
                     [searchEnabled]="true"
                     displayExpr="displayName"
@@ -99,8 +101,9 @@
                     [(value)]="truck.driverUserId"
                     [dataSource]="allDrivers"
                     [searchEnabled]="true"
+                    (onValueChanged)="onValueChanged($event, 'driverUserId')"
                     displayExpr="displayName"
-                    valueExpr="id"
+                    [valueExpr]="'id'"
                     required
                     placeholder="{{ l('SelectDriver') }}"
                   >
@@ -133,6 +136,7 @@
                   [(value)]="truck.transportTypeId"
                   [dataSource]="allTransportTypes"
                   [searchEnabled]="true"
+                  (onValueChanged)="onValueChanged($event, 'transportTypeId')"
                   (onSelectionChanged)="transportTypeSelectChange(truck.transportTypeId)"
                   displayExpr="displayName"
                   valueExpr="id"
@@ -202,6 +206,7 @@
                     [dataSource]="allTruckTypesByTransportType"
                     [searchEnabled]="true"
                     (onSelectionChanged)="trucksTypeSelectChange(truck.trucksTypeId)"
+                    (onValueChanged)="onValueChanged($event, 'trucksTypeId')"
                     displayExpr="displayName"
                     valueExpr="id"
                     required
@@ -271,6 +276,7 @@
                     [dataSource]="allTrucksCapByTruckTypeId"
                     [searchEnabled]="true"
                     displayExpr="displayName"
+                    (onValueChanged)="onValueChanged($event, 'capacityId')"
                     valueExpr="id"
                     required
                     [disabled]="
@@ -373,6 +379,7 @@
                 name="truck.truckStatusId"
                 [(value)]="truck.truckStatusId"
                 [dataSource]="allTruckStatuss"
+                (onValueChanged)="onValueChanged($event, 'truckStatusId')"
                 [searchEnabled]="true"
                 displayExpr="translatedDisplayName"
                 valueExpr="id"
@@ -410,6 +417,7 @@
                   [(value)]="truck.plateTypeId"
                   [dataSource]="allPlateTypes"
                   [searchEnabled]="true"
+                  (onValueChanged)="onValueChanged($event, 'plateTypeId')"
                   displayExpr="displayName"
                   valueExpr="id"
                   required
