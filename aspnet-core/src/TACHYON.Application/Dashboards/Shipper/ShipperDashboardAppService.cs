@@ -1,4 +1,4 @@
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -93,8 +93,9 @@ namespace TACHYON.Dashboards.Shipper
             
             return await (from trip in _shippingRequestTripRepository.GetAll()
                 where ((!isBroker && trip.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
-                          (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)))
+                          (trip.ShippingRequestId.HasValue ? 
+                              ((trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)) 
+                              : ((trip.ShipperTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId)))))
                       && trip.Status == ShippingRequestTripStatus.Delivered
                 let lastWorkingDate = _transitionRepository.GetAll()
                     .Where(x => x.RoutPointFK.ShippingRequestTripId == trip.Id && !x.IsReset)
@@ -112,7 +113,8 @@ namespace TACHYON.Dashboards.Shipper
             
             return await _shippingRequestTripRepository.GetAll()
                 .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(isBroker,x=> x.ShippingRequestId.HasValue ? (x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) 
+                    : (x.ShipperTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId) )
                 .CountAsync(x =>x.Status == ShippingRequestTripStatus.InTransit);
         }
         
@@ -123,15 +125,17 @@ namespace TACHYON.Dashboards.Shipper
             bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
             
             DisableTenancyFilters();
-
-            // todo hide actors date when broker is request this service
             var trips = await (from trip in _shippingRequestTripRepository.GetAll().AsNoTracking()
                     .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
                 where ((!isBroker && trip.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
-                          (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId))) &&
-                      (!trip.ShippingRequestFk.CarrierActorId.HasValue && !trip.ShippingRequestFk.ShipperActorId.HasValue)&&
+                          (trip.ShippingRequestId.HasValue
+                              ? (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                                 trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                              : (trip.ShipperTenantId == AbpSession.TenantId ||
+                                 trip.CarrierTenantId == AbpSession.TenantId)))) &&
+                      (!trip.ShippingRequestFk.CarrierActorId.HasValue &&
+                       !trip.ShippingRequestFk.ShipperActorId.HasValue) &&
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
                 select new
@@ -170,15 +174,25 @@ namespace TACHYON.Dashboards.Shipper
         {
             bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
             if (isBroker) DisableTenancyFilters();
-            
+
             var trips = await (from point in _routePointRepository.GetAll()
-                where ((!isBroker && point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
-                    (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                     point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)))
+                where ((!isBroker && point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId) ||
+                       (isBroker &&
+                        (point.ShippingRequestTripFk.ShippingRequestId.HasValue
+                            ? ((point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                                point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId ==
+                                AbpSession.TenantId)) &&
+                              (!point.ShippingRequestTripFk.ShippingRequestFk.CarrierActorId.HasValue &&
+                               !point.ShippingRequestTripFk.ShippingRequestFk.ShipperActorId.HasValue)
+                            : ((point.ShippingRequestTripFk.ShipperTenantId == AbpSession.TenantId ||
+                                point.ShippingRequestTripFk.CarrierTenantId == AbpSession.TenantId) &&
+                               (!point.ShippingRequestTripFk.CarrierActorId.HasValue &&
+                                !point.ShippingRequestTripFk.ShipperActorId.HasValue)))))
                       && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
-                      && point.PickingType == PickingType.Dropoff && !point.IsComplete && 
+                      && point.PickingType == PickingType.Dropoff && !point.IsComplete &&
                       (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue
-                      && point.ShippingRequestTripFk.CreationTime.Date > input.StartDate && point.ShippingRequestTripFk.CreationTime.Date < input.EndDate)
+                          && point.ShippingRequestTripFk.CreationTime.Date > input.StartDate &&
+                          point.ShippingRequestTripFk.CreationTime.Date < input.EndDate)
                       
                 select new NeedsActionTripDto()
                 {
@@ -419,8 +433,11 @@ namespace TACHYON.Dashboards.Shipper
             var query = _shippingRequestTripRepository
                 .GetAll()
                 .AsNoTracking()
-                .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(!isBroker,x=> x.ShippingRequestId.HasValue ? x.ShippingRequestFk.TenantId == AbpSession.TenantId : x.ShipperTenantId == AbpSession.TenantId)
+                .WhereIf(isBroker,x=> x.ShippingRequestId.HasValue 
+                    ? (x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                      (!x.ShippingRequestFk.CarrierActorId.HasValue && !x.ShippingRequestFk.ShipperActorId.HasValue)
+                    : x.ShipperTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year &&
                 x.CreationTime.Date >= Clock.Now.AddDays(-28).Date)
@@ -746,15 +763,18 @@ namespace TACHYON.Dashboards.Shipper
         {
             DisableTenancyFilters();
 
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
             return (await _shippingRequestTripRepository
                     .GetAll()
                     .AsNoTracking()
-                    .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                    .Select(x => new
-                    {
-                        cityDisplayName = x.OriginFacilityFk.CityFk.DisplayName,
-                        x.Id
-                    })
+                    .Where(x => !isBroker
+                        ? x.ShippingRequestFk.TenantId == AbpSession.TenantId
+                        : (x.ShippingRequestId.HasValue
+                            ? x.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                              x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId
+                            : x.ShipperTenantId == AbpSession.TenantId && x.CarrierTenantId == AbpSession.TenantId))
+                    .Select(x => new { cityDisplayName = x.OriginFacilityFk.CityFk.DisplayName, x.Id })
                     .ToListAsync())
                     .GroupBy(r => r.cityDisplayName)
                     .Select(g => new MostUsedOriginsDto()
@@ -771,15 +791,21 @@ namespace TACHYON.Dashboards.Shipper
         {
             DisableTenancyFilters();
 
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+
             return (await _shippingRequestTripRepository
                     .GetAll()
                     .AsNoTracking()
-                    .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                                        .Select(x => new
-                                        {
-                                            cityDisplayName = x.DestinationFacilityFk.CityFk.DisplayName,
-                                            x.Id
-                                        })
+                    .Where(x => !isBroker
+                        ? x.ShippingRequestFk.TenantId == AbpSession.TenantId
+                        : (x.ShippingRequestId.HasValue
+                              ? (x.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                                 x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                                && (!x.ShippingRequestFk.CarrierActorId.HasValue &&
+                                    !x.ShippingRequestFk.ShipperActorId.HasValue)
+                              : x.ShipperTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId) &&
+                          (!x.CarrierActorId.HasValue && !x.ShipperActorId.HasValue))
+                    .Select(x => new { cityDisplayName = x.DestinationFacilityFk.CityFk.DisplayName, x.Id })
                     .ToListAsync())
                     .GroupBy(r => r.cityDisplayName)
                     .Select(g => new MostUsedOriginsDto()

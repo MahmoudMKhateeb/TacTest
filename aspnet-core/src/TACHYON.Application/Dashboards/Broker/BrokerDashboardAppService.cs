@@ -161,8 +161,11 @@ namespace TACHYON.Dashboards.Broker
             var trips = await (from trip in _tripRepository.GetAll().AsNoTracking()
                     .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.ShipperActorId.HasValue) &&
+                where (trip.ShippingRequestId.HasValue ? 
+                          (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) 
+                          && (trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.ShipperActorId.HasValue)
+                          : (trip.ShipperTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId)
+                            && (trip.CarrierActorId.HasValue || trip.ShipperActorId.HasValue)) &&
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
                 select new
@@ -249,10 +252,15 @@ namespace TACHYON.Dashboards.Broker
             DisableTenancyFilters();
 
             var cityLookups = await (from trip in _tripRepository.GetAll()
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                       trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue ||
-                       trip.ShippingRequestFk.ShipperActorId.HasValue)
+                where trip.ShippingRequestId.HasValue
+                    ? ((trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                        trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                       (trip.ShippingRequestFk.CarrierActorId.HasValue ||
+                        trip.ShippingRequestFk.ShipperActorId.HasValue))
+                    : ((trip.ShipperTenantId == AbpSession.TenantId ||
+                        trip.CarrierTenantId == AbpSession.TenantId) &&
+                       (trip.CarrierActorId.HasValue ||
+                        trip.ShipperActorId.HasValue))
                 select new
                 {
                     CityName = trip.OriginFacilityFk.CityFk.DisplayName,
@@ -277,10 +285,11 @@ namespace TACHYON.Dashboards.Broker
             DisableTenancyFilters();
 
             var cityLookups = await (from trip in _tripRepository.GetAll()
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                       trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue ||
-                       trip.ShippingRequestFk.ShipperActorId.HasValue)
+                where (trip.ShippingRequestId.HasValue ? 
+                    (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) 
+                    && (trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.ShipperActorId.HasValue)
+                                                        : (trip.ShipperTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId)
+                                                        && (trip.CarrierActorId.HasValue || trip.ShipperActorId.HasValue))
                 select new
                 {
                     CityName = trip.DestinationFacilityFk.CityFk.DisplayName,
@@ -460,15 +469,21 @@ namespace TACHYON.Dashboards.Broker
         }
 
 
-        public async Task<List<MostUsedTruckTypeDto>> GetMostTruckTypesUsed(int transportTypeId, DateRangeInput dateRangeInput)
+        public async Task<List<MostUsedTruckTypeDto>> GetMostTruckTypesUsed(int transportTypeId,
+            DateRangeInput dateRangeInput)
         {
             var truckTypes = await (from trip in _tripRepository.GetAll()
-                where (trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
-                       trip.ShippingRequestFk.TenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.ShipperActorId.HasValue ||
-                       trip.ShippingRequestFk.CarrierActorId.HasValue) &&
+                where (trip.ShippingRequestId.HasValue
+                          ? ((trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
+                              trip.ShippingRequestFk.TenantId == AbpSession.TenantId) &&
+                             (trip.ShippingRequestFk.ShipperActorId.HasValue ||
+                              trip.ShippingRequestFk.CarrierActorId.HasValue))
+                          : ((trip.CarrierTenantId == AbpSession.TenantId &&
+                              trip.ShipperTenantId == AbpSession.TenantId) &&
+                             (trip.ShipperActorId.HasValue || trip.CarrierActorId.HasValue))) &&
                       (trip.ShippingRequestFk.TransportTypeId == transportTypeId &&
-                      trip.CreationTime.Date > dateRangeInput.StartDate && trip.CreationTime.Date < dateRangeInput.EndDate)
+                       trip.CreationTime.Date > dateRangeInput.StartDate &&
+                       trip.CreationTime.Date < dateRangeInput.EndDate)
                 select new
                 {
                     TruckTypeId = trip.ShippingRequestFk.TrucksTypeId,
