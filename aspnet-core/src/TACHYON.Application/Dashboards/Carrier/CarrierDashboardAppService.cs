@@ -134,7 +134,8 @@ namespace TACHYON.Dashboards.Carrier
                     TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
                         ? LocalizationSource.GetString("Dedicated")
                         : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
-                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate
+                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate,
+                    IsDirectTrip = !trip.ShippingRequestId.HasValue
                 }).ToListAsync();
             
            var upcomingTrips = (from trip in trips
@@ -148,7 +149,8 @@ namespace TACHYON.Dashboards.Carrier
                         Id = x.Id,Origin = x.Origin,
                         Destinations = x.Destinations,
                         WaybillNumber = x.WaybillNumber,
-                        TripType = x.TripType
+                        TripType = x.TripType,
+                        IsDirectTrip = x.IsDirectTrip
                     }).ToList()
                 }).ToList();
 

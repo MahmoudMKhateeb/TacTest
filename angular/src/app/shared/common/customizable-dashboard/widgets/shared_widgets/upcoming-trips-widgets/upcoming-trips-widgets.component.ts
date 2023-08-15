@@ -91,8 +91,11 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
     }
   }
 
-  goToTrackingPage(trip: NeedsActionTripDto): void {
-    this.router.navigateByUrl(`/app/main/tracking?waybillNumber=${trip.waybillNumber}`);
+  goToTrackingPage(trip): void {
+    let url = trip.isDirectTrip
+      ? `/app/main/tracking/directShipmentTracking?waybillNumber=${trip.waybillNumber}`
+      : `/app/main/tracking/shipmentTracking?waybillNumber=${trip.waybillNumber}`;
+    this.router.navigateByUrl(url);
   }
 
   selectedFilter(filter: number) {
