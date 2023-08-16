@@ -33,9 +33,11 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
 
   ngOnInit(): void {
     if (this.isDateDropDown) {
-      const startDate = moment().subtract(12, 'months').startOf('month');
+      const startDate = moment().subtract(10, 'months').startOf('month');
       const endDate = moment();
-      this.optionSelected.emit({ start: startDate, end: endDate });
+      const normalizedStartDate = moment({ year: startDate.year(), month: startDate.month(), day: 1 });
+      const normalizedEndDate = moment({ year: endDate.year(), month: endDate.month(), day: endDate.daysInMonth() });
+      this.optionSelected.emit({ start: normalizedStartDate, end: normalizedEndDate });
       return;
     }
     if (this.isForTripType) {
@@ -59,38 +61,39 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
 
   selectOption(option: number) {
     console.log('Selected option:', option);
-    // Perform the desired action based on the selected option
-    // For example, emit an event or update a variable
-    // You can handle each option accordingly in your application logic
+
+    const emitDatesAndToggle = (start: moment.Moment, end: moment.Moment) => {
+      this.optionSelected.emit({ start, end });
+      this.showCustomStartEnd = false;
+      this.toggleDropdown();
+    };
+
     switch (option) {
       case 1: {
-        const startDate = moment().subtract(6, 'months').startOf('month');
+        const startDate = moment().subtract(4, 'months').startOf('month');
         const endDate = moment();
-        this.optionSelected.emit({ start: startDate, end: endDate });
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-        this.showCustomStartEnd = false;
-        this.toggleDropdown();
+        emitDatesAndToggle(
+          moment({ year: startDate.year(), month: startDate.month(), day: 1 }),
+          moment({ year: endDate.year(), month: endDate.month(), day: endDate.daysInMonth() })
+        );
         break;
       }
       case 2: {
-        const startDate = moment().subtract(12, 'months').startOf('month');
+        const startDate = moment().subtract(10, 'months').startOf('month');
         const endDate = moment();
-        this.optionSelected.emit({ start: startDate, end: endDate });
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-        this.showCustomStartEnd = false;
-        this.toggleDropdown();
+        emitDatesAndToggle(
+          moment({ year: startDate.year(), month: startDate.month(), day: 1 }),
+          moment({ year: endDate.year(), month: endDate.month(), day: endDate.daysInMonth() })
+        );
         break;
       }
       case 3: {
-        const startDate = moment().subtract(1, 'year').startOf('year');
+        const startDate = moment().subtract(1, 'year').startOf('year').add(1, 'month');
         const endDate = moment().subtract(1, 'year').endOf('year');
-        this.optionSelected.emit({ start: startDate, end: endDate });
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-        this.showCustomStartEnd = false;
-        this.toggleDropdown();
+        emitDatesAndToggle(
+          moment({ year: startDate.year(), month: startDate.month(), day: 1 }),
+          moment({ year: endDate.year(), month: endDate.month(), day: endDate.daysInMonth() })
+        );
         break;
       }
       case 4: {
@@ -100,34 +103,14 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
       case 5: {
         const startDate = moment().startOf('week');
         const endDate = moment().endOf('week');
-
-        this.optionSelected.emit({ start: startDate, end: endDate });
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-        this.showCustomStartEnd = false;
-        this.toggleDropdown();
+        emitDatesAndToggle(startDate, endDate);
         break;
       }
-      case 6: {
-        const startDate = moment().startOf('month');
-        const endDate = moment().endOf('month');
-
-        this.optionSelected.emit({ start: startDate, end: endDate });
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-        this.showCustomStartEnd = false;
-        this.toggleDropdown();
-        break;
-      }
+      case 6:
       case 7: {
-        const startDate = moment().subtract(1, 'month').startOf('month');
-        const endDate = moment().subtract(1, 'month').endOf('month');
-
-        this.optionSelected.emit({ start: startDate, end: endDate });
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-        this.showCustomStartEnd = false;
-        this.toggleDropdown();
+        const startOfMonth = moment().startOf('month');
+        const endOfMonth = moment().endOf('month');
+        emitDatesAndToggle(startOfMonth, endOfMonth);
         break;
       }
       default:
