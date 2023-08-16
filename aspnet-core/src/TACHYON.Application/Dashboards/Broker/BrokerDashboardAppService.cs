@@ -338,10 +338,10 @@ namespace TACHYON.Dashboards.Broker
                     .Where(x => x.DueDate.Date > Clock.Now.Date)
                     .Select(x => new { CompanyName = x.CarrierActorFk.CompanyName, x.DueDate }).ToListAsync();
                 
-                return actorSubmitInvoices.GroupBy(x => (x.DueDate.Date - DateTime.Now.Date).TotalDays / 7)
+                return actorSubmitInvoices.GroupBy(x => CalculateRemainingDays((x.DueDate.Date - DateTime.Now.Date).TotalDays ))
                     .Select(x => new NextDueDateDto
                     {
-                        RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
+                        RemainingWeeks = $"{x.Key:0} {LocalizationSource.GetString("Week")}",
                         CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
                     }).ToList();
             }
@@ -350,13 +350,20 @@ namespace TACHYON.Dashboards.Broker
                 .Where(x => !x.IsPaid && x.DueDate.Date > Clock.Now.Date)
                 .Select(x => new { CompanyName = x.ShipperActorFk.CompanyName, x.DueDate }).ToListAsync();
                 
-            return actorInvoices.GroupBy(x => (x.DueDate.Date - DateTime.Now.Date).TotalDays / 7)
+            return actorInvoices.GroupBy(x => CalculateRemainingDays((x.DueDate.Date - DateTime.Now.Date).TotalDays))
                 .Select(x => new NextDueDateDto
                 {
-                    RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
+                    RemainingWeeks = $"{x.Key:0} {LocalizationSource.GetString("Week")}",
                     CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
                 }).ToList();
             
+        }
+
+        private static double CalculateRemainingDays(double totalDays)
+        {
+            const int daysOfWeek = 7;
+            var remainingDays = totalDays != 0 ? totalDays / daysOfWeek : 0;
+            return Math.Round(remainingDays);
         }
 
         public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVsPaidInvoices(int shipperActorId)
