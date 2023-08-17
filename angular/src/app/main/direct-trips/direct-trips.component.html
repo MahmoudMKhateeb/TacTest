@@ -164,13 +164,22 @@
 
               <dxi-column dataField="driver" caption="{{ l('Driver') }}"></dxi-column>
               <dxi-column dataField="truck" caption="{{ l('PlateNumber') }}"></dxi-column>
-              <dxi-column dataField="routeType" caption="{{ l('RouteType') }}" cellTemplate="routeTypeTemplate"></dxi-column>
+              <dxi-column dataField="routeType" caption="{{ l('RouteType') }}" cellTemplate="routeTypeTemplate">
+                <dxo-lookup [dataSource]="routeTypes" displayExpr="value" valueExpr="key"> </dxo-lookup>
+              </dxi-column>
               <dxi-column dataField="numberOfDrops" caption="{{ l('NumberOfDrops') }}"></dxi-column>
               <dxi-column dataField="shipperActorName" caption="{{ l('Actor') + ' ' + l('Shipper') }}"></dxi-column>
               <dxi-column dataField="carrierActorName" caption="{{ l('Actor') + ' ' + l('Carrier') }}"></dxi-column>
               <dxi-column dataField="containerNumber" caption="{{ l('ContainerNumber') }}"></dxi-column>
-              <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
-
+              <dxi-column dataField="status" caption="{{ l('Status') }}" cellTemplate="statusTemplate">
+                <dxo-lookup [dataSource]="tripStatuses" displayExpr="value" valueExpr="key"> </dxo-lookup>
+              </dxi-column>
+              <div *dxTemplate="let d of 'routeTypeTemplate'">
+                <span> {{ ShippingRequestRouteType[d?.data?.routeType] | localize }} </span>
+              </div>
+              <div *dxTemplate="let d of 'statusTemplate'">
+                <span> {{ ShippingRequestTripStatus[d?.data?.status] | localize }} </span>
+              </div>
               <div *dxTemplate="let d of 'startTripDateTemplate'">
                 <span>
                   {{ d?.data?.startTripDate | date: 'dd/MM/yyyy hh:mm a' }}
@@ -181,11 +190,7 @@
                   {{ d?.data?.endWorking | date: 'dd/MM/yyyy hh:mm a' }}
                 </span>
               </div>
-              <div *dxTemplate="let d of 'routeTypeTemplate'">
-                <span>
-                  {{ d?.data?.routeType | localize }}
-                </span>
-              </div>
+
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <button class="btn btn-sm btn-primary mr-2" dropdownToggle>
