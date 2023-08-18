@@ -130,7 +130,7 @@ namespace TACHYON.Dashboards.Shipper
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
                 where ((!isBroker && trip.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
                           (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId))) &&
+                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)) || trip.CarrierTenantId == AbpSession.TenantId || trip.ShipperTenantId == AbpSession.TenantId) &&
                       (!trip.ShippingRequestFk.CarrierActorId.HasValue && !trip.ShippingRequestFk.ShipperActorId.HasValue)&&
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
@@ -419,8 +419,8 @@ namespace TACHYON.Dashboards.Shipper
             var query = _shippingRequestTripRepository
                 .GetAll()
                 .AsNoTracking()
-                .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShipperTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.ShipperTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year &&
                 x.CreationTime.Date >= Clock.Now.AddDays(-28).Date)
@@ -877,8 +877,7 @@ namespace TACHYON.Dashboards.Shipper
             .Include(x => x.DestinationFacilityFk)
             .ThenInclude(x => x.CityFk).ThenInclude(x=> x.Translations)
             .AsNoTracking()
-            .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-            .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+            .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShipperTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
             .WhereIf(!input.WaybillNumber.IsNullOrEmpty(),x=> x.WaybillNumber.HasValue && x.WaybillNumber.ToString().Contains(input.WaybillNumber))
             .WhereIf(input.TruckTypeId.HasValue,x=> x.ShippingRequestFk.TrucksTypeId == input.TruckTypeId)
             .WhereIf(input.RouteType.HasValue,x=> x.ShippingRequestFk.RouteTypeId == input.RouteType)
