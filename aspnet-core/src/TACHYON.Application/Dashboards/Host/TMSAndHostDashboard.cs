@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Dashboards.Carrier;
 using TACHYON.Dashboards.Host.Dto;
 using TACHYON.Dashboards.Host.TMS_HostDto;
@@ -752,10 +753,10 @@ namespace TACHYON.Dashboards.Host
                         select new GetNeedsActionTripsAndRequestsOutput()
                         {
                             OriginCity = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
-                            DestinationCity = point.ShippingRequestTripFk.ShippingRequestFk != null 
-                            ? point.ShippingRequestTripFk.ShippingRequestFk.ShippingRequestDestinationCities.Select(x=>x.CityFk.DisplayName).ToList()
-                            : point.ShippingRequestTripFk.ShippingRequestDestinationCities.Count() >0 
-                            ? point.ShippingRequestTripFk.ShippingRequestDestinationCities.Select(x=>x.CityFk.DisplayName).ToList()
+                            DestinationCity = point.ShippingRequestTripFk.ShippingRequestId.HasValue 
+                            ? GetDistinctDestinations(point.ShippingRequestTripFk.ShippingRequestFk.ShippingRequestDestinationCities.Select(i=> i.CityFk))
+                            : point.ShippingRequestTripFk.ShippingRequestDestinationCities.Any()
+                            ? GetDistinctDestinations(point.ShippingRequestTripFk.ShippingRequestDestinationCities.Select(i=> i.CityFk))
                             : new List<string> { point.FacilityFk.CityFk.DisplayName },
                             WaybillOrRequestReference = point.ShippingRequestTripFk.RouteType.HasValue
                                 ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
@@ -937,6 +938,10 @@ namespace TACHYON.Dashboards.Host
             return dto;
         }
 
+        private static List<string> GetDistinctDestinations(IEnumerable<City> cities)
+        {
+            return cities.Select(x => x.DisplayName).Distinct().ToList();
+        }
         private IEnumerable<string> MonthsWithYearsInRange(DateTime start, DateTime end)
         {
             for (DateTime date = start; date <= end; date = date.AddMonths(1))

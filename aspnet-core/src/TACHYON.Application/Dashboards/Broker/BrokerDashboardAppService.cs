@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Actors;
 using TACHYON.Authorization;
+using TACHYON.Cities;
 using TACHYON.Dashboards.Broker.Dto;
 using TACHYON.Dashboards.Carrier;
 using TACHYON.Dashboards.Host.TMS_HostDto;
@@ -206,21 +207,20 @@ namespace TACHYON.Dashboards.Broker
         
         public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips()
         {
-             DisableTenancyFilters();
+            DisableTenancyFilters();
 
-             var trips = await (from point in _routePointRepository.GetAll()
-                 where (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                        point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                       && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
-                       && point.PickingType == PickingType.Dropoff && !point.IsComplete &&
-                       (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
-                     
+            var trips = await (from point in _routePointRepository.GetAll()
+                where (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                       point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                      && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                      && point.PickingType == PickingType.Dropoff && !point.IsComplete &&
+                      (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
                 select new NeedsActionTripDto()
                 {
                     Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
-                    Destinations = point.ShippingRequestTripFk.RoutPoints
-                        .Where(x => x.PickingType == PickingType.Dropoff)
-                        .Select(x => x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
+                    Destinations =
+                        GetDistinctDestinations(point.ShippingRequestTripFk.RoutPoints
+                            .Where(x => x.PickingType == PickingType.Dropoff).Select(c => c.FacilityFk.CityFk)),
                     WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
                         ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
                             ? point.ShippingRequestTripFk.WaybillNumber
@@ -234,6 +234,11 @@ namespace TACHYON.Dashboards.Broker
                 }).ToListAsync();
 
             return trips;
+        }
+
+        private static List<string> GetDistinctDestinations(IEnumerable<City> cities)
+        {
+            return cities.Select(x => x.DisplayName).Distinct().ToList();
         }
 
         public async Task<ActiveAndNonActiveActorsDto> GetNumberOfActiveAndNonActiveActors()

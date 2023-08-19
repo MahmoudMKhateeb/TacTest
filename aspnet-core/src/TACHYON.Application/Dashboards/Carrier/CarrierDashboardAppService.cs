@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Dashboards.Carrier.Dto;
 using TACHYON.Dashboards.Host.Dto;
 using TACHYON.Dashboards.Host.TMS_HostDto;
@@ -168,9 +169,8 @@ namespace TACHYON.Dashboards.Carrier
                 select new NeedsActionTripDto()
                 {
                     Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
-                    Destinations = point.ShippingRequestTripFk.RoutPoints
-                        .Where(x => x.PickingType == PickingType.Dropoff)
-                        .Select(x => x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
+                    Destinations = GetDistinctDestinations(point.ShippingRequestTripFk.RoutPoints
+                            .Where(x => x.PickingType == PickingType.Dropoff).Select(c => c.FacilityFk.CityFk)),
                     WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
                         ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
                             ? point.ShippingRequestTripFk.WaybillNumber
@@ -828,7 +828,10 @@ namespace TACHYON.Dashboards.Carrier
                 .ToList();
         }
 
-
+        private static List<string> GetDistinctDestinations(IEnumerable<City> cities)
+        {
+            return cities.Select(x => x.DisplayName).Distinct().ToList();
+        }
 
     }
 
