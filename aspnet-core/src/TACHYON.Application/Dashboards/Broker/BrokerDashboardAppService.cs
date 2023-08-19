@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Actors;
 using TACHYON.Authorization;
@@ -26,6 +27,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Trucks.TrucksTypes;
+using DateTime = System.DateTime;
 
 namespace TACHYON.Dashboards.Broker
 {
@@ -343,31 +345,59 @@ namespace TACHYON.Dashboards.Broker
 
         public async Task<List<NextDueDateDto>> GetNextInvoicesDueDate(BrokerInvoiceType invoiceType)
         {
-            if (invoiceType == BrokerInvoiceType.CarrierInvoices)
+
+            #region Local Functions
+            
+            async Task<List<Tuple<string, DateTime>>> GetNextActorSubmitInvoices(Expression<Func<ActorSubmitInvoice,bool>> actorTypeExpression)
             {
-                 var actorSubmitInvoices = await _actorSubmitInvoiceRepository.GetAll()
+                return await _actorSubmitInvoiceRepository.GetAll()
                     .Where(x => x.DueDate.Date > Clock.Now.Date)
-                    .Select(x => new { CompanyName = x.CarrierActorFk.CompanyName, x.DueDate }).ToListAsync();
-                
-                return actorSubmitInvoices.GroupBy(x => CalculateRemainingDays((x.DueDate.Date - DateTime.Now.Date).TotalDays ))
+                    .Where(actorTypeExpression)
+                    .Select(x => new Tuple<string, DateTime>(x.CarrierActorFk.CompanyName, x.DueDate)).ToListAsync();
+            }
+            async Task<List<Tuple<string, DateTime>>> GetNextActorInvoices(Expression<Func<ActorInvoice,bool>> actorTypeExpression)
+            {
+                return await _actorInvoiceRepository.GetAll()
+                    .Where(x => x.DueDate.Date > Clock.Now.Date)
+                    .Where(actorTypeExpression)
+                    .Select(x => new Tuple<string, DateTime>(x.ShipperActorFk.CompanyName, x.DueDate)).ToListAsync();
+            }
+            List<NextDueDateDto> GetNextDueDateList(IEnumerable<Tuple<string,DateTime>> actorInvoices)
+            {
+                return actorInvoices.GroupBy(x => CalculateRemainingDays((x.Item2.Date - DateTime.Now.Date).TotalDays ))
                     .Select(x => new NextDueDateDto
                     {
                         RemainingWeeks = $"{x.Key:0} {LocalizationSource.GetString("Week")}",
-                        CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
+                        CompanyName = x.Select(i => i.Item1).FirstOrDefault()
                     }).ToList();
             }
+            #endregion
             
-            var actorInvoices = await _actorInvoiceRepository.GetAll()
-                .Where(x => !x.IsPaid && x.DueDate.Date > Clock.Now.Date)
-                .Select(x => new { CompanyName = x.ShipperActorFk.CompanyName, x.DueDate }).ToListAsync();
-                
-            return actorInvoices.GroupBy(x => CalculateRemainingDays((x.DueDate.Date - DateTime.Now.Date).TotalDays))
-                .Select(x => new NextDueDateDto
-                {
-                    RemainingWeeks = $"{x.Key:0} {LocalizationSource.GetString("Week")}",
-                    CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
-                }).ToList();
-            
+            switch (invoiceType)
+            {
+                case BrokerInvoiceType.CarrierInvoices:
+                    {
+                        var actorSubmitInvoices = 
+                            await GetNextActorSubmitInvoices(x => x.CarrierActorFk.ActorType != ActorTypesEnum.MySelf);
+                        return GetNextDueDateList(actorSubmitInvoices);
+                    }
+                case BrokerInvoiceType.ShipperInvoices:
+                    {
+                        var actorInvoices = 
+                            await GetNextActorInvoices(x => x.ShipperActorFk.ActorType != ActorTypesEnum.MySelf);
+                        return GetNextDueDateList(actorInvoices);
+                    }
+                case BrokerInvoiceType.MySelfInvoices:
+                    var myselfSubmitInvoices =
+                        await GetNextActorSubmitInvoices(x => x.CarrierActorFk.ActorType == ActorTypesEnum.MySelf);
+                    var myselfInvoices =
+                        await GetNextActorInvoices(x => x.ShipperActorFk.ActorType == ActorTypesEnum.MySelf);
+                    var allMyselfInvoices = new List<Tuple<string, DateTime>>(myselfInvoices);
+                    allMyselfInvoices.AddRange(myselfSubmitInvoices);
+                    return GetNextDueDateList(allMyselfInvoices);
+
+                default: throw new UserFriendlyException(L("NotSupportedInvoiceType"));
+            }
         }
 
         private static double CalculateRemainingDays(double totalDays)

@@ -4,5 +4,6 @@ namespace TACHYON.Dashboards.Shipper.Dto
     {
         ShipperInvoices = 1,
         CarrierInvoices = 2,
+        MySelfInvoices = 3,
     }
 }
