@@ -3526,8 +3526,7 @@
 	<text name="CostVsSellingVsProfitOfSaasTripsWidget">Cost Vs Selling Vs Profit Of Saas Trips Widget</text>
 	<text name="NeedsActions">Needs Actions</text>
 	<text name="ClaimedInvoicesVsPaidInvoices">Claimed Invoices Vs Paid Invoices</text>
-
-	
 	<text name="ReportBeingGeneratedInTheBackGround">Report is Being Generated in the Background,The page will update once ready</text>
+	<text name="MySelfInvoices">Myself Invoices</text>
 	</texts>
 </localizationDictionary>

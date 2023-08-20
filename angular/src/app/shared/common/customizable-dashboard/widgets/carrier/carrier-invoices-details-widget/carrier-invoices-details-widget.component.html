@@ -24,9 +24,9 @@
     </div>
     <div class="row border-left pl-4" *ngIf="isForActor">
       <div class="col-3 p-0 d-flex align-items-center">
-        <i class="fa fa-circle text-dark mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
+        <i class="fa fa-circle text-gray mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
       </div>
-      <div class="col-3 p-0 d-flex align-items-center"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+      <div class="col-3 p-0 d-flex align-items-center"><i class="fa fa-circle text-dark mx-1"></i> {{ 'Claimed' | localize }}</div>
       <div class="col-6 p-0">
         <dx-select-box
           id="carrierActorId"

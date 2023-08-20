@@ -1288,7 +1288,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   getAllDrivers() {
     this._dedicatedShippingRequestService
-      .getAllDriversForDropDown(undefined, this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId)
+      .getAllDriversForDropDown(undefined, this._TripService.CreateOrEditShippingRequestTripDto?.carrierActorId)
       .subscribe((res) => {
         this.allDrivers = res.map((item) => {
           (item.id as any) = Number(item.id);
@@ -1302,7 +1302,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   getAllTrucks(truckTypeId) {
     this._dedicatedShippingRequestService
-      .getAllTrucksWithDriversList(truckTypeId, undefined, this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId)
+      .getAllTrucksWithDriversList(truckTypeId, undefined, this._TripService.CreateOrEditShippingRequestTripDto?.carrierActorId)
       .subscribe((res) => {
         this.allTrucks = res;
       });

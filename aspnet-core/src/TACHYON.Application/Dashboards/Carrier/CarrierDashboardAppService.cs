@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Dashboards.Carrier.Dto;
 using TACHYON.Dashboards.Host.Dto;
 using TACHYON.Dashboards.Host.TMS_HostDto;
@@ -120,7 +121,7 @@ namespace TACHYON.Dashboards.Carrier
             var trips = await (from trip in _shippingRequestTripRepository.GetAll().AsNoTracking()
                     .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
-                where trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
+                where (trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId || trip.ShipperTenantId == AbpSession.TenantId) &&
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
                 select new
@@ -134,7 +135,8 @@ namespace TACHYON.Dashboards.Carrier
                     TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
                         ? LocalizationSource.GetString("Dedicated")
                         : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
-                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate
+                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate,
+                    IsDirectTrip = !trip.ShippingRequestId.HasValue
                 }).ToListAsync();
             
            var upcomingTrips = (from trip in trips
@@ -148,7 +150,8 @@ namespace TACHYON.Dashboards.Carrier
                         Id = x.Id,Origin = x.Origin,
                         Destinations = x.Destinations,
                         WaybillNumber = x.WaybillNumber,
-                        TripType = x.TripType
+                        TripType = x.TripType,
+                        IsDirectTrip = x.IsDirectTrip
                     }).ToList()
                 }).ToList();
 
@@ -166,9 +169,8 @@ namespace TACHYON.Dashboards.Carrier
                 select new NeedsActionTripDto()
                 {
                     Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
-                    Destinations = point.ShippingRequestTripFk.RoutPoints
-                        .Where(x => x.PickingType == PickingType.Dropoff)
-                        .Select(x => x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
+                    Destinations = GetDistinctDestinations(point.ShippingRequestTripFk.RoutPoints
+                            .Where(x => x.PickingType == PickingType.Dropoff).Select(c => c.FacilityFk.CityFk)),
                     WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
                         ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
                             ? point.ShippingRequestTripFk.WaybillNumber
@@ -826,7 +828,10 @@ namespace TACHYON.Dashboards.Carrier
                 .ToList();
         }
 
-
+        private static List<string> GetDistinctDestinations(IEnumerable<City> cities)
+        {
+            return cities.Select(x => x.DisplayName).Distinct().ToList();
+        }
 
     }
 

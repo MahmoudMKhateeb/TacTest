@@ -12,5 +12,7 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public List<string> Destinations { get; set; }
 
         public string TripType { get; set; }
+
+        public bool IsDirectTrip { get; set; }
     }
 }

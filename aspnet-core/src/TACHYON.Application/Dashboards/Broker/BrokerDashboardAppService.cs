@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Actors;
 using TACHYON.Authorization;
+using TACHYON.Cities;
 using TACHYON.Dashboards.Broker.Dto;
 using TACHYON.Dashboards.Carrier;
 using TACHYON.Dashboards.Host.TMS_HostDto;
@@ -26,6 +28,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Trucks.TrucksTypes;
+using DateTime = System.DateTime;
 
 namespace TACHYON.Dashboards.Broker
 {
@@ -161,7 +164,7 @@ namespace TACHYON.Dashboards.Broker
             var trips = await (from trip in _tripRepository.GetAll().AsNoTracking()
                     .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId || trip.ShipperTenantId == AbpSession.TenantId) &&
                       (trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.ShipperActorId.HasValue) &&
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
@@ -176,7 +179,8 @@ namespace TACHYON.Dashboards.Broker
                     TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
                         ? LocalizationSource.GetString("Dedicated")
                         : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
-                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate
+                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate,
+                    IsDirectTrip = !trip.ShippingRequestId.HasValue
                 }).ToListAsync();
             
            var upcomingTrips = (from trip in trips
@@ -190,7 +194,8 @@ namespace TACHYON.Dashboards.Broker
                         Id = x.Id,Origin = x.Origin,
                         Destinations = x.Destinations,
                         WaybillNumber = x.WaybillNumber,
-                        TripType = x.TripType
+                        TripType = x.TripType,
+                        IsDirectTrip = x.IsDirectTrip
                     }).ToList()
                 }).ToList();
 
@@ -199,21 +204,20 @@ namespace TACHYON.Dashboards.Broker
         
         public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips()
         {
-             DisableTenancyFilters();
+            DisableTenancyFilters();
 
-             var trips = await (from point in _routePointRepository.GetAll()
-                 where (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                        point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                       && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
-                       && point.PickingType == PickingType.Dropoff && !point.IsComplete &&
-                       (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
-                     
+            var trips = await (from point in _routePointRepository.GetAll()
+                where (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                       point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                      && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                      && point.PickingType == PickingType.Dropoff && !point.IsComplete &&
+                      (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
                 select new NeedsActionTripDto()
                 {
                     Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
-                    Destinations = point.ShippingRequestTripFk.RoutPoints
-                        .Where(x => x.PickingType == PickingType.Dropoff)
-                        .Select(x => x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
+                    Destinations =
+                        GetDistinctDestinations(point.ShippingRequestTripFk.RoutPoints
+                            .Where(x => x.PickingType == PickingType.Dropoff).Select(c => c.FacilityFk.CityFk)),
                     WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
                         ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
                             ? point.ShippingRequestTripFk.WaybillNumber
@@ -227,6 +231,11 @@ namespace TACHYON.Dashboards.Broker
                 }).ToListAsync();
 
             return trips;
+        }
+
+        private static List<string> GetDistinctDestinations(IEnumerable<City> cities)
+        {
+            return cities.Select(x => x.DisplayName).Distinct().ToList();
         }
 
         public async Task<ActiveAndNonActiveActorsDto> GetNumberOfActiveAndNonActiveActors()
@@ -249,10 +258,15 @@ namespace TACHYON.Dashboards.Broker
             DisableTenancyFilters();
 
             var cityLookups = await (from trip in _tripRepository.GetAll()
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                       trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue ||
-                       trip.ShippingRequestFk.ShipperActorId.HasValue)
+                where trip.ShippingRequestId.HasValue
+                    ? ((trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                        trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                       (trip.ShippingRequestFk.CarrierActorId.HasValue ||
+                        trip.ShippingRequestFk.ShipperActorId.HasValue))
+                    : ((trip.ShipperTenantId == AbpSession.TenantId ||
+                        trip.CarrierTenantId == AbpSession.TenantId) &&
+                       (trip.CarrierActorId.HasValue ||
+                        trip.ShipperActorId.HasValue))
                 select new
                 {
                     CityName = trip.OriginFacilityFk.CityFk.DisplayName,
@@ -277,10 +291,11 @@ namespace TACHYON.Dashboards.Broker
             DisableTenancyFilters();
 
             var cityLookups = await (from trip in _tripRepository.GetAll()
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                       trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue ||
-                       trip.ShippingRequestFk.ShipperActorId.HasValue)
+                where (trip.ShippingRequestId.HasValue ? 
+                    (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) 
+                    && (trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.ShipperActorId.HasValue)
+                                                        : (trip.ShipperTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId)
+                                                        && (trip.CarrierActorId.HasValue || trip.ShipperActorId.HasValue))
                 select new
                 {
                     CityName = trip.DestinationFacilityFk.CityFk.DisplayName,
@@ -332,31 +347,66 @@ namespace TACHYON.Dashboards.Broker
 
         public async Task<List<NextDueDateDto>> GetNextInvoicesDueDate(BrokerInvoiceType invoiceType)
         {
-            if (invoiceType == BrokerInvoiceType.CarrierInvoices)
+
+            #region Local Functions
+            
+            async Task<List<Tuple<string, DateTime>>> GetNextActorSubmitInvoices(Expression<Func<ActorSubmitInvoice,bool>> actorTypeExpression)
             {
-                 var actorSubmitInvoices = await _actorSubmitInvoiceRepository.GetAll()
+                return await _actorSubmitInvoiceRepository.GetAll()
                     .Where(x => x.DueDate.Date > Clock.Now.Date)
-                    .Select(x => new { CompanyName = x.CarrierActorFk.CompanyName, x.DueDate }).ToListAsync();
-                
-                return actorSubmitInvoices.GroupBy(x => (x.DueDate.Date - DateTime.Now.Date).TotalDays / 7)
+                    .Where(actorTypeExpression)
+                    .Select(x => new Tuple<string, DateTime>(x.CarrierActorFk.CompanyName, x.DueDate)).ToListAsync();
+            }
+            async Task<List<Tuple<string, DateTime>>> GetNextActorInvoices(Expression<Func<ActorInvoice,bool>> actorTypeExpression)
+            {
+                return await _actorInvoiceRepository.GetAll()
+                    .Where(x => x.DueDate.Date > Clock.Now.Date)
+                    .Where(actorTypeExpression)
+                    .Select(x => new Tuple<string, DateTime>(x.ShipperActorFk.CompanyName, x.DueDate)).ToListAsync();
+            }
+            List<NextDueDateDto> GetNextDueDateList(IEnumerable<Tuple<string,DateTime>> actorInvoices)
+            {
+                return actorInvoices.GroupBy(x => CalculateRemainingDays((x.Item2.Date - DateTime.Now.Date).TotalDays ))
                     .Select(x => new NextDueDateDto
                     {
-                        RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
-                        CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
+                        RemainingWeeks = $"{x.Key:0} {LocalizationSource.GetString("Week")}",
+                        CompanyName = x.Select(i => i.Item1).FirstOrDefault()
                     }).ToList();
             }
+            #endregion
             
-            var actorInvoices = await _actorInvoiceRepository.GetAll()
-                .Where(x => !x.IsPaid && x.DueDate.Date > Clock.Now.Date)
-                .Select(x => new { CompanyName = x.ShipperActorFk.CompanyName, x.DueDate }).ToListAsync();
-                
-            return actorInvoices.GroupBy(x => (x.DueDate.Date - DateTime.Now.Date).TotalDays / 7)
-                .Select(x => new NextDueDateDto
-                {
-                    RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
-                    CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
-                }).ToList();
-            
+            switch (invoiceType)
+            {
+                case BrokerInvoiceType.CarrierInvoices:
+                    {
+                        var actorSubmitInvoices = 
+                            await GetNextActorSubmitInvoices(x => x.CarrierActorFk.ActorType != ActorTypesEnum.MySelf);
+                        return GetNextDueDateList(actorSubmitInvoices);
+                    }
+                case BrokerInvoiceType.ShipperInvoices:
+                    {
+                        var actorInvoices = 
+                            await GetNextActorInvoices(x => x.ShipperActorFk.ActorType != ActorTypesEnum.MySelf);
+                        return GetNextDueDateList(actorInvoices);
+                    }
+                case BrokerInvoiceType.MySelfInvoices:
+                    var myselfSubmitInvoices =
+                        await GetNextActorSubmitInvoices(x => x.CarrierActorFk.ActorType == ActorTypesEnum.MySelf);
+                    var myselfInvoices =
+                        await GetNextActorInvoices(x => x.ShipperActorFk.ActorType == ActorTypesEnum.MySelf);
+                    var allMyselfInvoices = new List<Tuple<string, DateTime>>(myselfInvoices);
+                    allMyselfInvoices.AddRange(myselfSubmitInvoices);
+                    return GetNextDueDateList(allMyselfInvoices);
+
+                default: throw new UserFriendlyException(L("NotSupportedInvoiceType"));
+            }
+        }
+
+        private static double CalculateRemainingDays(double totalDays)
+        {
+            const int daysOfWeek = 7;
+            var remainingDays = totalDays != 0 ? totalDays / daysOfWeek : 0;
+            return Math.Round(remainingDays);
         }
 
         public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVsPaidInvoices(int shipperActorId)
@@ -460,15 +510,21 @@ namespace TACHYON.Dashboards.Broker
         }
 
 
-        public async Task<List<MostUsedTruckTypeDto>> GetMostTruckTypesUsed(int transportTypeId, DateRangeInput dateRangeInput)
+        public async Task<List<MostUsedTruckTypeDto>> GetMostTruckTypesUsed(int transportTypeId,
+            DateRangeInput dateRangeInput)
         {
             var truckTypes = await (from trip in _tripRepository.GetAll()
-                where (trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
-                       trip.ShippingRequestFk.TenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.ShipperActorId.HasValue ||
-                       trip.ShippingRequestFk.CarrierActorId.HasValue) &&
+                where (trip.ShippingRequestId.HasValue
+                          ? ((trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
+                              trip.ShippingRequestFk.TenantId == AbpSession.TenantId) &&
+                             (trip.ShippingRequestFk.ShipperActorId.HasValue ||
+                              trip.ShippingRequestFk.CarrierActorId.HasValue))
+                          : ((trip.CarrierTenantId == AbpSession.TenantId &&
+                              trip.ShipperTenantId == AbpSession.TenantId) &&
+                             (trip.ShipperActorId.HasValue || trip.CarrierActorId.HasValue))) &&
                       (trip.ShippingRequestFk.TransportTypeId == transportTypeId &&
-                      trip.CreationTime.Date > dateRangeInput.StartDate && trip.CreationTime.Date < dateRangeInput.EndDate)
+                       trip.CreationTime.Date > dateRangeInput.StartDate &&
+                       trip.CreationTime.Date < dateRangeInput.EndDate)
                 select new
                 {
                     TruckTypeId = trip.ShippingRequestFk.TrucksTypeId,
