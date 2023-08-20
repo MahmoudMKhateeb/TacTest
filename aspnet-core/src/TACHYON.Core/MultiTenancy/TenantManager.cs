@@ -203,6 +203,9 @@ namespace TACHYON.MultiTenancy
                         await _userEmailer.SendEmailActivationEmail(adminUser, emailActivationLink, input.AdminPassword);
                     }
 
+                    if (string.IsNullOrEmpty(tenant.MoiNumber))
+                        await SetFeatureValueAsync(tenant,AppFeatures.BayanIntegration,"false");
+                    
                     if (tenant.EditionId.HasValue)
                     {
                        string featureValue = await EditionManager.GetFeatureValueOrNullAsync(tenant.EditionId.Value, AppFeatures.CMS);
