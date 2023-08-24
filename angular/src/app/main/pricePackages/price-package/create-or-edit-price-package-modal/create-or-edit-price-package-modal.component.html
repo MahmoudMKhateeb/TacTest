@@ -341,7 +341,7 @@
                   name="tmsPP_ShippingType"
                   #shippingType="ngModel"
                   [(ngModel)]="pricePackageDto.shippingTypeId"
-                  (onValueChanged)="shippingTypeChanged()"
+                  (onChange)="shippingTypeChanged()"
                   [dataSource]="shippingTypes"
                   [searchEnabled]="true"
                   displayExpr="value"
