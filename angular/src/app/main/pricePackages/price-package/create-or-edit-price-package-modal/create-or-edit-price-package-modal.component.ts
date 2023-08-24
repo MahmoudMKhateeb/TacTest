@@ -259,15 +259,15 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
         this.pricePackageOriginLocations = res;
         this.pricePackageDto.originLocation = undefined;
       } else {
+        if (isNotNullOrUndefined(this.pricePackageDto?.id) && isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
+          (this.pricePackageDto.serviceAreas as any[]) = res.filter((x) => this.pricePackageDto?.serviceAreas?.some((s) => s.cityId == +x.cityId));
+          (this.selectedServiceAreas as any[]) = this.pricePackageDto.serviceAreas;
+        }
+
         this.pricePackageOriginLocations = res;
         this.pricePackageDestinationLocations = res;
         this.pricePackageDto.originLocation = undefined;
         this.pricePackageDto.destinationLocation = undefined;
-      }
-      if (isNotNullOrUndefined(this.pricePackageDto?.id) && isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
-        (this.pricePackageDto.serviceAreas as any[]) = this.pricePackageOriginLocations.filter((x) =>
-          this.pricePackageDto?.serviceAreas?.some((s) => s.cityId == +x.cityId)
-        );
       }
     });
   }

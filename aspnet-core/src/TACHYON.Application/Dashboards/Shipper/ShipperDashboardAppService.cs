@@ -819,7 +819,8 @@ namespace TACHYON.Dashboards.Shipper
             if(count == 1)
             {
                 var RemainingDays = document.FirstOrDefault() != null ? (document.FirstOrDefault().ExpirationDate.Value.Date - Clock.Now.Date).Days : 0;
-                return new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays +" Days" };
+                string timeUnit = GetTimeUnitByDays(RemainingDays, true);
+                return new GetDueDateInDaysOutput { Count = 1, TimeUnit = timeUnit };
             }
             else
             {
@@ -832,9 +833,9 @@ namespace TACHYON.Dashboards.Shipper
         {
             DisableTenancyFilters();
 
-            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+                bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
                 if (!invoiceType.HasValue) throw new UserFriendlyException(L("YouMustProvideInvoiceType"));
-                if(invoiceType == BrokerInvoiceType.CarrierInvoices)
+                if(isBroker && invoiceType == BrokerInvoiceType.CarrierInvoices)
                 {
                     var submitInvoice = _submitInvoiceRepository.GetAll()
                     .Where(x => x.TenantId == AbpSession.TenantId && x.DueDate.HasValue &&
@@ -848,7 +849,9 @@ namespace TACHYON.Dashboards.Shipper
                         var nextSubmitInvoiceDate = await submitInvoice.FirstOrDefaultAsync();
                         remainingDays = nextSubmitInvoiceDate.HasValue && Clock.Now.Date < nextSubmitInvoiceDate.Value.Date ? (nextSubmitInvoiceDate.Value.Date - Clock.Now.Date).Days : 0;
                     }
-                    return new GetDueDateInDaysOutput { Count = count, TimeUnit = remainingDays == 1 ? "Day" : remainingDays + " Days" };
+
+                    string timeUnit = GetTimeUnitByDays(remainingDays, count > 0);
+                    return new GetDueDateInDaysOutput { Count = count, TimeUnit = timeUnit };
                 }
             
             else
@@ -865,11 +868,23 @@ namespace TACHYON.Dashboards.Shipper
                     var nextInvoiceDate = await invoice.FirstOrDefaultAsync();
                     remainingDays =  Clock.Now.Date < nextInvoiceDate.Date ? (nextInvoiceDate.Date - Clock.Now.Date).Days : 0;
                 }
-                
-                return new GetDueDateInDaysOutput { Count = count, TimeUnit = remainingDays == 1 ? "a Day" : remainingDays + " Days" };
+                string timeUnit = GetTimeUnitByDays(remainingDays, count > 0);
+                return new GetDueDateInDaysOutput { Count = count, TimeUnit = timeUnit};
 
             }
        
+        }
+
+        private static string GetTimeUnitByDays(int remainingDays, bool hasItems)
+        {
+            // it's good to replace the magic strings below
+            string timeUnit = remainingDays switch
+            {
+                > 1 => $"{remainingDays} Days",
+                <= 1 when hasItems => "Today",
+                _ => "a Day"
+            };
+            return timeUnit;
         }
 
         // Tracking Map
