@@ -155,7 +155,13 @@
                         href="javascript:;"
                         class="dropdown-item"
                         *ngIf="'Pages.Tenants.ChangeFeatures' | permission"
-                        (click)="tenantFeaturesModal.show(options.data.tenantListDto.id, options.data.tenantListDto.name)"
+                        (click)="
+                          tenantFeaturesModal.show(
+                            options.data.tenantListDto.id,
+                            options.data.tenantListDto.name,
+                            !options.data.tenantListDto.moiNumber
+                          )
+                        "
                         >{{ 'Features' | localize }}</a
                       >
                     </li>

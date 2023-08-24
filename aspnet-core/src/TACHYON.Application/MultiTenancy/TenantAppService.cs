@@ -182,6 +182,14 @@ namespace TACHYON.MultiTenancy
         [AbpAuthorize(AppPermissions.Pages_Tenants_ChangeFeatures)]
         public async Task UpdateTenantFeatures(UpdateTenantFeaturesInput input)
         {
+            string tenantMoiNumber = await TenantManager.Tenants.Where(x => x.Id == input.Id)
+                .Select(x => x.MoiNumber).FirstOrDefaultAsync();
+            if (string.IsNullOrEmpty(tenantMoiNumber))
+            {
+                var bayanFeature = input.FeatureValues.FirstOrDefault(x => x.Name.Equals(AppFeatures.BayanIntegration));
+                if (bayanFeature != null) bayanFeature.Value = "false";
+            }
+            
             await TenantManager.SetFeatureValuesAsync(input.Id,
                 input.FeatureValues.Select(fv => new NameValue(fv.Name, fv.Value)).ToArray());
             bool isCmsEnabled = input.FeatureValues.Any(x =>

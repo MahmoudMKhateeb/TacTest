@@ -3528,5 +3528,6 @@
 	<text name="ClaimedInvoicesVsPaidInvoices">Claimed Invoices Vs Paid Invoices</text>
 	<text name="ReportBeingGeneratedInTheBackGround">Report is Being Generated in the Background,The page will update once ready</text>
 	<text name="MySelfInvoices">Myself Invoices</text>
+	<text name="MoiNumberWarningMsg">This company doesn’t have an MOI number, please fill it to activate the Bayan feature.</text>
 	</texts>
 </localizationDictionary>
