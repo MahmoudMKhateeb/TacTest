@@ -328,6 +328,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
         this._TripService.CreateOrEditShippingRequestTripDto = res;
+        (this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag as any) = res.shippingRequestTripFlag?.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.packingTypeId as any) = res.packingTypeId?.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.originCityId as any) = res.originCityId?.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.routeType as any) = res.routeType?.toString();
+
         (this.originCountry as any) = res.countryId;
         if (!shippingRequestForView) {
           this.loadCitiesByCountryId(this.originCountry, 'source', true);
@@ -1358,9 +1363,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.fillAllRoundTrips();
     this.isPortMovement =
       this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-      this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
-        ? true
-        : false;
+      this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements;
     if (this.isPortMovement) {
       this.BindGeneralGoods();
     } else {

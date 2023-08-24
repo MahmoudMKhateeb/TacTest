@@ -268,7 +268,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_userRepository.GetAll()
-                .WhereIf(await IsTachyonDealer(), x=>x.TenantId == tenantId.Value)
+                .WhereIf(await IsTachyonDealer() && tenantId.HasValue, x=>x.TenantId == tenantId.Value)
                 .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
                 .Where(e => e.IsDriver == true)
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
@@ -279,7 +279,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _truckRepository.GetAll()
-                .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
+                .WhereIf(await IsTachyonDealer() && tenantId.HasValue, x => x.TenantId == tenantId.Value)
                 .WhereIf(truckTypeId.HasValue , x => x.TrucksTypeId == truckTypeId)
                 .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
                 .Select(x => new GetAllTrucksWithDriversListDto
