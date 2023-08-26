@@ -283,7 +283,14 @@ namespace TACHYON.Tracking
                       );
                 if (!isTMS)
                 {
-                    item.IsInvoiceIssued = isShipper || isBroker ?item.ShipperInvoiceNumber != null : isCarrier && item.CarrierInvoiceNumber != null;
+                    if (isShipper || isBroker)
+                    {
+                        item.IsInvoiceIssued = item.ShipperInvoiceNumber != null;
+                    }
+                    else
+                    {
+                        item.IsInvoiceIssued = isCarrier && item.CarrierInvoiceNumber != null;
+                    }
                 }
             }
             return LoadResult<TrackingListDto>(result, filter);

@@ -156,7 +156,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   isEdit: boolean;
   allOriginPorts: SelectFacilityItemDto[] = [];
-  selectedShippingRequestDestinationCities: ShippingRequestDestinationCitiesDto[];
+  //selectedShippingRequestDestinationCities: ShippingRequestDestinationCitiesDto[];
   allpackingTypes: SelectItemDto[];
 
   get isFileInputValid() {
@@ -326,7 +326,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this.isEdit = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
-        this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
+        // this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
+        this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = res.shippingRequestDestinationCities;
         this._TripService.CreateOrEditShippingRequestTripDto = res;
         (this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag as any) = res.shippingRequestTripFlag?.toString();
         (this._TripService.CreateOrEditShippingRequestTripDto.packingTypeId as any) = res.packingTypeId?.toString();
@@ -1431,6 +1432,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   validateShippingRequestType() {
+    console.log('validateShippingRequestType __________________________________________');
     if (this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
       // this.step2Form.get('originFacility').setValidators([Validators.required]);
       // this.step2Form.get('originFacility').updateValueAndValidity();

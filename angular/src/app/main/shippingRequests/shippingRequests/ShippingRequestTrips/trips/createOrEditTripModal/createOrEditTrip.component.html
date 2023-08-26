@@ -403,7 +403,7 @@
                       [searchEnabled]="true"
                       displayExpr="translatedDisplayName"
                       valueExpr="id"
-                      (onValueChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
+                      (onChange)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
                       placeholder="{{ l('SelectanOriginCountry') }}"
                     >
                     </dx-select-box>
@@ -424,7 +424,7 @@
                       [searchEnabled]="true"
                       displayExpr="displayName"
                       valueExpr="id"
-                      (onValueChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'destination')"
+                      (onChange)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'destination')"
                       placeholder="{{ l('SelectaCountry') }}"
                     >
                     </dx-select-box>
@@ -454,7 +454,7 @@
                       displayExpr="displayName"
                       valueExpr="id"
                       [disabled]="!sourceCities ? true : null"
-                      (onValueChanged)="validateShippingRequestType(); loadFacilitiesInPointComponent()"
+                      (onChange)="validateShippingRequestType(); loadFacilitiesInPointComponent()"
                       placeholder="{{ l('SelectanOriginCity') }}"
                       required
                     >
@@ -481,7 +481,7 @@
                       displayExpr="displayName"
                       valueExpr="id"
                       [disabled]="!allOriginPorts ? true : null"
-                      (onValueChanged)="
+                      (onChange)="
                         validateShippingRequestType();
                         getCityIdFromSelectedPort($event);
                         removeValidationForImportPortRequestOnStep2Form();
@@ -502,9 +502,7 @@
                       displayExpr="displayName"
                       valueExpr="id"
                       [disabled]="!sourceCities ? true : null"
-                      (onValueChanged)="
-                        validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form(); loadFacilitiesInPointComponent()
-                      "
+                      (onChange)="validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form(); loadFacilitiesInPointComponent()"
                       placeholder="{{ l('SelectanOriginCity') }}"
                       required
                       *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
