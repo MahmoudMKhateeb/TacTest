@@ -84,6 +84,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         
         public bool IsShipperActorMyself { get; set; }
 
+        public long? TemplateId { get; set; }
+
         #region Dedicated
         public TimeUnit? RentalDurationUnit { get; set; }
         public string RentalDurationUnitTitle { get; set; }
