@@ -219,6 +219,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit() {
+    // setInterval(() => {
+    //   console.log(this.destinationCities);
+    //   console.log(this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities);
+    // });
     this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
     this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
 
@@ -1485,8 +1489,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination', isInit = false) {
+    console.log('cities is loading');
     if (!isInit) {
-      this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
+      //this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
     }
     this.destinationCities = [];
     this.citiesLoading = true;

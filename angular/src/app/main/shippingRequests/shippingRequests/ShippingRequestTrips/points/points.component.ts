@@ -91,7 +91,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   ngOnInit() {
-    console.log('isPortMovement', this.isPortMovement);
     this.loadSharedServices();
     this.loadDropDowns();
     this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
@@ -246,8 +245,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * creates empty points for the trip based on number of drops
    */
   createEmptyPoints(selectedPaymentMethodId?: number) {
-    console.log('createEmptyPoints this._tripService.GetShippingRequestForViewOutput', this._tripService.GetShippingRequestForViewOutput);
-    console.log('createEmptyPoints this._tripService.CreateOrEditShippingRequestTripDto', this._tripService.CreateOrEditShippingRequestTripDto);
     let numberOfDrops = 0;
     if (!this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id) {
       numberOfDrops = this._tripService.CreateOrEditShippingRequestTripDto?.numberOfDrops;
@@ -256,7 +253,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
 
     //if there is already wayPoints Dont Create Empty Once
-    console.log('this.wayPointsList.length == numberOfDrops + 1', this.wayPointsList.length == numberOfDrops + 1);
     if (this.wayPointsList.length == numberOfDrops + 1) return;
     // for (let i = 0; i <= numberOfDrops; i++) {
     //   let point = new CreateOrEditRoutPointDto();
@@ -357,6 +353,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   ngAfterContentChecked() {
+    // this.wayPointsList.forEach((x) => {
+    //   return ((x.receiverId as any) = x.receiverId.toString());
+    // });
     this.cdref.detectChanges();
   }
 }

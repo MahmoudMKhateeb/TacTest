@@ -66,11 +66,10 @@
                             [(value)]="wayPointsList[i].facilityId"
                             [dataSource]="record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"
                             [searchEnabled]="true"
-                            (onChange)="
+                            (onSelectionChanged)="
                               RouteStepCordSetter(i, wayPointsList[i].facilityId);
                               wayPointsSetter();
                               loadReceivers(wayPointsList[i].facilityId);
-                              wayPointsList[i].receiverId = null;
                               onChangedWayPointsList()
                             "
                             displayExpr="displayName"
