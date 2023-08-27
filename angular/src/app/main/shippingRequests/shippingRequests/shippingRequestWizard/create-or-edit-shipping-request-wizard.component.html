@@ -185,7 +185,7 @@
 
                     <div class="separator separator-dashed my-5"></div>
 
-                    <div *ngIf="!isCarrierSass" [hidden]="step1Dto.isInternalBrokerRequest" class="form-group">
+                    <div [hidden]="step1Dto.isInternalBrokerRequest" class="form-group">
                       <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
                       <dx-select-box
                         name="shippingRequestType"
@@ -232,7 +232,7 @@
                       <!--                      </select>-->
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                     </div>
-                    <div class="form-group" [hidden]="shippingRequestType !== 'directrequest' || isCarrierSass || step1Dto.isInternalBrokerRequest">
+                    <div class="form-group" [hidden]="shippingRequestType !== 'directrequest' || step1Dto.isInternalBrokerRequest">
                       <label>{{ l('SelectCarriers') }} <span *ngIf="shippingRequestType === 'directrequest'" class="required-fileds">*</span></label>
                       <div
                         [ngClass]="{

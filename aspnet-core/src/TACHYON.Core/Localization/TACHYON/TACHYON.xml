@@ -1730,7 +1730,7 @@
 		<text name="SendActivationEmail">Send activation email.</text>
 		<text name="SendDirectRequestOffer">Send direct request offer</text>
 		<text name="SendDirectRequests">Send direct request</text>
-		<text name="SendDirectRequest">Please send us a quote for the shipment.</text>
+		<text name="SendDirectRequest">Send Direct Request</text>
 		<text name="SendDriectRequestForCarrier">Please send us a quote for the shipment No.: {id}.</text>
 		<text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
 		<text name="Sender">Sender</text>
