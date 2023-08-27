@@ -339,7 +339,7 @@
                     _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
                   "
                 >
-                  <label>{{ l('RouteType') }}</label>
+                  <label>{{ l('RouteType') }} <span class="required-fileds">*</span></label>
                   <dx-select-box
                     id="routeType"
                     name="routeType"
@@ -403,7 +403,7 @@
                       [searchEnabled]="true"
                       displayExpr="translatedDisplayName"
                       valueExpr="id"
-                      (onChange)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
+                      (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
                       placeholder="{{ l('SelectanOriginCountry') }}"
                     >
                     </dx-select-box>
@@ -424,7 +424,7 @@
                       [searchEnabled]="true"
                       displayExpr="displayName"
                       valueExpr="id"
-                      (onChange)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'destination')"
+                      (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'destination')"
                       placeholder="{{ l('SelectaCountry') }}"
                     >
                     </dx-select-box>

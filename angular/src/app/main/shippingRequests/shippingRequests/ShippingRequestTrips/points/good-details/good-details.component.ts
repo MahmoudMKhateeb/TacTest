@@ -52,7 +52,10 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
       //take the Good Category From the Shared Service and bind it
 
       this.MainGoodsCategory = this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.goodCategoryId;
-      this.loadGoodSubCategory(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.goodCategoryId);
+      this.loadGoodSubCategory(
+        this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.goodCategoryId ||
+          this._TripService.CreateOrEditShippingRequestTripDto?.goodCategoryId
+      );
 
       //get the value of the single way point fron the Shared Service
       this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
@@ -63,7 +66,8 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
     }
   }
 
-  getGoodSubDisplayname(id) {
+  getGoodSubDisplayname(id, record) {
+    console.log(record, id, this.allSubGoodCategorys);
     return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : '';
   }
 
@@ -83,6 +87,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
     if (FatherID || this.isDirectTrip) {
+      console.log(FatherID, 'asssssssssssssssssasas');
       this.allSubGoodCategorysLoading = true;
       this._goodsDetailsServiceProxy
         .getAllGoodCategoryForTableDropdown(FatherID)
