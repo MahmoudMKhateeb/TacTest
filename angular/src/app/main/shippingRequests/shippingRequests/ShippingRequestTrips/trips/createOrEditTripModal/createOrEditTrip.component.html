@@ -869,7 +869,6 @@
                     displayExpr="displayName"
                     valueExpr="id"
                     [disabled]="saving || isDisabledTruck"
-                    (onValueChanged)="GetTruckOrDriver(null, _TripService?.CreateOrEditShippingRequestTripDto?.truckId)"
                     placeholder="{{ l('Selectatruck') }}"
                     required
                   >
