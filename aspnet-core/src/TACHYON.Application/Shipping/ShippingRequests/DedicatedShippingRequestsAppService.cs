@@ -333,7 +333,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<long?> GetDriverOrTruckForTripAssign(long? truckId, long? DriverUserId, long shippingRequestId)
         {
-            if (truckId == null && DriverUserId == null) throw new UserFriendlyException(L("EvenTruckOrDriverMustHaveValue"));
+            //if (truckId == null && DriverUserId == null) throw new UserFriendlyException(L("EvenTruckOrDriverMustHaveValue"));
             await DisableTenancyFiltersIfTachyonDealer();
             var dedicatedTruck= await _dedicatedShippingRequestTruckRepository.GetAll()
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
