@@ -74,6 +74,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   step3Form = this.fb.group({
     editionType: [null, Validators.required],
+    excludingCompanies: [null, null],
   });
   // end of form groups and form models
 
@@ -226,7 +227,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             }
             this.isStepLoading = true;
             this.reportDefinitionDto.grantedEditionIds = (this.selectedGrantedEditionIds as any[]).map((x) => x.id);
-            if (isNotNullOrUndefined(this.reportDefinitionDto.excludedTenantIds)) {
+            if (isNotNullOrUndefined(this.selectedExcludedTenantIds)) {
               this.reportDefinitionDto.excludedTenantIds = (this.selectedExcludedTenantIds as any[]).map((x) => x.id);
             }
             this._reportDefinitionService.createOrEdit(this.reportDefinitionDto).subscribe(() => {
