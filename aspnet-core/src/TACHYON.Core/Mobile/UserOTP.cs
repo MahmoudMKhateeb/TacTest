@@ -18,7 +18,7 @@ namespace TACHYON.Mobile
         public DateTime CreationTime { get; set; }
 
         //changed from 3 minutes to 1 minute based on TAC-2122
-        public DateTime ExpireTime { get; set; } = Clock.Now.AddMinutes(1);
+        public DateTime ExpireTime { get; set; } = Clock.Now.AddMinutes(3);
 
         public UserOTP(long UserId)
         {
