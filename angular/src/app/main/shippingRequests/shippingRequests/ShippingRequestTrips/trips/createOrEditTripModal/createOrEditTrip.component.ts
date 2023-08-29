@@ -1266,10 +1266,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       .subscribe((res) => {
         if (driverId != null && res != null) {
           this._TripService.CreateOrEditShippingRequestTripDto.truckId = res;
-          this.isDisabledTruck = true;
+          //this.isDisabledTruck = true;
         } else if (truckId != null && res != null) {
           this._TripService.CreateOrEditShippingRequestTripDto.driverUserId = res;
-          this.isDisabledDriver = true;
+          //this.isDisabledDriver = true;
         }
       });
   }
