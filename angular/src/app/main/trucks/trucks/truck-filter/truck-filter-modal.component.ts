@@ -2,7 +2,6 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } f
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CarriersForDropDownDto,
-  DedicatedShippingRequestsServiceProxy,
   ISelectItemDto,
   ShippingRequestsServiceProxy,
   TrucksServiceProxy,
@@ -10,8 +9,6 @@ import {
   TruckTruckStatusLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import { DriverFilter } from '@app/admin/users/drivers/driver-filter/driver-filter-model';
 import { TruckFilter } from '@app/main/trucks/trucks/truck-filter/truck-filter-model';
 
 @Component({
@@ -79,13 +76,13 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
 
   search() {
     this.truckFilterObj.selectedCarrier = this.selectedCarrier?.map((item) => {
-      return this.carriersList.find((carrier) => Number(carrier.id) === item);
+      return this.carriersList?.find((carrier) => Number(carrier?.id) === item);
     });
     this.truckFilterObj.selectedTruckTypes = this.selectedTruckTypes?.map((item) => {
-      return this.transportTypeList.find((type) => Number(type.id) === item);
+      return this.transportTypeList?.find((type) => Number(type?.id) === item);
     });
     this.truckFilterObj.selectedCapacity = this.selectedCapacity?.map((item) => {
-      return this.capacityList.find((capacity) => Number(capacity.id) === item);
+      return this.capacityList?.find((capacity) => Number(capacity?.id) === item);
     });
     this.searchClicked.emit(this.truckFilterObj);
     console.log(this.truckFilterObj);
@@ -94,7 +91,7 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
 
   private getAllCarriersForDropDown() {
     this._shippingRequestService.getAllCarriersForDropDown().subscribe((res) => {
-      this.carriersList = res.map((item) => {
+      this.carriersList = res?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
@@ -103,7 +100,7 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
 
   private getAllTransportTypesForDropdown() {
     this._shippingRequestService.getAllTransportTypesForDropdown().subscribe((res) => {
-      this.transportTypeList = res.map((item) => {
+      this.transportTypeList = res?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
@@ -112,7 +109,7 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
 
   private getAllTrucksTypeForTableDropdown() {
     this._shippingRequestService.getAllTrucksTypeForTableDropdown().subscribe((res) => {
-      this.truckTypesList = res.map((item) => {
+      this.truckTypesList = res?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
@@ -120,7 +117,7 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
   }
   private getAllCapacitiesForDropdown() {
     this._shippingRequestService.getAllCapacitiesForDropdown().subscribe((res) => {
-      this.capacityList = res.map((item) => {
+      this.capacityList = res?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
@@ -128,7 +125,7 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
   }
   private getAllTruckStatusForTableDropdown() {
     this._trucksService.getAllTruckStatusForTableDropdown().subscribe((res) => {
-      this.truckStatusList = res.map((item) => {
+      this.truckStatusList = res?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });

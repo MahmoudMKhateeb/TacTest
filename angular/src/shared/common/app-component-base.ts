@@ -173,6 +173,27 @@ export abstract class AppComponentBase {
   }
 
   /**
+   * validates if the value input is decimal
+   */
+  isDecimal(value: string): boolean {
+    // Regular expression to match a decimal number
+    const decimalRegex = /^\d*\.?\d+$/;
+    return decimalRegex.test(value);
+  }
+
+  /**
+   * Forces the User To Enter Numbers Decimals
+   * recommend to be used with keypress
+   * @param $event
+   */
+  validateIsDecimal(event: KeyboardEvent): void {
+    const inputValue = (event.target as HTMLInputElement).value;
+    if (!this.isDecimal(inputValue)) {
+      event.preventDefault();
+    }
+  }
+
+  /**
    * is used to handle hijri gregorian datepicker change event
    * @param $event
    * @param item

@@ -3,8 +3,11 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   BrokerDashboardServiceProxy,
   CarrierDashboardServiceProxy,
+  FilterDatePeriod,
+  GetNeedsActionTripsAndRequestsOutput,
   NeedsActionTripDto,
   ShipperDashboardServiceProxy,
+  TMSAndHostDashboardServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
 
@@ -15,14 +18,19 @@ import { Router } from '@angular/router';
 })
 export class NeedsActionWidgetComponent extends AppComponentBase implements OnInit {
   @Input('isForActors') isForActors = false;
-  needsActionTrips: NeedsActionTripDto[] = [];
+  needsActionTrips: NeedsActionTripDto[] | GetNeedsActionTripsAndRequestsOutput[] = [];
   loading: boolean;
+  today = new Date();
+  private selectedOption = FilterDatePeriod.Monthly;
+  private start: moment.Moment;
+  private end: moment.Moment;
 
   constructor(
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
     private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
     private _brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
+    private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy,
     private router: Router
   ) {
     super(injector);
@@ -46,20 +54,42 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
       return;
     }
     if (this.isShipper) {
-      this._shipperDashboardServiceProxy.getNeedsActionTrips().subscribe((res) => {
+      this._shipperDashboardServiceProxy.getNeedsActionTrips(this.start, this.end).subscribe((res) => {
         this.needsActionTrips = res;
         this.loading = false;
       });
     }
     if (this.isCarrier || this.isCarrierSaas) {
-      this._carrierDashboardServiceProxy.getNeedsActionTrips().subscribe((res) => {
+      this._carrierDashboardServiceProxy.getNeedsActionTrips(this.start, this.end).subscribe((res) => {
         this.needsActionTrips = res;
         this.loading = false;
       });
     }
+    if (this.isTachyonDealerOrHost) {
+      this.loading = false;
+    }
   }
 
-  goToTrackingPage(trip: NeedsActionTripDto): void {
-    this.router.navigateByUrl(`/app/main/tracking?waybillNumber=${trip.waybillNumber}`);
+  goToTrackingPage(trip: NeedsActionTripDto | GetNeedsActionTripsAndRequestsOutput): void {
+    const waybillNumber = trip instanceof NeedsActionTripDto ? trip.waybillNumber : trip.waybillOrRequestReference;
+    this.router.navigateByUrl(`/app/main/tracking/shipmentTracking?waybillNumber=${waybillNumber}`);
+  }
+
+  selectedFilter(filter: { start: moment.Moment; end: moment.Moment }) {
+    this.loading = true;
+    this.start = filter.start;
+    this.end = filter.end;
+    if (this.isTachyonDealerOrHost) {
+      this.getNeedsActionTripsAndRequests();
+    } else {
+      this.fetchData();
+    }
+  }
+
+  private getNeedsActionTripsAndRequests() {
+    this._TMSAndHostDashboardServiceProxy.getNeedsActionTripsAndRequests(this.start, this.end).subscribe((res) => {
+      this.needsActionTrips = res;
+      this.loading = false;
+    });
   }
 }

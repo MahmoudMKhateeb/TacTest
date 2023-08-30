@@ -455,6 +455,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
       scrollToNewItems: true,
       swap: true,
       swapWhileDragging: false,
+      maxRows: 200,
     };
   }
 
@@ -518,7 +519,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     if (
       this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultShipperDashboard ||
       this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultCarrierDashboard ||
-      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultBrokerDashboard
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultBrokerDashboard ||
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultHostDashboard ||
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultTachyonMangedServiceDashboard
     ) {
       this.resetPage(this.dashboardName);
     }
@@ -533,11 +536,11 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     let savePageInput = new SavePageInput({
       dashboardName: dashboardName,
       pages: this.userDashboard.pages.map((page) => {
-        const widgets = dashboardDefault.pages.find((item) => item.name === page.name).widgets;
+        const widgets = dashboardDefault.pages.find((item) => item.name === page.name)?.widgets;
         return new Page({
           id: page.id,
           name: page.name,
-          widgets: widgets.map((widget) => {
+          widgets: widgets?.map((widget) => {
             return new Widget({
               widgetId: widget.widgetId,
               height: widget.height,

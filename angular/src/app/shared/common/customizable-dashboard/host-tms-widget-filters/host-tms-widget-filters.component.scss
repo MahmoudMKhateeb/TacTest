@@ -1,0 +1,47 @@
+.filter {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-icon {
+    cursor: pointer;
+    i {
+        color: var(--primary, #da1a32);
+    }
+}
+
+.dropdown {
+    background: var(--white, #fff);
+    position: absolute;
+    top: 100%;
+    left: -15rem;
+    display: none;
+    width: 16rem;
+    z-index: 2;
+    border: 1px solid var(--dark, #000);
+    padding: 0.5rem;
+    border-radius: 5px;
+    &.open {
+        display: block;
+        box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.75);
+        -webkit-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.75);
+    }
+}
+
+
+.options {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    li {
+        cursor: pointer;
+        padding: 0.3rem 0.7rem;
+        &:hover {
+            background: var(--primary, #da1a32);
+            color: var(--white, #fff);
+        }
+    }
+
+}
+

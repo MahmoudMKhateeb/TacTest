@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -28,6 +28,8 @@ using TACHYON.Authorization.Users.Dto;
 using TACHYON.Cities;
 using TACHYON.Cities.Dtos;
 using TACHYON.Countries;
+using TACHYON.Documents;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Editions.Dto;
 using TACHYON.Features;
@@ -45,16 +47,21 @@ namespace TACHYON.MultiTenancy
         private readonly IRepository<County, int> _lookup_countryRepository;
         private readonly IRepository<City, int> _lookup_cityRepository;
         private readonly IBackgroundJobManager _jobManager;
-
+        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly DocumentFilesManager _documentFilesManager;
+        private readonly IFeatureChecker _featureChecker;
 
         public TenantAppService(IRepository<County, int> lookup_countryRepository,
-            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager)
+            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager , IFeatureChecker featureChecker)
         {
             AppUrlService = NullAppUrlService.Instance;
             EventBus = NullEventBus.Instance;
             _lookup_countryRepository = lookup_countryRepository;
             _lookup_cityRepository = lookup_cityRepository;
             _jobManager = jobManager;
+            _documentFileRepository = documentFileRepository;
+            _documentFilesManager = documentFilesManager;
+            _featureChecker = featureChecker;
         }
 
         public async Task<PagedResultDto<TenantListDto>> GetTenants(GetTenantsInput input)
@@ -89,12 +96,22 @@ namespace TACHYON.MultiTenancy
             IQueryable<UserListDto> userListDtos = UserManager.Users.Where(x => x.UserName.ToLower() == "admin")
                 .ProjectTo<UserListDto>(AutoMapperConfigurationProvider);
 
-            var query = from t in tenantListDtos
+            var query = (from t in tenantListDtos
                 join u in userListDtos
                     on t.Id equals u.TenantId
-                select new GetAllTenantsOutput { TenantListDto = t, UserListDto = u };
+                select new GetAllTenantsOutput { TenantListDto = t, UserListDto = u }).ToList();
 
-            return await LoadResultAsync(query, loadOptions);
+            var documentFiles = await _documentFileRepository.GetAll()
+                     .Where(x => x.DocumentTypeFk.IsRequired == true && x.DocumentTypeId != null)
+                     .ToListAsync();
+            foreach (var item in query)
+            {
+                item.TenantListDto.DocumentStatus =
+                (await _documentFilesManager.GetIsTenentHasMissingDocuments(documentFiles,item.TenantListDto.Id)) == true
+                ? L("Submited") : L("NotSubmitted");
+            }
+
+            return  LoadResult(query, loadOptions);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Create)]
@@ -112,6 +129,8 @@ namespace TACHYON.MultiTenancy
         public async Task<TenantEditDto> GetTenantForEdit(EntityDto input)
         {
             var tenantEditDto = ObjectMapper.Map<TenantEditDto>(await TenantManager.GetByIdAsync(input.Id));
+            tenantEditDto.IsCarrier = (await _featureChecker.IsEnabledAsync(tenantEditDto.Id, AppFeatures.Carrier) &&
+              !await _featureChecker.IsEnabledAsync(tenantEditDto.Id, AppFeatures.CMS));
             tenantEditDto.ConnectionString = SimpleStringCipher.Instance.Decrypt(tenantEditDto.ConnectionString);
             return tenantEditDto;
         }
@@ -163,6 +182,14 @@ namespace TACHYON.MultiTenancy
         [AbpAuthorize(AppPermissions.Pages_Tenants_ChangeFeatures)]
         public async Task UpdateTenantFeatures(UpdateTenantFeaturesInput input)
         {
+            string tenantMoiNumber = await TenantManager.Tenants.Where(x => x.Id == input.Id)
+                .Select(x => x.MoiNumber).FirstOrDefaultAsync();
+            if (string.IsNullOrEmpty(tenantMoiNumber))
+            {
+                var bayanFeature = input.FeatureValues.FirstOrDefault(x => x.Name.Equals(AppFeatures.BayanIntegration));
+                if (bayanFeature != null) bayanFeature.Value = "false";
+            }
+            
             await TenantManager.SetFeatureValuesAsync(input.Id,
                 input.FeatureValues.Select(fv => new NameValue(fv.Name, fv.Value)).ToArray());
             bool isCmsEnabled = input.FeatureValues.Any(x =>

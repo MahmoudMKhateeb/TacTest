@@ -145,7 +145,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
       });
 
-    this._trucksServiceProxy.getAllDriversForDropDown(null).subscribe((result) => {
+    this._trucksServiceProxy.getAllDriversForDropDown(null, null).subscribe((result) => {
       this.allDrivers = result;
     });
 
@@ -334,11 +334,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     if (transportTypeId > 0) {
       this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
         this.allTruckTypesByTransportType = result;
-        this.truck.trucksTypeId = null;
+        // this.truck.trucksTypeId = null;
         this.truckTypeLoading = false;
       });
     } else {
-      this.truck.trucksTypeId = null;
+      // this.truck.trucksTypeId = null;
       this.allTruckTypesByTransportType = null;
       this.allTrucksCapByTruckTypeId = null;
       this.truckTypeLoading = false;
@@ -410,9 +410,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     );
   }
   LoadDrivers() {
-    this._trucksServiceProxy.getAllDriversForDropDown(this.isTachyonDealer ? this.truck.tenantId : null).subscribe((result) => {
-      this.allDrivers = result;
-    });
+    this._trucksServiceProxy
+      .getAllDriversForDropDown(this.isTachyonDealer ? this.truck.tenantId : null, this.truck.carrierActorId)
+      .subscribe((result) => {
+        this.allDrivers = result;
+      });
   }
   // plateNumberNoramlize() {
   //   this.truck.plateNumber = this.truck.plateNumber
@@ -431,4 +433,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   //   }
   //   return false;
   // }
+
+  onValueChanged(event: any, property: string) {
+    if (event.value) {
+      this.truck[property] = event.value.toString();
+    }
+  }
 }

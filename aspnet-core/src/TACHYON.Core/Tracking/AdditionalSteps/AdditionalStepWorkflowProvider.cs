@@ -39,6 +39,7 @@ namespace TACHYON.Tracking.AdditionalSteps
         private readonly IAppNotifier _appNotifier;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly CommonManager _commonManager;
         public IAbpSession AbpSession { set; get; }
 
 
@@ -53,7 +54,8 @@ namespace TACHYON.Tracking.AdditionalSteps
             IAppNotifier appNotifier,
             DocumentFilesManager documentFilesManager,
             IAbpSession abpSession,
-            IRepository<ShippingRequest, long> shippingRequestRepository)
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            CommonManager commonManager)
         {
             _routePointRepository = routePointRepository;
             _reasonProvider = reasonProvider;
@@ -193,6 +195,7 @@ namespace TACHYON.Tracking.AdditionalSteps
             _documentFilesManager = documentFilesManager;
             AbpSession = abpSession;
             _shippingRequestRepository = shippingRequestRepository;
+            _commonManager = commonManager;
         }
 
 
@@ -258,6 +261,18 @@ namespace TACHYON.Tracking.AdditionalSteps
                 ? new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>()
                 : transactions.Where(x => availableAdditionalStepTypes.Contains(x.AdditionalStepType)).ToList();
         }
+
+        public bool IsPointContainReceiverCodeTransition(
+            int workflowVersion, long pointId)
+        {
+            var transactions = GetTransactions(workflowVersion).ToList();
+
+            var transactionsStepTypes = GetTransactions(workflowVersion)
+                .Select(x => x.AdditionalStepType).ToList();
+
+
+            return transactionsStepTypes.Contains(AdditionalStepType.ReceiverCode);
+        }
         /// <summary>
         /// This API returns all point transitions, steps that done in tracking including receiver code, files
         /// </summary>
@@ -300,7 +315,9 @@ namespace TACHYON.Tracking.AdditionalSteps
             bool isExist = await _routePointRepository.GetAll().AnyAsync(x => x.Id == args.PointId);
 
             if (!isExist) throw new UserFriendlyException(L("PointIsNotFound"));
-            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
+
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), args.DocumentContentType, AbpSession.TenantId);
+
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.POD);
             
@@ -312,7 +329,7 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task<string> UploadEirFile(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
-            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), args.DocumentContentType, AbpSession.TenantId);
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.Eir);
             
@@ -322,7 +339,7 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task<string> UploadManifestFile(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
-            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), args.DocumentContentType, AbpSession.TenantId);
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.Manifest);
 
@@ -334,7 +351,7 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task<string> UploadConfirmationDocument(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
-            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), args.DocumentContentType, AbpSession.TenantId);
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.ConfirmationDocuments);
 
@@ -488,8 +505,9 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task HandleDeliveredTrip(long srId, int tripId, UserIdentifier shipper)
         {
             // when set All asyn ==> delivered it get false ? question why ?
-            bool isOtherTripsDelivered = await _tripRepository.GetAll().Where(x => x.ShippingRequestId == srId && x.Id != tripId)
-                 .AllAsync(x => x.Status == ShippingRequestTripStatus.Delivered);
+            bool isOtherTripsDelivered = await _tripRepository.GetAll().Where(x => x.ShippingRequestId == srId)
+                 .AllAsync(x => x.ShippingRequestFk.NumberOfTrips == x.ShippingRequestFk.TotalsTripsAddByShippier
+                 && x.Status == ShippingRequestTripStatus.Delivered);
             if (isOtherTripsDelivered)
             {
                 _shippingRequestRepository.Update(srId, x =>

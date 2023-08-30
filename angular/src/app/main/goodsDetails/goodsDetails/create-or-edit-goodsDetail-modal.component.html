@@ -23,10 +23,22 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>
-            <select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">
-              <option value="">{{ l('SelectAGoodCategory') }}</option>
-              <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              name="goodsDetail.goodCategoryId"
+              id="GoodCategoryDisplayName"
+              [(value)]="goodsDetail.goodCategoryId"
+              [dataSource]="allGoodCategorys"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectAGoodCategory') }}"
+            >
+            </dx-select-box>
+            <!--            <select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">-->
+            <!--              <option value="">{{ l('SelectAGoodCategory') }}</option>-->
+            <!--              <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group">

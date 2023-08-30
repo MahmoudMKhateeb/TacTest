@@ -41,7 +41,7 @@ namespace TACHYON.PricePackages.PricePackageProposals.Jobs
                 .FirstOrDefaultAsync(x => x.Id == args.ProposalId);
             var file = await _proposalManager.GenerateProposalPdfFile(proposal);
 
-            if (args.ProposalReceiverEmailAddress.IsNullOrEmpty()) 
+            if (!args.ProposalReceiverEmailAddress.IsNullOrEmpty()) 
                 await _userEmailer.SendPricePackageProposalEmail(proposal.ProposalName, file,
                 args.ProposalReceiverEmailAddress);
             

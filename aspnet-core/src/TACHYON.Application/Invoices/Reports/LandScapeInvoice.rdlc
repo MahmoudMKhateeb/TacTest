@@ -253,7 +253,7 @@
                   <Width>2.57579cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.00417cm</Width>
+                  <Width>3.15444cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>4.11106cm</Width>
@@ -757,7 +757,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Invoice Date:</Value>
+                                  <Value>Issuance Date and time:</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -833,7 +833,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>:تاريخ الفاتورة</Value>
+                                  <Value>:تاريخ و وقت الفاتورة</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -1159,6 +1159,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1964,7 +1965,7 @@
             <Top>0.17639cm</Top>
             <Left>0.56761cm</Left>
             <Height>3.36011cm</Height>
-            <Width>28.28757cm</Width>
+            <Width>28.43784cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2439,7 +2440,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(VAT </Value>
+                                  <Value>(VAT Amount </Value>
                                   <Style>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -2464,7 +2465,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>قيمة الضريبة المضافة ر.س</Value>
+                                  <Value>قيمة الضريبة ر.س</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3811,7 +3812,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value> قيمة الضريبة المضافة (%</Value>
+                                  <Value> قيمة الضريبة (%</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>8pt</FontSize>

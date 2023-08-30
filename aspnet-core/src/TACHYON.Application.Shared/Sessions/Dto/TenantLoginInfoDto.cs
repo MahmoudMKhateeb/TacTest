@@ -17,6 +17,9 @@ namespace TACHYON.Sessions.Dto
         public Guid? LogoId { get; set; }
 
         public string LogoFileType { get; set; }
+        public Guid? StampId { get; set; }
+
+        public string StampFileType { get; set; }
 
         public Guid? CustomCssId { get; set; }
 

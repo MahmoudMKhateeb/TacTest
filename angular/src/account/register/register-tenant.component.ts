@@ -155,10 +155,11 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   CountryChanged(event) {
+    console.log(event);
     console.log(this.model.countryId);
     if (this.model.countryId > 0) {
       this.isCountySelected = true;
-      this._tenantRegistrationService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
+      this._tenantRegistrationService.getAllCitiesForTableDropdown(event.selectedItem.id).subscribe((result) => {
         this.allCities = result;
       });
     } else {

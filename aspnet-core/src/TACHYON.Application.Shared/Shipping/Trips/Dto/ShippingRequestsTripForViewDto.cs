@@ -62,6 +62,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public virtual int? OriginCityId { get; set; }
         public string DestinationCities { get; set; }
+        public int? PackingTypeId { get; set; }
         #endregion
     }
 }

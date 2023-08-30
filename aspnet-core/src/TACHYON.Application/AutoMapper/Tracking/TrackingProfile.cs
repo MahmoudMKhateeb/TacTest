@@ -32,7 +32,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.ShippingRequestFlag, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingRequestFlag))
             .ForMember(dst => dst.NumberOfTrucks, opt => opt.MapFrom(src => src.ShippingRequestFk.NumberOfTrucks))
             .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.ShippingRequestFk.TenantId))
-            .ForMember(dst => dst.ShippingType, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingTypeId))
+            .ForMember(dst => dst.ShippingType, opt => opt.MapFrom(src => src.ShippingRequestId.HasValue ? src.ShippingRequestFk.ShippingTypeId : src.ShippingTypeId))
             .ForMember(dst => dst.RequestId, opt => opt.MapFrom(src => src.ShippingRequestId))
             .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Rate : 0))
             .ForMember(dst => dst.shippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFk.Status))
@@ -56,12 +56,16 @@ namespace TACHYON.AutoMapper.Tracking
             : ""))
             .ForMember(dst => dst.CarrierTenantId, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.CarrierTenantId : src.CarrierTenantId))
             .ForMember(dst => dst.ShippingRequestFlagTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingRequestFlag.GetEnumDescription() : "SAAS"))
-            .ForMember(dst => dst.ShippingTypeTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingTypeId.GetEnumDescription() : ""))
+            .ForMember(dst => dst.ShippingTypeTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingTypeId.GetEnumDescription() : src.ShippingTypeId.GetEnumDescription()))
             .ForMember(dst => dst.PlateNumber, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.PlateNumber : ""))
             .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => src.DriverStatus.GetEnumDescription()))
             .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => src.RouteType != null ? src.RouteType.GetEnumDescription() : src.ShippingRequestFk.RouteTypeId.GetEnumDescription()))
             .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
             .ForMember(dst => dst.BookingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo  :""))
+            .ForMember(dst => dst.ActualDeliveryDate, opt => opt.MapFrom(src => src.ActualDeliveryDate != null ?src.ActualDeliveryDate.Value.ToString("dd/MM/yyyy")  :""))
+            .ForMember(dst => dst.ActualPickupDate, opt => opt.MapFrom(src => src.StartTripDate.ToString("dd/MM/yyyy")))
+            .ForMember(dst => dst.IsPODUploaded, opt => opt.MapFrom(src => src.RoutPoints.Where(x=>x.PickingType == PickingType.Dropoff).All(x=>x.IsPodUploaded)))
+            .ForMember(dst => dst.IsInvoiceIssued, opt => opt.MapFrom(src => src.IsShipperHaveInvoice))
             ;
 
 

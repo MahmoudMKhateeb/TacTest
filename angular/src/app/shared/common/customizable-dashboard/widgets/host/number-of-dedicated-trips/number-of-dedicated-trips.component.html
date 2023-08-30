@@ -1,0 +1,31 @@
+<div class="row h-100">
+  <div class="col-lg-12">
+    <!--begin::Card-->
+    <div class="card card-custom card-stretch" [busyIf]="loading">
+      <div class="card-body d-flex flex-column">
+        <div class="d-flex justify-content-between">
+          <h3>
+            {{ 'NumberOfDedicatedTrips' | localize }}
+          </h3>
+          <div>
+            <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+          </div>
+        </div>
+        <div id="chart" *ngIf="chartOptions">
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [dataLabels]="chartOptions.dataLabels"
+            [plotOptions]="chartOptions.plotOptions"
+            [yaxis]="chartOptions.yaxis"
+            [legend]="chartOptions.legend"
+            [fill]="chartOptions.fill"
+            [stroke]="chartOptions.stroke"
+            [tooltip]="chartOptions.tooltip"
+            [xaxis]="chartOptions.xaxis"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

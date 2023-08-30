@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="21.2.5.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="FinancialReport" SnapGridSize="12.5" ReportUnit="Pixels" Landscape="true" Margins="20, 20, 60, 40" PaperKind="A4" PageWidth="1123" PageHeight="794" Version="21.2" DataSource="#Ref-0" Dpi="96" Font="Arial, 9.75pt">
+  <Extensions>
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".repx" />
+  </Extensions>
+  <Parameters>
+    <Item1 Ref="4" Visible="false" ValueInfo="00000000-0000-0000-0000-000000000000" Name="ReportId" Type="#Ref-3" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="5" ControlType="TopMarginBand" Name="TopMargin" HeightF="60" Dpi="96" />
+    <Item2 Ref="6" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="40" Dpi="96">
+      <Controls>
+        <Item1 Ref="7" ControlType="XRPageInfo" Name="pageInfo1" PageInfo="DateTime" SizeF="541.5,22" LocationFloat="0,0" Dpi="96" StyleName="PageInfo" />
+        <Item2 Ref="8" ControlType="XRPageInfo" Name="pageInfo2" TextFormatString="Page {0} of {1}" TextAlignment="TopRight" SizeF="541.5,22" LocationFloat="541,0" Dpi="96" StyleName="PageInfo" />
+      </Controls>
+    </Item2>
+    <Item3 Ref="9" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="57.6" Dpi="96">
+      <Controls>
+        <Item1 Ref="10" ControlType="XRLabel" Name="label1" Text="Financial Report" SizeF="1083,23.22656" LocationFloat="0,0" Dpi="96" StyleName="Title" />
+      </Controls>
+    </Item3>
+    <Item4 Ref="11" ControlType="GroupHeaderBand" Name="GroupHeader1" GroupUnion="WithFirstDetail" Level="1" HeightF="25.92" Dpi="96">
+      <GroupFields>
+        <Item1 Ref="12" FieldName="tripCreationDate" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="13" ControlType="XRTable" Name="table1" SizeF="1083,24" LocationFloat="0,1.92" Dpi="96">
+          <Rows>
+            <Item1 Ref="14" ControlType="XRTableRow" Name="tableRow1" Weight="1" Dpi="96">
+              <Cells>
+                <Item1 Ref="15" ControlType="XRTableCell" Name="tableCell1" Weight="0.1168569985739302" Text="TRIP CREATION DATE" Dpi="96" StyleName="GroupCaption1" />
+                <Item2 Ref="16" ControlType="XRTableCell" Name="tableCell2" Weight="0.88314303664949789" Dpi="96" StyleName="GroupData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="17" EventName="BeforePrint" PropertyName="Text" Expression="[tripCreationDate]" />
+                  </ExpressionBindings>
+                </Item2>
+              </Cells>
+            </Item1>
+          </Rows>
+        </Item1>
+      </Controls>
+    </Item4>
+    <Item5 Ref="18" ControlType="GroupHeaderBand" Name="GroupHeader2" GroupUnion="WithFirstDetail" Level="2" HeightF="26.88" Dpi="96">
+      <Controls>
+        <Item1 Ref="19" ControlType="XRTable" Name="table2" SizeF="1083,26.88" LocationFloat="0,0" Dpi="96">
+          <Rows>
+            <Item1 Ref="20" ControlType="XRTableRow" Name="tableRow2" Weight="1" Dpi="96">
+              <Cells>
+                <Item1 Ref="21" ControlType="XRTableCell" Name="tableCell3" Weight="0.042731474421141" Text="request Id" Dpi="96" StyleName="DetailCaption1" Borders="None">
+                  <StylePriority Ref="22" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="23" ControlType="XRTableCell" Name="tableCell4" Weight="0.082364858132430177" Text="request Creation Date" Dpi="96" StyleName="DetailCaption1" />
+                <Item3 Ref="24" ControlType="XRTableCell" Name="tableCell5" Weight="0.061174190165483609" Text="waybill Number" TextAlignment="MiddleRight" Dpi="96" StyleName="DetailCaption1">
+                  <StylePriority Ref="25" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="26" ControlType="XRTableCell" Name="tableCell6" Weight="0.067045928588754466" Text="trip Loading Date" Dpi="96" StyleName="DetailCaption1" />
+                <Item5 Ref="27" ControlType="XRTableCell" Name="tableCell7" Weight="0.074889854931325023" Text="trip Offloading Date" Dpi="96" StyleName="DetailCaption1" />
+                <Item6 Ref="28" ControlType="XRTableCell" Name="tableCell8" Weight="0.055685164855787957" Text="shipper Name" Dpi="96" StyleName="DetailCaption1" />
+                <Item7 Ref="29" ControlType="XRTableCell" Name="tableCell9" Weight="0.052168327465391996" Text="carrier Name" Dpi="96" StyleName="DetailCaption1" />
+                <Item8 Ref="30" ControlType="XRTableCell" Name="tableCell10" Weight="0.08432671149791883" Text="shipper Invoice Status" Dpi="96" StyleName="DetailCaption1" />
+                <Item9 Ref="31" ControlType="XRTableCell" Name="tableCell11" Weight="0.080809870585180049" Text="carrier Invoice Status" Dpi="96" StyleName="DetailCaption1" />
+                <Item10 Ref="32" ControlType="XRTableCell" Name="tableCell12" Weight="0.045469092089933924" Text="pod Status" Dpi="96" StyleName="DetailCaption1" />
+                <Item11 Ref="33" ControlType="XRTableCell" Name="tableCell13" Weight="0.11023754426316872" Text="shipper Invoice Issuance Date" Dpi="96" StyleName="DetailCaption1" />
+                <Item12 Ref="34" ControlType="XRTableCell" Name="tableCell14" Weight="0.12394629819241257" Text="shipper Invoice Confirmation Date" Dpi="96" StyleName="DetailCaption1" />
+                <Item13 Ref="35" ControlType="XRTableCell" Name="tableCell15" Weight="0.043903752377158718" Text="trip Status" Dpi="96" StyleName="DetailCaption1" />
+                <Item14 Ref="36" ControlType="XRTableCell" Name="tableCell16" Weight="0.028598609283250014" Text="origin" Dpi="96" StyleName="DetailCaption1" />
+                <Item15 Ref="37" ControlType="XRTableCell" Name="tableCell17" Weight="0.046648379508147937" Text="destination" Dpi="96" StyleName="DetailCaption1" />
+              </Cells>
+            </Item1>
+          </Rows>
+        </Item1>
+      </Controls>
+    </Item5>
+    <Item6 Ref="38" ControlType="DetailBand" Name="Detail" HeightF="24.08" Dpi="96">
+      <HierarchyPrintOptions Ref="39" Indent="19.2" />
+      <Controls>
+        <Item1 Ref="40" ControlType="XRTable" Name="table3" SizeF="1083,24.08" LocationFloat="0,0" Dpi="96" OddStyleName="DetailData3_Odd">
+          <Rows>
+            <Item1 Ref="41" ControlType="XRTableRow" Name="tableRow3" Weight="11.039999961853027" Dpi="96">
+              <Cells>
+                <Item1 Ref="42" ControlType="XRTableCell" Name="tableCell18" Weight="0.042731470898798189" Dpi="96" StyleName="DetailData1" Borders="None">
+                  <ExpressionBindings>
+                    <Item1 Ref="43" EventName="BeforePrint" PropertyName="Text" Expression="[requestId]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="44" UseBorders="false" />
+                </Item1>
+                <Item2 Ref="45" ControlType="XRTableCell" Name="tableCell19" Weight="0.082364851087744551" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="46" EventName="BeforePrint" PropertyName="Text" Expression="[requestCreationDate]" />
+                  </ExpressionBindings>
+                </Item2>
+                <Item3 Ref="47" ControlType="XRTableCell" Name="tableCell20" Weight="0.061174190165483609" TextAlignment="MiddleRight" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="48" EventName="BeforePrint" PropertyName="Text" Expression="[waybillNumber]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="49" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="50" ControlType="XRTableCell" Name="tableCell21" Weight="0.067045921544068854" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="51" EventName="BeforePrint" PropertyName="Text" Expression="[tripLoadingDate]" />
+                  </ExpressionBindings>
+                </Item4>
+                <Item5 Ref="52" ControlType="XRTableCell" Name="tableCell22" Weight="0.0748898478866394" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="53" EventName="BeforePrint" PropertyName="Text" Expression="[tripOffloadingDate]" />
+                  </ExpressionBindings>
+                </Item5>
+                <Item6 Ref="54" ControlType="XRTableCell" Name="tableCell23" Weight="0.055685161333445143" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="55" EventName="BeforePrint" PropertyName="Text" Expression="[shipperName]" />
+                  </ExpressionBindings>
+                </Item6>
+                <Item7 Ref="56" ControlType="XRTableCell" Name="tableCell24" Weight="0.052168323943049183" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="57" EventName="BeforePrint" PropertyName="Text" Expression="[carrierName]" />
+                  </ExpressionBindings>
+                </Item7>
+                <Item8 Ref="58" ControlType="XRTableCell" Name="tableCell25" Weight="0.0843267044532332" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="59" EventName="BeforePrint" PropertyName="Text" Expression="[shipperInvoiceStatus]" />
+                  </ExpressionBindings>
+                </Item8>
+                <Item9 Ref="60" ControlType="XRTableCell" Name="tableCell26" Weight="0.080809863540494437" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="61" EventName="BeforePrint" PropertyName="Text" Expression="[carrierInvoiceStatus]" />
+                  </ExpressionBindings>
+                </Item9>
+                <Item10 Ref="62" ControlType="XRTableCell" Name="tableCell27" Weight="0.045469088567591111" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="63" EventName="BeforePrint" PropertyName="Text" Expression="[podStatus]" />
+                  </ExpressionBindings>
+                </Item10>
+                <Item11 Ref="64" ControlType="XRTableCell" Name="tableCell28" Weight="0.11023753721848309" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="65" EventName="BeforePrint" PropertyName="Text" Expression="[shipperInvoiceIssuanceDate]" />
+                  </ExpressionBindings>
+                </Item11>
+                <Item12 Ref="66" ControlType="XRTableCell" Name="tableCell29" Weight="0.12394629819241257" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="67" EventName="BeforePrint" PropertyName="Text" Expression="[shipperInvoiceConfirmationDate]" />
+                  </ExpressionBindings>
+                </Item12>
+                <Item13 Ref="68" ControlType="XRTableCell" Name="tableCell30" Weight="0.043903748854815905" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="69" EventName="BeforePrint" PropertyName="Text" Expression="[tripStatus]" />
+                  </ExpressionBindings>
+                </Item13>
+                <Item14 Ref="70" ControlType="XRTableCell" Name="tableCell31" Weight="0.028598607522078608" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="71" EventName="BeforePrint" PropertyName="Text" Expression="[origin]" />
+                  </ExpressionBindings>
+                </Item14>
+                <Item15 Ref="72" ControlType="XRTableCell" Name="tableCell32" Weight="0.046648330195348565" Dpi="96" StyleName="DetailData1">
+                  <ExpressionBindings>
+                    <Item1 Ref="73" EventName="BeforePrint" PropertyName="Text" Expression="[destination]" />
+                  </ExpressionBindings>
+                </Item15>
+              </Cells>
+            </Item1>
+          </Rows>
+        </Item1>
+      </Controls>
+    </Item6>
+    <Item7 Ref="74" ControlType="GroupFooterBand" Name="GroupFooter1" GroupUnion="WithLastDetail" HeightF="5.76" Dpi="96">
+      <Controls>
+        <Item1 Ref="75" ControlType="XRLabel" Name="label2" SizeF="1083,2" LocationFloat="0,0" Dpi="96" StyleName="GroupFooterBackground3" Borders="None">
+          <StylePriority Ref="76" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item7>
+  </Bands>
+  <StyleSheet>
+    <Item1 Ref="77" Name="Title" BorderStyle="Inset" Padding="6,6,0,0,96" Font="Arial, 14.25pt" ForeColor="255,64,70,80" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;Default" BorderWidthSerializable="1" />
+    <Item2 Ref="78" Name="GroupCaption1" BorderStyle="Inset" Padding="6,2,0,0,96" Font="Arial, 8.25pt, style=Bold" ForeColor="255,228,228,228" BackColor="255,196,66,79" BorderColor="White" Sides="Bottom" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item3 Ref="79" Name="GroupData1" BorderStyle="Inset" Padding="6,2,0,0,96" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,196,66,79" BorderColor="White" Sides="Bottom" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item4 Ref="80" Name="DetailCaption1" BorderStyle="Inset" Padding="6,6,0,0,96" Font="Arial, 8.25pt, style=Bold" ForeColor="White" BackColor="255,196,66,79" BorderColor="White" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item5 Ref="81" Name="DetailData1" BorderStyle="Inset" Padding="6,6,0,0,96" Font="Arial, 8.25pt" ForeColor="Black" BorderColor="Transparent" Sides="Left" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item6 Ref="82" Name="GroupFooterBackground3" BorderStyle="Inset" Padding="6,2,0,0,96" Font="Arial, 8.25pt, style=Bold" ForeColor="255,228,228,228" BackColor="255,109,117,129" BorderColor="White" Sides="Bottom" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="2" />
+    <Item7 Ref="83" Name="DetailData3_Odd" BorderStyle="Inset" Padding="6,6,0,0,96" Font="Arial, 8.25pt" ForeColor="Black" BackColor="255,243,245,248" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;Default" TextAlignment="MiddleLeft" BorderWidthSerializable="1" />
+    <Item8 Ref="84" Name="PageInfo" BorderStyle="Inset" Padding="6,6,0,0,96" Font="Arial, 8.25pt, style=Bold" ForeColor="255,64,70,80" StringFormat="Near;Near;0;None;Character;Default" />
+  </StyleSheet>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Json.JsonDataSource,DevExpress.DataAccess.v21.2" Name="jsonDataSource1" Base64="PEpzb25EYXRhU291cmNlIE5hbWU9Impzb25EYXRhU291cmNlMSI+PFNvdXJjZSBTb3VyY2VUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuSnNvbi5VcmlKc29uU291cmNlIiBVcmk9Imh0dHBzOi8vbG9jYWxob3N0OjQ0MzAxL2FwaS9zZXJ2aWNlcy9hcHAvRmluYW5jaWFsUmVwb3J0RGF0YVNvdXJjZS9HZXRBbGwiPjxIZWFkZXJzPjxIZWFkZXIgTmFtZT0iQXV0aG9yaXphdGlvbiIgVmFsdWU9IkJlYXJlciBleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKb2RIUndPaTh2YzJOb1pXMWhjeTU0Yld4emIyRndMbTl5Wnk5M2N5OHlNREExTHpBMUwybGtaVzUwYVhSNUwyTnNZV2x0Y3k5dVlXMWxhV1JsYm5ScFptbGxjaUk2SWpFaUxDSm9kSFJ3T2k4dmMyTm9aVzFoY3k1NGJXeHpiMkZ3TG05eVp5OTNjeTh5TURBMUx6QTFMMmxrWlc1MGFYUjVMMk5zWVdsdGN5OXVZVzFsSWpvaVlXUnRhVzRpTENKQmMzQk9aWFF1U1dSbGJuUnBkSGt1VTJWamRYSnBkSGxUZEdGdGNDSTZJalkyVUUxRVJ6WlVUMHRhUzB0S1MxcE9TakpEU2tGU1QxRk5Sa0ZTVEVGQklpd2lhSFIwY0RvdkwzTmphR1Z0WVhNdWJXbGpjbTl6YjJaMExtTnZiUzkzY3k4eU1EQTRMekEyTDJsa1pXNTBhWFI1TDJOc1lXbHRjeTl5YjJ4bElqb2lRV1J0YVc0aUxDSnpkV0lpT2lJeElpd2lhblJwSWpvaU1UZzRZV0k0TlRFdE1HSTJZUzAwTXpVeExUaGxOamd0WlRZNU1URXdOekE1TUdFM0lpd2lhV0YwSWpveE5qZzVOVGcyT1RnekxDSjBiMnRsYmw5MllXeHBaR2wwZVY5clpYa2lPaUl3TWpJeU16ZzNPUzFrTmpZeUxUUTROV0V0WVRNMlpDMHlZV0UxWkRZME5ERXlZVEVpTENKMWMyVnlYMmxrWlc1MGFXWnBaWElpT2lJeElpd2lkRzlyWlc1ZmRIbHdaU0k2SWpBaUxDSnVZbVlpT2pFMk9EazFPRFk1T0RNc0ltVjRjQ0k2TVRZNE9UWTNNek00TXl3aWFYTnpJam9pVkVGRFNGbFBUaUlzSW1GMVpDSTZJbFJCUTBoWlQwNGlmUS5taFB3RVdpcXVadXhoZkRhbExkb0hvOHRwNmZpSWgyOHcxRzROaHFwNko0IiAvPjwvSGVhZGVycz48UXVlcnlQYXJhbWV0ZXJzPjxRdWVyeVBhcmFtZXRlciBOYW1lPSJyZXBvcnRJZCIgVmFsdWU9ImV4cHJlc3Npb246P1JlcG9ydElkIiAvPjwvUXVlcnlQYXJhbWV0ZXJzPjwvU291cmNlPjxTY2hlbWE+PE5vZGUgTmFtZT0icm9vdCIgU2VsZWN0ZWQ9InRydWUiIE5vZGVUeXBlPSJBcnJheSI+PE5vZGUgTmFtZT0icmVxdWVzdElkIiBUeXBlPSJTeXN0ZW0uU3RyaW5nIiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9InJlcXVlc3RDcmVhdGlvbkRhdGUiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0id2F5YmlsbE51bWJlciIgVHlwZT0iU3lzdGVtLk51bGxhYmxlYDFbU3lzdGVtLkludDY0XSIgU2VsZWN0ZWQ9InRydWUiIE5vZGVUeXBlPSJQcm9wZXJ0eSIgLz48Tm9kZSBOYW1lPSJ0cmlwQ3JlYXRpb25EYXRlIiBUeXBlPSJTeXN0ZW0uU3RyaW5nIiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9InRyaXBMb2FkaW5nRGF0ZSIgVHlwZT0iU3lzdGVtLlN0cmluZyIgU2VsZWN0ZWQ9InRydWUiIE5vZGVUeXBlPSJQcm9wZXJ0eSIgLz48Tm9kZSBOYW1lPSJ0cmlwT2ZmbG9hZGluZ0RhdGUiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0ic2hpcHBlck5hbWUiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0iY2Fycmllck5hbWUiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0ic2hpcHBlckludm9pY2VOdW1iZXIiIFR5cGU9IlN5c3RlbS5PYmplY3QiIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0ic2hpcHBlckludm9pY2VTdGF0dXMiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0iY2Fycmllckludm9pY2VOdW1iZXIiIFR5cGU9IlN5c3RlbS5PYmplY3QiIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0iY2Fycmllckludm9pY2VTdGF0dXMiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0icG9kU3RhdHVzIiBUeXBlPSJTeXN0ZW0uU3RyaW5nIiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9ImNvc3RXaXRoVmF0IiBUeXBlPSJTeXN0ZW0uT2JqZWN0IiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9ImNvc3RXaXRob3V0VmF0IiBUeXBlPSJTeXN0ZW0uT2JqZWN0IiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9InNlbGxpbmdXaXRoVmF0IiBUeXBlPSJTeXN0ZW0uT2JqZWN0IiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9InNlbGxpbmdXaXRob3V0VmF0IiBUeXBlPSJTeXN0ZW0uT2JqZWN0IiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9InRhY2h5b25Db21taXNzaW9uV2l0aFZhdCIgVHlwZT0iU3lzdGVtLk9iamVjdCIgU2VsZWN0ZWQ9InRydWUiIE5vZGVUeXBlPSJQcm9wZXJ0eSIgLz48Tm9kZSBOYW1lPSJ0YWNoeW9uQ29tbWlzc2lvbldpdGhvdXRWYXQiIFR5cGU9IlN5c3RlbS5PYmplY3QiIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0ic2hpcHBlckludm9pY2VJc3N1YW5jZURhdGUiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0ic2hpcHBlckludm9pY2VDb25maXJtYXRpb25EYXRlIiBUeXBlPSJTeXN0ZW0uU3RyaW5nIiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9InRyaXBTdGF0dXMiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0ib3JpZ2luIiBUeXBlPSJTeXN0ZW0uU3RyaW5nIiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9ImRlc3RpbmF0aW9uIiBUeXBlPSJTeXN0ZW0uU3RyaW5nIiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjxOb2RlIE5hbWU9InRyYW5zcG9ydFR5cGUiIFR5cGU9IlN5c3RlbS5TdHJpbmciIFNlbGVjdGVkPSJ0cnVlIiBOb2RlVHlwZT0iUHJvcGVydHkiIC8+PE5vZGUgTmFtZT0idHJ1Y2tUeXBlIiBUeXBlPSJTeXN0ZW0uU3RyaW5nIiBTZWxlY3RlZD0idHJ1ZSIgTm9kZVR5cGU9IlByb3BlcnR5IiAvPjwvTm9kZT48L1NjaGVtYT48L0pzb25EYXRhU291cmNlPg==" />
+  </ComponentStorage>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v21.2" Ref="3" Content="System.Guid" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>

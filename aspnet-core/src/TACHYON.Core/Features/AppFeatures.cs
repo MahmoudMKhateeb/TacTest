@@ -233,6 +233,10 @@
         public const string DetentionCommissionMinValue = "App.Penalties.Detention.CommissionMinValue";
         public const string DetentionCommissionValue = "App.Penalties.Detention.CommissionValue";
         public const string DetentionCommissionPercentage = "App.Penalties.Detention.CommissionPercentage";
-
+        
+        public const string Reporting = "App.Reporting";
+        public const string TripDetailsReport = "App.Reporting.TripDetails";
+        public const string PodPerformanceReport = "App.Reporting.PodPerformance";
+        public const string FinancialReportFeature = "App.Reporting.Financial";
     }
 }

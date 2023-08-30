@@ -87,8 +87,8 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     this.documentEntity = documentEntity;
     this.selectedDate = this.todayGregorian;
     //create
+    this.getRequiredDocumentFiles(documentEntity);
     if (!documentFileId) {
-      this.getRequiredDocumentFiles(documentEntity);
     }
     //edit
     // tslint:disable-next-line:one-line
@@ -260,13 +260,13 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   }
 
   getRequiredDocumentFiles(entityType) {
-    if (entityType === DocumentsEntitiesEnum.Truck) {
+    if (entityType == DocumentsEntitiesEnum.Truck) {
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles(this.entityId).subscribe((result) => {
         this.CreateOrEditDocumentFileDtoList = result;
         this.documentFile = this.CreateOrEditDocumentFileDtoList[0];
         this.initializeDocumentFile();
       });
-    } else if (entityType === DocumentsEntitiesEnum.Driver) {
+    } else if (entityType == DocumentsEntitiesEnum.Driver) {
       this._documentFilesServiceProxy.getDriverRequiredDocumentFiles(this.entityId).subscribe((result) => {
         this.CreateOrEditDocumentFileDtoList = result;
         this.documentFile = this.CreateOrEditDocumentFileDtoList[0];

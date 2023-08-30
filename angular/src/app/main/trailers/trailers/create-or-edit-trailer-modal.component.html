@@ -23,34 +23,82 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="TrailerStatusDisplayName">{{ l('TrailerStatus') }}</label>
-            <select name="trailer.trailerStatusId" [(ngModel)]="trailer.trailerStatusId" class="form-control" required>
-              <option value="">{{ l('SelectATrailerStatus') }}</option>
-              <option *ngFor="let item of allTrailerStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="TrailerStatusDisplayName"
+              name="trailer.trailerStatusId"
+              [(value)]="trailer.trailerStatusId"
+              [dataSource]="allTrailerStatuss"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectATrailerStatus') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="trailer.trailerStatusId" [(ngModel)]="trailer.trailerStatusId" class="form-control" required>-->
+            <!--              <option value="">{{ l('SelectATrailerStatus') }}</option>-->
+            <!--              <option *ngFor="let item of allTrailerStatuss" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group m-form__group">
             <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
-            <select name="trailer.trailerTypeId" [(ngModel)]="trailer.trailerTypeId" class="form-control" required>
-              <option value="">{{ l('SelectATrailerType') }}</option>
-              <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="TrailerTypeDisplayName"
+              name="trailer.trailerTypeId"
+              [(value)]="trailer.trailerTypeId"
+              [dataSource]="allTrailerTypes"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectATrailerType') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="trailer.trailerTypeId" [(ngModel)]="trailer.trailerTypeId" class="form-control" required>-->
+            <!--              <option value="">{{ l('SelectATrailerType') }}</option>-->
+            <!--              <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group m-form__group">
             <label for="PayloadMaxWeightDisplayName">{{ l('PayloadMaxWeight') }}</label>
-            <select name="trailer.payloadMaxWeightId" [(ngModel)]="trailer.payloadMaxWeightId" class="form-control" required>
-              <option value="">{{ l('SelectAPayloadMaxWeight') }}</option>
-              <option *ngFor="let item of allPayloadMaxWeights" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="PayloadMaxWeightDisplayName"
+              name="trailer.payloadMaxWeightId"
+              [(value)]="trailer.payloadMaxWeightId"
+              [dataSource]="allPayloadMaxWeights"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectAPayloadMaxWeight') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="trailer.payloadMaxWeightId" [(ngModel)]="trailer.payloadMaxWeightId" class="form-control" required>-->
+            <!--              <option value="">{{ l('SelectAPayloadMaxWeight') }}</option>-->
+            <!--              <option *ngFor="let item of allPayloadMaxWeights" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group m-form__group">
             <label for="TruckPlateNumber">{{ l('Truck') }}</label>
-            <select name="trailer.hookedTruckId" [(ngModel)]="trailer.hookedTruckId" class="form-control">
-              <option value="">{{ l('SelectATruck') }}</option>
-              <option *ngFor="let item of allTrucks" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="TruckPlateNumber"
+              name="trailer.hookedTruckId"
+              [(value)]="trailer.hookedTruckId"
+              [dataSource]="allTrucks"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectATruck') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="trailer.hookedTruckId" [(ngModel)]="trailer.hookedTruckId" class="form-control">-->
+            <!--              <option value="">{{ l('SelectATruck') }}</option>-->
+            <!--              <option *ngFor="let item of allTrucks" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group">

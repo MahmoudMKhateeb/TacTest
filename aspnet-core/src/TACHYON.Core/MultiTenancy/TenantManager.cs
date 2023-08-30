@@ -1,5 +1,7 @@
 ﻿using Abp;
 using Abp.Application.Features;
+using Abp.Authorization;
+using Abp.Authorization.Roles;
 using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -18,12 +20,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using TACHYON.Actors.Jobs;
+using TACHYON.Authorization;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Editions;
@@ -199,6 +203,9 @@ namespace TACHYON.MultiTenancy
                         await _userEmailer.SendEmailActivationEmail(adminUser, emailActivationLink, input.AdminPassword);
                     }
 
+                    if (string.IsNullOrEmpty(tenant.MoiNumber))
+                        await SetFeatureValueAsync(tenant,AppFeatures.BayanIntegration,"false");
+                    
                     if (tenant.EditionId.HasValue)
                     {
                        string featureValue = await EditionManager.GetFeatureValueOrNullAsync(tenant.EditionId.Value, AppFeatures.CMS);

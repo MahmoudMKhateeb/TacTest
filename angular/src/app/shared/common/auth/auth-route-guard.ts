@@ -63,6 +63,10 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
       return of(true);
     }
 
+    if (data['permission'] === 'Pages.Tenant.Dashboard' && this._permissionChecker.isGranted('Pages.Administration.Host.Dashboard')) {
+      return of(true);
+    }
+
     this._router.navigate([this.selectBestRoute()]);
     return of(false);
   }

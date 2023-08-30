@@ -23,14 +23,14 @@
         </div>
       </div>
     </div>
-    <div appMakeScrollable class="overflow-auto" *ngFor="let doc of invoices">
+    <div appMakeScrollable class="overflow-auto" *ngFor="let doc of invoices" [cssClassSelector]="'overflow-auto'">
       <div class="d-flex justify-content-between mb-4 px-4">
         <div class="clickable-item">
           {{ doc.companyName }}
         </div>
         <div class="flex-grow-2 border-bottom-dashed mx-4"></div>
         <div>
-          <b>{{ doc.remainingWeeks }} {{ 'Week' | localize }}</b>
+          <b>{{ doc.remainingWeeks }}</b>
         </div>
       </div>
     </div>

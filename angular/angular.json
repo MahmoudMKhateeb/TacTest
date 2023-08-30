@@ -42,7 +42,8 @@
                 "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
                 "output": "/assets/abp"
               },
-              { "glob": "**/*", "input": "node_modules/ng2-pdfjs-viewer/pdfjs", "output": "/assets/pdfjs" }
+              { "glob": "**/*", "input": "node_modules/ng2-pdfjs-viewer/pdfjs", "output": "/assets/pdfjs" },
+              {"input": "./node_modules/@google/markerclustererplus/images", "glob": "*", "output": "/images"}
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

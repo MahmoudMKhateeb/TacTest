@@ -25,7 +25,7 @@ import { TabsetComponent } from 'ngx-bootstrap/tabs';
 let that: any;
 const emailAsyncValidation = function (value) {
   return new Promise(async (resolve) => {
-    resolve(await that._userService.checkIfEmailisAvailable(value).toPromise());
+    resolve(await that._userService.checkIfEmailisAvailable(value, that.user.id).toPromise());
   });
 };
 const phoneNumberAsyncValidation = function (value) {
@@ -238,7 +238,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     this.checkIfIsEmailAvailable();
   }
   checkIfIsEmailAvailable() {
-    this._userService.checkIfEmailisAvailable(this.user.emailAddress).subscribe((result) => {
+    this._userService.checkIfEmailisAvailable(this.user.emailAddress, this.user.id).subscribe((result) => {
       this.isEmailAvailable = result;
     });
   }

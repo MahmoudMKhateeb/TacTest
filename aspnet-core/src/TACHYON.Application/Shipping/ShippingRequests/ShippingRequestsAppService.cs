@@ -14,7 +14,7 @@ using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
-using DevExpress.Office.Utils;
+
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
@@ -1234,7 +1234,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     IsMultipDrops = x.ShippingRequestFk.NumberOfDrops > 1 ? true : false,
                     TotalDrops = x.RouteType != null ? x.NumberOfDrops : x.ShippingRequestFk.NumberOfDrops,
-                    StartTripDate = x.ActualPickupDate,
+                    StartTripDate = x.StartTripDate,
                     CarrierName =
                         x.ShippingRequestFk.CarrierTenantFk != null
                             ? x.ShippingRequestFk.CarrierTenantFk.TenancyName
@@ -1399,7 +1399,7 @@ namespace TACHYON.Shipping.ShippingRequests
                    ),
                         PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                         //PackingTypeDisplayName = "",
-                        StartTripDate = x.StartTripDate,
+                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
                         ActualPickupDate = x.ActualPickupDate,
                         DeliveryDate = x.ActualDeliveryDate,
                         //TotalWeight = 0,

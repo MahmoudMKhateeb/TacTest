@@ -26,6 +26,9 @@ import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { Workbook } from 'exceljs';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { saveAs } from 'file-saver';
 
 @Component({
   templateUrl: './tenants.component.html',
@@ -257,5 +260,26 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
     const url = this._router.serializeUrl(this._router.createUrlTree([`/app/main/profile`, tenantId]));
 
     window.open(url, '_blank');
+  }
+
+  onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Companies');
+
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+      customizeCell: ({ gridCell, excelCell }) => {
+        if (gridCell.rowType === 'group') {
+          excelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'BEDFE6' } };
+        }
+      },
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
+    });
+    e.cancel = true;
   }
 }

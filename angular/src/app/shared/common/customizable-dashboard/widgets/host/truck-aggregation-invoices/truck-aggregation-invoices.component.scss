@@ -1,0 +1,53 @@
+.sar-red-circle {
+    width: 10em;
+    height: 10em;
+    position: absolute;
+    right: 10%;
+}
+
+.label-absolute-for-overall {
+    position: absolute;
+    left: 40%;
+    font-size: 1.6em;
+    margin: 0;
+    padding-top: 0.4em;
+}
+
+.custom-left-ribbon {
+    padding-left: 2em;
+    left: -2px;
+    font-size: 1.6em;
+    width: 7.5em;
+}
+
+::ng-deep {
+    [dir='rtl'] {
+        .sar-red-circle {
+            right: auto !important;
+            left: 10%;
+        }
+
+        .label-absolute-for-overall {
+            left: auto !important;
+            right: 40%;
+        }
+
+        .custom-left-ribbon {
+            padding-right: 2em;
+            right: -2px !important;
+            left: auto !important;
+        }
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .custom-left-ribbon{
+        width: auto !important;
+    }
+}
+
+.custom-current-month {
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.89);
+    padding: 0.5rem;
+    border-radius: 5px;
+}

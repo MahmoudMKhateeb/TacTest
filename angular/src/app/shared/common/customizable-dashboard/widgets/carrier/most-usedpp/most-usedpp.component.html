@@ -6,20 +6,6 @@
     </div>
   </div>
   <div class="card-body p-1">
-    <!--    <div *ngIf="chartOptions" id="invoicesVsPaidInvoices">-->
-    <!--      <apx-chart-->
-    <!--        [series]="chartOptions.series"-->
-    <!--        [chart]="chartOptions.chart"-->
-    <!--        [dataLabels]="chartOptions.dataLabels"-->
-    <!--        [plotOptions]="chartOptions.plotOptions"-->
-    <!--        [yaxis]="chartOptions.yaxis"-->
-    <!--        [legend]="chartOptions.legend"-->
-    <!--        [fill]="chartOptions.fill"-->
-    <!--        [stroke]="chartOptions.stroke"-->
-    <!--        [tooltip]="chartOptions.tooltip"-->
-    <!--        [xaxis]="chartOptions.xaxis"-->
-    <!--      ></apx-chart>-->
-    <!--    </div>-->
     <div class="col-12 pb-3 text-center">
       <img src="assets/SVG/Price_package_vector.svg" width="100%" style="max-height: 100px" />
     </div>
@@ -47,7 +33,6 @@
             aria-valuemax="100"
           ></div>
         </div>
-        <!--                         style="width: {{item.numberOfRequests > 0 && total > 0 ? item.numberOfRequests / total : 100}}%"-->
       </ng-container>
     </div>
     <div class="col-12" *ngIf="pricePackages.length === 0">

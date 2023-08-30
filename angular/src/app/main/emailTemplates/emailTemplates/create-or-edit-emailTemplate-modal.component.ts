@@ -86,7 +86,10 @@ export class CreateOrEditEmailTemplateModalComponent extends AppComponentBase im
   }
 
   ngOnInit(): void {
-    this.types = this.enumToArray.transform(EmailTemplateTypesEnum);
+    this.types = this.enumToArray.transform(EmailTemplateTypesEnum).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
   }
 
   // called when the editor is created

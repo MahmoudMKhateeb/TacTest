@@ -374,7 +374,7 @@ namespace TACHYON.Web.Controllers
             }
 
             var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User,
-                mobileDeviceId: model.DeviceId, mobileDeviceToken: model.DeviceToken));
+                mobileDeviceId: model.DeviceId, mobileDeviceToken: model.DeviceToken, expiration: TimeSpan.FromDays(365)));
             var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User,
                 tokenType: TokenType.RefreshToken, mobileDeviceId: model.DeviceId,
                 mobileDeviceToken: model.DeviceToken));

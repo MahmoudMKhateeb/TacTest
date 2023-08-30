@@ -156,7 +156,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   isEdit: boolean;
   allOriginPorts: SelectFacilityItemDto[] = [];
-  selectedShippingRequestDestinationCities: ShippingRequestDestinationCitiesDto[];
+  //selectedShippingRequestDestinationCities: ShippingRequestDestinationCitiesDto[];
+  allpackingTypes: SelectItemDto[];
 
   get isFileInputValid() {
     return this._TripService.CreateOrEditShippingRequestTripDto.hasAttachment
@@ -218,6 +219,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit() {
+    // setInterval(() => {
+    //   console.log(this.destinationCities);
+    //   console.log(this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities);
+    // });
     this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
     this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
 
@@ -245,6 +250,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
     this._facilitiesServiceProxy.getAllPortsForTableDropdown().subscribe((result) => {
       this.allOriginPorts = result;
+    });
+
+    this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
+      this.allpackingTypes = result;
     });
   }
 
@@ -274,14 +283,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     ) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
-      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+        item.value = this.l(item.value);
+        return item;
+      });
     }
     if (!shippingRequestForView) {
       //console.log('!shippingRequestForView');
       this.getAllDrivers();
       this.getAllTrucks(undefined);
       this.getAllGoodCategories();
-      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+        item.value = this.l(item.value);
+        return item;
+      });
       this.getActors();
     }
     if (this.shippingRequest) {
@@ -315,8 +330,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this.isEdit = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
-        this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
+        // this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
+        this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = res.shippingRequestDestinationCities;
         this._TripService.CreateOrEditShippingRequestTripDto = res;
+        (this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag as any) = res.shippingRequestTripFlag?.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.packingTypeId as any) = res.packingTypeId?.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.originCityId as any) = res.originCityId?.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.routeType as any) = res.routeType?.toString();
+
         (this.originCountry as any) = res.countryId;
         if (!shippingRequestForView) {
           this.loadCitiesByCountryId(this.originCountry, 'source', true);
@@ -370,7 +391,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
             '' + this._TripService.CreateOrEditShippingRequestTripDto.routeType;
           (this._TripService.CreateOrEditShippingRequestTripDto.driverUserId as any) =
             '' + this._TripService.CreateOrEditShippingRequestTripDto.driverUserId;
-          (this._TripService.CreateOrEditShippingRequestTripDto.truckId as any) = '' + this._TripService.CreateOrEditShippingRequestTripDto.truckId;
+          (this._TripService.CreateOrEditShippingRequestTripDto.truckId as any) =
+            this._TripService.CreateOrEditShippingRequestTripDto.truckId.toString();
         }
         this.loading = false;
 
@@ -414,26 +436,29 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   prepareRoundTripInputs() {
     console.log('prepareStep2Inputs');
-    switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
-      case RoundTripType.TwoWayRoutsWithPortShuttling: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = !this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id
-          ? 3
-          : 2;
-        break;
-      }
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
-      case RoundTripType.WithReturnTrip: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 2;
-        break;
-      }
-      case RoundTripType.WithoutReturnTrip:
-      case RoundTripType.OneWayRoutWithoutPortShuttling:
-      default: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.SingleDrop;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
-        break;
+    if (isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
+      switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
+        case RoundTripType.TwoWayRoutsWithPortShuttling: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = !this._TripService?.GetShippingRequestForViewOutput?.shippingRequest
+            ?.id
+            ? 3
+            : 2;
+          break;
+        }
+        case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+        case RoundTripType.WithReturnTrip: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 2;
+          break;
+        }
+        case RoundTripType.WithoutReturnTrip:
+        case RoundTripType.OneWayRoutWithoutPortShuttling:
+        default: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.SingleDrop;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
+          break;
+        }
       }
     }
     this.onRouteTypeChange();
@@ -1032,8 +1057,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   isGoodDetailsValidForPoint(point: CreateOrEditRoutPointDto, isWeightRequired: boolean, isQtyRequired: boolean, isDescRequired: boolean) {
-    return isNotNullOrUndefined(point.goodsDetailListDto) && point.goodsDetailListDto.length > 0
-      ? point.goodsDetailListDto.filter((goodDetail) => {
+    if (!isNotNullOrUndefined(point)) {
+      return false;
+    }
+    return isNotNullOrUndefined(point?.goodsDetailListDto) && point?.goodsDetailListDto?.length > 0
+      ? point?.goodsDetailListDto?.filter((goodDetail) => {
           if (isWeightRequired && isQtyRequired && isDescRequired) {
             return (
               isNotNullOrUndefined(goodDetail.amount) &&
@@ -1061,7 +1089,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           if (isDescRequired) {
             return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
           }
-        }).length === point.goodsDetailListDto.length
+        })?.length === point?.goodsDetailListDto?.length
       : false;
   }
 
@@ -1072,20 +1100,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   public CanCreateTemplate(): boolean {
     //if there is no routePoints
     if (
-      !isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.routPoints) &&
+      !isNotNullOrUndefined(this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints) &&
       !isNotNullOrUndefined(this.PointsComponent?.wayPointsList)
     ) {
       return false;
     } else if (
-      this._TripService.CreateOrEditShippingRequestTripDto.routPoints.find(
-        (x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto)
+      this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints?.find(
+        (x) => x?.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x?.goodsDetailListDto)
       ) ||
-      this.PointsComponent?.wayPointsList?.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))
+      this.PointsComponent?.wayPointsList?.find((x) => x?.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x?.goodsDetailListDto))
     ) {
       return false;
     } else if (
-      this._TripService.CreateOrEditShippingRequestTripDto.routPoints.length < this.shippingRequest.numberOfDrops + 1 &&
-      this.PointsComponent?.wayPointsList?.length < this.shippingRequest.numberOfDrops + 1
+      this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints?.length < this.shippingRequest?.numberOfDrops + 1 &&
+      this.PointsComponent?.wayPointsList?.length < this.shippingRequest?.numberOfDrops + 1
     ) {
       return false;
     } else {
@@ -1143,7 +1171,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._dedicatedShippingRequestsServiceProxy
         .getAllDedicatedDriversForDropDown(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
         .subscribe((res) => {
-          this.allDedicatedDrivers = res;
+          this.allDedicatedDrivers = res.map((item) => {
+            (item as any).disabled = !item.isAvailable;
+            return item;
+          });
         });
     }
   }
@@ -1156,7 +1187,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._dedicatedShippingRequestsServiceProxy
         .getAllDedicateTrucksForDropDown(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
         .subscribe((res) => {
-          this.allDedicatedTrucks = res;
+          this.allDedicatedTrucks = res.map((item) => {
+            (item as any).disabled = !item.isAvailable;
+            return item;
+          });
         });
     }
   }
@@ -1232,11 +1266,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       .getDriverOrTruckForTripAssign(truckId, driverId, this._TripService.GetShippingRequestForViewOutput.shippingRequest.id)
       .subscribe((res) => {
         if (driverId != null && res != null) {
-          this._TripService.CreateOrEditShippingRequestTripDto.truckId = res;
-          this.isDisabledTruck = true;
+          (this._TripService.CreateOrEditShippingRequestTripDto.truckId as any) = res.toString();
+          //this.isDisabledTruck = true;
         } else if (truckId != null && res != null) {
-          this._TripService.CreateOrEditShippingRequestTripDto.driverUserId = res;
-          this.isDisabledDriver = true;
+          (this._TripService.CreateOrEditShippingRequestTripDto.driverUserId as any) = res.toString();
+          //this.isDisabledDriver = true;
         }
       });
   }
@@ -1264,21 +1298,25 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    this._dedicatedShippingRequestService.getAllDriversForDropDown(undefined).subscribe((res) => {
-      this.allDrivers = res.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
+    this._dedicatedShippingRequestService
+      .getAllDriversForDropDown(undefined, this._TripService.CreateOrEditShippingRequestTripDto?.carrierActorId)
+      .subscribe((res) => {
+        this.allDrivers = res.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
-    });
   }
 
   /**
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    this._dedicatedShippingRequestService.getAllTrucksWithDriversList(truckTypeId, undefined).subscribe((res) => {
-      this.allTrucks = res;
-    });
+    this._dedicatedShippingRequestService
+      .getAllTrucksWithDriversList(truckTypeId, undefined, this._TripService.CreateOrEditShippingRequestTripDto?.carrierActorId)
+      .subscribe((res) => {
+        this.allTrucks = res;
+      });
   }
 
   getAllGoodCategories() {
@@ -1331,9 +1369,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.fillAllRoundTrips();
     this.isPortMovement =
       this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-      this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
-        ? true
-        : false;
+      this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements;
     if (this.isPortMovement) {
       this.BindGeneralGoods();
     } else {
@@ -1401,6 +1437,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   validateShippingRequestType() {
+    console.log('validateShippingRequestType __________________________________________');
     if (this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
       // this.step2Form.get('originFacility').setValidators([Validators.required]);
       // this.step2Form.get('originFacility').updateValueAndValidity();
@@ -1453,8 +1490,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination', isInit = false) {
+    console.log('cities is loading');
     if (!isInit) {
-      this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
+      //this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
     }
     this.destinationCities = [];
     this.citiesLoading = true;

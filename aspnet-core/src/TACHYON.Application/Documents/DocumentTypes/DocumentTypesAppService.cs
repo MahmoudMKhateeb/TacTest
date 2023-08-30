@@ -130,7 +130,7 @@ namespace TACHYON.Documents.DocumentTypes
             if (!input.FileToken.IsNullOrEmpty())
             {
                 documentType.TemplateId =
-                    await _documentFilesManager.SaveDocumentFileBinaryObject(input.FileToken, AbpSession.TenantId);
+                    await _documentFilesManager.SaveDocumentFileBinaryObject(input.FileToken, input.TemplateContentType, AbpSession.TenantId);
             }
 
             await _documentTypeRepository.InsertAsync(documentType);
@@ -149,7 +149,7 @@ namespace TACHYON.Documents.DocumentTypes
                 }
 
                 input.TemplateId =
-                    await _documentFilesManager.SaveDocumentFileBinaryObject(input.FileToken, AbpSession.TenantId);
+                    await _documentFilesManager.SaveDocumentFileBinaryObject(input.FileToken, input.TemplateContentType, AbpSession.TenantId);
             }
 
             ObjectMapper.Map(input, documentType);

@@ -32,14 +32,15 @@
       <apx-chart
         #chart
         [series]="chartOptions.series"
+        [yaxis]="chartOptions.yaxis"
         [chart]="chartOptions.chart"
         [labels]="chartOptions.labels"
         [responsive]="chartOptions.responsive"
         [plotOptions]="chartOptions.plotOptions"
         [legend]="legend"
+        [tooltip]="tooltip"
         [dataLabels]="{ enabled: false }"
       ></apx-chart>
-      <!--                [fill]="{colors}"-->
     </div>
   </div>
 </div>

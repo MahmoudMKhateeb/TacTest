@@ -16,16 +16,28 @@
             </div>
             <div class="form-group col-md-6">
               <label>{{ l('Shipper') }} <span class="text-danger">*</span></label>
-              <select
-                [(ngModel)]="pricePackageProposal.shipperId"
-                (change)="loadAllPricePkgForTable()"
-                required
-                class="form-control"
+              <dx-select-box
                 name="tmsPP_Shipper"
+                [(value)]="pricePackageProposal.shipperId"
+                [dataSource]="shippers"
+                [searchEnabled]="true"
+                (onSelectionChanged)="loadAllPricePkgForTable()"
+                displayExpr="displayName"
+                valueExpr="id"
+                required
+                placeholder="{{ l('SelectShipper') }}"
               >
-                <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
-                <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
-              </select>
+              </dx-select-box>
+              <!--              <select-->
+              <!--                [(ngModel)]="pricePackageProposal.shipperId"-->
+              <!--                (change)="loadAllPricePkgForTable()"-->
+              <!--                required-->
+              <!--                class="form-control"-->
+              <!--                name="tmsPP_Shipper"-->
+              <!--              >-->
+              <!--                <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>-->
+              <!--                <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>-->
+              <!--              </select>-->
             </div>
             <div class="form-group col-md-12">
               <!--              <input [(ngModel)]="pricePackageProposal.tmsPricePackages" required type="text" class="form-control" name="tmsPricePackages" />-->

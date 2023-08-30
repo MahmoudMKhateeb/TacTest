@@ -34,51 +34,60 @@ export class InvoiceDetailComponent extends AppComponentBase {
     this.Items = this.Data.items;
 
     console.log(this.Items);
-    if (this.Data.channel === InvoiceChannel.DynamicInvoice) {
-      this._InvoiceReportServiceProxy.downloadDynamicInvoice(this.Data.id).subscribe((result) => {
-        let url = this._fileDownloadService.GetTempFileUrl(result);
-        this.downloadFile(url).subscribe((res) => {
-          this.pdfViewerAutoLoad.pdfSrc = res;
-          this.pdfViewerAutoLoad.refresh();
-          console.log('res', res);
-        });
+    this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(this.Data.id).subscribe((result) => {
+      let url = this._fileDownloadService.GetTempFileUrl(result);
+      this.downloadFile(url).subscribe((res) => {
+        this.pdfViewerAutoLoad.pdfSrc = res;
+        this.pdfViewerAutoLoad.refresh();
+        console.log('res', res);
       });
-    } else if (this.Data.channel === InvoiceChannel.Trip) {
-      this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(this.Data.id).subscribe((result) => {
-        let url = this._fileDownloadService.GetTempFileUrl(result);
-        this.downloadFile(url).subscribe((res) => {
-          this.pdfViewerAutoLoad.pdfSrc = res;
-          this.pdfViewerAutoLoad.refresh();
-          console.log('res', res);
-        });
-      });
-    } else if (this.Data.channel === InvoiceChannel.Dedicated) {
-      this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(this.Data.id).subscribe((result) => {
-        let url = this._fileDownloadService.GetTempFileUrl(result);
-        this.downloadFile(url).subscribe((res) => {
-          this.pdfViewerAutoLoad.pdfSrc = res;
-          this.pdfViewerAutoLoad.refresh();
-          console.log('res', res);
-        });
-      });
-    } else if (this.Data.channel === InvoiceChannel.Penalty) {
-      this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(this.Data.id).subscribe((result) => {
-        let url = this._fileDownloadService.GetTempFileUrl(result);
-        this.downloadFile(url).subscribe((res) => {
-          this.pdfViewerAutoLoad.pdfSrc = res;
-          this.pdfViewerAutoLoad.refresh();
-        });
-      });
-    } else {
-      this._InvoiceReportServiceProxy.downloadActorShipperInvoiceReportPdf(this.Data.id).subscribe((result) => {
-        let url = this._fileDownloadService.GetTempFileUrl(result);
-        this.downloadFile(url).subscribe((res) => {
-          this.pdfViewerAutoLoad.pdfSrc = res;
-          this.pdfViewerAutoLoad.refresh();
-          console.log('res', res);
-        });
-      });
-    }
+    });
+
+    // if (this.Data.channel === InvoiceChannel.DynamicInvoice) {
+    //   this._InvoiceReportServiceProxy.downloadDynamicInvoice(this.Data.id).subscribe((result) => {
+    //     let url = this._fileDownloadService.GetTempFileUrl(result);
+    //     this.downloadFile(url).subscribe((res) => {
+    //       this.pdfViewerAutoLoad.pdfSrc = res;
+    //       this.pdfViewerAutoLoad.refresh();
+    //       console.log('res', res);
+    //     });
+    //   });
+    // } else if (this.Data.channel === InvoiceChannel.Trip) {
+    //   this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(this.Data.id).subscribe((result) => {
+    //     let url = this._fileDownloadService.GetTempFileUrl(result);
+    //     this.downloadFile(url).subscribe((res) => {
+    //       this.pdfViewerAutoLoad.pdfSrc = res;
+    //       this.pdfViewerAutoLoad.refresh();
+    //       console.log('res', res);
+    //     });
+    //   });
+    // } else if (this.Data.channel === InvoiceChannel.Dedicated) {
+    //   this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(this.Data.id).subscribe((result) => {
+    //     let url = this._fileDownloadService.GetTempFileUrl(result);
+    //     this.downloadFile(url).subscribe((res) => {
+    //       this.pdfViewerAutoLoad.pdfSrc = res;
+    //       this.pdfViewerAutoLoad.refresh();
+    //       console.log('res', res);
+    //     });
+    //   });
+    // } else if (this.Data.channel === InvoiceChannel.Penalty) {
+    //   this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(this.Data.id).subscribe((result) => {
+    //     let url = this._fileDownloadService.GetTempFileUrl(result);
+    //     this.downloadFile(url).subscribe((res) => {
+    //       this.pdfViewerAutoLoad.pdfSrc = res;
+    //       this.pdfViewerAutoLoad.refresh();
+    //     });
+    //   });
+
+    //   this._InvoiceReportServiceProxy.downloadActorShipperInvoiceReportPdf(this.Data.id).subscribe((result) => {
+    //     let url = this._fileDownloadService.GetTempFileUrl(result);
+    //     this.downloadFile(url).subscribe((res) => {
+    //       this.pdfViewerAutoLoad.pdfSrc = res;
+    //       this.pdfViewerAutoLoad.refresh();
+    //       console.log('res', res);
+    //     });
+    //   });
+    // }
   }
 
   MakePaid(): void {

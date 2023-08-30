@@ -4710,6 +4710,13 @@ namespace TACHYON.Migrations
                     b.Property<decimal>("ReservedBalance")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("StampFileType")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<Guid?>("StampId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("SubscriptionEndDateUtc")
                         .HasColumnType("datetime2");
 
@@ -5805,6 +5812,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("FacilityId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("IsSaas")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
@@ -5945,6 +5955,281 @@ namespace TACHYON.Migrations
                     b.HasIndex("CountyId");
 
                     b.ToTable("Regions");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.JsonDataSourceStorages.JsonDataSourceStorage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ConnectionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConnectionValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JsonDataSourceStorages");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.Report", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Format")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("GeneratedFileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ReportDefinitionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneratedFileId");
+
+                    b.HasIndex("ReportDefinitionId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Reports");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportDefinitionPermissions.ReportDefinitionPermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("EditionId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsGranted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ReportDefinitionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EditionId");
+
+                    b.HasIndex("ReportDefinitionId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("ReportDefinitionPermissions");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportDefinitions.ReportDefinition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ReportTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportTemplateId");
+
+                    b.ToTable("ReportDefinitions");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportParameterDefinitions.ReportParameterDefinition", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReportDefinitionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportDefinitionId");
+
+                    b.ToTable("ReportParameterDefinitions");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportParameters.ReportParameter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ReportId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ReportParameterDefinitionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
+
+                    b.HasIndex("ReportParameterDefinitionId");
+
+                    b.ToTable("ReportParameters");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportPermissions.ReportPermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsGranted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ReportId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReportPermissions");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportTemplates.ReportTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte[]>("Data")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReportTemplates");
                 });
 
             modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutPoint", b =>
@@ -7192,6 +7477,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("OriginFacilityId")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("PackingTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("RejectReasonId")
                         .HasColumnType("int");
 
@@ -7303,6 +7591,8 @@ namespace TACHYON.Migrations
                     b.HasIndex("OriginCityId");
 
                     b.HasIndex("OriginFacilityId");
+
+                    b.HasIndex("PackingTypeId");
 
                     b.HasIndex("RejectReasonId");
 
@@ -10723,6 +11013,90 @@ namespace TACHYON.Migrations
                         .HasForeignKey("CountyId");
                 });
 
+            modelBuilder.Entity("TACHYON.Reports.Report", b =>
+                {
+                    b.HasOne("TACHYON.Storage.BinaryObject", "GeneratedFile")
+                        .WithMany()
+                        .HasForeignKey("GeneratedFileId");
+
+                    b.HasOne("TACHYON.Reports.ReportDefinitions.ReportDefinition", "ReportDefinition")
+                        .WithMany()
+                        .HasForeignKey("ReportDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportDefinitionPermissions.ReportDefinitionPermission", b =>
+                {
+                    b.HasOne("Abp.Application.Editions.Edition", "Edition")
+                        .WithMany()
+                        .HasForeignKey("EditionId");
+
+                    b.HasOne("TACHYON.Reports.ReportDefinitions.ReportDefinition", "ReportDefinition")
+                        .WithMany("DefinitionPermissions")
+                        .HasForeignKey("ReportDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId");
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportDefinitions.ReportDefinition", b =>
+                {
+                    b.HasOne("TACHYON.Reports.ReportTemplates.ReportTemplate", "ReportTemplate")
+                        .WithMany()
+                        .HasForeignKey("ReportTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportParameterDefinitions.ReportParameterDefinition", b =>
+                {
+                    b.HasOne("TACHYON.Reports.ReportDefinitions.ReportDefinition", "ReportDefinition")
+                        .WithMany("ParameterDefinitions")
+                        .HasForeignKey("ReportDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportParameters.ReportParameter", b =>
+                {
+                    b.HasOne("TACHYON.Reports.Report", null)
+                        .WithMany("Parameters")
+                        .HasForeignKey("ReportId");
+
+                    b.HasOne("TACHYON.Reports.ReportParameterDefinitions.ReportParameterDefinition", "ParameterDefinition")
+                        .WithMany()
+                        .HasForeignKey("ReportParameterDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Reports.ReportPermissions.ReportPermission", b =>
+                {
+                    b.HasOne("TACHYON.Reports.Report", "Report")
+                        .WithMany("ReportPermissions")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TACHYON.Authorization.Roles.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
+                    b.HasOne("TACHYON.Authorization.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutPoint", b =>
                 {
                     b.HasOne("TACHYON.AddressBook.Facility", "FacilityFk")
@@ -11025,6 +11399,10 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.AddressBook.Facility", "OriginFacilityFk")
                         .WithMany()
                         .HasForeignKey("OriginFacilityId");
+
+                    b.HasOne("TACHYON.Packing.PackingTypes.PackingType", "PackingTypeFk")
+                        .WithMany()
+                        .HasForeignKey("PackingTypeId");
 
                     b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripRejectReason", "ShippingRequestTripRejectReason")
                         .WithMany()

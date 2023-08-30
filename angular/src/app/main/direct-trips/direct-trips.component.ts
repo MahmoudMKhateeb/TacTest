@@ -5,7 +5,9 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import {
   CreateOrEditShippingRequestTripDto,
   ShippingRequestDto,
+  ShippingRequestRouteType,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripStatus,
   TrackingServiceProxy,
   TrackingShippingRequestTripDto,
 } from '@shared/service-proxies/service-proxies';
@@ -23,6 +25,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-direct-trips',
@@ -30,6 +33,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./direct-trips.component.css'],
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class DirectTripsComponent extends AppComponentBase implements OnInit {
   @ViewChild('grid', { static: true }) dataGrid: DxDataGridComponent;
@@ -40,6 +44,10 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
   @ViewChild('GoodDetailsExcelFileUpload', { static: false }) GoodDetailsExcelFileUpload: FileUpload;
   @ViewChild('ViewImportedPointsModal', { static: false }) pointModal: ModalDirective;
   @ViewChild('ViewImportedGoodDetailsModal', { static: false }) goodDetailsModal: ModalDirective;
+  readonly ShippingRequestTripStatus = ShippingRequestTripStatus;
+  readonly ShippingRequestRouteType = ShippingRequestRouteType;
+  routeTypes = this.enumToArray.transform(this.ShippingRequestRouteType);
+  tripStatuses = this.enumToArray.transform(this.ShippingRequestTripStatus);
 
   popupPosition: any = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
   dataSource: any = {};
@@ -96,7 +104,8 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy,
     private _httpClient: HttpClient,
-    private _trackingServiceProxy: TrackingServiceProxy
+    private _trackingServiceProxy: TrackingServiceProxy,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportShipmentsFromExcel';
@@ -285,4 +294,8 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
     });
     e.cancel = true;
   }
+
+  // getStatusString(statusId: number) {
+  //   return ShippingRequestTripStatus[statusId];
+  // }
 }

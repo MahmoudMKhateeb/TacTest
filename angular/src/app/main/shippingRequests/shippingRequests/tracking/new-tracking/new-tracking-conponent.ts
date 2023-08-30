@@ -6,6 +6,7 @@ import {
   InvokeStatusInputDto,
   PickingType,
   PointTransactionDto,
+  RoutePointDocumentType,
   RoutePointStatus,
   RoutPointTransactionDto,
   ShippingRequestRouteType,
@@ -74,6 +75,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   dropWaybillLoadingId: number;
   busyPointId: number;
   loadPodForPointId: number;
+  pointDeliveryNoteList: GetAllUploadedFileDto[];
   pointPodList: GetAllUploadedFileDto[];
   pointAdditionalFilesList: GetAllUploadedFileDto[] = [];
   deliveryGoodPictureId: number;
@@ -415,6 +417,21 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
       )
       .subscribe((res) => {
         this.pointPodList = res;
+      });
+  }
+
+  getDeliveryNoteListForPoint(point: TrackingRoutePointDto): void {
+    this.loadPodForPointId = point.id;
+    this.pointDeliveryNoteList = null;
+    this._trackingServiceProxy
+      .getPointFile(point.id, RoutePointDocumentType.DeliveryNote)
+      .pipe(
+        finalize(() => {
+          this.loadPodForPointId = null;
+        })
+      )
+      .subscribe((res) => {
+        this.pointDeliveryNoteList = res;
       });
   }
 

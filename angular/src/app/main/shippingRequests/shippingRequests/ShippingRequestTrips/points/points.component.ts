@@ -91,7 +91,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   ngOnInit() {
-    console.log('isPortMovement', this.isPortMovement);
     this.loadSharedServices();
     this.loadDropDowns();
     this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
@@ -108,7 +107,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * loads Facilities with validation on it related to source and destination in SR
    */
   loadFacilities() {
-    if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+    if (!isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
       // direct trip
       this._routStepsServiceProxy
         .getAllFacilitiesForDirectTrip()
@@ -119,32 +118,31 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         )
         .subscribe((result) => {
           this.allFacilities = result;
-          this.dropFacilities =
+
+          let portMovement =
             this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
-            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements
-              ? result
-              : result.filter((fac) => {
-                  if (isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
-                    return this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos?.map((city) => city.cityId).includes(fac.cityId);
-                  }
-                  return this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
-                    ?.map((city) => city.cityId)
-                    .includes(fac.cityId);
-                });
-          console.log('loadFacilities this.dropFacilities', this.dropFacilities);
-          this.pickupFacilities =
-            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
-            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements
-              ? result
-              : result.filter((r) => {
-                  if (isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
-                    return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
-                      ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
-                      : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
-                  }
-                  return r.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
-                });
-          console.log('loadFacilities this.pickupFacilities', this.pickupFacilities);
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements;
+
+          if (portMovement) {
+            this.dropFacilities = result;
+          } else {
+            this.dropFacilities = result.filter((fac) => {
+              return this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
+                ?.map((city) => city.cityId)
+                .includes(fac.cityId);
+            });
+          }
+
+          if (portMovement) {
+            this.pickupFacilities = result;
+          } else {
+            this.pickupFacilities = result.filter((r) => {
+              return r.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
+            });
+            if (this._tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.LocalInsideCity) {
+              this.dropFacilities = this.pickupFacilities;
+            }
+          }
         });
 
       return;
@@ -246,8 +244,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * creates empty points for the trip based on number of drops
    */
   createEmptyPoints(selectedPaymentMethodId?: number) {
-    console.log('createEmptyPoints this._tripService.GetShippingRequestForViewOutput', this._tripService.GetShippingRequestForViewOutput);
-    console.log('createEmptyPoints this._tripService.CreateOrEditShippingRequestTripDto', this._tripService.CreateOrEditShippingRequestTripDto);
     let numberOfDrops = 0;
     if (!this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id) {
       numberOfDrops = this._tripService.CreateOrEditShippingRequestTripDto?.numberOfDrops;
@@ -256,7 +252,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
 
     //if there is already wayPoints Dont Create Empty Once
-    console.log('this.wayPointsList.length == numberOfDrops + 1', this.wayPointsList.length == numberOfDrops + 1);
     if (this.wayPointsList.length == numberOfDrops + 1) return;
     // for (let i = 0; i <= numberOfDrops; i++) {
     //   let point = new CreateOrEditRoutPointDto();
@@ -357,6 +352,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   ngAfterContentChecked() {
+    // this.wayPointsList.forEach((x) => {
+    //   return ((x.receiverId as any) = x.receiverId.toString());
+    // });
     this.cdref.detectChanges();
   }
 }

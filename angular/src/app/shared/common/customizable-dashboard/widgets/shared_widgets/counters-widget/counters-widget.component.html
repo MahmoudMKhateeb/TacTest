@@ -1,7 +1,4 @@
-<!--[busyIf]="loading"-->
 <div [ngClass]="hasCarrierClients && hasShipperClients ? 'd-flex flex-column h-100 w-100 justify-content-between' : 'w-100 h-100'">
-  <!--    [class.h-100]="!(hasCarrierClients && hasShipperClients)"-->
-  <!--    [class.mb-4]="hasCarrierClients && hasShipperClients"-->
   <div class="card card-custom card-stretch w-100 h-100">
     <div class="card-body p-4 d-flex flex-column justify-content-center">
       <div class="d-flex">
@@ -38,25 +35,8 @@
       </ng-container>
       <hr class="custom-hr" *ngIf="!(hasCarrierClients && hasShipperClients)" />
       <app-invoice-due-date [invoiceType]="invoiceType" *ngIf="!(hasCarrierClients && hasShipperClients)"></app-invoice-due-date>
-      <hr class="custom-hr" />
-      <app-shipper-due-date-in-days></app-shipper-due-date-in-days>
+      <hr class="custom-hr" *ngIf="!(hasCarrierClients && hasShipperClients)" />
+      <app-shipper-due-date-in-days *ngIf="!(hasCarrierClients && hasShipperClients)"></app-shipper-due-date-in-days>
     </div>
   </div>
-  <!--  <div *ngIf="hasCarrierClients && hasShipperClients" class="card card-custom card-stretch w-100 h-35">-->
-  <!--    <div class="filter-box">-->
-  <!--      <dx-select-box-->
-  <!--        id="invoiceType"-->
-  <!--        name="invoiceType"-->
-  <!--        [(value)]="invoiceType"-->
-  <!--        [dataSource]="invoiceTypes"-->
-  <!--        [searchEnabled]="true"-->
-  <!--        displayExpr="value"-->
-  <!--        valueExpr="key"-->
-  <!--        placeholder="{{ l('SelectInvoiceType') }}"-->
-  <!--      ></dx-select-box>-->
-  <!--    </div>-->
-  <!--    <div class="card-body justify-content-between p-4 d-flex flex-column justify-content-center">-->
-  <!--      <app-invoice-due-date [invoiceType]="invoiceType"></app-invoice-due-date>-->
-  <!--    </div>-->
-  <!--  </div>-->
 </div>

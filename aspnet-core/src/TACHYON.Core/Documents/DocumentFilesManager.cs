@@ -19,10 +19,12 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Common;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
+using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
@@ -37,6 +39,7 @@ namespace TACHYON.Documents
         private readonly TenantManager TenantManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
+        private CommonManager _commonManager;
 
 
 
@@ -47,7 +50,8 @@ namespace TACHYON.Documents
             IBinaryObjectManager binaryObjectManager,
             IUserEmailer userEmailer,
             IAppNotifier appNotifier,
-            IFeatureChecker featureChecker)
+            IFeatureChecker featureChecker,
+            CommonManager commonManager)
         {
             _documentFileRepository = documentFileRepository;
             TenantManager = tenantManager;
@@ -59,6 +63,7 @@ namespace TACHYON.Documents
             AbpSession = NullAbpSession.Instance;
             _appNotifier = appNotifier;
             _featureChecker = featureChecker;
+            _commonManager = commonManager;
         }
 
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
@@ -223,7 +228,7 @@ namespace TACHYON.Documents
         /// <param name="fileToken"></param>
         /// <param name="tenantId"></param>
         /// <returns></returns>
-        public async Task<Guid> SaveDocumentFileBinaryObject(string fileToken, int? tenantId)
+        public async Task<Guid> SaveDocumentFileBinaryObject(string fileToken, string contentType, int? tenantId)
         {
             var fileBytes = _tempFileCacheManager.GetFile(fileToken);
 
@@ -238,7 +243,11 @@ namespace TACHYON.Documents
                     TACHYONConsts.MaxDocumentFileBytesUserFriendlyValue));
             }
 
+           
             var storedFile = new BinaryObject(tenantId, fileBytes);
+
+            if (contentType != DocumentTypeConsts.PDF)
+                storedFile.ThumbnailByte = _commonManager.MakeThumbnail(fileBytes, 50, 50);
             await _binaryObjectManager.SaveAsync(storedFile);
 
             return storedFile.Id;
@@ -322,7 +331,7 @@ namespace TACHYON.Documents
             {
                 if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
                 {
-                    documentFile.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                    documentFile.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, input.Extn, AbpSession.TenantId);
                 }
             }
             await _documentFileRepository.InsertAsync(documentFile);
@@ -344,7 +353,7 @@ namespace TACHYON.Documents
                 }
 
                 input.BinaryObjectId =
-                    await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                    await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, input.Extn, AbpSession.TenantId);
                 input.IsAccepted = false;
                 input.IsRejected = false;
             }
@@ -419,7 +428,32 @@ namespace TACHYON.Documents
                 CurrentUnitOfWork.SaveChanges();
             }
         }
-        //---R
+
+        public async Task<bool> GetIsTenentHasMissingDocuments(List<DocumentFile> documentFiles,  int tenantId)
+        {
+            DisableTenancyFilters();
+
+            var tenant = _tenantManager.GetById(tenantId);
+
+            var tenantDocumentFiles =  documentFiles
+                //await _documentFileRepository.GetAll()
+          // .Include(doc => doc.DocumentTypeFk)
+           .Where(x => x.TenantId == tenantId )
+           .Select(x => x.DocumentTypeId.Value).ToList();
+
+            var allDocumentTypes = await _documentTypeRepository.GetAll()
+                .Where(x => (x.EditionId == tenant.EditionId && x.DocumentRelatedWithId == null) ||
+                            x.DocumentRelatedWithId == tenantId)
+                .Where(x => x.IsRequired == true)
+                .Select(x => x.Id).ToListAsync();
+
+            foreach (var item in allDocumentTypes)
+            {
+                if (!tenantDocumentFiles.Contains(item)) return false;
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Document Accepted and not Rejected and not expired documentsFiles.

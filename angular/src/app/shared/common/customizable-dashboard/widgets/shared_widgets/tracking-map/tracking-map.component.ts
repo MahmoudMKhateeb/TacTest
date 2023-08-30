@@ -10,6 +10,7 @@ import {
   TenantServiceProxy,
   FacilitiesServiceProxy,
   FacilityCityLookupTableDto,
+  PagedResultDtoOfTrackingMapDto,
 } from '@shared/service-proxies/service-proxies';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -20,8 +21,8 @@ import { Paginator } from 'primeng/paginator';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { finalize } from 'rxjs/operators';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import * as _moment from 'moment';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-tracking-map',
@@ -55,13 +56,17 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   TruckType: number;
   RouteType: number;
   driverName: string;
-  ShippingRequestRouteType = this.enumToArray.transform(ShippingRequestRouteType);
+  ShippingRequestRouteType = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+    item.value = this.l(item.value);
+    return item;
+  });
 
   allTruckTypes: ISelectItemDto[];
   cityFillter: number;
   destCityFilter: number;
   citiesList: FacilityCityLookupTableDto[];
   containerNumber: string;
+  private records: PagedResultDtoOfTrackingMapDto;
 
   constructor(
     private injector: Injector,
@@ -76,7 +81,6 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDriverLiveLocation();
     this.getallTruckTypes();
     this.getAllCities();
   }
@@ -84,6 +88,10 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   getallTruckTypes() {
     this._shipperDashboardServiceProxy.getAllTruckTypesForDropdown().subscribe((res) => {
       this.allTruckTypes = res;
+      const allFacLookup = new ISelectItemDto();
+      allFacLookup.displayName = this.l('All');
+      (allFacLookup.id as any) = '';
+      this.allTruckTypes.unshift(allFacLookup);
     });
   }
 
@@ -93,6 +101,10 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   getAllCities() {
     this.facilitiesServiceProxy.getAllCityForTableDropdown().subscribe((res) => {
       this.citiesList = res;
+      const allFacLookup = new FacilityCityLookupTableDto();
+      allFacLookup.displayName = this.l('All');
+      (allFacLookup.id as any) = '';
+      this.citiesList.unshift(allFacLookup);
     });
   }
 
@@ -117,6 +129,9 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
       .subscribe((result) => {
+        this.records = result;
+        this.getDriverLiveLocation();
+
         this.directions = [];
         for (let i = 0; i < result.items.length; i++) {
           let r = result.items[i];
@@ -150,60 +165,8 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
               });
             }
           }
-
-          // r.routPoints.forEach((x) => {
-          //     setTimeout(() => {
-          //         console.log('a Query Request Was Fired');
-          //         if (r.routPoints.indexOf(x) === 0) {
-          //             direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
-          //         } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
-          //             direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
-          //         } else {
-          //             direction.waypoints.push({
-          //                 location: new google.maps.LatLng(x.latitude, x.longitude),
-          //             });
-          //         }
-          //     }, 1000);
-          // });
           this.directions.push(direction);
         }
-        // result.items.forEach((r) => {
-        //   let renderOptions: google.maps.DirectionsRendererOptions = { polylineOptions: { strokeColor: '#344440' } };
-        //   let color = this.getRandomColor();
-        //   let direction: Direction = {
-        //     origin: undefined,
-        //     destination: undefined,
-        //     waypoints: [],
-        //     renderOptions: {
-        //       polylineOptions: {
-        //         strokeWeight: 6,
-        //         strokeOpacity: 0.55,
-        //         strokeColor: color,
-        //       },
-        //     },
-        //     trackingMapDto: r,
-        //     show: true,
-        //     color: color,
-        //   };
-        //
-        //   r.routPoints.forEach((x) => {
-        //     setTimeout(() => {
-        //       console.log('a Query Request Was Fired');
-        //       if (r.routPoints.indexOf(x) === 0) {
-        //         direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
-        //       } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
-        //         direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
-        //       } else {
-        //         direction.waypoints.push({
-        //           location: new google.maps.LatLng(x.latitude, x.longitude),
-        //         });
-        //       }
-        //     }, 1000);
-        //   });
-        //
-        //   this.directions.push(direction);
-        // });
-
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = this.directions;
         this.primengTableHelper.hideLoadingIndicator();
@@ -230,14 +193,23 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
         )
         .subscribe((res) => {
           this.allDrivers = res;
-          console.log('allDrivers', this.allDrivers);
         });
+    } else if (this.isShipper) {
+      combineLatest(this.records.items.map((x) => helper.getDriverLocationLiveByWayBillNumber(Number(x.wayBillNumber)))).subscribe(
+        (responses) => {
+          this.allDrivers = [].concat(...responses);
+        },
+        (error) => {
+          console.error('Error in combineLatest:', error);
+        }
+      );
     } else if (!this.appSession.tenant.id || this.isTachyonDealer) {
       helper.getAllActiveDriversLocationsInTheSystem().subscribe((res) => {
         this.allDrivers = res;
       });
     }
   }
+
   mapReady(event: any) {
     this.map = event;
     this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('Settings'));
@@ -285,6 +257,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
       return this.l('Delayed');
     }
   }
+
   getRandomColor(): string {
     let color = '#'; // <-----------
     let letters = '0123456789ABCDEF';
@@ -299,6 +272,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
     return !!date ? _moment(date).toDate() : null;
   }
 }
+
 export interface Direction {
   origin: google.maps.LatLng;
   destination: google.maps.LatLng;

@@ -5,13 +5,13 @@
   color: #d3d3d3;
 }
 .full {
-  color: #ffca08;
+  color: #000;
 }
 .half {
   position: absolute;
   display: inline-block;
   overflow: hidden;
-  color: #ffca08;
+  color: #000;
 }
 th,
 td {

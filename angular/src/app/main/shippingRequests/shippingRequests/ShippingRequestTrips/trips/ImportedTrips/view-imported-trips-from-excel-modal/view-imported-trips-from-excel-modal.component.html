@@ -32,8 +32,19 @@
                   (onCellHoverChanged)="onCellHoverChanged($event)"
                 >
                   <dxi-column dataField="bulkUploadRef" [caption]="'TripReferenceID' | localize"></dxi-column>
-                  <dxi-column dataField="startTripDate" [caption]="'TripStartDate' | localize" dataType="date"></dxi-column>
-                  <dxi-column dataField="endTripDate" [caption]="'TripEndDate' | localize" dataType="date"></dxi-column>
+                  <dxi-column
+                    dataField="startTripDate"
+                    cellTemplate="startDateCell"
+                    [caption]="'TripStartDate' | localize"
+                    dataType="date"
+                  ></dxi-column>
+                  <div *dxTemplate="let item of 'startDateCell'">
+                    {{ item.data.startTripDate | date: 'dd/MM/yyyy' }}
+                  </div>
+                  <dxi-column dataField="endTripDate" cellTemplate="endDateCell" [caption]="'TripEndDate' | localize" dataType="date"></dxi-column>
+                  <div *dxTemplate="let item of 'endDateCell'">
+                    {{ item.data.endTripDate | date: 'dd/MM/yyyy' }}
+                  </div>
                   <dxi-column dataField="hasAttachment" [caption]="'HasAttachment' | localize" cellTemplate="needsDeliveryNoteTemplate"></dxi-column>
                   <dxi-column
                     dataField="needsDeliveryNote"

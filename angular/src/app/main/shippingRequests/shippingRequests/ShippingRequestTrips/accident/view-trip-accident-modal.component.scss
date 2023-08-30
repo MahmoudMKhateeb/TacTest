@@ -19,6 +19,7 @@ agm-map {
 
 ::ng-deep .modal-backdrop.fade.in {
   z-index: 999 !important;
+  display: none;
 }
 ::ng-deep .modal {
   z-index: 1000 !important;

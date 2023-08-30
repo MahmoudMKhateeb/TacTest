@@ -1,3 +1,5 @@
+using System;
+
 namespace TACHYON.Dashboards.Shipper.Dto
 {
     public class NewPriceOfferListDto
@@ -6,5 +8,6 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public string ReferenceNumber { get; set; }
 
         public string CompanyName { get; set; }
+        public DateTime CreationTime { get; set; }
     }
 }

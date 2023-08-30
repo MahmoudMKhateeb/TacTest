@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, Output, EventEmitter } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -9,10 +9,9 @@ import {
   GetShippingRequestSearchListDto,
   ComboboxItemDto,
   ShippingRequestRouteType,
-  PriceOfferChannel,
-  ShippingRequestType,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './tacking-search-model.component.html',
@@ -25,7 +24,7 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
   @Output() modalsearch: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
-  isLoad: boolean = false;
+  isLoad = false;
   active = false;
   saving = false;
   input: TrackingSearchInput = new TrackingSearchInput();
@@ -33,9 +32,9 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   pickupDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   deliveryDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
-  creationDateRangeActive: boolean;
-  pickupDateRangeActive: boolean;
-  deliveryDateRangeActive: boolean;
+  creationDateRangeActive = false;
+  pickupDateRangeActive = false;
+  deliveryDateRangeActive = false;
   searchList: GetShippingRequestSearchListDto;
   cites: ComboboxItemDto[] = [];
   truckTypes: ComboboxItemDto[] = [];
@@ -43,15 +42,23 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
   goodsCategories: ComboboxItemDto[] = [];
   packingTypes: ComboboxItemDto[] = [];
   truckCapacities: ComboboxItemDto[] = [];
-  statusData: object[] = [];
-  routeTypes: any;
-  requestTypes: any;
+  statusData: { displayText: string; value: number | string }[] = [];
+  routeTypes: any[] = [];
+
   constructor(injector: Injector, private _currentSrv: PriceOfferServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(injector);
   }
   ngOnInit(): void {
-    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
-    this.requestTypes = this.enumToArray.transform(ShippingRequestType);
+    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    const obj = {
+      value: this.l('All'),
+      key: '',
+    };
+    this.routeTypes.unshift(obj);
+    this.getRoutTypes();
     this.getRequestStatus();
   }
 
@@ -65,38 +72,54 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
         item.value = x.id.toString();
         return item;
       });
+      this.addAllToTopOfTheArray(this.cites);
       this.truckTypes = result.trucksTypes.map((x) => {
         let item: ComboboxItemDto = new ComboboxItemDto();
-        item.displayText = x.translatedDisplayName;
+        item.displayText = isNotNullOrUndefined(x.translatedDisplayName) ? x.translatedDisplayName : x.displayName;
         item.value = x.id.toString();
         return item;
       });
+      this.addAllToTopOfTheArray(this.truckTypes);
       this.transportTypes = result.transportTypes.map((x) => {
         let item: ComboboxItemDto = new ComboboxItemDto();
         item.displayText = x.translatedDisplayName;
         item.value = x.id.toString();
         return item;
       });
+      this.addAllToTopOfTheArray(this.transportTypes);
       this.truckCapacities = result.capacities.map((x) => {
         let item: ComboboxItemDto = new ComboboxItemDto();
-        item.displayText = x.translatedDisplayName;
+        item.displayText = isNotNullOrUndefined(x.translatedDisplayName) ? x.translatedDisplayName : x.displayName;
         item.value = x.id.toString();
         return item;
       });
+      this.addAllToTopOfTheArray(this.truckCapacities);
       this.goodsCategories = result.goodsCategories.map((x) => {
         let item: ComboboxItemDto = new ComboboxItemDto();
         item.displayText = x.displayName;
         item.value = x.id.toString();
         return item;
       });
+      this.addAllToTopOfTheArray(this.goodsCategories);
       this.packingTypes = result.packingTypes.map((x) => {
         let item: ComboboxItemDto = new ComboboxItemDto();
         item.displayText = x.displayName;
         item.value = x.id.toString();
         return item;
       });
+      this.addAllToTopOfTheArray(this.packingTypes);
     });
   }
+
+  private addAllToTopOfTheArray(array: ComboboxItemDto[]) {
+    array.unshift(
+      ComboboxItemDto.fromJS({
+        value: '',
+        displayText: this.l('All'),
+      })
+    );
+  }
+
   show(Input: TrackingSearchInput): void {
     this.input = Input;
     this.getData();
@@ -134,16 +157,28 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
       this.input.deliveryToDate = null;
     }
 
-    this.modalsearch.emit(null);
+    this.modalsearch.emit(this.input);
     this.close();
   }
 
   getRequestStatus() {
     this.statusData.push(
-      { displayText: this.l('New'), value: '0' },
-      { displayText: this.l('InTransit'), value: '1' },
-      { displayText: this.l('Cancled'), value: '2' },
-      { displayText: this.l('Delivered'), value: '3' }
+      { displayText: this.l('All'), value: '' },
+      { displayText: this.l('New'), value: 0 },
+      { displayText: this.l('InTransit'), value: 1 },
+      { displayText: this.l('Cancled'), value: 2 },
+      { displayText: this.l('Delivered'), value: 3 }
     );
+  }
+
+  private getRoutTypes() {
+    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
+    this.routeTypes.unshift({
+      key: '',
+      value: this.l('All'),
+    });
   }
 }

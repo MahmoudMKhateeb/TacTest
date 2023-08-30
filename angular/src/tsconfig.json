@@ -19,9 +19,12 @@
       "@node_modules/*": ["../node_modules/*"],
       "@angular/*": ["../node_modules/@angular/*"],
       "@metronic/*": ["./assets/metronic/*"],
+      "@src/*": ["./app/src/"],
       "jszip": ["node_modules/jszip/dist/jszip.min.js"]
     },
-    "types": ["googlemaps"]
+    "types": ["googlemaps"],
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

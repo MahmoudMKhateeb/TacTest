@@ -270,7 +270,8 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     return false;
   }
 
-  search(): void {
+  search(input: ShippingRequestForPriceOfferGetAllInput): void {
+    this.searchInput = ShippingRequestForPriceOfferGetAllInput.fromJS(input);
     this.IsLoading = true;
     this.skipCount = 0;
     this.items = [];

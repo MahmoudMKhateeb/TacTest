@@ -1,0 +1,113 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'AllReportTypes' | localize">
+      <div role="actions">
+        <button *ngIf="isGranted('Pages.ReportDefinitions.Create')" class="btn btn-primary btn-sm" (click)="goToCreateNewReportType()">
+          {{ 'CreateNewReportType' | localize }}
+        </button>
+      </div>
+    </sub-header>
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <dx-data-grid
+            id="allReportTypesDataSource"
+            [dataSource]="allReportTypesDataSource"
+            [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
+            [showColumnLines]="true"
+            [showRowLines]="false"
+            [showBorders]="true"
+            [rowAlternationEnabled]="true"
+            [wordWrapEnabled]="true"
+            [allowColumnReordering]="true"
+            [allowColumnResizing]="true"
+            [columnAutoWidth]="true"
+            keyExpr="id"
+          >
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+            <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-paging [pageSize]="20"></dxo-paging>
+
+            <dxi-column
+              *ngIf="!isTachyonDealer"
+              cellTemplate="cellTemplateActions"
+              [allowFiltering]="false"
+              [allowSorting]="false"
+              [allowEditing]="false"
+              [editorOptions]="{ visible: false }"
+              [width]="120"
+              [fixed]="true"
+              [alignment]="'center'"
+            ></dxi-column>
+            <dxi-column
+              dataField="reportType"
+              cellTemplate="reportTypeTemplate"
+              caption="{{ l('ReportType') }}"
+              alignment="center"
+              [allowSearch]="false"
+            ></dxi-column>
+            <dxi-column dataField="displayName" caption="{{ l('ReportName') }}"></dxi-column>
+            <dxi-column
+              dataField="creationTime"
+              cellTemplate="creationTimeTemplate"
+              caption="{{ l('CreationDate') }}"
+              [allowSearch]="false"
+            ></dxi-column>
+            <dxi-column dataField="grantedEditions" alignment="center" caption="{{ l('GrantedEditions') }}" [allowSearch]="false"></dxi-column>
+            <dxi-column
+              [allowFiltering]="false"
+              [width]="350"
+              dataField="excludedCompanies"
+              alignment="center"
+              caption="{{ l('ExcludedCompanies') }}"
+              [allowSearch]="false"
+            ></dxi-column>
+            <dxi-column dataField="isActive" [caption]="l('IsActive')" cellTemplate="cellTemplate_IsActive" [allowSearch]="false"></dxi-column>
+
+            <div *dxTemplate="let options of 'cellTemplate_IsActive'">
+              <span *ngIf="options.data.isActive">{{ 'Yes' | localize }}</span>
+              <span *ngIf="!options.data.isActive">{{ 'No' | localize }}</span>
+            </div>
+            <div *dxTemplate="let options of 'reportTypeTemplate'">
+              <span>{{ options.data.reportType | localize }}</span>
+            </div>
+            <div *dxTemplate="let optoins of 'creationTimeTemplate'">
+              <span>{{ optoins.data.creationTime | momentFormat: 'DD/MM/yyyy' }}</span>
+            </div>
+
+            <div *dxTemplate="let options of 'cellTemplateActions'">
+              <div class="btn-group dropdown" dropdown container="body">
+                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                  <i class="fa fa-cog"></i><span class="caret"></span>
+                  {{ 'Actions' | localize }}
+                </button>
+                <!--                                <a href="javascript:;" class="btn btn-sm btn-primary mr-2" dropdownToggle>-->
+                <!--                                    {{'Actions' | localize}}-->
+                <!--                                </a>-->
+                <ul class="dropdown-menu z-index-1000" *dropdownMenu>
+                  <li *ngIf="isGranted('Pages.ReportDefinitions.Activate') && !options.data.isActive">
+                    <a href="javascript:;" class="dropdown-item" (click)="activateReportType(options.data.id)">
+                      {{ 'Activate' | localize }}
+                    </a>
+                  </li>
+                  <li *ngIf="isGranted('Pages.ReportDefinitions.Deactivate') && options.data.isActive">
+                    <a href="javascript:;" class="dropdown-item" (click)="deactivateReportType(options.data.id)">
+                      {{ 'Deactivate' | localize }}
+                    </a>
+                  </li>
+                  <li *ngIf="isGranted('Pages.ReportDefinitions.Clone')">
+                    <a href="javascript:;" class="dropdown-item" (click)="cloneReportType(options.data.id)">
+                      {{ 'Clone' | localize }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

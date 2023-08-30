@@ -4,19 +4,19 @@ import { finalize } from 'rxjs/operators';
 import {
   CarriersForDropDownDto,
   CreateOrEditShippingRequestDto,
+  CreateOrEditShippingRequestVasListDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
   RoutStepCityLookupTableDto,
-  SelectItemDto,
-  ShippingRequestsServiceProxy,
-  CreateOrEditShippingRequestVasListDto,
-  ShippingRequestVasListOutput,
   RoutStepsServiceProxy,
-  ShippingRequestRouteType,
+  SelectItemDto,
   ShippingRequestDestinationCitiesDto,
+  ShippingRequestRouteType,
+  ShippingRequestsServiceProxy,
+  ShippingRequestVasListOutput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -105,7 +105,10 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.show(this._activatedRoute.snapshot.queryParams['id']);
-    this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
+    this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
   }
 
   show(shippingRequestId?: number): void {
@@ -121,6 +124,12 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         .pipe(finalize(() => {}))
         .subscribe((result) => {
           this.shippingRequest = result.shippingRequest;
+          (this.shippingRequest.transportTypeId as any) = result.shippingRequest.transportTypeId.toString();
+          (this.shippingRequest.trucksTypeId as any) = result.shippingRequest.trucksTypeId.toString();
+          (this.shippingRequest.capacityId as any) = result.shippingRequest.capacityId.toString();
+          (this.shippingRequest.shippingTypeId as any) = result.shippingRequest.shippingTypeId.toString();
+          (this.shippingRequest.packingTypeId as any) = result.shippingRequest.packingTypeId.toString();
+
           if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined) {
             this.startBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidStartDate);
           }
@@ -300,7 +309,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.truckTypeLoading = true;
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
         this.allTrucksTypes = result;
-        this.shippingRequest.trucksTypeId = null;
+        //this.shippingRequest.trucksTypeId = null;
         this.truckTypeLoading = false;
       });
     } else {

@@ -28,6 +28,7 @@
               [allowColumnReordering]="true"
               [allowColumnResizing]="true"
               [columnAutoWidth]="true"
+              (onExporting)="onExporting($event)"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
@@ -40,7 +41,9 @@
               <dxo-summary>
                 <dxi-group-item column="tenantListDto.id" summaryType="count"> </dxi-group-item>
               </dxo-summary>
+              <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
               <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+              <dxo-selection mode="multiple"></dxo-selection>
               <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
               <dxi-column
                 *ngIf="!isTachyonDealer"
@@ -48,6 +51,7 @@
                 [allowFiltering]="false"
                 [allowSorting]="false"
                 [allowEditing]="false"
+                [allowExporting]="false"
                 [editorOptions]="{ visible: false }"
                 [width]="50"
                 [fixed]="true"
@@ -77,6 +81,16 @@
 
               <dxi-column dataField="userListDto.emailAddress" dataType="text" caption="{{ l('Email') }}"> </dxi-column>
               <dxi-column dataField="userListDto.isEmailConfirmed" caption="{{ l('IsEmailConfirmed') }}"> </dxi-column>
+
+              <dxi-column dataField="tenantListDto.moiNumber" caption="{{ l('MoiNumber') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.insuranceCoverage" caption="{{ l('InsuranceCoverage') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.valueOfGoods" caption="{{ l('ValueOfGoods') }}"> </dxi-column>
+              <dxi-column dataField="userListDto.name" caption="{{ l('AdminName') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.countryName" caption="{{ l('Country') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.cityName" caption="{{ l('City') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.address" caption="{{ l('Address') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.documentStatus" caption="{{ l('DocumentStatus') }}"> </dxi-column>
+
               <dxi-column dataField="tenantListDto.rate" caption="{{ l('Rate') }} " dataType="number" cellTemplate="cellRatingTemplate" width="170">
               </dxi-column>
 
@@ -141,7 +155,13 @@
                         href="javascript:;"
                         class="dropdown-item"
                         *ngIf="'Pages.Tenants.ChangeFeatures' | permission"
-                        (click)="tenantFeaturesModal.show(options.data.tenantListDto.id, options.data.tenantListDto.name)"
+                        (click)="
+                          tenantFeaturesModal.show(
+                            options.data.tenantListDto.id,
+                            options.data.tenantListDto.name,
+                            !options.data.tenantListDto.moiNumber
+                          )
+                        "
                         >{{ 'Features' | localize }}</a
                       >
                     </li>

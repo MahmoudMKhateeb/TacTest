@@ -44,10 +44,17 @@
                 <ul *dropdownMenu class="dropdown-menu p-2" role="menu" aria-labelledby="button-basic">
                   <li role="menuitem">
                     <div class="form-group">
-                      <select class="form-control" name="tripTemplate" [(ngModel)]="selectedTemplate" [busyIf]="templatesLoading">
-                        <option [value]="undefined" hidden selected disabled>{{ l('SelectATripTemplate') }}</option>
-                        <option *ngFor="let item of tripTemples" value="{{ item.id }}">{{ item.displayName }}</option>
-                      </select>
+                      <dx-select-box
+                        id="tripTemplate"
+                        name="tripTemplate"
+                        [(value)]="selectedTemplate"
+                        [dataSource]="tripTemples"
+                        [searchEnabled]="true"
+                        displayExpr="displayName"
+                        valueExpr="id"
+                        placeholder="{{ l('SelectATripTemplate') }}"
+                      >
+                      </dx-select-box>
                     </div>
                     <button class="btn btn-sm btn-block btn-info" (click)="applyTemplate()" type="button">{{ 'Load' | localize }}</button>
                   </li>
@@ -84,16 +91,18 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <label for="TripType"> {{ l('TripType') }} </label>
-                  <select
-                    #TripType="ngModel"
-                    name="TripType"
+                  <dx-select-box
                     id="TripType"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag"
-                    class="form-control"
-                    (change)="onRouteTypeChange()"
+                    name="TripType"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag"
+                    [dataSource]="ShippingRequestTripFlagArray"
+                    [searchEnabled]="true"
+                    displayExpr="value"
+                    valueExpr="key"
+                    (onValueChanged)="onRouteTypeChange()"
+                    placeholder="{{ l('SelectATripType') }}"
                   >
-                    <option *ngFor="let flag of ShippingRequestTripFlagArray" [value]="flag.key">{{ flag.value }}</option>
-                  </select>
+                  </dx-select-box>
                 </div>
               </div>
             </div>
@@ -178,6 +187,7 @@
                       displayExpr="displayName"
                       valueExpr="id"
                       placeholder="{{ l('SelectActor') }}"
+                      (onValueChanged)="getAllDrivers(); getAllTrucks(undefined)"
                     >
                     </dx-select-box>
                   </div>
@@ -208,6 +218,19 @@
                     disabled
                   />
                 </div>
+                <div class="form-group" *ngIf="canSetPriceForCarrierActor()">
+                  <label>{{ l('TotalAmount') }} <span class="text-danger">*</span></label>
+                  <input
+                    [value]="
+                      _TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.subTotalAmount +
+                      _TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.vatAmount
+                    "
+                    type="number"
+                    class="form-control"
+                    name="TotalAmount"
+                    disabled
+                  />
+                </div>
               </div>
             </div>
 
@@ -227,22 +250,19 @@
                       'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                     }"
                   >
-                    <select
-                      class="form-control"
+                    <dx-select-box
+                      id="shippingTypeId"
                       name="shippingTypeId"
-                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId"
-                      (change)="ShippingTypeChanged()"
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId"
+                      [dataSource]="allShippingTypes"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      placeholder="{{ l('SelectAShippingType') }}"
+                      (onChange)="ShippingTypeChanged()"
                       required
                     >
-                      <!-- [class.is-valid]="
-                    shippingType.valid && (shippingType.dirty || shippingType.touched)
-                  "
-                  [class.is-invalid]="
-                    shippingType.invalid && (shippingType.dirty || shippingType.touched)
-                  " -->
-                      <!--                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>-->
-                      <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                    </select>
+                    </dx-select-box>
                   </div>
                   <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
                 </div>
@@ -261,27 +281,46 @@
                       'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                     }"
                   >
-                    <select
-                      class="form-control"
+                    <dx-select-box
+                      id="roundTripType"
                       name="roundTripType"
-                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.roundTripType"
-                      required
-                      (ngModelChange)="resetShippingInputs(); prepareRoundTripInputs(); onRouteTypeChange()"
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.roundTripType"
+                      [dataSource]="allRoundTripTypes"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      placeholder="{{ l('SelectARoundTripType') }}"
+                      (onValueChanged)="resetShippingInputs(); prepareRoundTripInputs(); onRouteTypeChange()"
                     >
-                      <!-- [class.is-valid]="
-                    roundTripType.valid && (roundTripType.dirty || roundTripType.touched)
-                  "
-                  [class.is-invalid]="
-                    roundTripType.invalid && (roundTripType.dirty || roundTripType.touched)
-                  " -->
-                      <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>
-                      <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                    </select>
+                    </dx-select-box>
                   </div>
                   <span class="form-text text-muted">{{ l('SelectARoundTripType') }}</span>
                 </div>
               </div>
               <!-- End Shipping Type -->
+              <!-- packing type -->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label> {{ l('PackingType') }} <span class="required-fileds">*</span></label>
+                  <div
+                    [ngClass]="{
+                      'spinner spinner-success spinner-right mr-1 ml-1': !allpackingTypes
+                    }"
+                  >
+                    <select
+                      class="form-control"
+                      name="packingTypeId"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.packingTypeId"
+                      required
+                    >
+                      <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                    </select>
+                  </div>
+                  <span class="form-text text-muted">{{ l('SelectaPackingType') }}</span>
+                </div>
+              </div>
+
+              <!-- End packing type -->
 
               <!-- Route type -->
 
@@ -300,21 +339,19 @@
                     _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
                   "
                 >
-                  <label>{{ l('RouteType') }}</label>
-                  <select
+                  <label>{{ l('RouteType') }} <span class="required-fileds">*</span></label>
+                  <dx-select-box
+                    id="routeType"
                     name="routeType"
-                    type="text"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.routeType"
-                    class="form-control"
-                    [disabled]="saving"
-                    required
-                    (change)="onRouteTypeChange()"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.routeType"
+                    [dataSource]="routeTypes"
+                    [searchEnabled]="true"
+                    displayExpr="value"
+                    valueExpr="key"
+                    (onValueChanged)="onRouteTypeChange()"
+                    placeholder="{{ l('SelectRouteType') }}"
                   >
-                    <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
-                    <option [value]="r.key" *ngFor="let r of routeTypes">
-                      {{ l(r.value) | localize }}
-                    </option>
-                  </select>
+                  </dx-select-box>
                 </div>
                 <div
                   class="form-group col-lg-6"
@@ -358,24 +395,18 @@
                     <span class="required-fileds">*</span>
                   </label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
-                    <!-- [class.is-valid]="
-                        step2Form.get('originCountry').valid &&
-                        (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originCountry').invalid &&
-                        (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
-                      " -->
-                    <select
-                      class="form-control"
+                    <dx-select-box
+                      id="originCountry"
                       name="originCountry"
-                      [(ngModel)]="originCountry"
-                      (ngModelChange)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
-                      required
+                      [(value)]="originCountry"
+                      [dataSource]="allCountries"
+                      [searchEnabled]="true"
+                      displayExpr="translatedDisplayName"
+                      valueExpr="id"
+                      (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
+                      placeholder="{{ l('SelectanOriginCountry') }}"
                     >
-                      <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>
-                      <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
-                    </select>
+                    </dx-select-box>
                   </div>
 
                   <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
@@ -385,31 +416,18 @@
                 <div class="form-group">
                   <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
-                    <!-- [class.is-valid]="
-                        step2Form.get('destinationCountry').valid &&
-                        (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('destinationCountry').invalid &&
-                        (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
-                      " -->
-                    <!--                      [attr.disabled]="-->
-                    <!--                        _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId &&-->
-                    <!--                        (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == 2 ||-->
-                    <!--                        _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == 1-->
-                    <!--                          ? true-->
-                    <!--                          : null)-->
-                    <!--                      "-->
-                    <select
-                      class="form-control"
+                    <dx-select-box
+                      id="destinationCountry"
                       name="destinationCountry"
-                      [(ngModel)]="destinationCountry"
-                      (ngModelChange)="validateShippingRequestType(); loadCitiesByCountryId(destinationCountry, 'destination')"
-                      required
+                      [(value)]="destinationCountry"
+                      [dataSource]="allCountries"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'destination')"
+                      placeholder="{{ l('SelectaCountry') }}"
                     >
-                      <option value="undefined" selected disabled>{{ l('SelectanDestinationCountry') }}</option>
-                      <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
-                    </select>
+                    </dx-select-box>
                     <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                   </div>
                   <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
@@ -427,23 +445,20 @@
                 >
                   <label>{{ l('OriginCity') }} <span class="required-fileds">*</span> </label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                    <!-- [class.is-valid]="
-                        step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      " -->
-                    <select
-                      class="form-control"
+                    <dx-select-box
+                      id="originCity"
                       name="originCity"
-                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
-                      [attr.disabled]="!sourceCities ? true : null"
-                      (ngModelChange)="validateShippingRequestType(); loadFacilitiesInPointComponent()"
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
+                      [dataSource]="sourceCities"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      [disabled]="!sourceCities ? true : null"
+                      (onChange)="validateShippingRequestType(); loadFacilitiesInPointComponent()"
+                      placeholder="{{ l('SelectanOriginCity') }}"
                       required
                     >
-                      <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
-                      <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
-                    </select>
+                    </dx-select-box>
                   </div>
 
                   <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
@@ -457,53 +472,42 @@
                 >
                   <label>{{ l('Origin') }} <span class="required-fileds">*</span> </label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                    <!-- [class.is-valid]="
-                        step2Form.get('originFacility').valid &&
-                        (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originFacility').invalid &&
-                        (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
-                      " -->
-                    <select
-                      class="form-control"
+                    <dx-select-box
+                      id="originFacility"
                       name="originFacility"
-                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originFacilityId"
-                      [attr.disabled]="!allOriginPorts ? true : null"
-                      (ngModelChange)="
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.originFacilityId"
+                      [dataSource]="allOriginPorts"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      [disabled]="!allOriginPorts ? true : null"
+                      (onChange)="
                         validateShippingRequestType();
                         getCityIdFromSelectedPort($event);
                         removeValidationForImportPortRequestOnStep2Form();
                         loadFacilitiesInPointComponent()
                       "
+                      placeholder="{{ l('SelectanOrigin') }}"
                       required
                       *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
                     >
-                      <option [ngValue]="null" disabled selected>{{ l('SelectanOrigin') }}</option>
-                      <option *ngFor="let originPort of allOriginPorts" [ngValue]="Number(originPort.id)">
-                        {{ originPort.displayName }}
-                      </option>
-                    </select>
-                    <!-- [class.is-valid]="
-                        step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      " -->
-                    <select
-                      class="form-control"
+                    </dx-select-box>
+
+                    <dx-select-box
+                      id="originCity"
                       name="originCity"
-                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
-                      [attr.disabled]="!sourceCities ? true : null"
-                      (ngModelChange)="
-                        validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form(); loadFacilitiesInPointComponent()
-                      "
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
+                      [dataSource]="sourceCities"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      [disabled]="!sourceCities ? true : null"
+                      (onChange)="validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form(); loadFacilitiesInPointComponent()"
+                      placeholder="{{ l('SelectanOriginCity') }}"
                       required
                       *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
                     >
-                      <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
-                      <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
-                    </select>
+                    </dx-select-box>
                   </div>
 
                   <span class="form-text text-muted">{{
@@ -518,13 +522,13 @@
                   <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                     <!-- [class.is-valid]="
-                        step2Form.get('destinationCity').valid &&
-                        (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('destinationCity').invalid &&
-                        (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
-                      " -->
+                                            step2Form.get('destinationCity').valid &&
+                                            (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                                          "
+                                          [class.is-invalid]="
+                                            step2Form.get('destinationCity').invalid &&
+                                            (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                                          " -->
                     <p-multiSelect
                       name="destinationCity"
                       [options]="destinationCities"
@@ -596,7 +600,7 @@
               </div>
               <div class="col-lg-6 form-group d-inline-flex">
                 <div class="input-group d-inline-block mr-8">
-                  <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
+                  <label> {{ l('supposedPickupTimeFrom') }} </label>
                   <dx-date-box
                     name="supposedPickupDateFrom"
                     [(value)]="_TripService.CreateOrEditShippingRequestTripDto.supposedPickupDateFrom"
@@ -606,16 +610,10 @@
                     [interval]="20"
                     required
                   >
-                    <dx-validator [validationGroup]="'shippingRequestTripsGroup'">
-                      <dxi-validation-rule
-                        type="required"
-                        message="{{ l('supposedPickupTimeFrom') }}: {{ 'ThisFieldIsRequired' | localize }}"
-                      ></dxi-validation-rule>
-                    </dx-validator>
                   </dx-date-box>
                 </div>
                 <div class="input-group d-inline-block">
-                  <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
+                  <label> {{ l('supposedPickupTimeTo') }} </label>
                   <dx-date-box
                     name="supposedPickupDateTo"
                     [(value)]="_TripService.CreateOrEditShippingRequestTripDto.supposedPickupDateTo"
@@ -625,12 +623,6 @@
                     [interval]="20"
                     required
                   >
-                    <dx-validator [validationGroup]="'shippingRequestTripsGroup'">
-                      <dxi-validation-rule
-                        type="required"
-                        message="{{ l('supposedPickupTimeTo') }}: {{ 'ThisFieldIsRequired' | localize }}"
-                      ></dxi-validation-rule>
-                    </dx-validator>
                   </dx-date-box>
                 </div>
               </div>
@@ -680,16 +672,19 @@
               <div class="col-lg-6" *ngIf="!_TripService?.GetShippingRequestForViewOutput">
                 <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
                 <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
-                  <select
-                    class="form-control"
+                  <dx-select-box
+                    id="goodCategoryId"
                     name="goodCategoryId"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.goodCategoryId"
+                    [dataSource]="allGoodCategorys"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
                     [disabled]="!allGoodCategorys"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.goodCategoryId"
+                    placeholder="{{ l('SelectAGoodCategory') }}"
                     required
                   >
-                    <!--                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>-->
-                    <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-                  </select>
+                  </dx-select-box>
                   <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
                 </div>
               </div>
@@ -729,16 +724,19 @@
                     "
                   >
                     <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
-                    <select
-                      #DeliveryNote="ngModel"
-                      name="DeliveryNote"
+                    <dx-select-box
                       id="DeliveryNote"
-                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.needsDeliveryNote"
-                      class="form-control"
+                      name="DeliveryNote"
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.needsDeliveryNote"
+                      [dataSource]="[
+                        { value: true, displayName: l('Yes') },
+                        { value: false, displayName: l('No') }
+                      ]"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="value"
                     >
-                      <option [ngValue]="true">{{ l('Yes') }}</option>
-                      <option [ngValue]="false">{{ l('No') }}</option>
-                    </select>
+                    </dx-select-box>
                   </div>
                   <div
                     [class]="
@@ -749,16 +747,19 @@
                     "
                   >
                     <label for="Attachment"> {{ l('Attachment') }} </label>
-                    <select
-                      #Attachment="ngModel"
-                      name="Attachment"
+                    <dx-select-box
                       id="Attachment"
-                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment"
-                      class="form-control"
+                      name="Attachment"
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment"
+                      [dataSource]="[
+                        { value: true, displayName: l('Yes') },
+                        { value: false, displayName: l('No') }
+                      ]"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="value"
                     >
-                      <option [ngValue]="true">{{ l('Yes') }}</option>
-                      <option [ngValue]="false">{{ l('No') }}</option>
-                    </select>
+                    </dx-select-box>
                   </div>
                 </div>
               </div>
@@ -842,66 +843,71 @@
               <ng-container *ngIf="_TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
                 <div class="form-group col-lg-6">
                   <label>{{ l('Driver') }}</label>
-                  <select
+                  <dx-select-box
+                    id="driverUserId"
                     name="driverUserId"
-                    type="text"
-                    (change)="GetTruckOrDriver(_TripService?.CreateOrEditShippingRequestTripDto?.driverUserId, null)"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
-                    class="form-control"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
+                    [dataSource]="allDedicatedDrivers"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
                     [disabled]="saving || isDisabledDriver"
+                    (onValueChanged)="GetTruckOrDriver(_TripService?.CreateOrEditShippingRequestTripDto?.driverUserId, null)"
+                    placeholder="{{ l('SelectaDriver') }}"
                     required
                   >
-                    <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
-                    <option *ngFor="let item of allDedicatedDrivers" [value]="item.id" [disabled]="!item.isAvailable">
-                      {{ item.displayName }}
-                    </option>
-                  </select>
+                  </dx-select-box>
                 </div>
                 <div class="form-group col-lg-6">
                   <label>{{ l('Truck') }}</label>
-                  <select
+                  <dx-select-box
+                    id="truckId"
                     name="truckId"
-                    type="text"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
-                    (change)="GetTruckOrDriver(null, _TripService?.CreateOrEditShippingRequestTripDto?.truckId)"
-                    class="form-control"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
+                    [dataSource]="allDedicatedTrucks"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
                     [disabled]="saving || isDisabledTruck"
+                    placeholder="{{ l('Selectatruck') }}"
                     required
                   >
-                    <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
-                    <option *ngFor="let item of allDedicatedTrucks" [value]="item.id" [disabled]="!item.isAvailable">{{ item.displayName }}</option>
-                  </select>
+                  </dx-select-box>
                 </div>
               </ng-container>
 
               <ng-container *ngIf="!_TripService?.GetShippingRequestForViewOutput">
                 <div class="form-group col-lg-6">
                   <label>{{ l('Driver') }}</label>
-                  <select
+                  <dx-select-box
+                    id="driverUserId"
                     name="driverUserId"
-                    type="text"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
-                    class="form-control"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
+                    [dataSource]="allDrivers"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
                     [disabled]="saving || isDisabledDriver"
+                    placeholder="{{ l('SelectaDriver') }}"
                     required
                   >
-                    <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
-                    <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
-                  </select>
+                  </dx-select-box>
                 </div>
                 <div class="form-group col-lg-6">
                   <label>{{ l('Truck') }}</label>
-                  <select
+                  <dx-select-box
+                    id="truckId"
                     name="truckId"
-                    type="text"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
-                    class="form-control"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
+                    [dataSource]="allTrucks"
+                    [searchEnabled]="true"
+                    displayExpr="truckName"
+                    valueExpr="truckId"
                     [disabled]="saving || isDisabledTruck"
+                    placeholder="{{ l('Selectatruck') }}"
                     required
                   >
-                    <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
-                    <option *ngFor="let item of allTrucks" [value]="item.truckId">{{ item.truckName }}</option>
-                  </select>
+                  </dx-select-box>
                 </div>
               </ng-container>
               <!--   EndOf::Driver&Truck for DedicatedSR -->
@@ -982,26 +988,33 @@
               >
                 <div class="form-group col-lg-4 mt-3">
                   <label for="PaymentMethod"> {{ l('PaymentMethod') }} </label>
-                  <select #PaymentMethod="ngModel" name="PaymentMethod" id="PaymentMethod" [(ngModel)]="selectedPaymentMethod" class="form-control">
-                    <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>
-                  </select>
+                  <dx-select-box
+                    id="PaymentMethod"
+                    name="PaymentMethod"
+                    [(value)]="paymentMethodsArray"
+                    [dataSource]="allDrivers"
+                    [searchEnabled]="true"
+                    displayExpr="value"
+                    valueExpr="key"
+                  >
+                  </dx-select-box>
                 </div>
                 <div class="form-group col-lg-5 mt-3">
                   <label>{{ l('RouteType') }}</label>
-                  <select
+                  <dx-select-box
+                    id="routeType"
                     name="routeType"
-                    type="text"
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.routeType"
-                    class="form-control"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.routeType"
+                    [dataSource]="routeTypes"
+                    [searchEnabled]="true"
+                    displayExpr="value"
+                    valueExpr="key"
                     [disabled]="saving"
+                    (onValueChanged)="onRouteTypeChange()"
+                    placeholder="{{ l('SelectRouteType') }}"
                     required
-                    (change)="onRouteTypeChange()"
                   >
-                    <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
-                    <option [value]="r.key" *ngFor="let r of routeTypes">
-                      {{ l(r.value) | localize }}
-                    </option>
-                  </select>
+                  </dx-select-box>
                 </div>
                 <div class="col-lg-3 mt-3">
                   <div class="d-flex justify-content-between">

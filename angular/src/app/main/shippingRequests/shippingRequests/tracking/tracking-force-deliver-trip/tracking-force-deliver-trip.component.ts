@@ -5,6 +5,9 @@ import { AppConsts } from '@shared/AppConsts';
 import { finalize } from '@node_modules/rxjs/operators';
 import { FileUpload } from 'primeng/fileupload';
 import { HttpClient } from '@angular/common/http';
+import { ImportTripTransactionFromExcelDto } from '@shared/service-proxies/service-proxies';
+import { isNullOrUndefined } from 'util';
+import { ViewForceDeliverTripsFromExcelModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/view-force-deliver-trips-from-excel-modal/view-force-deliver-trips-from-excel-modal.component';
 
 @Component({
   selector: 'app-tracking-force-deliver-trip',
@@ -16,6 +19,9 @@ export class TrackingForceDeliverTripComponent extends AppComponentBase {
   loading: boolean;
   @ViewChild('DeliverTripModal') modal: ModalDirective;
   @ViewChild('DeliverTripFileUpdate') fileUpload: FileUpload;
+  @ViewChild('viewForceDeliverTripsFromExcelModal', { static: false })
+  viewForceDeliverTripsFromExcelModal: ViewForceDeliverTripsFromExcelModalComponent;
+  tripsFromExcel: ImportTripTransactionFromExcelDto[] = [];
 
   constructor(injector: Injector, private _httpClient: HttpClient) {
     super(injector);
@@ -47,8 +53,10 @@ export class TrackingForceDeliverTripComponent extends AppComponentBase {
       )
       .subscribe((response) => {
         if (response.success) {
-          this.notify.success(this.l('SuccessfullyUpload'));
-          this.close();
+          this.tripsFromExcel = response.result.tripsFromExcel as ImportTripTransactionFromExcelDto[];
+          this.viewForceDeliverTripsFromExcelModal.show();
+          //   this.notify.success(this.l('SuccessfullyUpload'));
+          // this.close();
         } else if (response.error != null) {
           this.notify.error(this.l('UploadFailed'));
         }
@@ -60,5 +68,11 @@ export class TrackingForceDeliverTripComponent extends AppComponentBase {
     this.modal.hide();
   }
 
-  onUploadError() {}
+  onUploadError(error) {
+    console.log('error', error);
+  }
+
+  onViewModalSave() {
+    this.close();
+  }
 }

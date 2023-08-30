@@ -3,12 +3,12 @@ using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.AspNetZeroCore.Web.Authentication.JwtBearer;
 using Abp.Castle.Logging.Log4Net;
-using Abp.Extensions;
 using Abp.Hangfire;
 using Abp.PlugIns;
 using Abp.Timing;
 using Castle.Facilities.Logging;
 using CrystalQuartz.AspNetCore;
+using DevExpress.AspNetCore;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using GraphQL.Server;
@@ -26,14 +26,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Owl.reCAPTCHA;
 using Quartz.Impl;
 using Stripe;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using TACHYON.Authorization;
 using TACHYON.Configuration;
@@ -46,6 +43,7 @@ using TACHYON.Web.Chat.SignalR;
 using TACHYON.Web.Common;
 using TACHYON.Web.HealthCheck;
 using TACHYON.Web.IdentityServer;
+using TACHYON.Web.Services;
 using TACHYON.Web.Swagger;
 using HealthChecksUISettings = HealthChecks.UI.Configuration.Settings;
 using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
@@ -175,6 +173,13 @@ namespace TACHYON.Web.Startup
                     services.AddHealthChecksUI();
                 }
             }
+            
+            // Register reporting services in an application's dependency injection container.
+            services.AddDevExpressControls();
+            // Use the AddMvcCore (or AddMvc) method to add MVC services
+            services.AddMvcCore();
+
+            services.RegisterReportingServices();
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<TACHYONWebHostModule>(options =>
@@ -214,7 +219,11 @@ namespace TACHYON.Web.Startup
             app.UseStaticFiles();
             app.UseRouting();
 
+            
             app.UseCors(DefaultCorsPolicyName); //Enable CORS!
+
+            // Initialize reporting services.
+            app.UseDevExpressControls();
 
             app.UseAuthentication();
 

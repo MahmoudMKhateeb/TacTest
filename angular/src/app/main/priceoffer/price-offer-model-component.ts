@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -28,7 +28,7 @@ import { NgForm } from '@angular/forms';
   animations: [appModuleAnimation()],
   providers: [EnumToArrayPipe],
 })
-export class PriceOfferModelComponent extends AppComponentBase {
+export class PriceOfferModelComponent extends AppComponentBase implements OnInit {
   @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
   @Output() offerRepriced = new EventEmitter();
@@ -56,6 +56,9 @@ export class PriceOfferModelComponent extends AppComponentBase {
   ShipperValueOfGoods: Number;
   CarrierInsuranceCoverage: Number;
   hasMatchesPricePackage: boolean;
+  isTMSOnBehalfCarrier: boolean;
+  carrierTenantId: number;
+  CanShowCommissions: boolean = false;
 
   constructor(
     injector: Injector,
@@ -67,7 +70,10 @@ export class PriceOfferModelComponent extends AppComponentBase {
   }
 
   ngOnInit(): void {
-    this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType);
+    this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
     this.offer.commissionSettings = new PriceOfferTenantCommissionSettings();
     this.isPostPriceOffer = false;
     this.hasMatchesPricePackage = false;
@@ -80,10 +86,16 @@ export class PriceOfferModelComponent extends AppComponentBase {
     offerId: number | undefined = undefined,
     isPostPriceOffer: boolean = false,
     isForDedicated = false,
-    directRequestId?: number
+    directRequestId?: number,
+    isTMSOnBehalfCarrier = false,
+    carrierTenantId?: number
   ): void {
     this.isForDedicated = isForDedicated;
     this.isPostPriceOffer = isPostPriceOffer;
+    this.isTMSOnBehalfCarrier = isTMSOnBehalfCarrier;
+    this.carrierTenantId = carrierTenantId;
+
+    this.CanShowCommissions = this.isTachyonDealer && !isTMSOnBehalfCarrier;
 
     this._CurrentServ.getAllCarrierActorsForDropDown().subscribe((result) => {
       this.AllActorsCarriers = result;
@@ -211,15 +223,26 @@ export class PriceOfferModelComponent extends AppComponentBase {
       return;
     }
 
-    this._CurrentServ
-      .createOrEdit(this.input)
-      .pipe(finalize(() => (this.saving = false)))
-      .subscribe((result) => {
-        this.notify.success(this.l('SendSuccessfully'));
-        this.close();
-        this.modalSave.emit(result);
-      });
-
+    if (this.isTMSOnBehalfCarrier) {
+      this.input.carrierTenantId = this.carrierTenantId;
+      this._CurrentServ
+        .sendDirectRequestToCarrierAndSubmitPrice(this.input)
+        .pipe(finalize(() => (this.saving = false)))
+        .subscribe((result) => {
+          this.notify.success(this.l('SendSuccessfully'));
+          this.close();
+          this.modalSave.emit(result);
+        });
+    } else {
+      this._CurrentServ
+        .createOrEdit(this.input)
+        .pipe(finalize(() => (this.saving = false)))
+        .subscribe((result) => {
+          this.notify.success(this.l('SendSuccessfully'));
+          this.close();
+          this.modalSave.emit(result);
+        });
+    }
     this.saving = true;
   }
 

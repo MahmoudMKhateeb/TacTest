@@ -60,27 +60,47 @@
                       <td>
                         <span *ngIf="this.usedIn != 'createOrEdit'"> {{ record.facility }}</span>
                         <div *ngIf="this.usedIn == 'createOrEdit'" class="input-group">
-                          <select
-                            #pointFacility="ngModel"
+                          <dx-select-box
+                            class="form-control p-0"
                             name="facility{{ i }}"
-                            class="form-control"
-                            [(ngModel)]="wayPointsList[i].facilityId"
-                            (change)="
+                            [(value)]="wayPointsList[i].facilityId"
+                            [dataSource]="record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"
+                            [searchEnabled]="true"
+                            (onSelectionChanged)="
                               RouteStepCordSetter(i, wayPointsList[i].facilityId);
                               wayPointsSetter();
                               loadReceivers(wayPointsList[i].facilityId);
-                              wayPointsList[i].receiverId = null;
                               onChangedWayPointsList()
                             "
-                            [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"
-                            [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            required
+                            placeholder="{{ l('SelectaFacility') }}"
                           >
-                            <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
-                            <!--                              *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"-->
-                            <option *ngFor="let item of filterFacilitiesForDropDown(record.pickingType == PickingType.Pickup)" [ngValue]="item.id">
-                              {{ item.displayName }}
-                            </option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            #pointFacility="ngModel"-->
+                          <!--                            name="facility{{ i }}"-->
+                          <!--                            class="form-control"-->
+                          <!--                            [(ngModel)]="wayPointsList[i].facilityId"-->
+                          <!--                            (change)="-->
+                          <!--                              RouteStepCordSetter(i, wayPointsList[i].facilityId);-->
+                          <!--                              wayPointsSetter();-->
+                          <!--                              loadReceivers(wayPointsList[i].facilityId);-->
+                          <!--                              wayPointsList[i].receiverId = null;-->
+                          <!--                              onChangedWayPointsList()-->
+                          <!--                            "-->
+                          <!--                            [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"-->
+                          <!--                            [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"-->
+                          <!--                          >-->
+                          <!--                            <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>-->
+                          <!--                            <option-->
+                          <!--                              *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"-->
+                          <!--                              [ngValue]="item.id"-->
+                          <!--                            >-->
+                          <!--                              {{ item.displayName }}-->
+                          <!--                            </option>-->
+                          <!--                          </select>-->
                           <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
                             <button class="btn btn-light-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                               <i class="flaticon2-add"></i>
@@ -91,22 +111,36 @@
                       <td>
                         <span *ngIf="this.usedIn != 'createOrEdit'"> {{ record.senderOrReceiverContactName }}</span>
                         <div *ngIf="this.usedIn == 'createOrEdit'" class="input-group">
-                          <select
-                            #pointReciver="ngModel"
+                          <dx-select-box
+                            class="form-control p-0"
                             name="reciver{{ i }}"
-                            class="form-control"
-                            [(ngModel)]="wayPointsList[i].receiverId"
+                            [(value)]="wayPointsList[i].receiverId"
+                            [dataSource]="allPointsSendersAndREcivers[wayPointsList[i].facilityId] ?? []"
+                            [searchEnabled]="true"
+                            (onSelectionChanged)="onChangedWayPointsList()"
                             [disabled]="!wayPointsList[i].facilityId"
-                            [busyIf]="receiverLoading"
-                            [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"
-                            [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"
-                            (change)="onChangedWayPointsList()"
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            required
+                            placeholder="{{ l('SelectContact') }}"
                           >
-                            <option value="">{{ l('SelectContact') }}</option>
-                            <option *ngFor="let item of allPointsSendersAndREcivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">
-                              {{ item.displayName }}
-                            </option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            #pointReciver="ngModel"-->
+                          <!--                            name="reciver{{ i }}"-->
+                          <!--                            class="form-control"-->
+                          <!--                            [(ngModel)]="wayPointsList[i].receiverId"-->
+                          <!--                            [disabled]="!wayPointsList[i].facilityId"-->
+                          <!--                            [busyIf]="receiverLoading"-->
+                          <!--                            [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"-->
+                          <!--                            [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"-->
+                          <!--                            (change)="onChangedWayPointsList()"-->
+                          <!--                          >-->
+                          <!--                            <option value="">{{ l('SelectContact') }}</option>-->
+                          <!--                            <option *ngFor="let item of allPointsSendersAndREcivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">-->
+                          <!--                              {{ item.displayName }}-->
+                          <!--                            </option>-->
+                          <!--                          </select>-->
                           <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
                             <button
                               class="btn btn-light-primary"
@@ -187,15 +221,28 @@
                       </td>
                       <td *ngIf="isHomeDelivery">
                         <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>
-                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType == PickingType.Dropoff" class="input-group">
-                          <select
+                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff" class="input-group">
+                          <dx-select-box
+                            class="form-control p-0"
                             name="PaymentMethod-{{ i }}"
                             id="PaymentMethod-{{ i }}"
-                            [(ngModel)]="wayPointsList[i].dropPaymentMethod"
-                            class="form-control"
+                            [(value)]="wayPointsList[i].dropPaymentMethod"
+                            [dataSource]="paymentMethodsArray"
+                            [searchEnabled]="true"
+                            displayExpr="value"
+                            valueExpr="key"
+                            required
+                            placeholder="{{ l('Select') }}"
                           >
-                            <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            name="PaymentMethod-{{ i }}"-->
+                          <!--                            id="PaymentMethod-{{ i }}"-->
+                          <!--                            [(ngModel)]="wayPointsList[i].dropPaymentMethod"-->
+                          <!--                            class="form-control"-->
+                          <!--                          >-->
+                          <!--                            <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>-->
+                          <!--                          </select>-->
                         </div>
                       </td>
                       <td *ngIf="isHomeDelivery">

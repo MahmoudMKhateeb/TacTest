@@ -1,7 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import { FilterDatePeriod, HostDashboardServiceProxy, SalesSummaryDatePeriod } from '@shared/service-proxies/service-proxies';
+import { FilterDatePeriod, HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { WidgetComponentBase } from '../../widget-component-base';
 

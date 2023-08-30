@@ -101,6 +101,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   destinationCities: ShippingRequestDestinationCitiesDto[] = [];
   allOriginPorts: SelectFacilityItemDto[] = [];
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
+  allpackingTypes: SelectItemDto[];
 
   constructor(
     injector: Injector,
@@ -154,6 +155,10 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       this.allOriginPorts = result;
     });
     this.getAllGoodCategories();
+
+    this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
+      this.allpackingTypes = result;
+    });
   }
 
   ngAfterViewInit() {
@@ -303,7 +308,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Drivers For Direct Shipment
    */
   getAllDriversForDirectShipment() {
-    this._trucksServiceProxy.getAllDriversForDropDown(undefined).subscribe((result) => {
+    this._trucksServiceProxy.getAllDriversForDropDown(undefined, null).subscribe((result) => {
       this.allDrivers = result;
     });
   }
@@ -312,7 +317,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Trucks For Direct Shipment
    */
   getAllTrucksForDirectShipment() {
-    this._dedicatedShippingRequestsServiceProxy.getAllTrucksWithDriversList(undefined, undefined).subscribe((res) => {
+    this._dedicatedShippingRequestsServiceProxy.getAllTrucksWithDriversList(undefined, undefined, null).subscribe((res) => {
       this.allTrucks = res;
     });
   }

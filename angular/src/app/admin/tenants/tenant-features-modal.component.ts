@@ -1,4 +1,4 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, Input, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EntityDto, TenantServiceProxy, UpdateTenantFeaturesInput } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -20,15 +20,17 @@ export class TenantFeaturesModalComponent extends AppComponentBase {
   tenantId: number;
   tenantName: string;
   featureEditData: any = null;
+  showMoiNumberWarning = false;
 
   constructor(injector: Injector, private _tenantService: TenantServiceProxy) {
     super(injector);
   }
 
-  show(tenantId: number, tenantName: string): void {
+  show(tenantId: number, tenantName: string, showMoiNumberWarning: boolean): void {
     this.tenantId = tenantId;
     this.tenantName = tenantName;
     this.active = true;
+    this.showMoiNumberWarning = showMoiNumberWarning;
     this.loadFeatures();
     this.modal.show();
   }

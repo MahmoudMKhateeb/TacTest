@@ -184,7 +184,7 @@ namespace TACHYON.Shipping.Trips
                     EndTripDate = x.EndTripDate,
                     StartWorking = x.StartWorking,
                     EndWorking = x.EndWorking,
-                    Status = x.Status.ToString(),
+                    Status = x.Status,
                     Driver = x.AssignedDriverUserFk.Name + " " + x.AssignedDriverUserFk.Surname,
                     Truck = x.AssignedTruckFk.PlateNumber,
                     Origin = x.OriginFacilityFk.Name,
@@ -192,7 +192,7 @@ namespace TACHYON.Shipping.Trips
                     WaybillNumber = x.WaybillNumber,
                     SupposedPickupDateFrom = x.SupposedPickupDateFrom,
                     SupposedPickupDateTo = x.SupposedPickupDateTo,
-                    RouteType = x.RouteType.GetEnumDescription(),
+                    RouteType = x.RouteType,
                     NumberOfDrops = x.NumberOfDrops,
                     ShipperActorName = x.ShipperActorFk.CompanyName,
                     CarrierActorName = x.CarrierActorFk.CompanyName,
@@ -634,7 +634,7 @@ namespace TACHYON.Shipping.Trips
             // appointment attachment
             if (input.DocumentId != null)
             {
-                input.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.DocumentId.ToString(), AbpSession.TenantId);
+                input.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.DocumentId.ToString(), input.DocumentContentType, AbpSession.TenantId);
                 var document = ObjectMapper.Map<IHasDocument>(input);
                 await _shippingRequestPointWorkFlowProvider.UploadFiles(new List<IHasDocument> { document }, point.Id, RoutePointDocumentType.Appointment);
             }
@@ -1080,8 +1080,11 @@ namespace TACHYON.Shipping.Trips
                 var pointHasAbilityToChangeWorkflow =
                     trip.RoutPoints?.Where(x => x.Status == RoutePointStatus.StandBy).ToList();
 
+                    var shippingType = request != null ? request.ShippingTypeId : trip.ShippingTypeId;
+                var roundTrip = request != null ? request.RoundTripType : trip.RoundTripType;
+
                 if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0)
-                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, request.ShippingTypeId,request.RoundTripType, pointHasAbilityToChangeWorkflow.ToArray());
+                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, shippingType,roundTrip, pointHasAbilityToChangeWorkflow.ToArray());
             }
 
             if (!trip.BayanId.IsNullOrEmpty())
@@ -1106,7 +1109,7 @@ namespace TACHYON.Shipping.Trips
            
             foreach (var point in trip.RoutPoints.Where(x => x.NeedsAppointment && input.RoutPoints.First(y => y.PointOrder == x.PointOrder).AppointmentDataDto != null))
             {
-                if (request != null && request.Status != ShippingRequestStatus.PostPrice)
+                if (request != null && (request.Status != ShippingRequestStatus.PostPrice && request.Status != ShippingRequestStatus.Completed))
                 {
                     throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
                 }
@@ -1119,7 +1122,7 @@ namespace TACHYON.Shipping.Trips
             var ClearancePoints = trip.RoutPoints.Where(x => x.NeedsClearance && input.RoutPoints.First(y => y.PointOrder == x.PointOrder).TripClearancePricesDto != null);
             foreach(var point in ClearancePoints)
             {
-                if (request!= null && request.Status != ShippingRequestStatus.PostPrice)
+                if (request!= null && (request.Status != ShippingRequestStatus.PostPrice && request.Status != ShippingRequestStatus.Completed))
                 {
                     throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
                 }

@@ -233,10 +233,13 @@ namespace TACHYON.Tracking
 
             var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
             var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
+            var isBroker = await IsBroker();
             var tenantId = AbpSession.TenantId;
             var isTMS = await IsTachyonDealer();
 
             DisableTenancyFilters();
+            await DisableDraftedFilterIfTachyonDealerOrHost();
+
             var query =  (await GetTrip(input))
                 .Where(x => input.TrackingMode == ShipmentTrackingMode.Mixed ||
                             (input.TrackingMode == ShipmentTrackingMode.NormalShipment && x.ShippingRequestId.HasValue) ||
@@ -273,11 +276,22 @@ namespace TACHYON.Tracking
 
 
                 item.CanDriveTrip = !tenantId.HasValue || tenantId == item.CarrierTenantId || isTMS;
-                item.IsAssign = !tenantId.HasValue || (tenantId.HasValue && !isShipper) ? true : false;
+                item.IsAssign = !tenantId.HasValue || (tenantId.HasValue && !isShipper);
                 item.CanStartTrip = !tenantId.HasValue || (tenantId.HasValue && !isShipper) && (item.StartTripDate.Date <= Clock.Now.Date
                       && item.Status == ShippingRequestTripStatus.New
                       && item.DriverStatus == ShippingRequestTripDriverStatus.Accepted
-                      ) ? true : false;
+                      );
+                if (!isTMS)
+                {
+                    if (isShipper || isBroker)
+                    {
+                        item.IsInvoiceIssued = item.ShipperInvoiceNumber != null;
+                    }
+                    else
+                    {
+                        item.IsInvoiceIssued = isCarrier && item.CarrierInvoiceNumber != null;
+                    }
+                }
             }
             return LoadResult<TrackingListDto>(result, filter);
 

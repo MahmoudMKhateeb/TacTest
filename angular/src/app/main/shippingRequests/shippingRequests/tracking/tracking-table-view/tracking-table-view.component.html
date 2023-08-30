@@ -65,6 +65,11 @@
         <dxi-column dataField="bookingNumber" caption="{{ 'ShipperBookingNumber' | localize }}"></dxi-column>
         <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>
         <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}" cellTemplate="statusTitleCellTemplate"></dxi-column>
+        <dxi-column dataField="actualPickupDate" caption="{{ 'PickupDate' | localize }}"></dxi-column>
+        <dxi-column dataField="actualDeliveryDate" caption="{{ 'DeliveryDate' | localize }}"></dxi-column>
+        <dxi-column dataField="isPODUploaded" caption="{{ 'IsPODUploaded' | localize }}"></dxi-column>
+        <dxi-column dataField="isInvoiceIssued" caption="{{ 'IsInvoiceIssued' | localize }}"></dxi-column>
+
         <dxi-column [allowExporting]="false" dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
 
         <dxo-master-detail [enabled]="true" template="masterDetail"></dxo-master-detail>
@@ -72,12 +77,17 @@
           <div class="card with-border" *ngIf="masterDetailItem.data.showSubTable">
             <div class="card-header pb-2" (click)="log(masterDetailItem)">
               <h3>
-                {{ 'SubWaybill' | localize }}
+                {{ masterDetailItem.data.routeTypeId !== 1 ? ('SubWaybill' | localize) : ('Waypoints' | localize) }}
               </h3>
             </div>
             <div class="card-body p-0">
               <dx-data-grid [dataSource]="tripSubDetails?.routPoints" [remoteOperations]="false" [wordWrapEnabled]="true">
-                <dxi-column dataField="waybillNumber" caption="{{ 'SubWaybill' | localize }}"></dxi-column>
+                <dxi-column
+                  *ngIf="masterDetailItem.data.routeTypeId !== 1"
+                  dataField="waybillNumber"
+                  caption="{{ 'SubWaybill' | localize }}"
+                ></dxi-column>
+
                 <dxi-column dataField="address" caption="{{ 'Destination' | localize }}"></dxi-column>
               </dx-data-grid>
             </div>
@@ -87,10 +97,6 @@
               <new-tracking-conponent (getForViewReady)="getForViewReady()" [trip]="masterDetailItem.data"></new-tracking-conponent>
             </div>
           </div>
-          <!--        <detail-view-->
-          <!--            [key]="masterDetailItem.key"-->
-          <!--            [rowData]="masterDetailItem.data"-->
-          <!--        ></detail-view>-->
         </div>
         <div *dxTemplate="let d of 'trackCellTemplate'">
           <button class="btn btn-primary" (click)="track(d)">
