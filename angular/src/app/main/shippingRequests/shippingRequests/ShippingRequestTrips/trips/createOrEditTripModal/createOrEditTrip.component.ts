@@ -391,7 +391,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
             '' + this._TripService.CreateOrEditShippingRequestTripDto.routeType;
           (this._TripService.CreateOrEditShippingRequestTripDto.driverUserId as any) =
             '' + this._TripService.CreateOrEditShippingRequestTripDto.driverUserId;
-          (this._TripService.CreateOrEditShippingRequestTripDto.truckId as any) = '' + this._TripService.CreateOrEditShippingRequestTripDto.truckId;
+          (this._TripService.CreateOrEditShippingRequestTripDto.truckId as any) =
+            this._TripService.CreateOrEditShippingRequestTripDto.truckId.toString();
         }
         this.loading = false;
 
@@ -1265,11 +1266,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       .getDriverOrTruckForTripAssign(truckId, driverId, this._TripService.GetShippingRequestForViewOutput.shippingRequest.id)
       .subscribe((res) => {
         if (driverId != null && res != null) {
-          this._TripService.CreateOrEditShippingRequestTripDto.truckId = res;
-          this.isDisabledTruck = true;
+          (this._TripService.CreateOrEditShippingRequestTripDto.truckId as any) = res.toString();
+          //this.isDisabledTruck = true;
         } else if (truckId != null && res != null) {
-          this._TripService.CreateOrEditShippingRequestTripDto.driverUserId = res;
-          this.isDisabledDriver = true;
+          (this._TripService.CreateOrEditShippingRequestTripDto.driverUserId as any) = res.toString();
+          //this.isDisabledDriver = true;
         }
       });
   }
