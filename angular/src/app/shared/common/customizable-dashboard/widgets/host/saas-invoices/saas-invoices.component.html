@@ -1,0 +1,40 @@
+<div class="row d-flex justify-content-center h-100" [busyIf]="loading">
+  <div class="col-sm">
+    <!--begin::Card-->
+    <div class="card card-custom card-stretch border-bottom-5 border-bottom-dark">
+      <div class="card-header border-bottom-0 pl-4 d-flex w-100 flex-row">
+        <div class="card-title w-50 m-0">
+          <h3 class="w-100">
+            {{ l('SaasInvoices') }}
+          </h3>
+        </div>
+        <div class="w-50 d-flex justify-content-end align-items-center">
+          <span class="text-dark custom-current-month">
+            {{ 'CurrentMonth' | localize }}
+          </span>
+        </div>
+      </div>
+      <div class="card-body ribbon ribbon-left pt-0 pl-3 w-100 d-flex justify-content-center flex-column">
+        <div class="ribbon-target bg-dark custom-left-ribbon" style="top: 0%">
+          {{ 'Selling' | localize }}
+        </div>
+        <div class="ribbon-target bg-primary custom-left-ribbon" style="top: 30%">
+          {{ 'Cost' | localize }}
+        </div>
+        <div class="ribbon-target bg-gray custom-left-ribbon" style="top: 60%">
+          {{ 'Profit' | localize }}
+        </div>
+        <h1 class="ml-4 text-dark font-weight-bold label-absolute-for-overall" style="top: 0%">{{ selling }}</h1>
+        <h1 class="ml-4 text-dark font-weight-bold label-absolute-for-overall" style="top: 30%">{{ cost }}</h1>
+        <h1 class="ml-4 text-dark font-weight-bold label-absolute-for-overall" style="top: 60%">{{ profit }}</h1>
+
+        <div class="sar-red-circle">
+          <div class="sar-label">
+            <h1 class="h-100 d-flex flex-column align-items-center justify-content-center">{{ 'SAR' | localize }}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end::Card-->
+  </div>
+</div>

@@ -757,7 +757,9 @@ namespace TACHYON
             //Tenant
             configuration.CreateMap<Tenant, RecentTenant>();
             configuration.CreateMap<Tenant, TenantLoginInfoDto>();
-            configuration.CreateMap<Tenant, TenantListDto>();
+            configuration.CreateMap<Tenant, TenantListDto>()
+                 .ForMember(x => x.CountryName, x => x.MapFrom(i => i.CountyFk.DisplayName))
+                  .ForMember(x => x.CityName, x => x.MapFrom(i => i.CityFk.DisplayName));
             configuration.CreateMap<Tenant, TenantProfileInformationDto>()
                 .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.companyName))
                 .ForMember(x => x.CompanyInfo, x => x.MapFrom(i => i.Description))

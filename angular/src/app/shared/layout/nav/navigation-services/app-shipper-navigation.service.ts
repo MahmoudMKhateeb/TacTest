@@ -21,6 +21,21 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
     console.log('AppShipperNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
+      // start of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
+      new AppMenuItem(
+        'Reporting',
+        'Pages.Reports',
+        'report.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('CreateReport', 'Pages.Reports.Create', '', '/app/main/reporting/generate-report'),
+          new AppMenuItem('MyReports', '', '', '/app/main/reporting/all-reports'),
+        ]
+      ),
+      //end of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
@@ -44,7 +59,18 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             () => this.isEnabled('App.Shipper')
           ),
 
-          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem(
+            'MyShippingRequests',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/shippingRequests',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            }
+          ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',
@@ -56,8 +82,18 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper') && this.isEnabled('App.SaveTemplateFeature')
           ),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.Shipper')
+          new AppMenuItem(
+            'ShipmentTracking',
+            'Pages',
+            '',
+            '/app/main/tracking/shipmentTracking',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            },
+            () => this.isEnabled('App.Shipper')
           ),
           // TODO this Hole Component need To be removed Later
         ],

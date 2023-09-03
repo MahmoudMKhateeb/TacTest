@@ -1,0 +1,100 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form #Form="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ l('Automation setup') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex">
+            <div class="form-group w-50">
+              <label>{{ 'GenerationFrequency' | localize }}</label>
+              <dx-select-box
+                id="generationFrequency"
+                name="generationFrequency"
+                [(value)]="automationSetupModel.generationFrequency"
+                [dataSource]="allGenerationFrequencies"
+                [searchEnabled]="true"
+                placeholder="{{ l('SelectFrequency') }}"
+              >
+                <!--                                                    displayExpr="displayName"-->
+                <!--                                                    valueExpr="id"-->
+              </dx-select-box>
+              <span class="form-text text-muted">{{ 'PleaseSelectFrequency' | localize }}</span>
+            </div>
+            <div class="form-group w-50 ml-4">
+              <label>{{ 'SendBy' | localize }}</label>
+              <dx-select-box
+                id="sendBy"
+                name="sendBy"
+                [(value)]="automationSetupModel.sendBy"
+                [dataSource]="allSendBy"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                placeholder="{{ l('SelectSendBy') }}"
+                (onValueChanged)="changedSendBy()"
+              >
+              </dx-select-box>
+              <span class="form-text text-muted">{{ 'PleaseSelectSendBy' | localize }}</span>
+            </div>
+          </div>
+          <ng-container *ngIf="automationSetupModel?.sendBy === 2">
+            <div class="d-flex">
+              <div class="form-group w-50">
+                <label>{{ 'EmailAddress' | localize }}</label>
+                <dx-text-box
+                  id="emailAddress"
+                  name="emailAddress"
+                  [(value)]="automationSetupModel.emailAddress"
+                  placeholder="{{ l('EnterEmailAddress') }}"
+                >
+                </dx-text-box>
+                <span class="form-text text-muted">{{ 'PleaseEnterEmailAddress' | localize }}</span>
+              </div>
+              <div class="form-group w-50 ml-4">
+                <label>{{ 'EmailSubject' | localize }}</label>
+                <dx-text-box
+                  id="emailSubject"
+                  name="emailSubject"
+                  [(value)]="automationSetupModel.emailSubject"
+                  placeholder="{{ l('EnterEmailSubject') }}"
+                >
+                </dx-text-box>
+                <span class="form-text text-muted">{{ 'PleaseEnterEmailSubject' | localize }}</span>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="form-group w-100">
+                <label>{{ 'EmailBody' | localize }}</label>
+                <dx-text-area id="emailBody" name="emailBody" [(value)]="automationSetupModel.emailBody" placeholder="{{ l('EnterEmailBody') }}">
+                </dx-text-area>
+                <span class="form-text text-muted">{{ 'PleaseEnterEmailBody' | localize }}</span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!Form.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+            <i class="fa fa-save"></i> <span>{{ l('Submit') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

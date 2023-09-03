@@ -3,14 +3,17 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   BrokerDashboardServiceProxy,
   CarrierDashboardServiceProxy,
+  GetUpcomingTripsOutput,
   NeedsActionTripDto,
   ShipperDashboardServiceProxy,
+  TMSAndHostDashboardServiceProxy,
   UpcomingTripItemDto,
   UpcomingTripsOutput,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from '@node_modules/moment';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { Router } from '@angular/router';
+import { NormalSaasHomeDeliveryEnum } from '@app/shared/common/customizable-dashboard/host-tms-widget-filters/normal-saas-homedelivery-enum';
 
 @Component({
   selector: 'app-upcoming-trips-widgets',
@@ -21,16 +24,19 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
   @Input('isForActors') isForActors = false;
   today = new Date();
   weekDates: Date[] = [];
-  upcomingTrips: UpcomingTripsOutput[];
+  upcomingTrips: UpcomingTripsOutput[] | GetUpcomingTripsOutput[];
   loading: boolean;
-  upcomingTripsForSelectedDay: UpcomingTripItemDto[] = [];
+  upcomingTripsForSelectedDay: UpcomingTripItemDto[] | GetUpcomingTripsOutput[] = [];
   selectedDay: Date;
+  selectedFilterId: number;
+  normalSaasHomeDeliveryEnum = NormalSaasHomeDeliveryEnum;
 
   constructor(
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
     private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
     private _brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
+    private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy,
     private router: Router
   ) {
     super(injector);
@@ -67,19 +73,38 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
         this.loading = false;
       });
     }
+    if (this.isTachyonDealerOrHost) {
+      this.loading = false;
+    }
   }
 
   selectDay(day: Date) {
     this.selectedDay = day;
-    const foundItem = this.upcomingTrips.find((item) => moment(item.date).isSame(day, 'day'));
+    const foundItem = (this.upcomingTrips as any[]).find((item) => moment(item?.date).isSame(day, 'day'));
     if (isNotNullOrUndefined(foundItem)) {
       this.upcomingTripsForSelectedDay = foundItem?.trips;
     } else {
       this.upcomingTripsForSelectedDay = [];
     }
+    if (this.isTachyonDealerOrHost) {
+      this.upcomingTripsForSelectedDay = (this.upcomingTrips as any[]).filter((item) => moment(item.startTripDate).isSame(day, 'day'));
+    }
   }
 
-  goToTrackingPage(trip: NeedsActionTripDto): void {
-    this.router.navigateByUrl(`/app/main/tracking?waybillNumber=${trip.waybillNumber}`);
+  goToTrackingPage(trip): void {
+    let url = trip.isDirectTrip
+      ? `/app/main/tracking/directShipmentTracking?waybillNumber=${trip.waybillNumber}`
+      : `/app/main/tracking/shipmentTracking?waybillNumber=${trip.waybillNumber}`;
+    this.router.navigateByUrl(url);
+  }
+
+  selectedFilter(filter: number) {
+    this.selectedFilterId = filter;
+    this.loading = true;
+    this._TMSAndHostDashboardServiceProxy.getUpcomingTrips(filter).subscribe((res) => {
+      this.upcomingTrips = res;
+      this.selectDay(this.weekDates[0]);
+      this.loading = false;
+    });
   }
 }

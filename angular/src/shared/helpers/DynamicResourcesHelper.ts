@@ -35,7 +35,7 @@ export class DynamicResourcesHelper {
     styleLoaderService.loadArray(styleUrls);
 
     if (isRtl) {
-      styleLoaderService.load(AppConsts.appBaseUrl + '/assets/common/styles/abp-zero-template-rtl.min.css');
+      styleLoaderService.load();
     }
 
     return Promise.resolve(true);

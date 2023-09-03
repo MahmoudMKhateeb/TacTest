@@ -218,11 +218,6 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           id: this.facility.id == undefined ? null : fh.id,
         })
     );
-    if (this.facility.facilityWorkingHours.length == 0 && !this.isHomeDelivery) {
-      this.notify.error(this.l('PleaseEnterfacilityWorkingHours'));
-      this.saving = false;
-      return;
-    }
 
     if (this.facility.cityId == undefined && this.isRequiredAddress) {
       this.notify.error(this.l('PleaseEnterCity'));

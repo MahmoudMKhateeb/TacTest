@@ -85,6 +85,13 @@ export class FirebaseHelperClass {
   }
 
   /**
+   * get Live Driver Location Based On WayBillNumber
+   */
+  getDriverLocationLiveByWayBillNumber(wayBillNumber: number): Observable<any> {
+    this.fireDB = this._db.list(this.database.driverDatabase, (ref) => ref.orderByChild('waybillNumber').equalTo(wayBillNumber));
+    return this.fireDB.valueChanges();
+  }
+  /**
    * Emit Driver Starting Trip From Frontend
    */
   assignDriverToTrip(trip: TrackingListDto, point: TrackingRoutePointDto, tenantId: number, transaction: string) {

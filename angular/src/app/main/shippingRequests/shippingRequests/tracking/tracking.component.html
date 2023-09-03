@@ -18,7 +18,7 @@
               </div>
             </div>
           </div>
-          <button (click)="ModelSearch.show(searchInput)" class="btn btn-secondary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+          <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
         </div>
       </div>
     </sub-header>
@@ -74,7 +74,8 @@
                     *ngIf="item.hasAccident"
                     (click)="showIncident(item)"
                     class="ribbon-target bg-gray border-0"
-                    style="right: 8%"
+                    [style.left]="!isRtl ? 'auto' : '8% !important'"
+                    [style.right]="!isRtl ? '8%' : 'auto !important'"
                     type="submit"
                     [style.top]="
                       item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
@@ -149,7 +150,7 @@
                         ></a>
                         <!--end::Name-->
                         <!--begin::Contacts-->
-                        <div class="d-flex flex-wrap my-2">
+                        <div class="d-flex flex-wrap my-2" *ngIf="shipmentType !== 'directShipment' && item.requestId">
                           <div class="d-flex align-items-center pr-5">
                             <i class="flaticon2-telegram-logo mr-2"></i>
                             <a
@@ -402,7 +403,7 @@
   </div>
 </div>
 
-<tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>
+<tacking-search-model #ModelSearch (modalsearch)="search($event)"></tacking-search-model>
 <view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
 <trip-accident-modal #TripAccidentModal></trip-accident-modal>
 <shared-file-viewer #fileViwerComponent></shared-file-viewer>

@@ -74,27 +74,53 @@
                 <div>
                   <div class="form-group">
                     <label for="originCity">{{ l('OriginCity') }}</label>
-                    <select name="originCity" id="originCity" [(ngModel)]="cityFillter" class="form-control" (change)="getTableRecords()">
-                      <option value="" selected>
-                        {{ 'All' | localize }}
-                      </option>
-                      <option [value]="t.id" *ngFor="let t of citiesList">
-                        {{ t.displayName | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="originCity"
+                      name="originCity"
+                      [(value)]="cityFillter"
+                      [dataSource]="citiesList"
+                      [searchEnabled]="true"
+                      (onSelectionChanged)="getTableRecords()"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      required
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="originCity" id="originCity" [(ngModel)]="cityFillter" class="form-control" (change)="getTableRecords()">-->
+                    <!--                      <option value="" selected>-->
+                    <!--                        {{ 'All' | localize }}-->
+                    <!--                      </option>-->
+                    <!--                      <option [value]="t.id" *ngFor="let t of citiesList">-->
+                    <!--                        {{ t.displayName | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div>
                   <div class="form-group">
                     <label for="destCity">{{ l('DestinationCity') }}</label>
-                    <select name="destCity" id="destCity" [(ngModel)]="destCityFilter" class="form-control" (change)="getTableRecords()">
-                      <option value="" selected>
-                        {{ 'All' | localize }}
-                      </option>
-                      <option [value]="t.id" *ngFor="let t of citiesList">
-                        {{ t.displayName | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="destCity"
+                      name="destCityFilter"
+                      [(value)]="destCityFilter"
+                      [dataSource]="citiesList"
+                      [searchEnabled]="true"
+                      (onSelectionChanged)="getTableRecords()"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      required
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="destCity" id="destCity" [(ngModel)]="destCityFilter" class="form-control" (change)="getTableRecords()">-->
+                    <!--                      <option value="" selected>-->
+                    <!--                        {{ 'All' | localize }}-->
+                    <!--                      </option>-->
+                    <!--                      <option [value]="t.id" *ngFor="let t of citiesList">-->
+                    <!--                        {{ t.displayName | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div>
@@ -108,27 +134,53 @@
                     <label for="TruckType">{{ l('TruckType') }}</label>
                     <!--              <input type="text" class="form-control" id="TruckType" name="TruckType" [(ngModel)]="TruckType" (change)="getTableRecords()" />-->
 
-                    <select name="TruckType" id="TruckType" [(ngModel)]="TruckType" class="form-control" (change)="getTableRecords()">
-                      <option value="" selected>
-                        {{ 'All' | localize }}
-                      </option>
-                      <option [value]="t.id" *ngFor="let t of allTruckTypes">
-                        {{ t.displayName | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="TruckType"
+                      name="TruckType"
+                      [(value)]="TruckType"
+                      [dataSource]="allTruckTypes"
+                      [searchEnabled]="true"
+                      (onSelectionChanged)="getTableRecords()"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      required
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="TruckType" id="TruckType" [(ngModel)]="TruckType" class="form-control" (change)="getTableRecords()">-->
+                    <!--                      <option value="" selected>-->
+                    <!--                        {{ 'All' | localize }}-->
+                    <!--                      </option>-->
+                    <!--                      <option [value]="t.id" *ngFor="let t of allTruckTypes">-->
+                    <!--                        {{ t.displayName | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div>
                   <div class="form-group">
                     <label for="RouteType">{{ l('RouteType') }}</label>
-                    <select name="RouteType" id="RouteType" [(ngModel)]="RouteType" class="form-control" (change)="getTableRecords()">
-                      <option value="" selected>
-                        {{ 'All' | localize }}
-                      </option>
-                      <option [value]="t.key" *ngFor="let t of ShippingRequestRouteType">
-                        {{ t.value | localize }}
-                      </option>
-                    </select>
+                    <dx-select-box
+                      id="RouteType"
+                      name="RouteType"
+                      [(value)]="RouteType"
+                      [dataSource]="ShippingRequestRouteType"
+                      [searchEnabled]="true"
+                      (onSelectionChanged)="getTableRecords()"
+                      displayExpr="value"
+                      valueExpr="key"
+                      required
+                      placeholder="{{ l('Select') }}"
+                    >
+                    </dx-select-box>
+                    <!--                    <select name="RouteType" id="RouteType" [(ngModel)]="RouteType" class="form-control" (change)="getTableRecords()">-->
+                    <!--                      <option value="" selected>-->
+                    <!--                        {{ 'All' | localize }}-->
+                    <!--                      </option>-->
+                    <!--                      <option [value]="t.key" *ngFor="let t of ShippingRequestRouteType">-->
+                    <!--                        {{ t.value | localize }}-->
+                    <!--                      </option>-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div>
@@ -200,7 +252,6 @@
               </th>
               <th>{{ l('ContainerNumber') }}</th>
               <th>{{ l('Show') }}</th>
-              <!--            <th>{{ l('tag') }}</th>-->
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-record="$implicit">
@@ -253,7 +304,6 @@
                   </label>
                 </span>
               </td>
-              <!--            <td><i style="color: {{ record.color }}" class="icon-2x flaticon-add-label-button"></i></td>-->
             </tr>
           </ng-template>
         </p-table>

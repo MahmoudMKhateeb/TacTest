@@ -216,14 +216,16 @@ export class CreateTenantModalComponent extends AppComponentBase {
   }
 
   CountryChanged(event) {
-    if (event.target.value == -2) {
+    console.log('event', event);
+    if (event.selectedItem.id == -2) {
       this.isCountySelected = false;
     } else {
       this.isCountySelected = true;
     }
 
-    this._tenantService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
+    this._tenantService.getAllCitiesForTableDropdown(event.selectedItem.id).subscribe((result) => {
       this.allCities = result;
+      this.allCities.push(TenantCityLookupTableDto.fromJS({ id: -1, displayName: this.l('Other') }));
     });
   }
 

@@ -85,7 +85,7 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    this._dedicatedShippingRequestService.getAllDriversForDropDown(this.dedicatedShippingRequest.carrierTenantId).subscribe((res) => {
+    this._dedicatedShippingRequestService.getAllDriversForDropDown(this.dedicatedShippingRequest.carrierTenantId, null).subscribe((res) => {
       this.allDrivers = res.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
@@ -97,9 +97,11 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    this._dedicatedShippingRequestService.getAllTrucksWithDriversList(truckTypeId, this.dedicatedShippingRequest.carrierTenantId).subscribe((res) => {
-      this.allTrucks = res;
-    });
+    this._dedicatedShippingRequestService
+      .getAllTrucksWithDriversList(truckTypeId, this.dedicatedShippingRequest.carrierTenantId, null)
+      .subscribe((res) => {
+        this.allTrucks = res;
+      });
   }
 
   print(d) {

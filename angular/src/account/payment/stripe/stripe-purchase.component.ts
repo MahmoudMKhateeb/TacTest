@@ -54,7 +54,7 @@ export class StripePurchaseComponent extends AppComponentBase implements OnInit 
     this.paymentId = this._activatedRoute.snapshot.queryParams['paymentId'];
 
     new ScriptLoaderService()
-      .load('https://js.stripe.com/v3')
+      .load()
       .then(() => {
         this._stripePaymentAppService.getConfiguration().subscribe(
           (config: StripeConfigurationDto) => {

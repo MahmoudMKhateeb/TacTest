@@ -28,6 +28,11 @@ namespace TACHYON.PriceOffers.Dto
         [JsonIgnore]
         public bool IgnoreExistingOffer { get; set; }
          public int? CarrierActorId { get; set; }
+        /// <summary>
+        /// This field for PP acknwoledge on behalf carrier, to set tenant id for offer
+        /// </summary>
+        public int? CarrierTenantId { get; set; }
+
 
         public void AddValidationErrors(CustomValidationContext context)
         {

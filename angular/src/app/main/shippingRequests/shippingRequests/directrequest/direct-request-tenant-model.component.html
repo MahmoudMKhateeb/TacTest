@@ -105,14 +105,28 @@
                 <td>
                   <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
                   <span>
-                    <button
-                      class="btn btn-primary btn-sm"
-                      [id]="record.id"
-                      [disabled]="record.isRequestSent"
-                      (click)="sendDirectRequestToCarrier(record)"
-                    >
-                      {{ l('SendDirectRequestOffer') }}
-                    </button>
+                    <div dropdown container="body" class="btn-group mr-2">
+                      <button dropdownToggle type="button" class="btn btn-primary" aria-controls="dropdown-basic">
+                        {{ l('SendDirectRequestOffer') }}
+                      </button>
+                      <div class="ngbDropdownMenu aria-labelledby='dropdownBasic1'">
+                        <ul *dropdownMenu class="dropdown-menu p-2 w-100" role="menu" aria-labelledby="button-basic">
+                          <li role="menuitem">
+                            <button (click)="sendDirectRequestToCarrier(record)" class="btn btn-outline-primary btn-elevate-hover w-100">
+                              {{ l('SendRequest') }}
+                            </button>
+                          </li>
+                          <li role="menuitem">
+                            <button
+                              (click)="ModelPrice.show(shippingRequestId, null, null, null, false, false, undefined, true, record.id); close()"
+                              class="btn btn-outline-primary btn-elevate-hover mt-2 w-100"
+                            >
+                              {{ l('SendPriceOnBehalfCarrier') }}
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </span>
                 </td>
               </tr>
@@ -139,3 +153,5 @@
     </div>
   </div>
 </div>
+
+<price-offer-model #ModelPrice [Channel]="1"></price-offer-model>

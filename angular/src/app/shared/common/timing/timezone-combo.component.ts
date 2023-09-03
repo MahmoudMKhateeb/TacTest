@@ -5,9 +5,16 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
 
 @Component({
   selector: 'timezone-combo',
-  template: ` <select class="form-control" [formControl]="selectedTimeZone">
-    <option *ngFor="let timeZone of timeZones" [value]="timeZone.value">{{ timeZone.name }}</option>
-  </select>`,
+  template: ` <dx-select-box
+      [formControl]="selectedTimeZone"
+      [dataSource]="timeZones"
+      [searchEnabled]="true"
+      displayExpr="name"
+      valueExpr="value"
+    ></dx-select-box>
+    <!--  <select class="form-control" [formControl]="selectedTimeZone">-->
+    <!--    <option *ngFor="let timeZone of timeZones" [value]="timeZone.value">{{ timeZone.name }}</option>-->
+    <!--  </select>-->`,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

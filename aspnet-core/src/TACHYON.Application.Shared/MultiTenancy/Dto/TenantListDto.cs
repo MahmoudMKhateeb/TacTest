@@ -30,8 +30,6 @@ namespace TACHYON.MultiTenancy.Dto
         public bool IsInTrialPeriod { get; set; }
         public string ContractNumber { get; set; }
 
-        //
-
         public virtual string companyName { get; set; }
 
         public virtual string MobileNo { get; set; }
@@ -40,5 +38,12 @@ namespace TACHYON.MultiTenancy.Dto
         public decimal ReservedBalance { get; set; } = 0;
         public decimal CreditBalance { get; set; } = 0;
         public decimal Rate { get; set; }
+        public string MoiNumber { get; set; }
+        public int? InsuranceCoverage { get; set; }
+        public int? ValueOfGoods { get; set; }
+        public string CountryName { get; set; }
+        public string CityName { get; set; }
+        public string Address { get; set; }
+        public string DocumentStatus { get; set; }
     }
 }

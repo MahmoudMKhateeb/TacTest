@@ -11,7 +11,7 @@
         >
           {{ l('OnDemand') }}
         </button>
-        <button (click)="ModelSearch.show(searchInput)" class="btn btn-secondary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
 
@@ -71,7 +71,7 @@
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
               >
               </dxi-column>
-              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
+              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}" format="fixedPoint"></dxi-column>
               <dxi-column *ngIf="isTachyonDealer" dataField="confirmationDate" caption="{{ l('ConfirmationDate') }}" dataType="date"></dxi-column>
               <dxi-column *ngIf="isTachyonDealer" dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
               <dxi-column
@@ -135,38 +135,12 @@
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
                     </li>
                     <li>
-                      <a
-                        class="dropdown-item"
-                        *ngIf="options.data.channel == InvoiceChannelEnum.Trip || options.data.channel == InvoiceChannelEnum.SaasTrip"
-                        (click)="downloadReport(options.data.id)"
-                        >{{ l('downloadInvoice') }}</a
-                      >
+                      <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('downloadInvoice') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" (click)="ExportItemToExcel(options.data.id)">{{ l('ExportToExcel') }}</a>
                     </li>
-                    <li>
-                      <a class="dropdown-item" *ngIf="options.data.channel == 3" (click)="downloadPenaltyReport(options.data.id)">{{
-                        l('downloadPenaltyInvoice')
-                      }}</a>
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        *ngIf="options.data.channel == InvoiceChannelEnum.DynamicInvoice"
-                        (click)="downloadDynamicReport(options.data.id)"
-                        >{{ l('downloadDynamicInvoice') }}</a
-                      >
-                    </li>
 
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        *ngIf="options.data.channel == InvoiceChannelEnum.Dedicated"
-                        (click)="downloadDedicatedReport(options.data.id)"
-                        >{{ l('downloadDedicatedInvoice') }}</a
-                      >
-                    </li>
                     <li *ngIf="!options.data.isPaid">
                       <a
                         class="dropdown-item"

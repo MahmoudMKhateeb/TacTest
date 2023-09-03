@@ -206,7 +206,8 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       });
   }
 
-  search(): void {
+  search(input: TrackingSearchInput): void {
+    this.searchInput = { ...input };
     if (!this.showNormalView) {
       const searchInput = { ...this.searchInput };
       this.searchInput = null;
@@ -291,7 +292,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this._shippingRequestDriverServiceProxy.reset(tripId).subscribe(() => {
           this.loadingTripId = null;
           this.notify.success(this.l('SuccessfullyReseated'));
-          this.search();
+          this.search(this.searchInput);
         });
       } //end of if
     });

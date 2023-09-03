@@ -27,6 +27,7 @@
               [columnAutoWidth]="true"
               [columnWidth]="100"
               keyExpr="id"
+              (onExporting)="onExporting($event)"
             >
               <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
               <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
@@ -39,13 +40,14 @@
 
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
-
+              <dxo-export *ngIf="isEnabled('App.ExportFunctionality')" [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
               <dxi-column
                 cellTemplate="cellTemplateActions"
                 [fixed]="true"
                 [allowFiltering]="false"
                 [allowSorting]="false"
                 [allowEditing]="false"
+                [allowExporting]="false"
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>

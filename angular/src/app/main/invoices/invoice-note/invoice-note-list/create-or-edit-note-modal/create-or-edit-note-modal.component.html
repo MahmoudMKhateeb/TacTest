@@ -48,18 +48,30 @@
             <div class="col-lg-12">
               <label>{{ l('NoteType') }} <span class="required-fileds">*</span></label>
               <div>
-                <select
-                  #NoteType="ngModel"
-                  class="form-control"
-                  [(ngModel)]="form.noteType"
+                <dx-select-box
+                  id="noteType"
                   name="noteType"
-                  [class.is-valid]="NoteType.valid && (NoteType.dirty || NoteType.touched)"
-                  [class.is-invalid]="NoteType.invalid && (NoteType.dirty || NoteType.touched)"
+                  [(value)]="form.noteType"
+                  [dataSource]="noteTypes"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
                   required
+                  placeholder="{{ l('SelectNoteType') }}"
                 >
-                  <option value="undefined" disabled selected>{{ l('SelectNoteType') }}</option>
-                  <option *ngFor="let item of noteTypes" value="{{ item.key }}">{{ item.value }}</option>
-                </select>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  #NoteType="ngModel"-->
+                <!--                  class="form-control"-->
+                <!--                  [(ngModel)]="form.noteType"-->
+                <!--                  name="noteType"-->
+                <!--                  [class.is-valid]="NoteType.valid && (NoteType.dirty || NoteType.touched)"-->
+                <!--                  [class.is-invalid]="NoteType.invalid && (NoteType.dirty || NoteType.touched)"-->
+                <!--                  required-->
+                <!--                >-->
+                <!--                  <option value="undefined" disabled selected>{{ l('SelectNoteType') }}</option>-->
+                <!--                  <option *ngFor="let item of noteTypes" value="{{ item.key }}">{{ item.value }}</option>-->
+                <!--                </select>-->
               </div>
             </div>
             <div class="col-lg-12 mt-4">
@@ -86,55 +98,94 @@
             <div class="col-lg-12 mt-4">
               <label>{{ l('InvoiceType') }} <span class="required-fileds">*</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
-                <select #invoiceType="ngModel" class="form-control" [(ngModel)]="InvoiceType" name="InvoiceType" (change)="handleCompanyChange()">
-                  <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
-                  <option value="1">{{ l('Invoice') }}</option>
-                  <option value="2">{{ l('CarrierInvoice') }}</option>
-                </select>
+                <dx-select-box
+                  id="InvoiceType"
+                  name="InvoiceType"
+                  [(value)]="InvoiceType"
+                  [dataSource]="[
+                    { name: l('Invoice'), value: 1 },
+                    { name: l('CarrierInvoice'), value: 2 }
+                  ]"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="handleCompanyChange()"
+                  displayExpr="name"
+                  valueExpr="value"
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                <select #invoiceType="ngModel" class="form-control" [(ngModel)]="InvoiceType" name="InvoiceType" (change)="handleCompanyChange()">-->
+                <!--                  &lt;!&ndash;                  <option value="">{{ l('SelectInvoiceReference') }}</option>&ndash;&gt;-->
+                <!--                  <option value="1">{{ l('Invoice') }}</option>-->
+                <!--                  <option value="2">{{ l('CarrierInvoice') }}</option>-->
+                <!--                </select>-->
               </div>
             </div>
             <div *ngIf="InvoiceType == 1" class="col-lg-12 mt-4">
               <label>{{ l('InvoiceReferenceNumber') }} </label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
-                <select
-                  #invoiceNumber="ngModel"
-                  class="form-control"
-                  [(ngModel)]="form.invoiceNumber"
+                <dx-select-box
                   name="invoiceNumber"
-                  [class.is-valid]="invoiceNumber.valid && (invoiceNumber.dirty || invoiceNumber.touched)"
-                  [class.is-invalid]="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"
-                  (change)="getAllWaybillByInvoiceId()"
+                  [(value)]="form.invoiceNumber"
+                  [dataSource]="allInvoices"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="getAllWaybillByInvoiceId()"
+                  displayExpr="refreanceNumber"
+                  valueExpr="refreanceNumber"
+                  required
+                  placeholder="{{ l('selectInvoice') }}"
                 >
-                  <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
-                  <option [ngValue]="null" disabled selected>{{ l('selectInvoice') }}</option>
-                  <option *ngFor="let item of allInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>
-                </select>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  #invoiceNumber="ngModel"-->
+                <!--                  class="form-control"-->
+                <!--                  [(ngModel)]="form.invoiceNumber"-->
+                <!--                  name="invoiceNumber"-->
+                <!--                  [class.is-valid]="invoiceNumber.valid && (invoiceNumber.dirty || invoiceNumber.touched)"-->
+                <!--                  [class.is-invalid]="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"-->
+                <!--                  (change)="getAllWaybillByInvoiceId()"-->
+                <!--                >-->
+                <!--                  &lt;!&ndash;                  <option value="">{{ l('SelectInvoiceReference') }}</option>&ndash;&gt;-->
+                <!--                  <option [ngValue]="null" disabled selected>{{ l('selectInvoice') }}</option>-->
+                <!--                  <option *ngFor="let item of allInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>-->
+                <!--                </select>-->
               </div>
             </div>
 
             <div *ngIf="InvoiceType == 2" class="col-lg-12 mt-4">
               <label>{{ l('CarrierInvoiceReferenceNumber') }} </label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
-                <select
-                  #invoiceNumber="ngModel"
-                  class="form-control"
-                  [(ngModel)]="form.submitInvoiceNumber"
+                <dx-select-box
                   name="invoiceNumber"
-                  [class.is-valid]="invoiceNumber.valid && (invoiceNumber.dirty || invoiceNumber.touched)"
-                  [class.is-invalid]="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"
-                  (change)="getAllWaybillByInvoiceId()"
+                  [(value)]="form.submitInvoiceNumber"
+                  [dataSource]="allSubmitInvoices"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="getAllWaybillByInvoiceId()"
+                  displayExpr="refreanceNumber"
+                  valueExpr="refreanceNumber"
+                  required
+                  placeholder="{{ l('selectInvoice') }}"
                 >
-                  <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
-                  <option [ngValue]="null" disabled selected>{{ l('selectInvoice') }}</option>
-                  <option *ngFor="let item of allSubmitInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>
-                </select>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  #invoiceNumber="ngModel"-->
+                <!--                  class="form-control"-->
+                <!--                  [(ngModel)]="form.submitInvoiceNumber"-->
+                <!--                  name="invoiceNumber"-->
+                <!--                  [class.is-valid]="invoiceNumber.valid && (invoiceNumber.dirty || invoiceNumber.touched)"-->
+                <!--                  [class.is-invalid]="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"-->
+                <!--                  (change)="getAllWaybillByInvoiceId()"-->
+                <!--                >-->
+                <!--                  &lt;!&ndash;                  <option value="">{{ l('SelectInvoiceReference') }}</option>&ndash;&gt;-->
+                <!--                  <option [ngValue]="null" disabled selected>{{ l('selectInvoice') }}</option>-->
+                <!--                  <option *ngFor="let item of allSubmitInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>-->
+                <!--                </select>-->
               </div>
             </div>
 
             <div class="form-check checkClass">
               <input
                 class="form-check-input"
-                (change)="calculatePrice(newAttribute.price); getAllWaybillByInvoiceId()"
+                (change)="IncludeTaxChange(newAttribute.price)"
                 name="IsTaxVatIncluded"
                 checked
                 [(ngModel)]="form.isTaxVatIncluded"
@@ -181,7 +232,7 @@
                           id="NotePrice{{ i }}"
                           [(ngModel)]="item.price"
                           (change)="calculator(item.price, item.taxVat, i)"
-                          (keypress)="numberOnly($event)"
+                          (keypress)="validateIsDecimal($event)"
                           [required]="true"
                           class="form-control"
                           name="NotePrice{{ i }}"
@@ -231,6 +282,7 @@
                         <input type="checkbox" [(ngModel)]="field.checked" name="field.id{{ i }}" id="field.id{{ i }}" value="field.checked" hidden />
                         <input
                           [(ngModel)]="field.price"
+                          (keypress)="validateIsDecimal($event)"
                           #NewPrice="ngModel"
                           disabled
                           class="form-control"

@@ -60,7 +60,13 @@
             </li>
           </ul>
         </div>
-        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button
+          *ngIf="Channel != PriceOfferChannelEnum.DirectRequest && Channel != PriceOfferChannelEnum.MarketPlace"
+          (click)="showAsTable()"
+          class="btn btn-dark"
+        >
+          <i class="fas fa-table"></i> {{ l('ShowAsTable') }}
+        </button>
 
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
@@ -90,8 +96,17 @@
           </ul>
         </div>
 
-        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button
+          *ngIf="Channel != PriceOfferChannelEnum.DirectRequest && Channel != PriceOfferChannelEnum.MarketPlace"
+          (click)="showAsTable()"
+          class="btn btn-dark"
+        >
+          <i class="fas fa-table"></i> {{ l('ShowAsTable') }}
+        </button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+      <div role="actions" *ngIf="!appSession.tenantId && Channel != PriceOfferChannelEnum.MarketPlace">
+        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
       </div>
     </sub-header>
     <!--end::Subheader-->
@@ -765,9 +780,9 @@
 </div>
 <shippingrequests-details-model #Model [Channel]="Channel"></shippingrequests-details-model>
 <price-offer-list-model [Channel]="Channel" #ModelOffer (valueUpdated)="refresh()"></price-offer-list-model>
-<shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
+<shipping-request-card-search-model #ModelSearch (modalsearch)="search($event)"></shipping-request-card-search-model>
 <shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
-<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
+<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search(searchInput)" (modalRefresh)="LoadData()"></price-offer-view-model>
 <load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
 <assign-trucks-and-drivers-modal #assignTrucksAndDriversModal></assign-trucks-and-drivers-modal>
 <replace-trucks-and-drivers-modal #replaceTrucksAndDriversModal></replace-trucks-and-drivers-modal>

@@ -25,17 +25,40 @@
             <div *ngIf="!documentFile.id" class="form-group col-md-6">
               <div>
                 <label> {{ l('SelectFile') }}</label>
-                <select
+                <dx-select-box
                   id="DocumentType"
-                  [(ngModel)]="documentFile.documentTypeId"
-                  (change)="chooseDocumentToBeCreated($event.target.value)"
                   name="selectedDoctumentTypeDto"
-                  class="form-control"
+                  [(value)]="documentFile.documentTypeId"
+                  [dataSource]="CreateOrEditDocumentFileDtoList"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="chooseDocumentToBeCreated($event?.selectedItem?.documentTypeDto?.id)"
+                  displayExpr="documentTypeDto.displayName"
+                  valueExpr="documentTypeId"
+                  placeholder="{{ l('Select') }}"
+                  fieldTemplate="field"
                 >
-                  <option *ngFor="let docFile of CreateOrEditDocumentFileDtoList" [value]="docFile.documentTypeDto.id">
-                    {{ docFile.documentTypeDto.displayName | localize }}
-                  </option>
-                </select>
+                  <div *dxTemplate="let data of 'field'">
+                    <div class="custom-item">
+                      <dx-text-box class="product-name" [value]="data && (data.documentTypeDto.displayName | localize)"></dx-text-box>
+                    </div>
+                  </div>
+                  <div *dxTemplate="let data of 'item'">
+                    <div class="custom-item">
+                      {{ data?.documentTypeDto?.displayName | localize }}
+                    </div>
+                  </div>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  id="DocumentType"-->
+                <!--                  [(ngModel)]="documentFile.documentTypeId"-->
+                <!--                  (change)="chooseDocumentToBeCreated($event.target.value)"-->
+                <!--                  name="selectedDoctumentTypeDto"-->
+                <!--                  class="form-control"-->
+                <!--                >-->
+                <!--                  <option *ngFor="let docFile of CreateOrEditDocumentFileDtoList" [value]="docFile.documentTypeDto.id">-->
+                <!--                    {{ docFile.documentTypeDto.displayName | localize }}-->
+                <!--                  </option>-->
+                <!--                </select>-->
               </div>
             </div>
             <div class="form-group col-md-6">

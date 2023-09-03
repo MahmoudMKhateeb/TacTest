@@ -20,6 +20,25 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
     console.log('AppCarrierNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
+      // start of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
+      //TODO: Need Permission
+      new AppMenuItem(
+        'Reporting',
+        'Pages.Reports',
+        'report.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('CreateReport', 'Pages.Reports.Create', '', '/app/main/reporting/generate-report'),
+          new AppMenuItem('MyReports', '', '', '/app/main/reporting/all-reports'),
+        ]
+        // undefined,
+        // undefined,
+        // () => !this.isEnabled('App.TachyonDealer')
+      ),
+      //end of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
@@ -29,10 +48,21 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         '/app/main/comingSoon',
         [],
         [
-          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
-          new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.Carrier')
+          new AppMenuItem(
+            'MyShippingRequests',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/shippingRequests',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            }
           ),
+          // new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
+          //   this.isEnabled('App.Carrier')
+          // ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',
@@ -47,8 +77,18 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
           ),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.Carrier')
+          new AppMenuItem(
+            'ShipmentTracking',
+            'Pages',
+            '',
+            '/app/main/tracking/shipmentTracking',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            },
+            () => this.isEnabled('App.Carrier')
           ),
         ],
         undefined,

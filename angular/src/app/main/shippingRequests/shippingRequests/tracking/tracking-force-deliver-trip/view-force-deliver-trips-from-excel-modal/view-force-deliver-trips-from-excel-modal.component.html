@@ -1,0 +1,86 @@
+<div
+  bsModal
+  #ViewForceDeliverTripsFromExcelModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl lgWidth2">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ 'BulkDeliverTripsDetails' | localize }}</span>
+        </p>
+        <div class="card-toolbar"></div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-6"></div>
+          <div class="col-lg-12 mt-4">
+            <div class="row align-items-center">
+              <div [busyIf]="primengTableHelper.isLoading" class="table primeng-datatable-container col-12">
+                <dx-data-grid
+                  id="gridContainer"
+                  [dataSource]="tripsFromExcel"
+                  [columnAutoWidth]="true"
+                  [wordWrapEnabled]="true"
+                  [showBorders]="true"
+                  (onCellHoverChanged)="onCellHoverChanged($event)"
+                >
+                  <dxi-column dataField="waybillNumber" [caption]="('SubWaybill' | localize) + '/' + ('MasterWaybillNumber' | localize)"></dxi-column>
+                  <dxi-column dataField="startMovingToLoadingLocation" [caption]="'StartedMovingToLoadingLocation' | localize"></dxi-column>
+                  <dxi-column dataField="arriveToLoadingLocation" [caption]="'ArriveToLoadingLocation' | localize"></dxi-column>
+                  <dxi-column dataField="startLoading" [caption]="'StartLoading' | localize"></dxi-column>
+                  <dxi-column dataField="finishLoading" [caption]="'FinishLoading' | localize"></dxi-column>
+                  <dxi-column dataField="startMovingToOffloadingLocation" [caption]="'StartedMovingToOfLoadingLocation' | localize"></dxi-column>
+                  <dxi-column dataField="arriveToOffloadingLocation" [caption]="'ArrivedToDestination' | localize"></dxi-column>
+                  <dxi-column dataField="startOffloading" [caption]="'StartOffloading' | localize"></dxi-column>
+                  <dxi-column dataField="finishOffLoading" [caption]="'FinishOffLoadShipment' | localize"></dxi-column>
+                  <dxi-column dataField="recieverConfirmed" [caption]="'ReceiverConfirmed' | localize"></dxi-column>
+                  <dxi-column
+                    dataField="exception"
+                    [caption]="'HasErrors' | localize"
+                    cellTemplate="errorsCellTemplate"
+                    alignment="center"
+                  ></dxi-column>
+
+                  <div *dxTemplate="let item of 'errorsCellTemplate'">
+                    <div *ngIf="item.data.exception">
+                      <i class="fa fa-2x fa-exclamation-circle text-danger"></i>
+                    </div>
+                  </div>
+                </dx-data-grid>
+                <dx-popover #popOver [(target)]="popoverTarget" position="{{ isRtl ? 'right' : 'left' }}" [width]="300">
+                  <div *dxTemplate="let data of 'content'">
+                    <span class="required-fileds font-weight-bolder"> {{ l('Exception') }}: </span><span>{{ popOverText }}</span>
+                  </div>
+                </dx-popover>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+
+        <button type="button" class="btn btn-light font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+        <button
+          type="submit"
+          (click)="save()"
+          class="btn btn-primary font-weight-bold"
+          [disabled]="tripsFromExcel ? checkImportedList(tripsFromExcel) : false"
+          [disabled]="saving"
+          [buttonBusy]="saving"
+          [busyText]="l('SavingWithThreeDot')"
+        >
+          <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+        </button>
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,7 @@
         <div class="w-100 text-center gutter-b">
           <img class="new-price-offers-img" src="assets/SVG/New_price_offer.svg" alt="" />
         </div>
-        <div appMakeScrollable class="overflow-auto">
+        <div appMakeScrollable class="overflow-auto" [cssClassSelector]="'overflow-auto'">
           <div class="d-flex justify-content-between mb-4 px-4 clickable-item" *ngFor="let offer of newOffers" (click)="goToPriceOffer(offer)">
             <div>
               {{ offer.referenceNumber }}
@@ -17,6 +17,11 @@
             <div>
               <small>{{ 'ChatMessage_From' | localize }}</small
               >&nbsp;&nbsp;<b>{{ offer.companyName }}</b>
+            </div>
+            <div class="flex-grow-2 border-bottom-dashed mx-4"></div>
+            <div>
+              <small>{{ 'On' | localize }}</small
+              >&nbsp;&nbsp;<b>{{ offer.creationTime | momentFormat: 'DD/MM/YYYY' }}</b>
             </div>
           </div>
         </div>

@@ -361,6 +361,11 @@ import { DirectTripsComponent } from '@app/main/direct-trips/direct-trips.compon
           },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: 'directShipments', component: DirectTripsComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
+          {
+            path: 'reporting',
+            loadChildren: () => import('../main/reporting/reporting.module').then((m) => m.ReportingModule), //Lazy load main module
+            data: { preload: true },
+          },
           //TODO:// to be removed after menu Structure work is complete
           //
           { path: 'page-not-found', component: ComingSoonComponent },

@@ -127,7 +127,7 @@ namespace TACHYON.Invoices.ActorInvoices
                     TruckType = trip.AssignedTruckFk.TrucksTypeFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName,
                     Source = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.OriginCityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.OriginFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
                     Destination = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.DestinationCityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
-                    DateWork = trip.EndWorking.HasValue ? trip.EndWorking.Value.ToString("dd MMM, yyyy") : string.Empty,
+                    DateWork = trip.EndWorking.HasValue ? trip.EndWorking.Value.ToString("dd MMM, yyyy")  : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
                     Remarks = trip.ShippingRequestId.HasValue ? (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops
                         ? LocalizationSource.GetString("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops)
                         : string.Empty) : (trip.RouteType == ShippingRequestRouteType.MultipleDrops

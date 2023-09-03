@@ -33,8 +33,8 @@
               </dxo-summary>
 
               <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
-              <dxi-column *ngIf="!appSession.tenantId" dataField="submitterTenatTenancyName" caption="{{ l('SubmitterTenant') }}"></dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="date"></dxi-column>
+              <dxi-column *ngIf="isTachyonDealerOrHost" dataField="submitterTenatTenancyName" caption="{{ l('SubmitterTenant') }}"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="date" [format]="'dd/MM/yyyy'"></dxi-column>
               <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
               <dxi-column
                 dataField="expirationDate"
@@ -48,8 +48,8 @@
               <dxi-column dataField="number" caption="{{ l('Number') }}"></dxi-column>
 
               <div *dxTemplate="let data of 'cellTemplateStatus'">
-                <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | date }}</span>
-                <span *ngIf="data.value > todayMoment"> {{ data.value | date }}</span>
+                <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | momentFormat: 'DD/MM/YYYY' }}</span>
+                <span *ngIf="data.value > todayMoment"> {{ data.value | momentFormat: 'DD/MM/YYYY' }}</span>
               </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">
@@ -77,9 +77,12 @@
 
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(options.data, entityType, isHost)">{{
-                        l('ViewDetails')
-                      }}</a>
+                      <a
+                        href="javascript:;"
+                        class="dropdown-item"
+                        (click)="viewDocumentFileModal.show(options.data, entityType, isTachyonDealerOrHost)"
+                        >{{ l('ViewDetails') }}</a
+                      >
                     </li>
                     <li>
                       <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data)">{{ l('Download') }}</a>
@@ -101,7 +104,7 @@
                     <li>
                       <a
                         href="javascript:;"
-                        *ngIf="!options.data.isAccepted && isHost"
+                        *ngIf="!options.data.isAccepted && isTachyonDealerOrHost"
                         class="dropdown-item"
                         (click)="acceptDocumentFile(options.data.id)"
                         >{{ l('Accept') }}</a
@@ -110,7 +113,7 @@
                     <li>
                       <a
                         href="javascript:;"
-                        *ngIf="!options.data.isRejected && isHost"
+                        *ngIf="!options.data.isRejected && isTachyonDealerOrHost"
                         class="dropdown-item"
                         (click)="
                           rejectionReasonModal.show(options.data.id, options.data.documentTypeDisplayName, options.data.submitterTenatTenancyName)
@@ -122,7 +125,7 @@
                     <li>
                       <a
                         href="javascript:;"
-                        *ngIf="!options.data.isAccepted && options.data.isRejected && isHost"
+                        *ngIf="!options.data.isAccepted && options.data.isRejected && isTachyonDealerOrHost"
                         class="dropdown-item"
                         (click)="viewRejectionReasonModal.show(options.data.documentTypeDisplayName, options.data.rejectionReason)"
                         >{{ l('ViewRejectionReason') }}</a

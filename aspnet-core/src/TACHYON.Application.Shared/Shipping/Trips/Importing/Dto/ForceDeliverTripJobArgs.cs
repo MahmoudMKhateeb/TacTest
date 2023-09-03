@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Abp;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using TACHYON.Tracking.Dto;
 
 namespace TACHYON.Shipping.Trips.Importing.Dto
 {
-    [Serializable]
     public class ForceDeliverTripJobArgs
     {
-        public Guid BinaryObjectId { get; set; }
+        public List<ImportTripTransactionFromExcelDto> importedTripDeliveryDetails { get; set; }
+        public UserIdentifier userIdentifier { get; set; }
 
-        public long RequestedByUserId { get; set; }
-        
-        public int? RequestedByTenantId { get; set; }
-        
     }
 }

@@ -19,6 +19,10 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'Dashboards.svg', '/app/main/dashboard'),
+      // start of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
+
+      // ---------------------------------------------------------------------------------------------------------------------
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
@@ -39,17 +43,21 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.TachyonDealer')
           ),
-          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
-            'Marketplace',
-            'Pages.ShippingRequests.Marketplace',
+            'MyShippingRequests',
+            'Pages.ShippingRequests',
             '',
-            '/app/main/marketplace/list',
+            '/app/main/shippingRequests/shippingRequests',
             undefined,
             undefined,
             undefined,
-            undefined
+            {
+              showType: 1,
+            }
           ),
+          new AppMenuItem('ShipmentTracking', 'Pages.shipment.Tracking', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, {
+            showType: 1,
+          }),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',
@@ -61,21 +69,28 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.SaveTemplateFeature')
           ),
-          new AppMenuItem(
-            'ShipmentTracking',
-            'Pages.shipment.Tracking',
-            '',
-            '/app/main/tracking/shipmentTracking',
-            undefined,
-            undefined,
-            undefined,
-            undefined
-          ),
         ],
         undefined,
         undefined
       ),
       // end of Operations
+      //  ---------------------------------------------------------------------------------------------------------------------
+      // start of TMS
+      new AppMenuItem(
+        'TMS',
+        '',
+        '8 TMS Managment.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('Trucks', 'Pages.Trucks', '', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined),
+          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
+          new AppMenuItem('VasPrices', 'Pages.VasPrices', '', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined),
+        ],
+        undefined,
+        undefined
+      ),
+      // end of TMS
       //  ---------------------------------------------------------------------------------------------------------------------
       //Start Of AddressBook "Facilities Management"
       new AppMenuItem(
@@ -94,22 +109,6 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         undefined
       ),
       //end  Of AddressBook  "Facilities Management"
-      //  ---------------------------------------------------------------------------------------------------------------------
-      // start of TMS
-      new AppMenuItem(
-        'TMS',
-        '',
-        '8 TMS Managment.svg',
-        '',
-        [],
-        [
-          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
-          new AppMenuItem('Trucks', 'Pages.Trucks', '', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined),
-        ],
-        undefined,
-        undefined
-      ),
-      // end of TMS
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Invoices
       new AppMenuItem(

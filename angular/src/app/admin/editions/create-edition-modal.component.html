@@ -225,16 +225,28 @@
                   </label>
                 </div>
                 <div class="form-group edition-list" *ngIf="expireAction == expireActionEnum.AssignToAnotherEdition">
-                  <select
-                    name="expiringEdition"
-                    class="form-control"
-                    [(ngModel)]="edition.edition.expiringEditionId"
+                  <dx-select-box
+                    name="edition.edition.expiringEditionId"
+                    [(value)]="edition.edition.expiringEditionId"
+                    [dataSource]="expiringEditions"
+                    [searchEnabled]="true"
+                    displayExpr="displayText"
+                    valueExpr="value"
+                    required
                     [attr.min]="expireAction == expireActionEnum.AssignToAnotherEdition ? 1 : 0"
+                    placeholder="{{ l('Select') }}"
                   >
-                    <option *ngFor="let expiringEdition of expiringEditions" [value]="expiringEdition.value">
-                      {{ expiringEdition.displayText }}
-                    </option>
-                  </select>
+                  </dx-select-box>
+                  <!--                  <select-->
+                  <!--                    name="expiringEdition"-->
+                  <!--                    class="form-control"-->
+                  <!--                    [(ngModel)]="edition.edition.expiringEditionId"-->
+                  <!--                    [attr.min]="expireAction == expireActionEnum.AssignToAnotherEdition ? 1 : 0"-->
+                  <!--                  >-->
+                  <!--                    <option *ngFor="let expiringEdition of expiringEditions" [value]="expiringEdition.value">{{-->
+                  <!--                      expiringEdition.displayText-->
+                  <!--                    }}</option>-->
+                  <!--                  </select>-->
                 </div>
               </div>
             </tab>

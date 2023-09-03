@@ -939,6 +939,33 @@ namespace TACHYON.Authorization
                 L("DirectShipmentTrackingPermission"),
                 featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
 
+            #region Reporting
+
+           var reportPermission = pages.CreateChildPermission(AppPermissions.Pages_Reports,
+                L("ReportsPermission"), multiTenancySides: MultiTenancySides.Tenant ,
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Reporting));
+           
+           reportPermission.CreateChildPermission(AppPermissions.Pages_Reports_Create, L("CreateReportPermission"));
+           
+           reportPermission.CreateChildPermission(AppPermissions.Pages_Reports_Delete, L("DeleteReportPermission"));
+
+           var reportDefinitionPermission = pages.CreateChildPermission(AppPermissions.Pages_ReportDefinitions,
+               L("ReportDefinitionsPermission"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
+           
+           reportDefinitionPermission.CreateChildPermission(AppPermissions.Pages_ReportDefinitions_Create,
+               L("CreateReportDefinitionPermission"));
+           
+           reportDefinitionPermission.CreateChildPermission(AppPermissions.Pages_ReportDefinitions_Clone,
+               L("CloneReportDefinitionPermission"));
+           
+           reportDefinitionPermission.CreateChildPermission(AppPermissions.Pages_ReportDefinitions_Activate,
+               L("ActivateReportDefinitionPermission"));
+           
+           reportDefinitionPermission.CreateChildPermission(AppPermissions.Pages_ReportDefinitions_Deactivate,
+               L("DeactivateReportDefinitionPermission"));
+
+           #endregion
         }
 
         private static ILocalizableString L(string name)

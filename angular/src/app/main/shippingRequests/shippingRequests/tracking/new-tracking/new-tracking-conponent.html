@@ -190,9 +190,9 @@
                                 <a href="#" class="text-dark-75 text-hover-primary font-weight-bold"
                                   >{{ point.pickingType === pickingTypeEnum.Pickup ? l('Pickup') : l('Drop') }}</a
                                 >
-                                <span class="text-muted ml-2" *ngIf="point.startTime">{{point.startTime | momentFormat: 'L'}}</span>
+                                <span class="text-muted ml-2" *ngIf="point.startTime">{{point.startTime | momentFormat: 'DD/MM/YYYY'}}</span>
                                 <span *ngIf="point.endTime"> -</span>
-                                <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'L'}}</span>
+                                <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'DD/MM/YYYY'}}</span>
                               </div>
 
                               <div class="btn-group mt-6" *ngIf="trip.driver ">
@@ -246,6 +246,32 @@
                                       (click)="downloadPOD(pod)"
                                     >
                                       {{ pod.fileName | slice:0:20 }}{{ '...'}}
+                                    </button>
+                                  </div>
+                                </div>
+
+                                <div
+                                  class="d-inline-block"
+                                  ngbDropdown
+                                  *ngIf="point.isDeliveryNoteUploaded &&
+                                        (shippingType != ShippingTypeEnum.ImportPortMovements && shippingType != ShippingTypeEnum.ExportPortMovements)"
+                                >
+                                  <button
+                                    class="btn btn-sm btn-danger mx-2"
+                                    ngbDropdownToggle
+                                    [buttonBusy]="loadPodForPointId == point.id"
+                                    (click)="getDeliveryNoteListForPoint(point)"
+                                  >
+                                    {{l('DeliveryNote')}}
+                                  </button>
+                                  <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
+                                    <button
+                                      ngbDropdownItem
+                                      class="overflow-hidden"
+                                      *ngFor="let deliverNote of pointDeliveryNoteList; let x = index"
+                                      (click)="downloadPOD(deliverNote)"
+                                    >
+                                      {{ deliverNote.fileName | slice:0:20 }}{{ '...'}}
                                     </button>
                                   </div>
                                 </div>

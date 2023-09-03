@@ -9,7 +9,7 @@ import isEnabled = abp.features.isEnabled;
   encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent extends AppComponentBase {
-  dashboardName = DashboardCustomizationConst.dashboardNames.defaultTenantDashboard;
+  dashboardName = DashboardCustomizationConst.dashboardNames.defaultHostDashboard;
 
   constructor(injector: Injector) {
     super(injector);

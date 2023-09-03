@@ -1,0 +1,22 @@
+<div class="row d-flex justify-content-center h-100" [busyIf]="loading">
+  <div class="col-sm">
+    <!--begin::Card-->
+    <div class="card card-custom card-stretch ribbon ribbon-right border-bottom-5 border-bottom-dark">
+      <div class="card-header border-bottom-0 pl-4">
+        <div class="card-title">
+          <b>
+            {{ l('NumberOfTruckAggregationTrips') }}
+          </b>
+        </div>
+        <div class="ribbon-target bg-dark" style="bottom: 8%; right: -2px; font-size: 0.85em">{{ 'CurrentMonth' | localize }}</div>
+      </div>
+      <div class="card-body pt-0 pl-6 w-100 d-flex justify-content-center flex-column">
+        <div class="d-flex align-items-center">
+          <img style="background: #dc2434; padding: 8px; border-radius: 5px" width="55" src="assets/SVG/hashtag-red-bg.svg" alt="" />
+          <h1 class="ml-4 font-weight-bold">{{ tripsCount }}</h1>
+        </div>
+      </div>
+    </div>
+    <!--end::Card-->
+  </div>
+</div>

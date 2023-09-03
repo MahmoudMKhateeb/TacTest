@@ -264,22 +264,24 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
 
-        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(int? tenantId)
+        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(int? tenantId, int? actorId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_userRepository.GetAll()
-                .WhereIf(await IsTachyonDealer(), x=>x.TenantId == tenantId.Value)
+                .WhereIf(await IsTachyonDealer() && tenantId.HasValue, x=>x.TenantId == tenantId.Value)
+                .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
                 .Where(e => e.IsDriver == true)
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
                 .ToListAsync();
         }
 
-        public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long? truckTypeId, int? tenantId)
+        public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long? truckTypeId, int? tenantId, int? actorId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _truckRepository.GetAll()
-                .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
+                .WhereIf(await IsTachyonDealer() && tenantId.HasValue, x => x.TenantId == tenantId.Value)
                 .WhereIf(truckTypeId.HasValue , x => x.TrucksTypeId == truckTypeId)
+                .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
                 .Select(x => new GetAllTrucksWithDriversListDto
                 {
                     TruckName = x.GetDisplayName(),
@@ -331,7 +333,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<long?> GetDriverOrTruckForTripAssign(long? truckId, long? DriverUserId, long shippingRequestId)
         {
-            if (truckId == null && DriverUserId == null) throw new UserFriendlyException(L("EvenTruckOrDriverMustHaveValue"));
+            //if (truckId == null && DriverUserId == null) throw new UserFriendlyException(L("EvenTruckOrDriverMustHaveValue"));
             await DisableTenancyFiltersIfTachyonDealer();
             var dedicatedTruck= await _dedicatedShippingRequestTruckRepository.GetAll()
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)

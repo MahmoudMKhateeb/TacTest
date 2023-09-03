@@ -1167,6 +1167,14 @@ namespace TACHYON.Invoices
                 actorInvoiceDto.Logo = logoBytes;
             }
 
+            //stamp
+            if (invoice.Tenant.HasStamp())
+            {
+                var stamp = await _binaryObjectManager.GetOrNullAsync(invoice.Tenant.StampId.Value);
+                byte[] stampBytes = stamp.Bytes;
+                actorInvoiceDto.Stamp = stampBytes;
+            }
+
 
 
             //broker name 

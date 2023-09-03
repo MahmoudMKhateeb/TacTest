@@ -303,7 +303,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   checkIfIsEmailAvailable() {
-    this._userService.checkIfEmailisAvailable(this.user.emailAddress).subscribe((result) => {
+    this._userService.checkIfEmailisAvailable(this.user.emailAddress, this.user.id).subscribe((result) => {
       this.isEmailAvailable = result;
     });
   }

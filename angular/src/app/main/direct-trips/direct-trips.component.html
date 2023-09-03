@@ -109,12 +109,13 @@
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <div class="row align-items-center">
+        <div class="card-body overflow-hidden">
+          <div class="row align-items-center overflow-hidden">
             <dx-data-grid
               style="height: 45vw"
               #grid
               id="dataGrid"
+              class="overflow-hidden"
               [dataSource]="dataSource"
               [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
@@ -126,6 +127,7 @@
               (onRowExpanded)="getForView($event)"
               (onRowCollapsed)="collapsedRow($event)"
               (onExporting)="onExporting($event)"
+              [columnAutoWidth]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
@@ -162,28 +164,33 @@
 
               <dxi-column dataField="driver" caption="{{ l('Driver') }}"></dxi-column>
               <dxi-column dataField="truck" caption="{{ l('PlateNumber') }}"></dxi-column>
-              <dxi-column dataField="routeType" caption="{{ l('RouteType') }}" cellTemplate="routeTypeTemplate"></dxi-column>
+              <dxi-column dataField="routeType" caption="{{ l('RouteType') }}" cellTemplate="routeTypeTemplate">
+                <dxo-lookup [dataSource]="routeTypes" displayExpr="value" valueExpr="key"> </dxo-lookup>
+              </dxi-column>
               <dxi-column dataField="numberOfDrops" caption="{{ l('NumberOfDrops') }}"></dxi-column>
               <dxi-column dataField="shipperActorName" caption="{{ l('Actor') + ' ' + l('Shipper') }}"></dxi-column>
               <dxi-column dataField="carrierActorName" caption="{{ l('Actor') + ' ' + l('Carrier') }}"></dxi-column>
               <dxi-column dataField="containerNumber" caption="{{ l('ContainerNumber') }}"></dxi-column>
-              <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
-
+              <dxi-column dataField="status" caption="{{ l('Status') }}" cellTemplate="statusTemplate">
+                <dxo-lookup [dataSource]="tripStatuses" displayExpr="value" valueExpr="key"> </dxo-lookup>
+              </dxi-column>
+              <div *dxTemplate="let d of 'routeTypeTemplate'">
+                <span> {{ ShippingRequestRouteType[d?.data?.routeType] | localize }} </span>
+              </div>
+              <div *dxTemplate="let d of 'statusTemplate'">
+                <span> {{ ShippingRequestTripStatus[d?.data?.status] | localize }} </span>
+              </div>
               <div *dxTemplate="let d of 'startTripDateTemplate'">
                 <span>
-                  {{ d?.data?.startTripDate | date: 'yyyy/MM/dd hh:mm a' }}
+                  {{ d?.data?.startTripDate | date: 'dd/MM/yyyy hh:mm a' }}
                 </span>
               </div>
               <div *dxTemplate="let d of 'endTripDateTemplate'">
                 <span>
-                  {{ d?.data?.endWorking | date: 'yyyy/MM/dd hh:mm a' }}
+                  {{ d?.data?.endWorking | date: 'dd/MM/yyyy hh:mm a' }}
                 </span>
               </div>
-              <div *dxTemplate="let d of 'routeTypeTemplate'">
-                <span>
-                  {{ d?.data?.routeType | localize }}
-                </span>
-              </div>
+
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <button class="btn btn-sm btn-primary mr-2" dropdownToggle>
