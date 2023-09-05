@@ -102,11 +102,11 @@ namespace TACHYON.Reports.ReportDataSources
                             : EmptyField,
                     InvoiceStatus = isShipper
                         ? LocalizationSource.GetString((x.Trip.IsShipperHaveInvoice
-                            ? "InvoiceIssued"
+                            ? "InvoiceIsIssued"
                             : "InvoiceNotIssued"))
                         : (isCarrier
                             ? LocalizationSource.GetString((x.Trip.IsCarrierHaveInvoice
-                                ? "InvoiceIssued"
+                                ? "InvoiceIsIssued"
                                 : "InvoiceNotIssued"))
                             : EmptyField),
                     InvoiceNumber = x.Invoice.InvoiceNumber.HasValue ? x.Invoice.InvoiceNumber.ToString() : EmptyField,
