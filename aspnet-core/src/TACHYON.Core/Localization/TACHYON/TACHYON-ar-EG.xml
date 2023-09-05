@@ -3238,5 +3238,7 @@
 	<text name="ReportBeingGeneratedInTheBackGround">جاري العمل على انشاء التقرير سيتم تحديث الصفحة فور الانتهاء ...</text>
 	<text name="MySelfInvoices">فواتيري</text>
 	<text name="MoiNumberWarningMsg">هذه الشركة ليس لديها الرقم الموحد للمنشأة ، يرجى تعبئته لتفعيل خاصية بيان.</text>
+	<text name="NewInvoice">فواتير جديدة</text>
+
 	</texts>
 </localizationDictionary>

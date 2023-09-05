@@ -157,7 +157,7 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
     this.chartOptions = {
       series: [
         {
-          name: this.isShipper || this.isTachyonDealerOrHost ? this.l('UnPaidInvoice') : this.l('Claimed'),
+          name: this.isShipper || this.isTachyonDealerOrHost ? this.l('NewInvoice') : this.l('Claimed'),
           data: unpaidSeries,
           color: this.isForActor ? this.dashboardCustomizationService.unpaidColor : '#dc2434',
         },
