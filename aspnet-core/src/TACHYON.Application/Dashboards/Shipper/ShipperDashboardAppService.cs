@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 using TACHYON.Authorization;
 using TACHYON.Cities;
 using TACHYON.Dashboards.Host.Dto;
@@ -126,7 +127,7 @@ namespace TACHYON.Dashboards.Shipper
             bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
 
             DisableTenancyFilters();
-            List<ShippingRequestTrip> shippingRequestTrips = _shippingRequestTripRepository.GetAll()
+            var shippingRequestTrips = _shippingRequestTripRepository.GetAll()
                 .AsNoTracking()
                 .Include(x => x.OriginFacilityFk)
                 .ThenInclude(x => x.CityFk)
@@ -138,10 +139,10 @@ namespace TACHYON.Dashboards.Shipper
                              (isBroker && (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
                                            trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)) || trip.CarrierTenantId == AbpSession.TenantId ||
                              trip.ShipperTenantId == AbpSession.TenantId) &&
-                            (!trip.ShippingRequestFk.CarrierActorId.HasValue && !trip.ShippingRequestFk.ShipperActorId.HasValue) &&
+                            ((!trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.CarrierActorFk.ActorType == ActorTypesEnum.MySelf) &&
+                             (!trip.ShippingRequestFk.ShipperActorId.HasValue || trip.ShippingRequestFk.ShipperActorFk.ActorType == ActorTypesEnum.MySelf)) &&
                             trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay && trip.StartTripDate.Date <= endOfCurrentWeek
-                )
-                .ToList();
+                );
 
             var trips = shippingRequestTrips
                 .Select
