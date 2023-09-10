@@ -13,8 +13,8 @@ export class DashboardCustomizationService {
     if (isCurrentUserBroker) {
       this.acceptedColor = '#000000';
       this.rejectedColor = '#DA1A32';
-      this.paidColor = '#1C1C1C';
-      this.unpaidColor = '#D7DADC';
+      this.paidColor = '#D7DADC';
+      this.unpaidColor = '#1C1C1C';
     } else {
       this.acceptedColor = 'rgba(105, 228, 94, 0.89)';
       this.rejectedColor = '#d82631';
