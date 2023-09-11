@@ -801,7 +801,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           (item.id as any) = Number(item.id);
           return item;
         });
-        this.step3Dto.capacityId = null;
+        const found = result.find((x) => x.id == this.step3Dto.capacityId.toString());
+        if (!found) {
+          this.step3Dto.capacityId = null;
+        }
         this.capacityLoading = false;
       });
     } else {
@@ -810,26 +813,33 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     }
   }
 
+  getTruckTypes(transportTypeId) {
+    this.truckTypeLoading = true;
+    this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
+      this.allTrucksTypes = result.map((item) => {
+        (item.id as any) = Number(item.id);
+        return item;
+      });
+      const selectedTransportType = this.allTransportTypes.find((item) => Number(item.id) === Number(transportTypeId));
+      if (
+        result.length > 0 &&
+        (selectedTransportType.displayName.toLowerCase() === 'other' || selectedTransportType.displayName.toLowerCase() === 'others')
+      ) {
+        this.step3Dto.trucksTypeId = Number(result[0].id);
+        this.trucksTypeSelectChange(this.step3Dto.trucksTypeId);
+      }
+      //check if truck type is already in the truck types list if not make it null
+      const isFound = result.find((x) => x.id == this.step3Dto.trucksTypeId.toString());
+      if (!isFound) {
+        this.step3Dto.trucksTypeId = null;
+      }
+      this.truckTypeLoading = false;
+    });
+  }
   transportTypeSelectChange(transportTypeId?: number) {
     if (transportTypeId > 0) {
       this.truckTypeLoading = true;
-      this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
-        this.allTrucksTypes = result.map((item) => {
-          (item.id as any) = Number(item.id);
-          return item;
-        });
-        const selectedTransportType = this.allTransportTypes.find((item) => Number(item.id) === Number(transportTypeId));
-        if (
-          result.length > 0 &&
-          (selectedTransportType.displayName.toLowerCase() === 'other' || selectedTransportType.displayName.toLowerCase() === 'others')
-        ) {
-          this.step3Dto.trucksTypeId = Number(result[0].id);
-          this.trucksTypeSelectChange(this.step3Dto.trucksTypeId);
-        } else {
-          this.step3Dto.trucksTypeId = null;
-        }
-        this.truckTypeLoading = false;
-      });
+      this.getTruckTypes(transportTypeId);
     } else {
       this.step3Dto.trucksTypeId = null;
       this.allTrucksTypes = null;
@@ -1042,7 +1052,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    */
   resetStep2Inputs() {
     this.step2Dto.shippingRequestDestinationCities = [];
-    this.step2Dto.originFacilityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    //this.step2Dto.originFacilityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
     this.clearValidation('originCity');
     this.clearValidation('destinationCity');
     this.clearValidation('originCountry');
@@ -1191,9 +1201,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.loadCitiesByCountryId(this.originCountry, 'source');
     let citiesToFill = parsedJson.shippingRequestDestinationCities?.map((item) => item.cityId);
     this.loadCitiesByCountryId(this.destinationCountry, 'destination', citiesToFill);
-    this.step2Dto.originCityId = parsedJson.originCityId;
-    this.step2Dto.originFacilityId = parsedJson.originFacilityId;
+    this.step2Dto.originCityId = parsedJson.originCityId?.toString();
+    this.step2Dto.originFacilityId = parsedJson.originFacilityId?.toString();
     this.step3Dto.init(parsedJson);
+    // this.step3Dto.trucksTypeId = parsedJson.trucksTypeId.toString();
     this.step3Dto.goodCategoryId = parsedJson.goodCategoryId;
     this.loadTruckandCapacityForEdit();
     this.step4Dto.init(parsedJson);
