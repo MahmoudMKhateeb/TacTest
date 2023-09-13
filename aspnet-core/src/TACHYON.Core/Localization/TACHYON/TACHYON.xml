@@ -3245,7 +3245,7 @@
     <text name="NextDocDueDate">Next Document expired Date</text>
 	<text name="NextInvoiceDueDate">Next Invoice Due Date</text>
 	<text name="withinA">with in</text>
-	<text name="PaidVsClaimedInvoices">Paid Vs Claimed Invoices</text>
+	<text name="PaidVsClaimedInvoices">Paid Vs Claimed Vs Rejected Invoices</text>
 	<text name="NewActorsThisMonth">New Actors This Month</text>
 	<text name="NumberOfActors">Number Of Actors</text>
 	<text name="MostActiveActorCarrier">Most Active Actor Carrier</text>
@@ -3255,8 +3255,8 @@
 	<text name="NumberOfActiveActors">Number Of Active Actors</text>
 	<text name="NumberOfNonActiveActors">Number Of Non Active Actors</text>
 	<text name="Shippers">Shippers</text>
-	<text name="NewInvoicesVsPaidInvoices">New Invoices Vs Paid Invoices - Shipper Client </text>
-	<text name="PaidInvoiceVsClaimedInvoice">Paid Invoice Vs Claimed Invoice - Carrier Client</text>
+	<text name="NewInvoicesVsPaidInvoices">New Invoices Vs Paid Invoices</text>
+	<text name="PaidInvoiceVsClaimedInvoice">Paid Vs Claimed Vs Rejected Invoices</text>
 	<text name="Claimed">Claimed</text>
 	<text name="Week">Week</text>
 	<text name="Sun">Sun</text>
