@@ -465,13 +465,18 @@ namespace TACHYON.Dashboards.Broker
 
             var claimed = await query
                 .Where(x => x.Status == SubmitInvoiceStatus.Claim).ToListAsync();
+
+            var rejected = await query
+               .Where(x => x.Status == SubmitInvoiceStatus.Rejected).ToListAsync();
             var outputDto = new GetCarrierInvoicesDetailsOutput();
 
             var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
             var groupedClaimed = claimed.GroupBy(x => x.CreationTime.Date.Month);
+            var groupedRejected = rejected.GroupBy(x => x.CreationTime.Date.Month);
 
             outputDto.PaidInvoices = new List<ChartCategoryPairedValuesDto>();
             outputDto.Claimed = new List<ChartCategoryPairedValuesDto>();
+            outputDto.Rejected = new List<ChartCategoryPairedValuesDto>();
 
             foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
             {
@@ -503,6 +508,21 @@ namespace TACHYON.Dashboards.Broker
                 else
                 {
                     outputDto.Claimed.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+
+                if (groupedRejected.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    outputDto.Rejected.Add(groupedRejected.Where(x => x.Key == date.Month)
+                   .Select(g => new ChartCategoryPairedValuesDto
+                   {
+                       X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
+                       Y = g.Count()
+                   })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    outputDto.Rejected.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
                 }
             }
 

@@ -39,6 +39,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Tenants.Dashboard.Dto;
 using TACHYON.Tracking;
 using TACHYON.Trucks.TrucksTypes;
+using static TACHYON.TACHYONDashboardCustomizationConsts.Widgets;
 
 namespace TACHYON.Dashboards.Shipper
 {
@@ -976,6 +977,57 @@ namespace TACHYON.Dashboards.Shipper
 
         }
 
+        public async Task<GetLoadedVsDeliveredTripsOutput> GetLoadedVsDeliveredTrips(DateRangeInput input)
+        {
+            DisableTenancyFilters();
+            var query = _shippingRequestTripRepository
+            .GetAll()
+            .AsNoTracking()
+               .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
+               x.Status == ShippingRequestTripStatus.InTransit);
+
+            var loadedTrips = (await query.Where(x=> x.ActualPickupDate.HasValue && x.ActualPickupDate.Value.Date > input.StartDate && x.ActualPickupDate.Value < input.EndDate)
+                //.Where(x=>x.RoutPoints.Where(x=>x.PickingType == PickingType.Pickup).Any(x=>x.RoutPointStatusTransitions
+            //.Any(x=>x.Status == RoutePointStatus.FinishLoading && x.CreationTime > input.StartDate && x.CreationTime < input.EndDate)))
+                .Select(x=>x.ActualPickupDate).ToListAsync()).GroupBy(x => x.Value.Month);
+
+            var deliveredTrips = (await query.Where(x => x.ActualDeliveryDate.HasValue && x.Status == ShippingRequestTripStatus.Delivered).Select(x=>x.ActualDeliveryDate).ToListAsync()).GroupBy(x => x.Value.Month);
+
+            var output = new GetLoadedVsDeliveredTripsOutput()
+            {
+                DeliveredTrips = new List<ChartCategoryPairedValuesDto>(),
+                LoadedTrips = new List<ChartCategoryPairedValuesDto>()
+            };
+            foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+            {
+                if (loadedTrips.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    output.LoadedTrips.Add(loadedTrips.Where(x => x.Key == date.Month)
+                .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    output.LoadedTrips.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+
+                if (deliveredTrips.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    output.DeliveredTrips.Add(loadedTrips.Where(x => x.Key == date.Month)
+                .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    output.DeliveredTrips.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+            }
+
+            return output;
+
+
+            }
+
         [AbpAuthorize]
         public async Task<List<SelectItemDto>> GetAllTruckTypesForDropdown()
         {
@@ -989,6 +1041,7 @@ namespace TACHYON.Dashboards.Shipper
 
             return truckTypesList;
         }
+
 
         #region Helpers
         private async Task<List<ChartCategoryPairedValuesDto>> GetCompletedTripsIfMonthly(GetDataByDateFilterInput input)
