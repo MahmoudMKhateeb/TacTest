@@ -604,6 +604,7 @@ namespace TACHYON.Dashboards.Shipper
 
             var paid = await query
                     .Where(x => x.IsPaid)
+                    .Where(x=> x.PaymentDate.HasValue)
                     .ToListAsync();
 
 
@@ -614,7 +615,7 @@ namespace TACHYON.Dashboards.Shipper
             var totalInvoicesList = new List<ChartCategoryPairedValuesDto>();
             if (period == FilterDatePeriod.Daily)
             {
-                PaidInvoicesList = paid.GroupBy(x => x.CreationTime.DayOfWeek)
+                PaidInvoicesList = paid.GroupBy(x => x.PaymentDate.Value.DayOfWeek)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
                     .ToList();
 
@@ -624,7 +625,7 @@ namespace TACHYON.Dashboards.Shipper
             }
             if (period == FilterDatePeriod.Monthly)
             {
-                var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
+                var groupedPaid = paid.GroupBy(x => x.PaymentDate.Value.Date.Month);
                 var groupedTotal = total.GroupBy(x => x.CreationTime.Month);
 
                 foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
@@ -664,7 +665,7 @@ namespace TACHYON.Dashboards.Shipper
                 var AllWeeks = new List<int> { 1, 2, 3, 4 };
                 foreach (var week in AllWeeks)
                 {
-                    var groupedTrips = paid.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    var groupedTrips = paid.GroupBy(x => ((x.PaymentDate.Value.Date - firstDayInWeeks.Date).Days / 7) + 1);
                     if (groupedTrips.Select(x => x.Key).ToList().Contains(week))
                     {
                         PaidInvoicesList.Add(groupedTrips.Where(x => x.Key == week)
@@ -703,7 +704,7 @@ namespace TACHYON.Dashboards.Shipper
 
                 foreach (var year in allYears)
                 {
-                    var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Year);
+                    var groupedPaid = paid.GroupBy(x => x.PaymentDate.Value.Date.Year);
                     var groupedTotal = total.GroupBy(x => x.CreationTime.Year);
 
                     if (groupedPaid.Select(x => x.Key).ToList().Contains(year))

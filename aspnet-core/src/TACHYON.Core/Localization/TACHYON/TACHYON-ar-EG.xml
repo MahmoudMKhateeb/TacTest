@@ -24,7 +24,7 @@
     <text name="CompletedTripsvsPod">الرحلات المكتملة مقابل إثبات التسليم</text>
     <text name="DocumentsHasDueDateIn6Days">مستندات ستنتهي صلاحيتها خلال أسبوع</text>
     <text name="InvoiceDueDateIn6Days">فواتير ستكون مستحقة خلال أسبوع</text>
-    <text name="InvoicesVsPaidInvoices">الفواتير مقابل الفواتير المدفوعة</text>
+    <text name="InvoicesVsPaidInvoices">الفواتير الجديدة مقابل الفواتير المدفوعة</text>
     <text name="ShipmentHistory">تأريخ الشحن</text>
 		<text name="AddRating">أضف تقييم</text>
 		<text name="Rating">التقييم</text>
@@ -2975,7 +2975,7 @@
 	<text name="UpcomingTrips">الرحلات القادمة</text>
 	<text name="DeliveredTrips">الرحلات التي تم تسليمها</text>
 	<text name="InTransitTrips">في رحلات العبور</text>
-	<text name="NextDocDueDate">تاريخ الاستحقاق التالي للمستند</text>
+	<text name="NextDocDueDate">تاريخ الانتهاء التالي للمستند</text>
 	<text name="NextInvoiceDueDate">تاريخ استحقاق الفاتورة التالي</text>
 	<text name="withinA">خلال</text>
 	<text name="PaidVsClaimedInvoices">الفواتير المدفوعة مقابل المطالب بها</text>
@@ -3109,11 +3109,11 @@
     <text name="InvoiceStamp">توقيع الفاتورة</text>
 	<text name="NumberOfRegisteredCompanies">Number Of Registered Companies</text>
 	<text name="MostUsedRouteTypes">Most Used Route Types</text>
-	<text name="TopWorstRatedPerTripWidget">Top Worst Rated Per Trip Widget</text>
+	<text name="TopWorstRatedPerTripWidget">Top/Worst Rated Per Trip Widget</text>
 	<text name="RateType">Rate Type</text>
 	<text name="EditionType">Edition Type</text>
 	<text name="CurrentMonth">Current Month</text>
-	<text name="NumberOfDriversAndTrucks">Number Of Drivers And Trucks</text>
+	<text name="NumberOfDriversAndTrucks">Number Of Registered Drivers And Trucks</text>
 	<text name="NumberOfSaasTrips">Number Of Saas Trips</text>
 	<text name="NumberOfTruckAggregationTrips">Number Of Truck Aggregation Trips</text>
 	<text name="MostUsed">Most Used</text>
