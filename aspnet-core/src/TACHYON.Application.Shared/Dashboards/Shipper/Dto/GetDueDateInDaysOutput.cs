@@ -8,5 +8,6 @@ namespace TACHYON.Dashboards.Shipper.Dto
     {
         public long Count { get; set; }
         public string TimeUnit { get; set; }
+        public bool IsExpired { get; set; }
     }
 }

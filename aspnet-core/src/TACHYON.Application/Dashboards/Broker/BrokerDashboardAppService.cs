@@ -330,19 +330,43 @@ namespace TACHYON.Dashboards.Broker
                 }).ToListAsync();
         }
 
-        public async Task<List<NextDueDateDto>> GetNextDocumentsDueDate(ActorTypesEnum type)
+        public async Task<List<GetDueDateInDaysOutput>> GetNextDocumentsDueDate(ActorTypesEnum type)
         {
             var documents = await _documentFileRepository.GetAll().Where(x =>
-                    x.IsAccepted && x.ExpirationDate.HasValue && x.ExpirationDate.Value.Date > Clock.Now.Date &&
+                    x.IsAccepted && x.ExpirationDate.HasValue  &&
                     x.ActorFk.ActorType == type).Select(x=> new {ExpirationDate = x.ExpirationDate.Value,x.ActorFk.CompanyName}).ToListAsync();
 
 
-            return documents.GroupBy(x => (x.ExpirationDate.Date - DateTime.Now.Date).TotalDays / 7)
-                .Select(x => new NextDueDateDto
+            var count = documents.Count();
+
+            var RemainingDays = 0;
+            var dto = new List<GetDueDateInDaysOutput>();
+            if (count == 1)
+            {
+                var expiredDate = documents.FirstOrDefault().ExpirationDate.Date;
+                RemainingDays = documents.FirstOrDefault() != null ? (expiredDate - Clock.Now.Date).Days : 0;
+                if (RemainingDays < 0) RemainingDays = 0;
+
+                dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
+            }
+            else if (count == 0)
+            {
+                dto.Add(new GetDueDateInDaysOutput { Count = 0, TimeUnit = 0 + " Days" });
+            }
+            else
+            {
+                foreach (var document in documents)
                 {
-                    RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
-                    CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
-                }).ToList();
+                    var expiredDate = document.ExpirationDate.Date;
+                    RemainingDays = (expiredDate - Clock.Now.Date).Days;
+
+                    if (RemainingDays < 0) RemainingDays = 0;
+
+                    dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
+                }
+            }
+
+            return dto;
         }
 
         public async Task<List<NextDueDateDto>> GetNextInvoicesDueDate(BrokerInvoiceType invoiceType)
