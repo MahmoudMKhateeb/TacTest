@@ -3530,6 +3530,7 @@
 	<text name="MySelfInvoices">Myself Invoices</text>
 	<text name="MoiNumberWarningMsg">This company doesn’t have an MOI number, please fill it to activate the Bayan feature.</text>
 	<text name="NewInvoice">New Invoice</text>
+	<text name="InvoiceIsIssued">Invoice Issued</text>
 
 	</texts>
 </localizationDictionary>

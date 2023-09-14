@@ -3239,6 +3239,7 @@
 	<text name="MySelfInvoices">فواتيري</text>
 	<text name="MoiNumberWarningMsg">هذه الشركة ليس لديها الرقم الموحد للمنشأة ، يرجى تعبئته لتفعيل خاصية بيان.</text>
 	<text name="NewInvoice">فواتير جديدة</text>
+    <text name="InvoiceIsIssued">تم اصدار فاتورة</text>
 
 	</texts>
 </localizationDictionary>
