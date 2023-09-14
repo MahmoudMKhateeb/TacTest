@@ -85,6 +85,13 @@ namespace TACHYON.EntityTemplates
             return updatedEntityTemplate.Id.ToString();
         }
 
+        public async Task<long?> GetTemplateIdByEntity(string savedEntityId)
+        {
+            var templateId = await _templateRepository.GetAll().Where(x => x.SavedEntityId.Equals(savedEntityId))
+                .Select(x => x.Id).FirstOrDefaultAsync();
+            return templateId != default ? templateId : default(long?);
+        }
+
         private async Task<EntityTemplate> GetById(long templateId)
         {
             var template = await _templateRepository.FirstOrDefaultAsync(templateId);

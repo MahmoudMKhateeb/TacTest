@@ -152,6 +152,9 @@ namespace TACHYON.EntityTemplates
             return groupedTemplates;
         }
 
+        public async Task<string> GetTemplateName(int templateId)
+            => await _templateRepository.GetAll().Where(x => x.Id == templateId)
+                .Select(x => x.TemplateName).FirstOrDefaultAsync();
 
         [AbpAuthorize(AppPermissions.Pages_EntityTemplate_Create)]
         protected virtual async Task<string> Create(CreateOrEditEntityTemplateInputDto input)

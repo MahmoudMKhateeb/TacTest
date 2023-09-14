@@ -1143,19 +1143,11 @@
                               [(value)]="step3Dto.trucksTypeId"
                               [dataSource]="allTrucksTypes"
                               [searchEnabled]="true"
-                              (onSelectionChanged)="trucksTypeSelectChange(step3Dto.trucksTypeId)"
+                              (onValueChanged)="trucksTypeSelectChange(step3Dto.trucksTypeId)"
                               displayExpr="displayName"
                               valueExpr="id"
                               required
-                              [disabled]="
-                                step3Dto.transportTypeId == null
-                                  ? true
-                                  : null || allTransportTypes == null
-                                  ? true
-                                  : null || allTrucksTypes == null
-                                  ? true
-                                  : null
-                              "
+                              [disabled]="step3Dto.transportTypeId == null || allTransportTypes == null || allTrucksTypes == null"
                               placeholder="{{ l('SelectaTruckType') }}"
                             >
                             </dx-select-box>
@@ -1234,19 +1226,6 @@
                             displayExpr="displayName"
                             valueExpr="id"
                             required
-                            [disabled]="
-                              capacityLoading
-                                ? true
-                                : null || step3Dto.trucksTypeId == null
-                                ? true
-                                : null || step3Dto.transportTypeId == null
-                                ? true
-                                : null || allTransportTypes == null
-                                ? true
-                                : null || allTrucksTypes == null
-                                ? true
-                                : null
-                            "
                             placeholder="{{ l('SelectaCapacity') }}"
                           >
                           </dx-select-box>

@@ -283,15 +283,7 @@ namespace TACHYON.Dashboards.Host
                     break;
             }
 
-            switch (input.RateType)
-            {
-                case 1:
-                    tenantList = tenantList.OrderByDescending(x => x.Rate).ToList();
-                    break;
-                case 2:
-                    tenantList = tenantList.OrderBy(x => x.Rate).ToList();
-                    break;
-            }
+            
 
             var tenantsIdsList = tenantList.Select(x => x.Id).ToList();
 
@@ -301,14 +293,26 @@ namespace TACHYON.Dashboards.Host
                 tenantsIdsList.Contains(r.ShippingRequestFk.CarrierTenantId.Value) || (r.CarrierTenantId != null && tenantsIdsList.Contains(r.CarrierTenantId.Value)))
                 .Select(x=> new { x.CarrierTenantId , x.ShipperTenantId, requestShippers = x.ShippingRequestFk.TenantId, requestCarriers = x.ShippingRequestFk.CarrierTenantId }).ToListAsync();
 
-            return tenantList.Select(tenant => new GetTopOWorstRatedTenantsOutput()
+            var list = tenantList.Select(tenant => new GetTopOWorstRatedTenantsOutput()
             {
                 Id = tenant.Id,
                 Name = tenant.companyName,
                 Rating = tenant.Rate,
                 NumberOfTrips = trips.Where(x=>x.CarrierTenantId == tenant.Id || x.ShipperTenantId == tenant.Id ||
                 x.requestShippers == tenant.Id || x.requestCarriers == tenant.Id).Count()
-            }).Take(5).ToList();
+            }).ToList();
+
+            switch (input.RateType)
+            {
+                case 1:
+                    list = list.OrderByDescending(x => x.Rating).ThenBy(x=>x.NumberOfTrips).Take(5).ToList();
+                    break;
+                case 2:
+                    list = list.OrderBy(x => x.Rating).ThenBy(x => x.NumberOfTrips).Take(5).ToList();
+                    break;
+            }
+
+            return list;
         }
 
         public async Task<List<GetTruckTypeUsageOutput>> GetTruckTypeUsage(int transportTypeId)
