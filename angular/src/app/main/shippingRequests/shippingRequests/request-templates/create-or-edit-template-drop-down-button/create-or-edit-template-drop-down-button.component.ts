@@ -1,4 +1,4 @@
-import { Component, Injector, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { CreateOrEditEntityTemplateInputDto, EntityTemplateServiceProxy, SavedEntityType } from '@shared/service-proxies/service-proxies';
@@ -11,13 +11,14 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./create-or-edit-template-drop-down-button.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBase {
+export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBase implements OnInit {
   @Input() entityType: SavedEntityType;
   @Input() sourceEntityId: any;
   @Input() customClass: string;
   @Input() jsonData: string;
   @Input() dropDirection: 'up' | 'down';
   @Input() disabled: boolean;
+  @Input() templateId: number;
 
   templateName: string;
   loading: boolean;
@@ -80,5 +81,19 @@ export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBas
       },
       queryParamsHandling: 'merge',
     });
+  }
+
+  ngOnInit(): void {
+    if (isNotNullOrUndefined(this.templateId)) {
+      this.loading = true;
+      this._templateService
+        .getTemplateName(this.templateId)
+        .pipe(finalize(() => (this.loading = false)))
+        .subscribe((result) => {
+          this.templateName = result;
+          this.templateIdForEdit = this.templateId.toString();
+          this.updateUrl(this.templateIdForEdit);
+        });
+    }
   }
 }
