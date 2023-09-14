@@ -69,7 +69,7 @@
     <text name="MostUsedOrigins">Most Used Origins</text>
     <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivery</text>
     <text name="MostUsedDestantions">Most Used Destantions</text>
-    <text name="InvoicesVsPaidInvoices">Invoices Vs Paid Invoices</text>
+    <text name="InvoicesVsPaidInvoices">The new Invoice Vs Paid Invoices</text>
     <text name="{0}IsInvalid">"{0}" is invalid</text>
     <text name="ShipmentHistory">Shipment History</text>
 		<text name="{0}IsRequired">{0} is required.</text>
@@ -3242,10 +3242,10 @@
     <text name="UpcomingTrips">Upcoming Trips</text>
     <text name="DeliveredTrips">Delivered Trips</text>
     <text name="InTransitTrips">In Transit Trips</text>
-    <text name="NextDocDueDate">Next Doc Due Date</text>
+    <text name="NextDocDueDate">Next Document expired Date</text>
 	<text name="NextInvoiceDueDate">Next Invoice Due Date</text>
 	<text name="withinA">with in</text>
-	<text name="PaidVsClaimedInvoices">Paid Vs Claimed Invoices</text>
+	<text name="PaidVsClaimedInvoices">Paid Vs Claimed Vs Rejected Invoices</text>
 	<text name="NewActorsThisMonth">New Actors This Month</text>
 	<text name="NumberOfActors">Number Of Actors</text>
 	<text name="MostActiveActorCarrier">Most Active Actor Carrier</text>
@@ -3255,8 +3255,8 @@
 	<text name="NumberOfActiveActors">Number Of Active Actors</text>
 	<text name="NumberOfNonActiveActors">Number Of Non Active Actors</text>
 	<text name="Shippers">Shippers</text>
-	<text name="NewInvoicesVsPaidInvoices">New Invoices Vs Paid Invoices - Shipper Client </text>
-	<text name="PaidInvoiceVsClaimedInvoice">Paid Invoice Vs Claimed Invoice - Carrier Client</text>
+	<text name="NewInvoicesVsPaidInvoices">New Invoices Vs Paid Invoices</text>
+	<text name="PaidInvoiceVsClaimedInvoice">Paid Vs Claimed Vs Rejected Invoices</text>
 	<text name="Claimed">Claimed</text>
 	<text name="Week">Week</text>
 	<text name="Sun">Sun</text>
@@ -3287,8 +3287,8 @@
 	<text name="ActorsPaidInvoiceVsClaimedInvoice">Actors Paid Invoice Vs Claimed Invoice</text>
 	<text name="ActorsMostUsedOrigins">Actors Most Used Origins</text>
 	<text name="ActorsMostUsedDestinations">Actors Most Used Destinations</text>
-	<text name="ActorsUpcomingTrips">Actors Upcoming Trips</text>
-	<text name="ActorsNeedsActions">Actors Needs Actions</text>
+	<text name="ActorsUpcomingTrips">Client Upcoming Trips</text>
+	<text name="ActorsNeedsActions">Client Needs Action trips</text>
 	<text name="ShipperCountersWidget">Counters</text>
 	<text name="ShipperUpcomingTripsWidget">Upcoming Trips</text>
 	<text name="ShipperNeedsActionWidget">Needs Action</text>
@@ -3397,11 +3397,11 @@
     <text name="InvoiceStamp">Invoice stamp</text>
 	<text name="NumberOfRegisteredCompanies">Number Of Registered Companies</text>
 	<text name="MostUsedRouteTypes">Most Used Route Types</text>
-	<text name="TopWorstRatedPerTripWidget">Top Worst Rated Per Trip Widget</text>
+	<text name="TopWorstRatedPerTripWidget">Top/Worst Rated Per Trip Widget</text>
 	<text name="RateType">Rate Type</text>
 	<text name="EditionType">Edition Type</text>
 	<text name="CurrentMonth">Current Month</text>
-	<text name="NumberOfDriversAndTrucks">Number Of Drivers And Trucks</text>
+	<text name="NumberOfDriversAndTrucks">Number Of Registered Drivers And Trucks</text>
 	<text name="NumberOfSaasTrips">Number Of Saas Trips</text>
 	<text name="NumberOfTruckAggregationTrips">Number Of Truck Aggregation Trips</text>
 	<text name="MostUsed">Most Used</text>

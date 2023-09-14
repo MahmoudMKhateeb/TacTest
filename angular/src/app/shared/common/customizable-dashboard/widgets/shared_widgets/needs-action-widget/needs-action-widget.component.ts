@@ -60,7 +60,7 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
       });
     }
     if (this.isCarrier || this.isCarrierSaas) {
-      this._carrierDashboardServiceProxy.getNeedsActionTrips(this.start, this.end).subscribe((res) => {
+      this._carrierDashboardServiceProxy.getNeedsActionTrips().subscribe((res) => {
         this.needsActionTrips = res;
         this.loading = false;
       });
