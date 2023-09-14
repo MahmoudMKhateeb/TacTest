@@ -149,6 +149,9 @@ namespace TACHYON.Reports.ReportDataSources
                     ShipperInvoiceIssuanceDate = x.ShipperInvoice != null
                         ? x.ShipperInvoice.InvoiceFK.CreationTime.ToString("dd/MM/yyyy")
                         : EmptyField,
+                    CarrierInvoiceIssuanceDate = x.CarrierInvoice != null
+                        ? x.CarrierInvoice.InvoiceFK.CreationTime.ToString("dd/MM/yyyy")
+                        : EmptyField,
                 }).ToListAsync();
 
             return financialItems;

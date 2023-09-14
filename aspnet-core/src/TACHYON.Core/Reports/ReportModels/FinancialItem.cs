@@ -42,6 +42,8 @@
 
         public string ShipperInvoiceIssuanceDate { get; set; }
 
+        public string CarrierInvoiceIssuanceDate { get; set; }
+
         public string ShipperInvoiceConfirmationDate { get; set; }
 
         public string TripStatus { get; set; }
