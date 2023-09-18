@@ -970,6 +970,7 @@ namespace TACHYON.Dashboards.Shipper
                     Id = rp.Id,
                     Facility = rp.FacilityFk.Name,
                     PickingType = rp.PickingType.GetEnumDescription(),
+                    Endtime = rp.EndTime,
                     WaybillNumber = rp.WaybillNumber,
                     Longitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.X : 0),
                     Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
