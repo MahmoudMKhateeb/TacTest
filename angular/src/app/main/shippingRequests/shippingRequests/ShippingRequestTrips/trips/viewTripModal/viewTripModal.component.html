@@ -491,20 +491,20 @@
               </dx-date-box>
             </div>
           </div>
-          <div class="col-lg-6">
-            <label>{{ l('ExpectedDeliveryTime') }}</label>
-            <div class="form-group" [busyIf]="expectedDeliveryTimeLoading">
-              <dx-date-box
-                [(value)]="expectedDeliveryTime"
-                (onValueChanged)="updateTripExpectedDeliveryTime()"
-                type="datetime"
-                [min]="trip.startTripDate"
-                openOnFieldClick="true"
-                [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit')"
-              >
-              </dx-date-box>
-            </div>
-          </div>
+          <!--          <div class="col-lg-6">-->
+          <!--            <label>{{ l('ExpectedDeliveryTime') }}</label>-->
+          <!--            <div class="form-group" [busyIf]="expectedDeliveryTimeLoading">-->
+          <!--              <dx-date-box-->
+          <!--                [(value)]="expectedDeliveryTime"-->
+          <!--                (onValueChanged)="updateTripExpectedDeliveryTime()"-->
+          <!--                type="datetime"-->
+          <!--                [min]="trip.startTripDate"-->
+          <!--                openOnFieldClick="true"-->
+          <!--                [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit')"-->
+          <!--              >-->
+          <!--              </dx-date-box>-->
+          <!--            </div>-->
+          <!--          </div>-->
           <div class="col-lg-6" *ngIf="!_TripService.GetShippingRequestForViewOutput && _TripService.CreateOrEditShippingRequestTripDto">
             <label>{{ l('MainGoodCategory') }} </label>
             <div>

@@ -3531,6 +3531,10 @@
 	<text name="MoiNumberWarningMsg">This company doesn’t have an MOI number, please fill it to activate the Bayan feature.</text>
 	<text name="NewInvoice">New Invoice</text>
 	<text name="InvoiceIsIssued">Invoice Issued</text>
+	<text name="ETA">Estimated arrival time</text>
+	<text name="ETADateTime">Estimated arrival date</text>
+	<text name="DistanceToArrive">Distance to Arrive</text>
+
 
 	</texts>
 </localizationDictionary>
