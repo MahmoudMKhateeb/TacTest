@@ -692,7 +692,7 @@ namespace TACHYON.Tracking
                .WhereIf
                (
                    input.IsSubmittedPOD != null,
-                   x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.RoutPoints.Any(x => x.IsPodUploaded == input.IsSubmittedPOD))
+                   y => y.RoutPoints.Any(x => x.IsPodUploaded == input.IsSubmittedPOD)
                )
                //todo for tasneem will update request type after dediced
                .WhereIf(input.RequestTypeId == 1, x => x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId)

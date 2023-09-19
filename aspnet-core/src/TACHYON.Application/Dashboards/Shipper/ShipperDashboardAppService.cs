@@ -136,14 +136,16 @@ namespace TACHYON.Dashboards.Shipper
                 .ThenInclude(x => x.CityFk)
                 .Where
                 (
-                    trip => ((!isBroker && trip.ShippingRequestFk.TenantId == AbpSession.TenantId) ||
-                             (isBroker && (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)) || trip.CarrierTenantId == AbpSession.TenantId ||
-                             trip.ShipperTenantId == AbpSession.TenantId) &&
-                            ((!trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.CarrierActorFk.ActorType == ActorTypesEnum.MySelf) &&
-                             (!trip.ShippingRequestFk.ShipperActorId.HasValue || trip.ShippingRequestFk.ShipperActorFk.ActorType == ActorTypesEnum.MySelf)) &&
-                            trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay && trip.StartTripDate.Date <= endOfCurrentWeek
+                    trip => (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                             trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId ||
+                             trip.CarrierTenantId == AbpSession.TenantId ||
+                             trip.ShipperTenantId == AbpSession.TenantId)
+                )
+                .Where
+                (
+                    trip => trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay && trip.StartTripDate.Date <= endOfCurrentWeek
                 );
+
 
             var trips = shippingRequestTrips
                 .Select
@@ -159,9 +161,9 @@ namespace TACHYON.Dashboards.Shipper
                                 .Distinct()
                                 .ToList(),
                         trip.WaybillNumber,
-                        TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated ? LocalizationSource.GetString
+                        TripType = (trip.ShippingRequestId.HasValue && trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated) ? LocalizationSource.GetString
                                 ("Dedicated") :
-                            trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas") : LocalizationSource.GetString("TruckAggregation"),
+                            (trip.ShippingRequestId.HasValue && trip.ShippingRequestFk.IsSaas()) ? LocalizationSource.GetString("Saas") : LocalizationSource.GetString("TruckAggregation"),
                         trip.StartTripDate,
                         IsDirectTrip = !trip.ShippingRequestId.HasValue
                     }
