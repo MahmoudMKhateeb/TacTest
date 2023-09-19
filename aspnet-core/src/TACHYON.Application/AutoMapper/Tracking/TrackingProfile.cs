@@ -40,7 +40,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.TripFlag, opt => opt.MapFrom(src => src.ShippingRequestTripFlag))
             .ForMember(dst => dst.IsSass, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.IsSaas() : src.ShipperTenantId == src.CarrierTenantId))
             .ForMember(dst => dst.NumberOfDrops, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.NumberOfDrops : src.NumberOfDrops))
-            .ForMember(dst => dst.TruckType, opt => opt.MapFrom(src => src.AssignedTruckFk.TrucksTypeFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
+            .ForMember(dst => dst.TruckType, opt => opt.MapFrom(src => src.ShippingRequestId.HasValue? src.ShippingRequestFk.TrucksTypeFk.DisplayName :  src.AssignedTruckFk.TrucksTypeFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
             ? src.AssignedTruckFk.TrucksTypeFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().TranslatedDisplayName
             : src.AssignedTruckFk.TrucksTypeFk.Key))
             .ForMember(dst => dst.GoodsCategory, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.GoodCategoryFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
