@@ -149,6 +149,19 @@
                 disabled
               />
             </div>
+            <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId">
+              <label>{{ l('TotalAmount') }} <span class="text-danger">*</span></label>
+              <input
+                [value]="
+                  _TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.subTotalAmount +
+                  _TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.vatAmount
+                "
+                type="number"
+                class="form-control"
+                name="TotalAmount"
+                disabled
+              />
+            </div>
           </div>
         </div>
         <div class="row" [hidden]="_TripService.GetShippingRequestForViewOutput" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">

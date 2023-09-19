@@ -128,21 +128,16 @@ namespace TACHYON.Dashboards.Broker
             DisableTenancyFilters();
 
             var tripsQuery =  _tripRepository.GetAll()
-                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                            x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                .Where(x =>
-                    (input.ActorType == ActorTypesEnum.Carrier && x.ShippingRequestFk.CarrierActorId.HasValue) ||
-                    (input.ActorType == ActorTypesEnum.Shipper && x.ShippingRequestFk.ShipperActorId.HasValue))
+                .WhereIf(input.ActorType == ActorTypesEnum.Carrier , x => x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(input.ActorType == ActorTypesEnum.Shipper , x => x.ShipperTenantId == AbpSession.TenantId)
                 .WhereIf(input.RangeType == DateRangeType.ThisMonth, x => x.CreationTime.Month == Clock.Now.Month)
-                .WhereIf(input.RangeType == DateRangeType.LastMonth,
-                    x => x.CreationTime.Month == Clock.Now.AddMonths(-1).Month)
-                .WhereIf(input.RangeType == DateRangeType.LastYear,
-                    x => x.CreationTime.Year == Clock.Now.AddYears(-1).Year);
+                .WhereIf(input.RangeType == DateRangeType.LastMonth, x => x.CreationTime.Month == Clock.Now.AddMonths(-1).Month)
+                .WhereIf(input.RangeType == DateRangeType.LastYear, x => x.CreationTime.Year == Clock.Now.AddYears(-1).Year);
 
             var activeActors = await (from trip in tripsQuery
                     group trip by (input.ActorType == ActorTypesEnum.Carrier
-                        ? trip.ShippingRequestFk.CarrierActorFk.CompanyName
-                        : trip.ShippingRequestFk.ShipperActorFk.CompanyName)
+                        ? trip.CarrierActorFk.CompanyName
+                        : trip.ShipperActorFk.CompanyName)
                     into tripsGroup
                     select new ActiveActorDto { ActorName = tripsGroup.Key, NumberOfTrips = tripsGroup.Count() })
                 .ToListAsync();
