@@ -26,9 +26,9 @@
         </div>
       </div>
     </div>
-    <div class="trips-section overflow-auto pt-4">
+    <div appMakeScrollable class="trips-section overflow-auto pt-4 scrollable-container">
       <div
-        class="card card-custom ribbon ribbon-top dashboard-plain-card mb-2 clickable-item overflow-hidden"
+        class="card card-custom ribbon ribbon-top dashboard-plain-card mb-2 scrollable-col clickable-item overflow-hidden"
         *ngFor="let trip of upcomingTripsForSelectedDay"
         (click)="goToTrackingPage(trip)"
       >

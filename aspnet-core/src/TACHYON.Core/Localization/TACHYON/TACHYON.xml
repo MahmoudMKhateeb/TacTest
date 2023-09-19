@@ -3534,6 +3534,7 @@
 	<text name="ETA">Estimated arrival time</text>
 	<text name="ETADateTime">Estimated arrival date</text>
 	<text name="DistanceToArrive">Distance to Arrive</text>
+	<text name="ClientNeedsAction">Client Needs action</text>
 
 
 	</texts>

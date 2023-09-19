@@ -11,10 +11,10 @@
       <ng-container *ngIf="!isTachyonDealerOrHost">
         <div class="col-6 d-flex align-items-center">
           <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
-          {{ (isShipper ? 'UnPaidInvoice' : 'Paid') | localize }}
+          {{ (isShipper ? 'New' : 'Paid') | localize }}
         </div>
         <div class="col-6 d-flex align-items-center">
-          <i class="fa fa-circle text-gray mx-1"></i> {{ (isShipper ? 'PaidInvoice' : 'Claimed') | localize }}
+          <i class="fa fa-circle text-gray mx-1"></i> {{ (isShipper ? 'Paid' : 'Claimed') | localize }}
         </div>
       </ng-container>
       <ng-container *ngIf="isTachyonDealerOrHost">
