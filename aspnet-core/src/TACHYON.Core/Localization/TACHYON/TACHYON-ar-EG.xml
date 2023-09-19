@@ -3244,5 +3244,8 @@
 	<text name="ETA">وقت الوصول المتوقع</text>
 	<text name="ETADateTime">تاريخ الوصول المتوقع</text>
 	<text name="DistanceToArrive">المسافة حتى الوصول</text>
+
+	<text name="ClientNeedsAction">بانتظار قرار للعملاء</text>
+
 	</texts>
 </localizationDictionary>
