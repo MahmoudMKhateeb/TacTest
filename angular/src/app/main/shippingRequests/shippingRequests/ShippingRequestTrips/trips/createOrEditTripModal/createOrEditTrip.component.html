@@ -991,8 +991,8 @@
                   <dx-select-box
                     id="PaymentMethod"
                     name="PaymentMethod"
-                    [(value)]="paymentMethodsArray"
-                    [dataSource]="allDrivers"
+                    [(value)]="selectedPaymentMethod"
+                    [dataSource]="paymentMethodsArray"
                     [searchEnabled]="true"
                     displayExpr="value"
                     valueExpr="key"

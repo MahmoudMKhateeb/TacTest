@@ -290,6 +290,35 @@
                         </div>
                         <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
                       </div>
+                      <br />
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('ShipperReference') }} </label>
+                          <div class="input-group date">
+                            <input
+                              #shipperReference="ngModel"
+                              class="form-control"
+                              type="text"
+                              name="ShipperReference"
+                              [(ngModel)]="shippingRequest.shipperReference"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('ShipperBookingNumber') }}</label>
+                          <div class="input-group date">
+                            <input
+                              #shipperInvoiceNo="ngModel"
+                              class="form-control"
+                              type="text"
+                              name="ShipperInvoiceNumber"
+                              [(ngModel)]="shippingRequest.shipperInvoiceNo"
+                            />
+                          </div>
+                        </div>
+                      </div>
                       <!--  End of Shipping Type -->
                     </div>
                   </div>
