@@ -268,7 +268,7 @@
                             displayExpr="displayName"
                             valueExpr="id"
                             required
-                            (onSelectionChanged)="shippingRequest.shippingRequestDestinationCities = undefined"
+                            (onValueChanged)="shippingRequest.shippingRequestDestinationCities = undefined"
                             [disabled]="!allShippingTypes"
                             placeholder="{{ l('SelectAshippingType') }}"
                           >

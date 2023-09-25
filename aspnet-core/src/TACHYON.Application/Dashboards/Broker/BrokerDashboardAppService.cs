@@ -159,8 +159,7 @@ namespace TACHYON.Dashboards.Broker
             var trips = await (from trip in _tripRepository.GetAll().AsNoTracking()
                     .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId || trip.ShipperTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.ShipperActorId.HasValue) &&
+                where (  trip.CarrierTenantId == AbpSession.TenantId || trip.ShipperTenantId == AbpSession.TenantId) &
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
                 select new
@@ -171,10 +170,12 @@ namespace TACHYON.Dashboards.Broker
                     Destinations = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Dropoff)
                         .Select(x=> x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
                         trip.WaybillNumber,
-                    TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
-                        ? LocalizationSource.GetString("Dedicated")
-                        : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
-                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate,
+                    //TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
+                    //    ? LocalizationSource.GetString("Dedicated")
+                    //    : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
+                    //        : LocalizationSource.GetString("TruckAggregation"),
+
+                    trip.StartTripDate,
                     IsDirectTrip = !trip.ShippingRequestId.HasValue
                 }).ToListAsync();
             
@@ -189,7 +190,7 @@ namespace TACHYON.Dashboards.Broker
                         Id = x.Id,Origin = x.Origin,
                         Destinations = x.Destinations,
                         WaybillNumber = x.WaybillNumber,
-                        TripType = x.TripType,
+                        TripType = "Saas",
                         IsDirectTrip = x.IsDirectTrip
                     }).ToList()
                 }).ToList();
