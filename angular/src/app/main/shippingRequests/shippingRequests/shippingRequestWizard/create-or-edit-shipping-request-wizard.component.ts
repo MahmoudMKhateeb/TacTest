@@ -1201,12 +1201,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.loadCitiesByCountryId(this.originCountry, 'source');
     setTimeout(() => {
       this.step1Dto.roundTripType = parsedJson.roundTripType;
-      this.sourceCities ? (this.step2Dto.originCityId = parsedJson.originCityId.toString()) : '';
+      this.step2Dto.originCityId = parsedJson.originCityId?.toString();
+      this.step2Dto.originFacilityId = parsedJson.originFacilityId?.toString();
       this.step2Dto.shippingRequestDestinationCities = parsedJson.shippingRequestDestinationCities;
       let citiesToFill = parsedJson.shippingRequestDestinationCities?.map((item) => item.cityId);
       this.loadCitiesByCountryId(this.destinationCountry, 'destination', citiesToFill);
-    }, 1000);
-    this.step2Dto.originFacilityId = parsedJson.originFacilityId?.toString();
+    }, 2000);
+
     this.step3Dto.init(parsedJson);
     // this.step3Dto.trucksTypeId = parsedJson.trucksTypeId.toString();
     this.step3Dto.goodCategoryId = parsedJson.goodCategoryId;

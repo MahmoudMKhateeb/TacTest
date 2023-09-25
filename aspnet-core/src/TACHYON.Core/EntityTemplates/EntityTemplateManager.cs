@@ -267,15 +267,16 @@ namespace TACHYON.EntityTemplates
             };
             
             await DisableTenancyFilterIfTms(); // to skip join tenancy filter for tms
-            
-            var matchesOriginAndDestinationItems = (from template in filteredByRoutTypeItems 
-                join originFacility in _facilityRepository.GetAll().AsNoTracking()
-                    on template.Trip.OriginFacilityId equals originFacility.Id
-                join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
-                    on template.Trip.DestinationFacilityId equals destinationFacility.Id
-                where originFacility.CityId == shippingRequest.SourceCityId 
-                      && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId)
-                select template);
+
+            var matchesOriginAndDestinationItems = filteredByRoutTypeItems.Where(x=> x.Trip.OriginCityId == shippingRequest.SourceCityId);
+            //var matchesOriginAndDestinationItems = (from template in filteredByRoutTypeItems 
+            //    join originFacility in _facilityRepository.GetAll().AsNoTracking()
+            //        on template.Trip.OriginFacilityId equals originFacility.Id
+            //    join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
+            //        on template.Trip.DestinationFacilityId equals destinationFacility.Id
+            //    where originFacility.CityId == shippingRequest.SourceCityId 
+            //          //&& shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId)
+            //    select template);
 
             if (shippingRequest.ShippingType is ShippingTypeEnum.ImportPortMovements
                 or ShippingTypeEnum.ExportPortMovements)
