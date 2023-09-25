@@ -1194,14 +1194,18 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
     this.step1Dto.endTripDate = this.step1Dto.startTripDate = this.step1Dto.bidStartDate = this.step1Dto.bidEndDate = null; //empty Shipping Request Dates
     this.fillAllRoundTrips();
-    this.step1Dto.roundTripType = parsedJson.roundTripType;
+
     this.step2Dto.init(parsedJson);
     this.originCountry = parsedJson.originCountryId;
     this.destinationCountry = parsedJson.destinationCountryId;
     this.loadCitiesByCountryId(this.originCountry, 'source');
-    let citiesToFill = parsedJson.shippingRequestDestinationCities?.map((item) => item.cityId);
-    this.loadCitiesByCountryId(this.destinationCountry, 'destination', citiesToFill);
-    this.step2Dto.originCityId = parsedJson.originCityId?.toString();
+    setTimeout(() => {
+      this.step1Dto.roundTripType = parsedJson.roundTripType;
+      this.sourceCities ? (this.step2Dto.originCityId = parsedJson.originCityId.toString()) : '';
+      this.step2Dto.shippingRequestDestinationCities = parsedJson.shippingRequestDestinationCities;
+      let citiesToFill = parsedJson.shippingRequestDestinationCities?.map((item) => item.cityId);
+      this.loadCitiesByCountryId(this.destinationCountry, 'destination', citiesToFill);
+    }, 1000);
     this.step2Dto.originFacilityId = parsedJson.originFacilityId?.toString();
     this.step3Dto.init(parsedJson);
     // this.step3Dto.trucksTypeId = parsedJson.trucksTypeId.toString();

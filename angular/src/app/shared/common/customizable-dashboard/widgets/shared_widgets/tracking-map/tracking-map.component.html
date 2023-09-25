@@ -281,16 +281,29 @@
                 <span
                   class="label label-xl label-inline mr-2"
                   [ngClass]="{
-                    'label-danger': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === l('Delayed'),
-                    'label-success': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === l('OnTime'),
-                    'label-warning': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === l('Unknown')
+                    'label-danger':
+                      isTripDelayed(getTotalTripEta(record?.trackingMapDto?.routPoints[0]?.endtime, etaValues[record?.trackingMapDto?.id]?.ETA)) ===
+                      l('Delayed'),
+                    'label-success':
+                      isTripDelayed(getTotalTripEta(record?.trackingMapDto?.routPoints[0]?.endtime, etaValues[record?.trackingMapDto?.id]?.ETA)) ===
+                      l('OnTime'),
+                    'label-warning':
+                      isTripDelayed(getTotalTripEta(record?.trackingMapDto?.routPoints[0]?.endtime, etaValues[record?.trackingMapDto?.id]?.ETA)) ===
+                      l('Unknown')
                   }"
-                  >{{ isTripDelayed(record.trackingMapDto.expectedDeliveryTime) }}</span
+                  >{{
+                    isTripDelayed(getTotalTripEta(record?.trackingMapDto?.routPoints[0]?.endtime, etaValues[record?.trackingMapDto?.id]?.ETA))
+                  }}</span
                 >
               </td>
               <td>
-                <span class="ui-column-title"> {{ l('expectedDeliveryTime') }}</span>
-                {{ getDate(record.trackingMapDto.expectedDeliveryTime) | date: 'MMM d, y h:mm a' }}
+                <span class="ui-column-title" *ngIf="record?.trackingMapDto?.routPoints[0]?.endtime"> {{ l('expectedDeliveryTime') }}</span>
+                <!--                {{ getDate(record.trackingMapDto.expectedDeliveryTime) | date: 'MMM d, y h:mm a' }}-->
+                {{
+                  getTotalTripEta(record?.trackingMapDto?.routPoints[0]?.endtime, etaValues[record?.trackingMapDto?.id]?.ETA)
+                    | momentFormat: 'YYYY-MM-DD HH:mm:ss'
+                }}
+                <!--                {{ etaValues[record.trackingMapDto.id]?.ETA }}-->
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('containerNumber') }}</span>

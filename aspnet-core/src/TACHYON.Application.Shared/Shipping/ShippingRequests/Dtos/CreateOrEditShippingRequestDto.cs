@@ -16,6 +16,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     public class CreateOrEditShippingRequestDto : EntityDto<long?>, ICustomValidate, IHasVasListDto,
         IShippingRequestDtoHaveOthersName
     {
+        public string ShipperReference { get; set; }
+
+        public string ShipperInvoiceNo { get; set; }
+
+
         public virtual bool IsBid { get; set; }
 
         //Add Bid details If IsBid equals True
