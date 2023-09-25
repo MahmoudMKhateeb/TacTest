@@ -24,7 +24,7 @@
                 </label>
               </span>
             </div>
-            <div class="col-8 mt-1" *ngIf="trip.status == tripStatusesEnum.InTransit &&  routePoints[0].endTime">
+            <div class="col-8 mt-1">
               <div class="card-body p-9 bg-white">
                 <div class="fs-6 d-flex justify-content-between mb-4">
                   <div class="fw-semibold">{{ l('ExpectedMileage') }}</div>
@@ -41,7 +41,7 @@
 
                   <div class="d-flex fw-bold">
                     <i class="ki-duotone ki-arrow-down-left fs-3 me-1 text-danger"><span class="path1"></span><span class="path2"></span></i>
-                    {{TotalTripEta | momentFormat: 'YYYY-MM-DD HH:mm:ss'}}
+                    {{!TotalTripEta.isValid() ? l('Unknown') : (TotalTripEta | momentFormat: 'YYYY-MM-DD HH:mm:ss')}}
                   </div>
                 </div>
 
@@ -59,7 +59,8 @@
                     'label-success': etaService.isTripDelayed(TotalTripEta) === 'OnTime',
                     'label-warning': etaService.isTripDelayed(TotalTripEta) === 'Unknown'
                   }"
-                      >{{ l(etaService.isTripDelayed(TotalTripEta)) }}</span
+                      >{{ trip.status == tripStatusesEnum.Delivered || trip.status == tripStatusesEnum.DeliveredAndNeedsConfirmation ? l('Delivered')
+                      : l(etaService.isTripDelayed(TotalTripEta)) }}</span
                     >
                   </div>
                 </div>

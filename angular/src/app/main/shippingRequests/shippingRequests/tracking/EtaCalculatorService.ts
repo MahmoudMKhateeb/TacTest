@@ -40,7 +40,7 @@ export class EtaCalculatorService {
    * @param tripExpectedArrivalDate
    */
   isTripDelayed(tripExpectedArrivalDate): string {
-    if (tripExpectedArrivalDate === '') {
+    if (tripExpectedArrivalDate === '' || !tripExpectedArrivalDate.isValid()) {
       return 'Unknown';
     }
     const todayMoment = moment();
