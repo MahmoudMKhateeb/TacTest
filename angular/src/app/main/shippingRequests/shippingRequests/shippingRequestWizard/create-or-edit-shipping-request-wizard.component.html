@@ -698,6 +698,7 @@
                               *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
                             >
                             </dx-select-box>
+                            <!--                            origin facilityID {{ step2Dto.originFacilityId }}-->
                             <!--                            <select-->
                             <!--                              class="form-control"-->
                             <!--                              name="originFacility"-->
@@ -724,7 +725,7 @@
                             <!--                              </option>-->
                             <!--                            </select>-->
                             <dx-select-box
-                              name="originCity"
+                              name="originCity2"
                               formControlName="originCity"
                               [(value)]="step2Dto.originCityId"
                               [dataSource]="sourceCities"
@@ -738,6 +739,7 @@
                               *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
                             >
                             </dx-select-box>
+
                             <!--                            <select-->
                             <!--                              class="form-control"-->
                             <!--                              name="originCity"-->
