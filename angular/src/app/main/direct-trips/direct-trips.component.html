@@ -223,7 +223,7 @@
                 <div class="card with-border">
                   <div class="card-header pb-2">
                     <h3>
-                      {{ 'SubWaybill' | localize }}
+                      {{ (masterDetailItem?.data?.routeType == 1 ? 'points' : 'SubWaybill') | localize }}
                     </h3>
                   </div>
                   <div class="card-body p-0">
@@ -232,7 +232,11 @@
                       [remoteOperations]="false"
                       [wordWrapEnabled]="true"
                     >
-                      <dxi-column dataField="waybillNumber" caption="{{ 'SubWaybill' | localize }}"></dxi-column>
+                      <dxi-column
+                        *ngIf="masterDetailItem?.data?.routeType != 1"
+                        dataField="waybillNumber"
+                        caption="{{ 'SubWaybill' | localize }}"
+                      ></dxi-column>
                       <dxi-column dataField="address" caption="{{ 'Destination' | localize }}"></dxi-column>
                     </dx-data-grid>
                   </div>
