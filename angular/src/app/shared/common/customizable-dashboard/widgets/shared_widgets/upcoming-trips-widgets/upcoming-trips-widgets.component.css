@@ -78,3 +78,8 @@
   right: -1% !important;
   padding: 0.2em 1.5em 0.2em 0.2em;
 }
+
+.card-custom {
+  /*max-height: 200px; !* Set a maximum height for the container *!*/
+  overflow-y: auto !important;
+}

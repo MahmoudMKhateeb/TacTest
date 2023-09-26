@@ -121,6 +121,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     this._userService.getUserForEdit(userId).subscribe((userResult) => {
       this.user = userResult.user;
       this.user.isDriver = this.creatDriver;
+      (this.user.driverLicenseTypeId as any) = this.user?.driverLicenseTypeId?.toString();
+      (this.user.nationalityId as any) = this.user?.nationalityId?.toString();
       this.canChangeUserName = this.user.userName !== AppConsts.userManagement.defaultAdminUserName;
       this.allOrganizationUnits = userResult.allOrganizationUnits;
       this.memberedOrganizationUnits = userResult.memberedOrganizationUnits;

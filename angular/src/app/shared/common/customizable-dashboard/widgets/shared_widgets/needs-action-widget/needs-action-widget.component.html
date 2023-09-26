@@ -20,7 +20,7 @@
       <div class="card-body p-4 d-flex flex-column">
         <div class="card-title mb-4" *ngIf="!isTachyonDealerOrHost">
           <div class="d-flex w-100 justify-content-between align-items-center">
-            <div class="card-label">{{ 'NeedsAction' | localize }}</div>
+            <div class="card-label">{{ (isForActors ? 'ClientNeedsAction' : 'NeedsAction') | localize }}</div>
             <div *ngIf="!isForActors">
               <app-host-tms-widget-filters [showCurrentMonth]="true" (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
             </div>

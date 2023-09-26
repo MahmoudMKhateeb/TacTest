@@ -13,5 +13,6 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public string Facility { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
+        public DateTime? Endtime { get; set; }
     }
 }

@@ -344,12 +344,11 @@ namespace TACHYON.PricePackages.PricePackageOffers
 
         private async Task SendDirectRequestToCarrierByPricePackage(PricePackage pricePackage, ShippingRequest shippingRequest)
         {
+            var createDirectRequestInput = new CreateShippingRequestDirectRequestInput
+            {
+                ShippingRequestId = shippingRequest.Id, CarrierTenantId = pricePackage.TenantId
+            };
 
-            var createDirectRequestInput = new CreateShippingRequestDirectRequestInput()
-            { ShippingRequestId = shippingRequest.Id };
-
-            createDirectRequestInput.CarrierTenantId = pricePackage.TenantId;
-            
             var directRequest = await _shippingRequestDirectRequestManager.Create(createDirectRequestInput);
                
             var createdPricePackageOffer = new PricePackageOffer()
@@ -361,7 +360,7 @@ namespace TACHYON.PricePackages.PricePackageOffers
             await _pricePackageOfferRepository.InsertAsync(createdPricePackageOffer);
 
             // acknowledge offer on behalf of carrier
-            await _priceOfferManager.AcknowledgeOfferOnBehalfOfCarrier(new CreateOrEditPriceOfferInput
+            var offerInput = new CreateOrEditPriceOfferInput
             {
                 Channel = PriceOfferChannel.DirectRequest,
                 IsPostPrice = false,
@@ -369,8 +368,18 @@ namespace TACHYON.PricePackages.PricePackageOffers
                 ItemPrice = pricePackage.TotalPrice,
                 CommissionPercentageOrAddValue = 10,
                 CommissionType = PriceOfferCommissionType.CommissionPercentage,
-                CarrierTenantId = pricePackage.TenantId
-            }, shippingRequest, directRequest);
+                CarrierTenantId = pricePackage.TenantId,
+            };
+            var vasesList = shippingRequest.ShippingRequestVases?.Select(srVas => new PriceOfferDetailDto
+            {
+                ItemId = srVas.Id,
+                CommissionPercentageOrAddValue = 0,
+                CommissionType = PriceOfferCommissionType.CommissionValue,
+                Price = 0,
+                PriceType = PriceOfferType.Vas
+            }).ToList();
+            offerInput.ItemDetails = vasesList;
+            await _priceOfferManager.AcknowledgeOfferOnBehalfOfCarrier(offerInput, shippingRequest, directRequest);
             
         }
         private async Task SendOfferToShipperByPricePackage(ShippingRequest shippingRequest, PricePackage pricePackage)

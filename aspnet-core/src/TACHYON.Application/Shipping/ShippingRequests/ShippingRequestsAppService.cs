@@ -35,6 +35,7 @@ using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
 using TACHYON.EntityLogs.Transactions;
+using TACHYON.EntityTemplates;
 using TACHYON.Extension;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
@@ -117,7 +118,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<Actor> actorsRepository,
             IPricePackageManager pricePackageManager,
             IRepository<Facility, long> facilityRepository,
-            IFeatureChecker featureChecker)
+            IFeatureChecker featureChecker, EntityTemplateManager templateManager)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -153,6 +154,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _pricePackageManager = pricePackageManager;
             _facilityRepository = facilityRepository;
             _featureChecker = featureChecker;
+            _templateManager = templateManager;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -188,7 +190,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IPricePackageManager _pricePackageManager;
         private readonly IRepository<Facility, long> _facilityRepository;
         private readonly IFeatureChecker _featureChecker;
-
+        private readonly EntityTemplateManager _templateManager;
 
         private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
@@ -792,6 +794,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
                 output.ShipperRating = shippingRequest.Tenant.Rate;
                 output.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
+                output.TemplateId = await _templateManager.GetTemplateIdByEntity(shippingRequest.Id.ToString());
                 //return translated good category name by default language
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
