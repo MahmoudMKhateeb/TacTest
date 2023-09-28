@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
@@ -29,7 +30,7 @@ using TACHYON.Trucks;
 namespace TACHYON.Shipping.ShippingRequests
 {
     [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
-    public class DedicatedShippingRequestsAppService: TACHYONAppServiceBase, IDedicatedShippingRequestsAppService
+    public class DedicatedShippingRequestsAppService : TACHYONAppServiceBase, IDedicatedShippingRequestsAppService
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly ShippingRequestManager _shippingRequestManager;
@@ -42,6 +43,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
+        private readonly IRepository<Actor> _actorRepository;
 
         public DedicatedShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository,
             ShippingRequestManager shippingRequestManager,
@@ -53,7 +55,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<Truck, long> truckRepository,
             IRepository<User, long> lookup_userRepository,
             IAppNotifier appNotifier,
-            IFeatureChecker featureChecker)
+            IFeatureChecker featureChecker,
+            IRepository<Actor> actorRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestManager = shippingRequestManager;
@@ -66,6 +69,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_userRepository = lookup_userRepository;
             _appNotifier = appNotifier;
             _featureChecker = featureChecker;
+            _actorRepository = actorRepository;
         }
 
         #region Wizard
@@ -73,7 +77,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             var query = _dedicatedShippingRequestTruckRepository.GetAll()
-                .WhereIf(await IsTachyonDealer(),x=> true)
+                .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId ||
                 x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
@@ -81,7 +85,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .AsNoTracking();
 
             return await LoadResultAsync(query, input.Filter);
-            
+
         }
 
         public async Task<LoadResult> GetAllDedicatedDrivers(GetAllDedicatedDriversInput input)
@@ -118,13 +122,13 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-       
+
 
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<CreateOrEditDedicatedStep1Dto> GetStep1ForEdit(long id)
         {
-            var shippingRequest=await GetDraftedDedicatedShippingRequestForStep1(id);
-                return ObjectMapper.Map<CreateOrEditDedicatedStep1Dto>(shippingRequest);
+            var shippingRequest = await GetDraftedDedicatedShippingRequestForStep1(id);
+            return ObjectMapper.Map<CreateOrEditDedicatedStep1Dto>(shippingRequest);
         }
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task EditStep2(EditDedicatedStep2Dto input)
@@ -237,11 +241,11 @@ namespace TACHYON.Shipping.ShippingRequests
                     KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI)
                 });
 
-                driversList.Add(new DedicatedShippingRequestDriver 
-                { 
+                driversList.Add(new DedicatedShippingRequestDriver
+                {
                     ShippingRequestId = shippingRequest.Id,
-                    DriverUserId = driverAndtruck.DriverId, 
-                    Status = status ,
+                    DriverUserId = driverAndtruck.DriverId,
+                    Status = status,
                     ReplacementFlag = ReplacementFlag.Original
                 });
 
@@ -255,7 +259,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _truckRepository.GetAll()
-                .WhereIf(await IsTachyonDealer(), x=>x.TenantId == tenantId.Value)
+                .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
                 .Where(x => x.TrucksTypeId == truckTypeId)
                 .Select(x => new SelectItemDto
                 {
@@ -266,10 +270,17 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<List<SelectItemDto>> GetAllDriversForDropDown(int? tenantId, int? actorId)
         {
+            Actor actor = default ;
+            if (actorId.HasValue)
+            {
+                actor = await _actorRepository.GetAsync(actorId.Value);
+            }
+
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_userRepository.GetAll()
-                .WhereIf(await IsTachyonDealer() && tenantId.HasValue, x=>x.TenantId == tenantId.Value)
-                .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
+                .WhereIf(await IsTachyonDealer() && tenantId.HasValue, x => x.TenantId == tenantId.Value)
+                .WhereIf(actorId != null, x => x.CarrierActorId == actorId)
+                .WhereIf(actor != null && actor.ActorType == ActorTypesEnum.MySelf, x => x.CarrierActorFk.ActorType == Actors.ActorTypesEnum.MySelf || x.CarrierActorId == null)
                 .Where(e => e.IsDriver == true)
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
                 .ToListAsync();
@@ -277,21 +288,28 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long? truckTypeId, int? tenantId, int? actorId)
         {
+            Actor actor = default;
+            if (actorId.HasValue)
+            {
+                actor = await _actorRepository.GetAsync(actorId.Value);
+            }
+
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _truckRepository.GetAll()
                 .WhereIf(await IsTachyonDealer() && tenantId.HasValue, x => x.TenantId == tenantId.Value)
-                .WhereIf(truckTypeId.HasValue , x => x.TrucksTypeId == truckTypeId)
-                .WhereIf(actorId != null, x=> x.CarrierActorId == actorId)
+                .WhereIf(truckTypeId.HasValue, x => x.TrucksTypeId == truckTypeId)
+                .WhereIf(actorId != null, x => x.CarrierActorId == actorId)
+                .WhereIf(actor != null && actor.ActorType == ActorTypesEnum.MySelf, x => x.CarrierActorFk.ActorType == Actors.ActorTypesEnum.MySelf || x.CarrierActorId == null)
                 .Select(x => new GetAllTrucksWithDriversListDto
                 {
                     TruckName = x.GetDisplayName(),
                     TruckId = x.Id,
-                    DriverUserId=x.DriverUserId,
-                    DriverName = x.DriverUserFk!=null ?x.DriverUserFk.Name :""
+                    DriverUserId = x.DriverUserId,
+                    DriverName = x.DriverUserFk != null ? x.DriverUserFk.Name : ""
                 }).ToListAsync();
         }
 
-        
+
         #endregion
 
         #region trip
@@ -300,15 +318,19 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             return await _dedicatedShippingRequestDriverRepository.GetAll()
-                .Include(x=>x.DriverUser)
-                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x=>x.ShippingRequest.TenantId==AbpSession.TenantId)
-                .WhereIf(await IsTachyonDealer(), x=>true)
+                .Include(x => x.DriverUser)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(await IsTachyonDealer(), x => true)
                 .Where(e => e.ShippingRequestId == shippingRequestId)
-                .Select(x => new GetAllDedicatedDriversOrTrucksForDropDownDto { Id = x.DriverUserId.ToString()
-                ,IsAvailable = !x.ReplacementDate.HasValue || 
-                (x.ReplacementFlag == ReplacementFlag.Replaced && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now.Date ) ||
+                .Select(x => new GetAllDedicatedDriversOrTrucksForDropDownDto
+                {
+                    Id = x.DriverUserId.ToString()
+                ,
+                    IsAvailable = !x.ReplacementDate.HasValue ||
+                (x.ReplacementFlag == ReplacementFlag.Replaced && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now.Date) ||
                 (x.ReplacementFlag == ReplacementFlag.Original && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) < Clock.Now.Date),
-                    DisplayName = $"{x.DriverUser.Name} {x.DriverUser.Surname}" }                )
+                    DisplayName = $"{x.DriverUser.Name} {x.DriverUser.Surname}"
+                })
                 .ToListAsync();
         }
 
@@ -317,7 +339,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             return await _dedicatedShippingRequestTruckRepository.GetAll()
-                .Include(x=>x.Truck)
+                .Include(x => x.Truck)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .Where(x => x.ShippingRequestId == shippingRequestId)
@@ -335,7 +357,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             //if (truckId == null && DriverUserId == null) throw new UserFriendlyException(L("EvenTruckOrDriverMustHaveValue"));
             await DisableTenancyFiltersIfTachyonDealer();
-            var dedicatedTruck= await _dedicatedShippingRequestTruckRepository.GetAll()
+            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.GetAll()
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(truckId != null, x => x.TruckId == truckId)
@@ -378,7 +400,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => x.ShippingRequestId == shippingRequestId)
                 .Select(x => new SelectItemDto
                 {
-                    DisplayName = x.ReplacementFlag== ReplacementFlag.Replaced ?$"{x.Truck.GetDisplayName()}{"Replacement"}{x.OriginalTruck.Truck.GetDisplayName()}" :x.Truck.GetDisplayName(),
+                    DisplayName = x.ReplacementFlag == ReplacementFlag.Replaced ? $"{x.Truck.GetDisplayName()}{"Replacement"}{x.OriginalTruck.Truck.GetDisplayName()}" : x.Truck.GetDisplayName(),
                     Id = x.Id.ToString()
                 }).ToListAsync();
         }
@@ -391,8 +413,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             var request = await _shippingRequestRepository.GetAll()
-                .WhereIf(!await IsTachyonDealer(), x=>x.TenantId == x.CarrierTenantId)
-                .FirstOrDefaultAsync(x=>x.Id == input.ShippingRequestId);
+                .WhereIf(!await IsTachyonDealer(), x => x.TenantId == x.CarrierTenantId)
+                .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestId);
             request.DedicatedKPI = input.KPI;
         }
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.ShipperClients, AppFeatures.CarrierClients)]
@@ -401,7 +423,7 @@ namespace TACHYON.Shipping.ShippingRequests
             await DisableTenancyFilterIfTachyonDealerOrHost();
             var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.GetAll()
                 .WhereIf(!await IsTachyonDealer(), x => x.ShippingRequest.TenantId == x.ShippingRequest.CarrierTenantId)
-                .FirstOrDefaultAsync(x=>x.Id == input.DedicatedTruckId);
+                .FirstOrDefaultAsync(x => x.Id == input.DedicatedTruckId);
             dedicatedTruck.KPI = input.KPI;
         }
 
@@ -416,7 +438,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId &&
                 x.Truck.TenantId == AbpSession.TenantId)
-                .Where( x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice &&
+                .Where(x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice &&
                 x.ReplacementFlag == ReplacementFlag.Original)
                 .ProjectTo<GetDedicatedTruckForReplaceDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
@@ -436,10 +458,10 @@ namespace TACHYON.Shipping.ShippingRequests
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _truckRepository.GetAll()
                 .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
-                .Where(x => x.TrucksTypeId == truckTypeId && 
-                !x.DedicatedShippingRequestTrucks.Any(y=>y.ShippingRequestId == shippingRequestId && 
-                (y.ReplacementFlag == ReplacementFlag.Original || 
-                (y.ReplacementFlag== ReplacementFlag.Replaced && y.ReplacementDate.Value.AddDays(y.ReplacementIntervalInDays.Value) < Clock.Now.Date)
+                .Where(x => x.TrucksTypeId == truckTypeId &&
+                !x.DedicatedShippingRequestTrucks.Any(y => y.ShippingRequestId == shippingRequestId &&
+                (y.ReplacementFlag == ReplacementFlag.Original ||
+                (y.ReplacementFlag == ReplacementFlag.Replaced && y.ReplacementDate.Value.AddDays(y.ReplacementIntervalInDays.Value) < Clock.Now.Date)
                 )))
                 .Select(x => new SelectItemDto
                 {
@@ -457,9 +479,9 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task RequestReplaceTruck(RequestReplaceTruckInput input)
         {
-            var dedicatedTruck =await GetDedicateTruckById(input.DedicatedTruckId);
+            var dedicatedTruck = await GetDedicateTruckById(input.DedicatedTruckId);
             if (dedicatedTruck.IsRequestedToReplace) throw new UserFriendlyException(L("TruckIsRequestedToReplaceBefore"));
-            if(dedicatedTruck.ReplacementFlag == ReplacementFlag.Replaced) throw new UserFriendlyException(L("OriginalTruckMustnotBeReplaced"));
+            if (dedicatedTruck.ReplacementFlag == ReplacementFlag.Replaced) throw new UserFriendlyException(L("OriginalTruckMustnotBeReplaced"));
             dedicatedTruck.ReplacementReason = input.ReplacementReason;
             dedicatedTruck.ReplacementIntervalInDays = input.ReplacementIntervalInDays;
             dedicatedTruck.IsRequestedToReplace = true;
@@ -481,19 +503,19 @@ namespace TACHYON.Shipping.ShippingRequests
                 item.ReplacementDate = Clock.Now;
                 item.KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI);
                 item.ShippingRequestId = input.ShippingRequestId;
-                item.Status = dedicatedTrucks.First(x=>x.Id == item.OriginalDedicatedTruckId).Status;
+                item.Status = dedicatedTrucks.First(x => x.Id == item.OriginalDedicatedTruckId).Status;
 
                 _dedicatedShippingRequestTruckRepository.Insert(item);
             }
 
             // cancel request to replace in  original trucks
-            foreach(var originalTruck in dedicatedTrucks)
+            foreach (var originalTruck in dedicatedTrucks)
             {
                 originalTruck.IsRequestedToReplace = false;
                 originalTruck.ReplacementDate = Clock.Now;
                 originalTruck.ReplacementIntervalInDays = input.ReplaceTruckDtos.FirstOrDefault(x => x.OriginalDedicatedTruckId == originalTruck.Id).ReplacementIntervalInDays;
             }
-           
+
         }
 
         #endregion
@@ -525,7 +547,7 @@ namespace TACHYON.Shipping.ShippingRequests
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_userRepository.GetAll()
                 .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
-                .Where(e => e.IsDriver == true && !e.DedicatedShippingRequestDrivers.Any(x=>x.ShippingRequestId == shippingRequestId))
+                .Where(e => e.IsDriver == true && !e.DedicatedShippingRequestDrivers.Any(x => x.ShippingRequestId == shippingRequestId))
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
                 .ToListAsync();
         }
@@ -552,7 +574,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task ReplaceDrivers(ReplaceDriverInput input)
         {
             var dedicatedDrivers = await GetDedicateDriversByIds(input);
-            if (dedicatedDrivers.Any(x=>x.ReplacementFlag == ReplacementFlag.Replaced)) throw new UserFriendlyException(L("OriginalDriverMustnotBeReplaced"));
+            if (dedicatedDrivers.Any(x => x.ReplacementFlag == ReplacementFlag.Replaced)) throw new UserFriendlyException(L("OriginalDriverMustnotBeReplaced"));
             if (dedicatedDrivers.Any(x => x.ReplacementDate != null && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now)) throw new UserFriendlyException(L("SomeDriversAreCurrentlyReplaced"));
 
             var ReplacedDrivers = ObjectMapper.Map<List<DedicatedShippingRequestDriver>>(input.ReplaceDriverDtos);
@@ -585,8 +607,8 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequest.ShippingRequestFlag = ShippingRequestFlag.Dedicated;
             shippingRequest.DedicatedKPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.RequestKPI);
             await _shippingRequestManager.CreateStep1Manager(shippingRequest, input);
-            var SR= await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
-            
+            var SR = await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
+
 
             //add new or remove destinaton cities
             await AddOrRemoveDestinationCities(input, shippingRequest);
@@ -657,13 +679,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L(String.Format("TrucksAndDriversMustBe {0}", shippingRequest.NumberOfTrucks)));
             }
 
-            var RentedTruck =await _shippingRequestManager.IsAnyTruckBusyDuringRentalDuration(input.TrucksList.Select(x=>x.Id).ToList(), shippingRequest);
-            if (RentedTruck !=null)
+            var RentedTruck = await _shippingRequestManager.IsAnyTruckBusyDuringRentalDuration(input.TrucksList.Select(x => x.Id).ToList(), shippingRequest);
+            if (RentedTruck != null)
             {
-                throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.TrucksList.Where(x=>x.Id == RentedTruck).First().TruckName)));
+                throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.TrucksList.Where(x => x.Id == RentedTruck).First().TruckName)));
             }
 
-            var RentedDriver =await _shippingRequestManager.IsAnyDriverBusyDuringRentalDuration(input.DriversList.Select(x=>x.Id).ToList(), shippingRequest);
+            var RentedDriver = await _shippingRequestManager.IsAnyDriverBusyDuringRentalDuration(input.DriversList.Select(x => x.Id).ToList(), shippingRequest);
             if (RentedDriver != null)
             {
                 throw new UserFriendlyException(L(String.Format("The driver {0} is rented", input.DriversList.Where(x => x.Id == RentedDriver).First().DriverName)));
@@ -679,20 +701,20 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L(String.Format("TrucksAndDriversMustBe {0}", shippingRequest.NumberOfTrucks)));
             }
 
-            var RentedTruck = await _shippingRequestManager.IsAnyTruckBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.TruckId).ToList(), shippingRequest);
+            var RentedTruck = await _shippingRequestManager.IsAnyTruckBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x => x.TruckId).ToList(), shippingRequest);
             if (RentedTruck != null)
             {
                 throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.DedicatedShippingRequestTrucksAndDriversDtos.Where(x => x.TruckId == RentedTruck).First().TruckName)));
             }
 
-            var RentedDriver = await _shippingRequestManager.IsAnyDriverBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.DriverId).ToList(), shippingRequest);
+            var RentedDriver = await _shippingRequestManager.IsAnyDriverBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x => x.DriverId).ToList(), shippingRequest);
             if (RentedDriver != null)
             {
                 throw new UserFriendlyException(L(String.Format("The driver {0} is rented", input.DedicatedShippingRequestTrucksAndDriversDtos.Where(x => x.DriverId == RentedDriver).First().DriverName)));
             }
         }
 
-       
+
 
         private async Task<ShippingRequest> GetDraftedDedicatedShippingRequestForStep1(long id)
         {
@@ -703,7 +725,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(x => x.ShippingRequestDestinationCities)
                 .ThenInclude(x => x.CityFk)
                 .WhereIf(await IsTachyonDealer(), x => true)
-                .WhereIf(await IsShipper(), x=>x.TenantId==AbpSession.TenantId)
+                .WhereIf(await IsShipper(), x => x.TenantId == AbpSession.TenantId)
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
             return shippingRequest;
@@ -718,7 +740,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(x => x.ShippingRequestVases)
                 .WhereIf(await IsTachyonDealer(), x => true)
                 //.WhereIf(await IsShipper(), x => x.TenantId == AbpSession.TenantId)
-                .Where(x => x.Id == id && x.Status!=ShippingRequestStatus.PostPrice)
+                .Where(x => x.Id == id && x.Status != ShippingRequestStatus.PostPrice)
                 .FirstOrDefaultAsync();
             return shippingRequest;
         }
@@ -728,9 +750,9 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             return await _dedicatedShippingRequestTruckRepository.GetAll()
-                .Include(x=>x.ShippingRequest)
-                .ThenInclude(x=>x.CarrierTenantFk)
-                .Include(x=>x.Truck)
+                .Include(x => x.ShippingRequest)
+                .ThenInclude(x => x.CarrierTenantFk)
+                .Include(x => x.Truck)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -744,7 +766,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ThenInclude(x => x.CarrierTenantFk)
                 .Include(x => x.Truck)
                 .Where(x => input.ReplaceTruckDtos.Select(x => x.OriginalDedicatedTruckId).Contains(x.Id) &&
-                x.ShippingRequestId== input.ShippingRequestId)
+                x.ShippingRequestId == input.ShippingRequestId)
                 .ToListAsync();
         }
 
