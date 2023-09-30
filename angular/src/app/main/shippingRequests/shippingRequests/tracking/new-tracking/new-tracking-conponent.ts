@@ -1,4 +1,16 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Injector,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   AdditionalStepTransitionDto,
@@ -32,9 +44,10 @@ import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/mai
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { Timeline } from '@node_modules/primeng/timeline';
-import { CustomStep } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-step';
 import * as moment from '@node_modules/moment';
 import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
+import { Moment } from '@node_modules/moment';
+import { EtaCalculatorService } from '@app/main/shippingRequests/shippingRequests/tracking/EtaCalculatorService';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -43,7 +56,22 @@ import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/s
   providers: [NgbDropdownConfig],
   animations: [appModuleAnimation()],
 })
-export class NewTrackingConponent extends AppComponentBase implements OnChanges, OnInit {
+export class NewTrackingConponent extends AppComponentBase implements OnChanges, OnInit, AfterViewInit {
+  constructor(
+    injector: Injector,
+    private elRef: ElementRef,
+    private _trackingServiceProxy: TrackingServiceProxy,
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _fileDownloadService: FileDownloadService,
+    public etaService: EtaCalculatorService,
+
+    private _db: AngularFireDatabase,
+    config: NgbDropdownConfig
+  ) {
+    super(injector);
+    config.autoClose = true;
+    config.container = 'body';
+  }
   @ViewChild('modelconfirm', { static: false }) modelConfirmCode: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
   @ViewChild('appEntityLog', { static: false }) activityLogModal: EntityLogComponent;
@@ -64,13 +92,11 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   saving = false;
   markerLong: number;
   markerLat: number;
-  markerFacilityName: string;
   activeIndex = 1;
   driverStatusesEnum = ShippingRequestTripDriverStatus;
   tripStatusesEnum = ShippingRequestTripStatus;
   pickingTypeEnum = PickingType;
   routeTypeEnum = ShippingRequestRouteType;
-  ShippingRequestTypeEnum = ShippingRequestType;
   canStartAnotherPoint = false;
   dropWaybillLoadingId: number;
   busyPointId: number;
@@ -78,9 +104,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   pointDeliveryNoteList: GetAllUploadedFileDto[];
   pointPodList: GetAllUploadedFileDto[];
   pointAdditionalFilesList: GetAllUploadedFileDto[] = [];
-  deliveryGoodPictureId: number;
   mapToggle = true;
-  newReceiverCode: string;
   tripRoute = {
     origin: { lat: null, lng: null },
     wayPoints: [],
@@ -96,20 +120,9 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   ShippingTypeEnum = ShippingTypeEnum;
   RoutePointStatus = RoutePointStatus;
   additionalFilesTransitions: { pointId: number; transactions: AdditionalStepTransitionDto[] }[] = [];
-
-  constructor(
-    injector: Injector,
-    private elRef: ElementRef,
-    private _trackingServiceProxy: TrackingServiceProxy,
-    private _waybillsServiceProxy: WaybillsServiceProxy,
-    private _fileDownloadService: FileDownloadService,
-    private _db: AngularFireDatabase,
-    config: NgbDropdownConfig
-  ) {
-    super(injector);
-    config.autoClose = true;
-    config.container = 'body';
-  }
+  etaValues: { [key: string]: { distance: string; ETA: string; tripETA: Moment; distanceInMeters: number } } = {}; // Dictionary to store precalculated ETA values
+  totalTripMileage = 0;
+  totalTripPointsDuration = 0;
 
   ngOnInit() {
     abp.event.on('FileUploadedSuccessFromAdditionalSteps', () => {
@@ -118,6 +131,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
     abp.event.on('trackingConfirmCodeSubmittedFromAdditionalSteps', () => {
       this.getForView();
     });
+  }
+
+  ngAfterViewInit() {
+    this.getETAs();
   }
 
   /**
@@ -365,6 +382,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
       .subscribe(() => {
         this.notify.info(this.l('SuccessfullyChanged'));
       });
+    this.getETAs();
   }
 
   /**
@@ -590,5 +608,29 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
       }
     }
     return [];
+  }
+
+  getETAs() {
+    this.routePoints.forEach((x, index) => {
+      if (x.pickingType === this.pickingTypeEnum.Dropoff) {
+        this.etaService.calculateDistance(this.routePoints[index - 1], x).then((googleResponse) => {
+          let distanceText = googleResponse.distance.text; //distance in this format 1258 km
+          let distanceValue = googleResponse.distance.value; // distance in this format 1257978
+          let durationText = googleResponse.duration.text; // in text for example 2 hours and 20 min
+          let durationValue = googleResponse.duration.value; // in seconds
+          let previousPointEndTime = this.routePoints[index - 1].statues[this.routePoints[index - 1].statues.length - 1].creationTime;
+          let tripETA = moment(previousPointEndTime, 'YYYY-MM-DD HH:mm:ss').add(durationValue / 60, 'minutes');
+          this.etaValues[x.id] = { distance: distanceText, ETA: durationText, tripETA: tripETA, distanceInMeters: distanceValue };
+          this.totalTripMileage += distanceValue;
+          this.totalTripPointsDuration += durationValue;
+        });
+      }
+    });
+  }
+
+  get TotalTripEta(): moment.Moment {
+    let firstPointDeliveryTime = this.routePoints[0].endTime;
+    let totalTripPintsDurationInMin = this.totalTripPointsDuration / 60; // convert from secounds to min
+    return moment(firstPointDeliveryTime, 'YYYY-MM-DD HH:mm:ss').add(totalTripPintsDurationInMin, 'minutes');
   }
 }

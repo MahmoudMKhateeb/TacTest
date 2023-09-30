@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ActorTypesEnum, BrokerDashboardServiceProxy, NextDueDateDto } from '@shared/service-proxies/service-proxies';
+import { ActorTypesEnum, BrokerDashboardServiceProxy, GetDueDateInDaysOutput } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
@@ -9,7 +9,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
   styleUrls: ['./actor-next-doc-due-date.component.scss'],
 })
 export class ActorNextDocDueDateComponent extends AppComponentBase implements OnInit {
-  documents: NextDueDateDto[] = [];
+  documents: GetDueDateInDaysOutput[] = [];
   actorTypes: any[] = [];
   selectedActorShipper: ActorTypesEnum;
 

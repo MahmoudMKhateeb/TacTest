@@ -5,9 +5,7 @@ import {
   TrackingMapDto,
   WaybillsServiceProxy,
   ShippingRequestRouteType,
-  CapacitiesServiceProxy,
   ISelectItemDto,
-  TenantServiceProxy,
   FacilitiesServiceProxy,
   FacilityCityLookupTableDto,
   PagedResultDtoOfTrackingMapDto,
@@ -23,6 +21,8 @@ import { finalize } from 'rxjs/operators';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import * as _moment from 'moment';
 import { combineLatest } from 'rxjs';
+import { EtaCalculatorService } from '@app/main/shippingRequests/shippingRequests/tracking/EtaCalculatorService';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'app-tracking-map',
@@ -67,6 +67,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   citiesList: FacilityCityLookupTableDto[];
   containerNumber: string;
   private records: PagedResultDtoOfTrackingMapDto;
+  etaValues: { [key: string]: { ETA: number } } = {}; // Dictionary to store precalculated ETA values
 
   constructor(
     private injector: Injector,
@@ -75,7 +76,8 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
     private _fileDownloadService: FileDownloadService,
     private _db: AngularFireDatabase,
     private enumToArray: EnumToArrayPipe,
-    private facilitiesServiceProxy: FacilitiesServiceProxy
+    private facilitiesServiceProxy: FacilitiesServiceProxy,
+    public etaService: EtaCalculatorService
   ) {
     super(injector);
   }
@@ -131,6 +133,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
       .subscribe((result) => {
         this.records = result;
         this.getDriverLiveLocation();
+        this.getETAs();
 
         this.directions = [];
         for (let i = 0; i < result.items.length; i++) {
@@ -246,7 +249,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
    * check if trip Delayed or on time
    */
   isTripDelayed(tripExpectedArrivalDate): string {
-    if (tripExpectedArrivalDate === '') {
+    if (tripExpectedArrivalDate === '' || !tripExpectedArrivalDate.isValid()) {
       return this.l('Unknown');
     }
     const todayMoment = _moment();
@@ -270,6 +273,37 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
 
   getDate(date): Date {
     return !!date ? _moment(date).toDate() : null;
+  }
+
+  /**
+   * get Etas
+   */
+  async getETAs() {
+    //foreach trip
+    for (const x of this.records.items) {
+      //foreach point in the trip
+      for (let index = 0; index < x.routPoints.length; index++) {
+        const y = x.routPoints[index];
+        let ETAsInMin = 0;
+
+        if (y.pickingType === 'Dropoff' && index > 0) {
+          const googleResponce = await this.etaService.calculateDistance(y, x.routPoints[index - 1]);
+          ETAsInMin += googleResponce.duration.value / 60;
+        }
+
+        if (!this.etaValues[x.id]) {
+          this.etaValues[x.id] = { ETA: ETAsInMin };
+        } else {
+          this.etaValues[x.id].ETA += ETAsInMin;
+        }
+      }
+    }
+  }
+
+  getTotalTripEta(point, time): moment.Moment {
+    // let firstPointDeliveryTime = this.routePoints[0].endTime;
+    // let totalTripPintsDurationInMin = this.totalTripPointsDuration / 60; // convert from secounds to min
+    return moment(point, 'YYYY-MM-DD HH:mm:ss').add(time, 'minutes');
   }
 }
 

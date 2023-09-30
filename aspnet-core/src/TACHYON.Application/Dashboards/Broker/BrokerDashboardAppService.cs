@@ -128,21 +128,16 @@ namespace TACHYON.Dashboards.Broker
             DisableTenancyFilters();
 
             var tripsQuery =  _tripRepository.GetAll()
-                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                            x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                .Where(x =>
-                    (input.ActorType == ActorTypesEnum.Carrier && x.ShippingRequestFk.CarrierActorId.HasValue) ||
-                    (input.ActorType == ActorTypesEnum.Shipper && x.ShippingRequestFk.ShipperActorId.HasValue))
+                .WhereIf(input.ActorType == ActorTypesEnum.Carrier , x => x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(input.ActorType == ActorTypesEnum.Shipper , x => x.ShipperTenantId == AbpSession.TenantId)
                 .WhereIf(input.RangeType == DateRangeType.ThisMonth, x => x.CreationTime.Month == Clock.Now.Month)
-                .WhereIf(input.RangeType == DateRangeType.LastMonth,
-                    x => x.CreationTime.Month == Clock.Now.AddMonths(-1).Month)
-                .WhereIf(input.RangeType == DateRangeType.LastYear,
-                    x => x.CreationTime.Year == Clock.Now.AddYears(-1).Year);
+                .WhereIf(input.RangeType == DateRangeType.LastMonth, x => x.CreationTime.Month == Clock.Now.AddMonths(-1).Month)
+                .WhereIf(input.RangeType == DateRangeType.LastYear, x => x.CreationTime.Year == Clock.Now.AddYears(-1).Year);
 
             var activeActors = await (from trip in tripsQuery
                     group trip by (input.ActorType == ActorTypesEnum.Carrier
-                        ? trip.ShippingRequestFk.CarrierActorFk.CompanyName
-                        : trip.ShippingRequestFk.ShipperActorFk.CompanyName)
+                        ? trip.CarrierActorFk.CompanyName
+                        : trip.ShipperActorFk.CompanyName)
                     into tripsGroup
                     select new ActiveActorDto { ActorName = tripsGroup.Key, NumberOfTrips = tripsGroup.Count() })
                 .ToListAsync();
@@ -164,8 +159,7 @@ namespace TACHYON.Dashboards.Broker
             var trips = await (from trip in _tripRepository.GetAll().AsNoTracking()
                     .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId || trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || trip.CarrierTenantId == AbpSession.TenantId || trip.ShipperTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue || trip.ShippingRequestFk.ShipperActorId.HasValue) &&
+                where (  trip.CarrierTenantId == AbpSession.TenantId || trip.ShipperTenantId == AbpSession.TenantId) &
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
                 select new
@@ -176,10 +170,12 @@ namespace TACHYON.Dashboards.Broker
                     Destinations = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Dropoff)
                         .Select(x=> x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
                         trip.WaybillNumber,
-                    TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
-                        ? LocalizationSource.GetString("Dedicated")
-                        : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
-                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate,
+                    //TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
+                    //    ? LocalizationSource.GetString("Dedicated")
+                    //    : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
+                    //        : LocalizationSource.GetString("TruckAggregation"),
+
+                    trip.StartTripDate,
                     IsDirectTrip = !trip.ShippingRequestId.HasValue
                 }).ToListAsync();
             
@@ -194,7 +190,7 @@ namespace TACHYON.Dashboards.Broker
                         Id = x.Id,Origin = x.Origin,
                         Destinations = x.Destinations,
                         WaybillNumber = x.WaybillNumber,
-                        TripType = x.TripType,
+                        TripType = "Saas",
                         IsDirectTrip = x.IsDirectTrip
                     }).ToList()
                 }).ToList();
@@ -330,19 +326,43 @@ namespace TACHYON.Dashboards.Broker
                 }).ToListAsync();
         }
 
-        public async Task<List<NextDueDateDto>> GetNextDocumentsDueDate(ActorTypesEnum type)
+        public async Task<List<GetDueDateInDaysOutput>> GetNextDocumentsDueDate(ActorTypesEnum type)
         {
             var documents = await _documentFileRepository.GetAll().Where(x =>
-                    x.IsAccepted && x.ExpirationDate.HasValue && x.ExpirationDate.Value.Date > Clock.Now.Date &&
+                    x.IsAccepted && x.ExpirationDate.HasValue  &&
                     x.ActorFk.ActorType == type).Select(x=> new {ExpirationDate = x.ExpirationDate.Value,x.ActorFk.CompanyName}).ToListAsync();
 
 
-            return documents.GroupBy(x => (x.ExpirationDate.Date - DateTime.Now.Date).TotalDays / 7)
-                .Select(x => new NextDueDateDto
+            var count = documents.Count();
+
+            var RemainingDays = 0;
+            var dto = new List<GetDueDateInDaysOutput>();
+            if (count == 1)
+            {
+                var expiredDate = documents.FirstOrDefault().ExpirationDate.Date;
+                RemainingDays = documents.FirstOrDefault() != null ? (expiredDate - Clock.Now.Date).Days : 0;
+                if (RemainingDays < 0) RemainingDays = 0;
+
+                dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
+            }
+            else if (count == 0)
+            {
+                dto.Add(new GetDueDateInDaysOutput { Count = 0, TimeUnit = 0 + " Days" });
+            }
+            else
+            {
+                foreach (var document in documents)
                 {
-                    RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
-                    CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
-                }).ToList();
+                    var expiredDate = document.ExpirationDate.Date;
+                    RemainingDays = (expiredDate - Clock.Now.Date).Days;
+
+                    if (RemainingDays < 0) RemainingDays = 0;
+
+                    dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
+                }
+            }
+
+            return dto;
         }
 
         public async Task<List<NextDueDateDto>> GetNextInvoicesDueDate(BrokerInvoiceType invoiceType)
@@ -465,13 +485,18 @@ namespace TACHYON.Dashboards.Broker
 
             var claimed = await query
                 .Where(x => x.Status == SubmitInvoiceStatus.Claim).ToListAsync();
+
+            var rejected = await query
+               .Where(x => x.Status == SubmitInvoiceStatus.Rejected).ToListAsync();
             var outputDto = new GetCarrierInvoicesDetailsOutput();
 
             var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
             var groupedClaimed = claimed.GroupBy(x => x.CreationTime.Date.Month);
+            var groupedRejected = rejected.GroupBy(x => x.CreationTime.Date.Month);
 
             outputDto.PaidInvoices = new List<ChartCategoryPairedValuesDto>();
             outputDto.Claimed = new List<ChartCategoryPairedValuesDto>();
+            outputDto.Rejected = new List<ChartCategoryPairedValuesDto>();
 
             foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
             {
@@ -503,6 +528,21 @@ namespace TACHYON.Dashboards.Broker
                 else
                 {
                     outputDto.Claimed.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+
+                if (groupedRejected.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    outputDto.Rejected.Add(groupedRejected.Where(x => x.Key == date.Month)
+                   .Select(g => new ChartCategoryPairedValuesDto
+                   {
+                       X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
+                       Y = g.Count()
+                   })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    outputDto.Rejected.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
                 }
             }
 

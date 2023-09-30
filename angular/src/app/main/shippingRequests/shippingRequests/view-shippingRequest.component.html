@@ -16,6 +16,7 @@
           "
           [entityType]="entityTypes.ShippingRequestTemplate"
           [sourceEntityId]="activeShippingRequestId"
+          [templateId]="_trip.GetShippingRequestForViewOutput.templateId"
         ></create-or-edit-template-drop-down-button>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !_trip.GetShippingRequestForViewOutput.shippingRequest.isBid">
           <a class="btn btn-dark" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>

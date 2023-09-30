@@ -6,7 +6,6 @@ import {
   ActorTypesEnum,
   BrokerDashboardServiceProxy,
   CarrierDashboardServiceProxy,
-  ChartCategoryPairedValuesDto,
   FilterDatePeriod,
   GetCarrierInvoicesDetailsOutput,
   SelectItemDto,
@@ -15,7 +14,6 @@ import {
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
-import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-carrier-invoices-details-widget',
@@ -77,14 +75,14 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
     this.loading = true;
 
     this._carrierDashboardServiceProxy
-      .getCarrierInvoicesDetails(this.selectedOption)
+      .getCarrierInvoicesDetails()
       .pipe(
         finalize(() => {
           this.loading = false;
         })
       )
       .subscribe((result) => {
-        this.fillChart(result);
+        this.fillForBrokerOrCarrier(result);
       });
   }
 
@@ -102,7 +100,7 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
         })
       )
       .subscribe((result) => {
-        this.fillChart(result);
+        this.fillForBrokerOrCarrier(result);
       });
   }
 
@@ -241,5 +239,57 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
   filterOptionSelected($event: FilterDatePeriod) {
     this.selectedOption = $event;
     this.fetchData();
+  }
+  private fillForBrokerOrCarrier(result: GetCarrierInvoicesDetailsOutput) {
+    this.chartOptions = {
+      series: [
+        {
+          name: this.l('Paid'),
+          data: result.paidInvoices.map((item) => item.y),
+          color: '#dc2434',
+        },
+        {
+          name: this.l('Claimed'),
+          data: result.claimed.map((item) => item.y),
+          color: '#000',
+        },
+        {
+          name: this.l('Rejected'),
+          data: result.rejected.map((item) => item.y),
+          color: '#707070',
+        },
+      ],
+      chart: {
+        type: 'bar',
+        height: '100%',
+        width: '100%',
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
+      },
+      xaxis: {
+        categories: result.paidInvoices.map((item) => item.x),
+      },
+      yaxis: {
+        title: {},
+      },
+      fill: {
+        opacity: 1,
+      },
+      tooltip: {
+        y: {},
+      },
+    };
   }
 }

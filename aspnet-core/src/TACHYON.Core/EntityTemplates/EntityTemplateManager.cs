@@ -85,6 +85,13 @@ namespace TACHYON.EntityTemplates
             return updatedEntityTemplate.Id.ToString();
         }
 
+        public async Task<long?> GetTemplateIdByEntity(string savedEntityId)
+        {
+            var templateId = await _templateRepository.GetAll().Where(x => x.SavedEntityId.Equals(savedEntityId))
+                .Select(x => x.Id).FirstOrDefaultAsync();
+            return templateId != default ? templateId : default(long?);
+        }
+
         private async Task<EntityTemplate> GetById(long templateId)
         {
             var template = await _templateRepository.FirstOrDefaultAsync(templateId);
@@ -260,15 +267,16 @@ namespace TACHYON.EntityTemplates
             };
             
             await DisableTenancyFilterIfTms(); // to skip join tenancy filter for tms
-            
-            var matchesOriginAndDestinationItems = (from template in filteredByRoutTypeItems 
-                join originFacility in _facilityRepository.GetAll().AsNoTracking()
-                    on template.Trip.OriginFacilityId equals originFacility.Id
-                join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
-                    on template.Trip.DestinationFacilityId equals destinationFacility.Id
-                where originFacility.CityId == shippingRequest.SourceCityId 
-                      && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId)
-                select template);
+
+            var matchesOriginAndDestinationItems = filteredByRoutTypeItems.Where(x=> x.Trip.OriginCityId == shippingRequest.SourceCityId);
+            //var matchesOriginAndDestinationItems = (from template in filteredByRoutTypeItems 
+            //    join originFacility in _facilityRepository.GetAll().AsNoTracking()
+            //        on template.Trip.OriginFacilityId equals originFacility.Id
+            //    join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
+            //        on template.Trip.DestinationFacilityId equals destinationFacility.Id
+            //    where originFacility.CityId == shippingRequest.SourceCityId 
+            //          //&& shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId)
+            //    select template);
 
             if (shippingRequest.ShippingType is ShippingTypeEnum.ImportPortMovements
                 or ShippingTypeEnum.ExportPortMovements)

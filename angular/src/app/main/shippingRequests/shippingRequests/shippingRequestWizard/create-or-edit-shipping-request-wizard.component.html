@@ -698,6 +698,7 @@
                               *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
                             >
                             </dx-select-box>
+                            <!--                            origin facilityID {{ step2Dto.originFacilityId }}-->
                             <!--                            <select-->
                             <!--                              class="form-control"-->
                             <!--                              name="originFacility"-->
@@ -724,7 +725,7 @@
                             <!--                              </option>-->
                             <!--                            </select>-->
                             <dx-select-box
-                              name="originCity"
+                              name="originCity2"
                               formControlName="originCity"
                               [(value)]="step2Dto.originCityId"
                               [dataSource]="sourceCities"
@@ -738,6 +739,7 @@
                               *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
                             >
                             </dx-select-box>
+
                             <!--                            <select-->
                             <!--                              class="form-control"-->
                             <!--                              name="originCity"-->
@@ -1143,19 +1145,11 @@
                               [(value)]="step3Dto.trucksTypeId"
                               [dataSource]="allTrucksTypes"
                               [searchEnabled]="true"
-                              (onSelectionChanged)="trucksTypeSelectChange(step3Dto.trucksTypeId)"
+                              (onValueChanged)="trucksTypeSelectChange(step3Dto.trucksTypeId)"
                               displayExpr="displayName"
                               valueExpr="id"
                               required
-                              [disabled]="
-                                step3Dto.transportTypeId == null
-                                  ? true
-                                  : null || allTransportTypes == null
-                                  ? true
-                                  : null || allTrucksTypes == null
-                                  ? true
-                                  : null
-                              "
+                              [disabled]="step3Dto.transportTypeId == null || allTransportTypes == null || allTrucksTypes == null"
                               placeholder="{{ l('SelectaTruckType') }}"
                             >
                             </dx-select-box>
@@ -1234,19 +1228,6 @@
                             displayExpr="displayName"
                             valueExpr="id"
                             required
-                            [disabled]="
-                              capacityLoading
-                                ? true
-                                : null || step3Dto.trucksTypeId == null
-                                ? true
-                                : null || step3Dto.transportTypeId == null
-                                ? true
-                                : null || allTransportTypes == null
-                                ? true
-                                : null || allTrucksTypes == null
-                                ? true
-                                : null
-                            "
                             placeholder="{{ l('SelectaCapacity') }}"
                           >
                           </dx-select-box>

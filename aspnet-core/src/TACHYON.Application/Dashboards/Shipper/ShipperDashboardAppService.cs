@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 using TACHYON.Authorization;
 using TACHYON.Cities;
 using TACHYON.Dashboards.Host.Dto;
@@ -38,6 +39,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Tenants.Dashboard.Dto;
 using TACHYON.Tracking;
 using TACHYON.Trucks.TrucksTypes;
+using static TACHYON.TACHYONDashboardCustomizationConsts.Widgets;
 
 namespace TACHYON.Dashboards.Shipper
 {
@@ -126,7 +128,7 @@ namespace TACHYON.Dashboards.Shipper
             bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
 
             DisableTenancyFilters();
-            List<ShippingRequestTrip> shippingRequestTrips = _shippingRequestTripRepository.GetAll()
+            var shippingRequestTrips = _shippingRequestTripRepository.GetAll()
                 .AsNoTracking()
                 .Include(x => x.OriginFacilityFk)
                 .ThenInclude(x => x.CityFk)
@@ -134,14 +136,16 @@ namespace TACHYON.Dashboards.Shipper
                 .ThenInclude(x => x.CityFk)
                 .Where
                 (
-                    trip => ((!isBroker && trip.ShippingRequestFk.TenantId == AbpSession.TenantId) ||
-                             (isBroker && (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)) || trip.CarrierTenantId == AbpSession.TenantId ||
-                             trip.ShipperTenantId == AbpSession.TenantId) &&
-                            (!trip.ShippingRequestFk.CarrierActorId.HasValue && !trip.ShippingRequestFk.ShipperActorId.HasValue) &&
-                            trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay && trip.StartTripDate.Date <= endOfCurrentWeek
+                    trip => (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                             trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId ||
+                             trip.CarrierTenantId == AbpSession.TenantId ||
+                             trip.ShipperTenantId == AbpSession.TenantId)
                 )
-                .ToList();
+                .Where
+                (
+                    trip => trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay && trip.StartTripDate.Date <= endOfCurrentWeek
+                );
+
 
             var trips = shippingRequestTrips
                 .Select
@@ -157,9 +161,9 @@ namespace TACHYON.Dashboards.Shipper
                                 .Distinct()
                                 .ToList(),
                         trip.WaybillNumber,
-                        TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated ? LocalizationSource.GetString
+                        TripType = (trip.ShippingRequestId.HasValue && trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated) ? LocalizationSource.GetString
                                 ("Dedicated") :
-                            trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas") : LocalizationSource.GetString("TruckAggregation"),
+                            (trip.ShippingRequestId.HasValue && trip.ShippingRequestFk.IsSaas()) ? LocalizationSource.GetString("Saas") : LocalizationSource.GetString("TruckAggregation"),
                         trip.StartTripDate,
                         IsDirectTrip = !trip.ShippingRequestId.HasValue
                     }
@@ -603,6 +607,7 @@ namespace TACHYON.Dashboards.Shipper
 
             var paid = await query
                     .Where(x => x.IsPaid)
+                    .Where(x=> x.PaymentDate.HasValue)
                     .ToListAsync();
 
 
@@ -613,7 +618,7 @@ namespace TACHYON.Dashboards.Shipper
             var totalInvoicesList = new List<ChartCategoryPairedValuesDto>();
             if (period == FilterDatePeriod.Daily)
             {
-                PaidInvoicesList = paid.GroupBy(x => x.CreationTime.DayOfWeek)
+                PaidInvoicesList = paid.GroupBy(x => x.PaymentDate.Value.DayOfWeek)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
                     .ToList();
 
@@ -623,7 +628,7 @@ namespace TACHYON.Dashboards.Shipper
             }
             if (period == FilterDatePeriod.Monthly)
             {
-                var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
+                var groupedPaid = paid.GroupBy(x => x.PaymentDate.Value.Date.Month);
                 var groupedTotal = total.GroupBy(x => x.CreationTime.Month);
 
                 foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
@@ -663,7 +668,7 @@ namespace TACHYON.Dashboards.Shipper
                 var AllWeeks = new List<int> { 1, 2, 3, 4 };
                 foreach (var week in AllWeeks)
                 {
-                    var groupedTrips = paid.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    var groupedTrips = paid.GroupBy(x => ((x.PaymentDate.Value.Date - firstDayInWeeks.Date).Days / 7) + 1);
                     if (groupedTrips.Select(x => x.Key).ToList().Contains(week))
                     {
                         PaidInvoicesList.Add(groupedTrips.Where(x => x.Key == week)
@@ -702,7 +707,7 @@ namespace TACHYON.Dashboards.Shipper
 
                 foreach (var year in allYears)
                 {
-                    var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Year);
+                    var groupedPaid = paid.GroupBy(x => x.PaymentDate.Value.Date.Year);
                     var groupedTotal = total.GroupBy(x => x.CreationTime.Year);
 
                     if (groupedPaid.Select(x => x.Key).ToList().Contains(year))
@@ -820,28 +825,47 @@ namespace TACHYON.Dashboards.Shipper
         }
 
 
-        public async Task<GetDueDateInDaysOutput> GetDocumentsDueDateInDays()
+        public async Task<List<GetDueDateInDaysOutput>> GetDocumentsDueDateInDays()
         {
             DisableTenancyFilters();
 
-            var document = _documentFileRepository
+            var documents = await _documentFileRepository
                 .GetAll()
                 .AsNoTracking()
                 .Where(x => x.TenantId == AbpSession.TenantId)
                 .Where(x => x.IsAccepted)
                 .Where(x => x.ExpirationDate.HasValue)
-                .Where(x => x.ExpirationDate.Value.Date <= Clock.Now.Date.AddDays(7));
-            var count = await document.CountAsync();
+                .Where(x => x.ExpirationDate.Value.Date < Clock.Now.Date.AddDays(7)).ToListAsync();
+            var count = documents.Count();
+
+            var RemainingDays = 0;
+            var dto = new List<GetDueDateInDaysOutput>();
             if (count == 1)
             {
-                var RemainingDays = document.FirstOrDefault() != null ? (document.FirstOrDefault().ExpirationDate.Value.Date - Clock.Now.Date).Days : 0;
-                string timeUnit = GetTimeUnitByDays(RemainingDays, true);
-                return new GetDueDateInDaysOutput { Count = 1, TimeUnit = timeUnit };
+                var expiredDate = documents.FirstOrDefault().ExpirationDate.Value.Date;
+                RemainingDays = documents.FirstOrDefault() != null ? (expiredDate - Clock.Now.Date).Days : 0;
+                if (RemainingDays < 0) RemainingDays = 0;
+
+                dto.Add( new GetDueDateInDaysOutput{ Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays +" Days", IsExpired = expiredDate < Clock.Now.Date });
+            }
+            else if (count == 0)
+            {
+                dto.Add(new GetDueDateInDaysOutput { Count = 0, TimeUnit = 0 + " Days" });
             }
             else
             {
-                return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" };
+                foreach(var document in documents)
+                {
+                    var expiredDate = document.ExpirationDate.Value.Date;
+                    RemainingDays = (expiredDate - Clock.Now.Date).Days ;
+
+                    if (RemainingDays < 0) RemainingDays = 0;
+
+                    dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
+                }
             }
+
+            return dto;
         }
 
 
@@ -948,6 +972,7 @@ namespace TACHYON.Dashboards.Shipper
                     Id = rp.Id,
                     Facility = rp.FacilityFk.Name,
                     PickingType = rp.PickingType.GetEnumDescription(),
+                    Endtime = rp.EndTime,
                     WaybillNumber = rp.WaybillNumber,
                     Longitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.X : 0),
                     Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
@@ -974,6 +999,57 @@ namespace TACHYON.Dashboards.Shipper
 
         }
 
+        public async Task<GetLoadedVsDeliveredTripsOutput> GetLoadedVsDeliveredTrips(DateRangeInput input)
+        {
+            DisableTenancyFilters();
+            var query = _shippingRequestTripRepository
+            .GetAll()
+            .AsNoTracking()
+               .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
+               x.Status == ShippingRequestTripStatus.InTransit);
+
+            var loadedTrips = (await query.Where(x=> x.ActualPickupDate.HasValue && x.ActualPickupDate.Value.Date > input.StartDate && x.ActualPickupDate.Value < input.EndDate)
+                //.Where(x=>x.RoutPoints.Where(x=>x.PickingType == PickingType.Pickup).Any(x=>x.RoutPointStatusTransitions
+            //.Any(x=>x.Status == RoutePointStatus.FinishLoading && x.CreationTime > input.StartDate && x.CreationTime < input.EndDate)))
+                .Select(x=>x.ActualPickupDate).ToListAsync()).GroupBy(x => x.Value.Month);
+
+            var deliveredTrips = (await query.Where(x => x.ActualDeliveryDate.HasValue && x.Status == ShippingRequestTripStatus.Delivered).Select(x=>x.ActualDeliveryDate).ToListAsync()).GroupBy(x => x.Value.Month);
+
+            var output = new GetLoadedVsDeliveredTripsOutput()
+            {
+                DeliveredTrips = new List<ChartCategoryPairedValuesDto>(),
+                LoadedTrips = new List<ChartCategoryPairedValuesDto>()
+            };
+            foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+            {
+                if (loadedTrips.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    output.LoadedTrips.Add(loadedTrips.Where(x => x.Key == date.Month)
+                .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    output.LoadedTrips.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+
+                if (deliveredTrips.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    output.DeliveredTrips.Add(loadedTrips.Where(x => x.Key == date.Month)
+                .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    output.DeliveredTrips.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+            }
+
+            return output;
+
+
+            }
+
         [AbpAuthorize]
         public async Task<List<SelectItemDto>> GetAllTruckTypesForDropdown()
         {
@@ -987,6 +1063,7 @@ namespace TACHYON.Dashboards.Shipper
 
             return truckTypesList;
         }
+
 
         #region Helpers
         private async Task<List<ChartCategoryPairedValuesDto>> GetCompletedTripsIfMonthly(GetDataByDateFilterInput input)
