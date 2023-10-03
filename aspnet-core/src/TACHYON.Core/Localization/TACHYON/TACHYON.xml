@@ -3535,6 +3535,9 @@
 	<text name="ETADateTime">Estimated arrival date</text>
 	<text name="DistanceToArrive">Distance to Arrive</text>
 	<text name="ClientNeedsAction">Client Needs action</text>
+	<text name="NewShipment">New Shipment</text>
+	<text name="FleetManagement">Fleet Management</text>
+	<text name="ClientsAndTransporters"><![CDATA[Clients & transporters]]></text>
 
 
 	</texts>
