@@ -88,7 +88,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       // end of  Invoices
       //  ---------------------------------------------------------------------------------------------------------------------
       //start of TMS for shipper
-      new AppMenuItem('TMSForShipper', 'Pages.ShippingRequests', '3 TMS.svg', '/app/main/tmsforshipper', [], undefined, undefined, undefined),
+      // new AppMenuItem('TMSForShipper', 'Pages.ShippingRequests', '3 TMS.svg', '/app/main/tmsforshipper', [], undefined, undefined, undefined),
       //end of TMS for shipper
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Documents

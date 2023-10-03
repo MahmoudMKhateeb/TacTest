@@ -3246,6 +3246,11 @@
 	<text name="DistanceToArrive">المسافة حتى الوصول</text>
 
 	<text name="ClientNeedsAction">بانتظار قرار للعملاء</text>
+	<text name="Shipments">الشحنات</text>
+	<text name="Templates">القوالب</text>
+	<text name="NewShipment">شحنة جديدة</text>
+	<text name="FleetManagement">إدارة الأسطول</text>
+	<text name="ClientsAndTransporters">العملاء والناقلين</text>
 
 	</texts>
 </localizationDictionary>
