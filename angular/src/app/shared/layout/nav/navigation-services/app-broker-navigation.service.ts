@@ -33,7 +33,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         [],
         [
           new AppMenuItem(
-            'directShipments',
+            'Shipments',
             '',
             '',
             '/app/main/directShipments',
@@ -44,7 +44,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             () => this.isEnabled('App.TachyonDealer')
           ),
           new AppMenuItem(
-            'MyShippingRequests',
+            'ShippingRequests',
             'Pages.ShippingRequests',
             '',
             '/app/main/shippingRequests/shippingRequests',
@@ -55,11 +55,11 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
               showType: 1,
             }
           ),
-          new AppMenuItem('ShipmentTracking', 'Pages.shipment.Tracking', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, {
+          new AppMenuItem('Tracking', 'Pages.shipment.Tracking', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, {
             showType: 1,
           }),
           new AppMenuItem(
-            'SavedTemplates',
+            'Templates',
             'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
@@ -77,7 +77,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of TMS
       new AppMenuItem(
-        'TMS',
+        'FleetManagement',
         '',
         '8 TMS Managment.svg',
         '',
@@ -85,7 +85,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         [
           new AppMenuItem('Trucks', 'Pages.Trucks', '', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined),
           new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
-          new AppMenuItem('VasPrices', 'Pages.VasPrices', '', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined),
+          // new AppMenuItem('VasPrices', 'Pages.VasPrices', '', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined),
         ],
         undefined,
         undefined
@@ -167,16 +167,16 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       // end of  Invoices
       //  ---------------------------------------------------------------------------------------------------------------------
       //start of TMS for shipper
-      new AppMenuItem(
-        'TMSForShipper',
-        'Pages.ShippingRequests.TmsForShipper',
-        '3 TMS.svg',
-        '/app/main/tmsforshipper',
-        [],
-        undefined,
-        undefined,
-        undefined
-      ),
+      // new AppMenuItem(
+      //   'TMSForShipper',
+      //   'Pages.ShippingRequests.TmsForShipper',
+      //   '3 TMS.svg',
+      //   '/app/main/tmsforshipper',
+      //   [],
+      //   undefined,
+      //   undefined,
+      //   undefined
+      // ),
       //end of TMS for shipper
       //  ---------------------------------------------------------------------------------------------------------------------
       //start of Documents
@@ -252,7 +252,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         undefined
       ),
       //  ---------------------------------------------------------------------------------------------------------------------
-      new AppMenuItem('Actors', 'Pages.Administration.Actors', 'User Management.svg', '/app/main/actors/actors', [], []),
+      new AppMenuItem('ClientsAndTransporters', 'Pages.Administration.Actors', 'User Management.svg', '/app/main/actors/actors', [], []),
 
       //start of Settings
       new AppMenuItem(
