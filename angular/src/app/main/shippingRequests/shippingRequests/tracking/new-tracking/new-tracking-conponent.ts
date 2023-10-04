@@ -56,7 +56,7 @@ import { EtaCalculatorService } from '@app/main/shippingRequests/shippingRequest
   providers: [NgbDropdownConfig],
   animations: [appModuleAnimation()],
 })
-export class NewTrackingConponent extends AppComponentBase implements OnChanges, OnInit, AfterViewInit {
+export class NewTrackingConponent extends AppComponentBase implements OnChanges, OnInit {
   constructor(
     injector: Injector,
     private elRef: ElementRef,
@@ -131,10 +131,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
     abp.event.on('trackingConfirmCodeSubmittedFromAdditionalSteps', () => {
       this.getForView();
     });
-  }
-
-  ngAfterViewInit() {
-    this.getETAs();
   }
 
   /**
@@ -248,6 +244,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
         this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
         this.getTripRouteForMap();
+        this.getETAs();
+
         setTimeout(() => {
           this.getForViewReady.emit(true);
         }, 500);
@@ -611,26 +609,33 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   }
 
   getETAs() {
-    this.routePoints.forEach((x, index) => {
-      if (x.pickingType === this.pickingTypeEnum.Dropoff) {
-        this.etaService.calculateDistance(this.routePoints[index - 1], x).then((googleResponse) => {
-          let distanceText = googleResponse.distance.text; //distance in this format 1258 km
-          let distanceValue = googleResponse.distance.value; // distance in this format 1257978
-          let durationText = googleResponse.duration.text; // in text for example 2 hours and 20 min
-          let durationValue = googleResponse.duration.value; // in seconds
-          let previousPointEndTime = this.routePoints[index - 1].statues[this.routePoints[index - 1].statues.length - 1].creationTime;
-          let tripETA = moment(previousPointEndTime, 'YYYY-MM-DD HH:mm:ss').add(durationValue / 60, 'minutes');
-          this.etaValues[x.id] = { distance: distanceText, ETA: durationText, tripETA: tripETA, distanceInMeters: distanceValue };
-          this.totalTripMileage += distanceValue;
-          this.totalTripPointsDuration += durationValue;
-        });
-      }
-    });
+    if (this.routePoints && this.routePoints.length > 0) {
+      this.routePoints.forEach((x, index) => {
+        if (x.pickingType === this.pickingTypeEnum.Dropoff && index > 0) {
+          this.etaService.calculateDistance(this.routePoints[index - 1], x).then((googleResponse) => {
+            let distanceText = googleResponse.distance.text; // distance in this format 1258 km
+            let distanceValue = googleResponse.distance.value; // distance in this format 1257978
+            let durationText = googleResponse.duration.text; // in text, for example, 2 hours and 20 min
+            let durationValue = googleResponse.duration.value; // in seconds
+            let previousPointEndTime = this.routePoints[index - 1].endTime; // Access endTime property
+            let tripETA = moment(previousPointEndTime, 'YYYY-MM-DD HH:mm:ss').add(durationValue / 60, 'minutes');
+            this.etaValues[x.id] = { distance: distanceText, ETA: durationText, tripETA: tripETA, distanceInMeters: distanceValue };
+            this.totalTripMileage += distanceValue;
+            this.totalTripPointsDuration += durationValue;
+          });
+        }
+      });
+    }
   }
 
   get TotalTripEta(): moment.Moment {
-    let firstPointDeliveryTime = this.routePoints[0].endTime;
-    let totalTripPintsDurationInMin = this.totalTripPointsDuration / 60; // convert from secounds to min
-    return moment(firstPointDeliveryTime, 'YYYY-MM-DD HH:mm:ss').add(totalTripPintsDurationInMin, 'minutes');
+    if (this.routePoints && this.routePoints.length > 0) {
+      let firstPointDeliveryTime = this.routePoints[0]?.endTime || '';
+      let totalTripPointsDurationInMin = this.totalTripPointsDuration / 60; // convert from seconds to minutes
+      return moment(firstPointDeliveryTime, 'YYYY-MM-DD HH:mm:ss').add(totalTripPointsDurationInMin, 'minutes');
+    } else {
+      // Handle the case when routePoints is undefined or empty
+      return moment(); // You can return a default value or handle it as needed
+    }
   }
 }
