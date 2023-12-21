@@ -1,5 +1,7 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { RedemptionCodesComponent } from './redemption/redemptionCodes/redemptionCodes.component';
+import { RedeemCodesComponent } from './redemption/redeemCodes/redeemCodes.component';
 import { BayanIntegrationResultsComponent } from './bayanIntegration/bayanIntegrationResults/bayanIntegrationResults.component';
 import { RegionsComponent } from './regions/regions/regions.component';
 import { VasesComponent } from './vases/vases/vases.component';
@@ -42,6 +44,8 @@ import { ActorSubmitInvoicesComponent } from '@app/main/Invoices/actor-submit-in
       {
         path: '',
         children: [
+                    { path: 'redemption/redemptionCodes', component: RedemptionCodesComponent, data: { permission: 'Pages.Administration.RedemptionCodes' }  },
+                    { path: 'redemption/redeemCodes', component: RedeemCodesComponent, data: { permission: 'Pages.Administration.RedeemCodes' }  },
           {
             path: 'bayanIntegration/bayanIntegrationResults',
             component: BayanIntegrationResultsComponent,

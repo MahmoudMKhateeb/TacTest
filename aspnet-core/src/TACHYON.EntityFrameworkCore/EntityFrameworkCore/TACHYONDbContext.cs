@@ -1,3 +1,4 @@
+﻿using TACHYON.Redemption;
 using Abp.Domain.Entities;
 using TACHYON.Integration.BayanIntegration;
 using TACHYON.Regions;
@@ -115,6 +116,10 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<RedemptionCode> RedemptionCodes { get; set; }
+
+        public virtual DbSet<RedeemCode> RedeemCodes { get; set; }
+
         public virtual DbSet<BayanIntegrationResult> BayanIntegrationResults { get; set; }
 
         public virtual DbSet<Region> Regions { get; set; }
@@ -338,7 +343,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }
 
-         public DbSet<ServiceArea> ServiceAreas { get; set; }
+        public DbSet<ServiceArea> ServiceAreas { get; set; }
 
         public DbSet<DynamicInvoice> DynamicInvoices { get; set; }
 
@@ -349,7 +354,7 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DedicatedDynamicActorInvoice> DedicatedDynamicActorInvoices { get; set; }
         public DbSet<DedicatedDynamicActorInvoiceItem> DedicatedDynamicActorInvoiceItems { get; set; }
         public DbSet<PricePackage> PricePackages { get; set; }
-        
+
         public DbSet<PricePackageProposal> Proposals { get; set; }
 
         public DbSet<PricePackageAppendix> Appendixes { get; set; }
@@ -364,13 +369,13 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<JsonDataSourceStorage> JsonDataSourceStorages { get; set; }
 
         public DbSet<ReportParameterDefinition> ReportParameterDefinitions { get; set; }
-        
+
         public DbSet<ReportParameter> ReportParameters { get; set; }
 
         public DbSet<Report> Reports { get; set; }
 
         public DbSet<ReportPermission> ReportPermissions { get; set; }
-        
+
         public DbSet<ReportDefinitionPermission> ReportDefinitionPermissions { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
@@ -419,10 +424,10 @@ namespace TACHYON.EntityFrameworkCore
             if (typeof(IHaveInvoiceStatus).IsAssignableFrom(typeof(TEntity)))
             {
                 return true;
-            }            
+            }
             if (typeof(TEntity) == typeof(ReportDefinition))
             {
-                return true; 
+                return true;
             }
 
             return base.ShouldFilterEntity<TEntity>(entityType);
@@ -628,7 +633,6 @@ namespace TACHYON.EntityFrameworkCore
                 .WithMany(e => e.DedicatedDynamicInvoices)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             modelBuilder
                 .Entity<DedicatedDynamicInvoiceItem>()
                 .HasOne(e => e.DedicatedShippingRequestTruck)
@@ -641,7 +645,6 @@ namespace TACHYON.EntityFrameworkCore
                .WithMany(e => e.DedicatedShippingRequestDrivers)
                .OnDelete(DeleteBehavior.ClientNoAction);
 
-            
             modelBuilder
                .Entity<DedicatedDynamicActorInvoice>()
                .HasOne(e => e.Tenant)
@@ -658,8 +661,6 @@ namespace TACHYON.EntityFrameworkCore
             //.HasOne(s => s.Tenant)
             //.WithMany(e => e.DedicatedDynamicActorInvoices)
             //.IsRequired();
-
-
 
             modelBuilder.ConfigurePersistedGrantEntity();
         }

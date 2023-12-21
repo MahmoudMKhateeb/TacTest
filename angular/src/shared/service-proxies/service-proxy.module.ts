@@ -1,4 +1,4 @@
-import { AbpHttpConfigurationService, AbpHttpInterceptor, RefreshTokenService } from 'abp-ng2-module';
+﻿import { AbpHttpConfigurationService, AbpHttpInterceptor, RefreshTokenService } from 'abp-ng2-module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
@@ -13,6 +13,8 @@ import {
 
 @NgModule({
   providers: [
+        ApiServiceProxies.RedemptionCodesServiceProxy,        
+        ApiServiceProxies.RedeemCodesServiceProxy,        
     ApiServiceProxies.BayanIntegrationResultsServiceProxy,
     ApiServiceProxies.RegionsServiceProxy,
     ApiServiceProxies.ActorInvoiceServiceProxy,

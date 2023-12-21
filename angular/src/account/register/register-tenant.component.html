@@ -161,6 +161,26 @@
           </div>
         </div>
       </div>
+
+
+        <div class="col-12">
+            <div class="form-group">
+                <label>{{ 'PromotionCode' | localize }}</label>
+                <input
+                    #redeemCodeInput="ngModel"
+                    class="form-control"
+                    type="text"
+                    placeholder="{{ 'PromotionCode' | localize }}"
+                    [(ngModel)]="model.redeemCode"
+                    name="redeemCode"
+                    maxlength="8"
+                />
+                <div>
+                    <validation-messages [formCtrl]="redeemCodeInput"></validation-messages>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <h5 style="text-align: center" class="mt-2">

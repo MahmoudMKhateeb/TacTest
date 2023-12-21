@@ -6,6 +6,7 @@ using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Session;
@@ -32,6 +33,7 @@ using TACHYON.MultiTenancy.Dto;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.MultiTenancy.Payments.Dto;
 using TACHYON.Notifications;
+using TACHYON.Redemption;
 using TACHYON.Security.Recaptcha;
 using TACHYON.TermsAndConditions;
 using TACHYON.TermsAndConditions.Dtos;
@@ -54,6 +56,8 @@ namespace TACHYON.MultiTenancy
         private readonly IRepository<City, int> _lookupCityRepository;
         private readonly IRepository<TermAndCondition> _termAndConditionRepository;
         private readonly IBackgroundJobManager _jobManager;
+        private readonly IRepository<RedeemCode,long> _redeemCodeRepository;
+        private readonly IRepository<RedemptionCode, long> _redemptionCodeRepository;
 
         public TenantRegistrationAppService(
             IMultiTenancyConfig multiTenancyConfig,
@@ -66,7 +70,9 @@ namespace TACHYON.MultiTenancy
             IRepository<City, int> lookupCityRepository,
             IRepository<TermAndCondition> termAndConditionRepository,
             ISubscriptionPaymentRepository subscriptionPaymentRepository,
-            IBackgroundJobManager jobManager)
+            IBackgroundJobManager jobManager,
+            IRepository<RedeemCode, long> redeemCodeRepository,
+            IRepository<RedemptionCode, long> redemptionCodeRepository)
         {
             _multiTenancyConfig = multiTenancyConfig;
             _recaptchaValidator = recaptchaValidator;
@@ -76,6 +82,8 @@ namespace TACHYON.MultiTenancy
             _tenantManager = tenantManager;
             _subscriptionPaymentRepository = subscriptionPaymentRepository;
             _jobManager = jobManager;
+            _redeemCodeRepository = redeemCodeRepository;
+            _redemptionCodeRepository = redemptionCodeRepository;
             _lookupCountryRepository = lookupCountryRepository;
             _lookupCityRepository = lookupCityRepository;
             _termAndConditionRepository = termAndConditionRepository;
@@ -136,13 +144,36 @@ namespace TACHYON.MultiTenancy
                     }
                 }
 
+                long codeId = 0;
+                if (!input.RedeemCode.IsNullOrWhiteSpace())
+                {
+                    var code = await  _redeemCodeRepository.GetAll()
+                        .Where(x => x.Code == input.RedeemCode)
+                        .Where(x=> x.ExpiryDate == null || (x.ExpiryDate.HasValue && x.ExpiryDate.Value.Date > DateTime.Now.Date))
+                        .FirstOrDefaultAsync();
+
+                    if (code == null)
+                    {
+                        throw new Exception("Redeem Code is not valid ");
+                    }
+
+                    codeId = code.Id;
+
+                }
+
                 var createInput = ObjectMapper.Map<CreateTenantInput>(input);
                 createInput.ShouldChangePasswordOnNextLogin = false;
                 createInput.SubscriptionEndDateUtc = subscriptionEndDate;
                 createInput.IsInTrialPeriod = isInTrialPeriod;
                 createInput.IsActive = isActive;
                 var tenantId = await _tenantManager.CreateWithAdminUserAsync(
-                    createInput, AppUrlService.CreateEmailActivationUrlFormat(tenancyName));
+                createInput, AppUrlService.CreateEmailActivationUrlFormat(tenancyName));
+
+                if (codeId != 0)
+                {
+                    await _redemptionCodeRepository.InsertAsync(new RedemptionCode() { RedemptionTenantId = tenantId, RedeemCodeId = codeId , RedemptionDate = DateTime.Now});
+
+                }
 
                 var tenant = await TenantManager.GetByIdAsync(tenantId);
                 await _jobManager.EnqueueAsync<NewTenantRegisteredJob, string>(tenant.TenancyName);

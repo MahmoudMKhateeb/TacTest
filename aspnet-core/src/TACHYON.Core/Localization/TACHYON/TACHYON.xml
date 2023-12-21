@@ -1,6 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>
+	<texts>    <text name="RedemptionCode">Redemption code</text>
+    <text name="TACHYON.Redemption.RedemptionCode">RedemptionCode</text>
+    <text name="RedemptionDate">Redemption date</text>
+    <text name="RedemptionTenantId">Redemption tenant id</text>
+    <text name="RedemptionCodesHeaderInfo">Redemption codes header info</text>
+    <text name="CreateNewRedemptionCode">Create new redemption code</text>
+    <text name="EditRedemptionCode">Edit redemption code</text>
+    <text name="DeleteRedemptionCode">Delete redemption code</text>
+    <text name="RedemptionCodes">Redemption codes</text>
+    <text name="RedeemCodeCode">Redeem code code</text>
+    <text name="PickRedeemCode">Pick redeem code</text>
+    <text name="RedemptionDateRange">Redemption date range</text>
+    <text name="Redemption">Redemption</text>
+    <text name="RedeemCode">Redeem code</text>
+    <text name="TACHYON.Redemption.RedeemCode">RedeemCode</text>
+    <text name="ExpiryDate">Expiry date</text>
+    <text name="NotIsActive">Not is active</text>
+    <text name="percentage">percentage</text>
+    <text name="RedeemCodesHeaderInfo">Redeem codes header info</text>
+    <text name="CreateNewRedeemCode">Create new redeem code</text>
+    <text name="EditRedeemCode">Edit redeem code</text>
+    <text name="DeleteRedeemCode">Delete redeem code</text>
+    <text name="RedeemCodes">Redeem codes</text>
+    <text name="ExpiryDateRange">Expiry date range</text>
+
     <text name="Actors">Actors</text>
     <text name="Actor">Actor</text>
     <text name="TACHYON.Actors.Actor">Actor</text>
@@ -3538,6 +3562,7 @@
 	<text name="NewShipment">New Shipment</text>
 	<text name="FleetManagement">Fleet Management</text>
 	<text name="ClientsAndTransporters"><![CDATA[Clients & transporters]]></text>
+	<text name="PromotionCode">Promotion Code</text>
 
 
 	</texts>
