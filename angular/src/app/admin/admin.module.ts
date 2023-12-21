@@ -1,7 +1,15 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { RedemptionCodesComponent } from './redemption/redemptionCodes/redemptionCodes.component';
+import { ViewRedemptionCodeModalComponent } from './redemption/redemptionCodes/view-redemptionCode-modal.component';
+import { CreateOrEditRedemptionCodeModalComponent } from './redemption/redemptionCodes/create-or-edit-redemptionCode-modal.component';
+
+import { RedeemCodesComponent } from './redemption/redeemCodes/redeemCodes.component';
+import { ViewRedeemCodeModalComponent } from './redemption/redeemCodes/view-redeemCode-modal.component';
+import { CreateOrEditRedeemCodeModalComponent } from './redemption/redeemCodes/create-or-edit-redeemCode-modal.component';
+
 import { BayanIntegrationResultsComponent } from './bayanIntegration/bayanIntegrationResults/bayanIntegrationResults.component';
 import { ViewBayanIntegrationResultModalComponent } from './bayanIntegration/bayanIntegrationResults/view-bayanIntegrationResult-modal.component';
 import { CreateOrEditBayanIntegrationResultModalComponent } from './bayanIntegration/bayanIntegrationResults/create-or-edit-bayanIntegrationResult-modal.component';
@@ -236,6 +244,14 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DxScrollViewModule,
   ],
   declarations: [
+		RedemptionCodesComponent,
+
+		ViewRedemptionCodeModalComponent,
+		CreateOrEditRedemptionCodeModalComponent,
+		RedeemCodesComponent,
+
+		ViewRedeemCodeModalComponent,
+		CreateOrEditRedeemCodeModalComponent,
     BayanIntegrationResultsComponent,
 
     ViewBayanIntegrationResultModalComponent,

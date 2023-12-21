@@ -3251,6 +3251,7 @@
 	<text name="NewShipment">شحنة جديدة</text>
 	<text name="FleetManagement">إدارة الأسطول</text>
 	<text name="ClientsAndTransporters">العملاء والناقلين</text>
+	<text name="PromotionCode">كود خصم</text>
 
 	</texts>
 </localizationDictionary>

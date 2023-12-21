@@ -57,6 +57,8 @@ namespace TACHYON.MultiTenancy.Dto
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
 
+        public string RedeemCode { get; set; }
+
 
     }
 

@@ -1,0 +1,172 @@
+﻿<div [@routerTransition]>
+  
+  <div class="content d-flex flex-column flex-column-fluid">
+   <sub-header [title]="'RedemptionCodes' | localize" [description]="'RedemptionCodesHeaderInfo' | localize">
+             <div role="actions">
+                 <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{l("ExportToExcel")}}</button>
+                
+                 <button *ngIf="isGranted('Pages.Administration.RedemptionCodes.Create')" (click)="createRedemptionCode()" 
+                                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewRedemptionCode")}}</button>
+             </div>
+            </sub-header>
+    
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <form class="form" autocomplete="off">
+                    <div>
+                        <div class="row align-items-center">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="getRedemptionCodes()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						 <div class="row" [hidden]="!advancedFiltersAreShown">
+						 	<div class="col-md-12">
+						         <div class="separator separator-dashed"></div>
+						     </div>
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label  for="MinRedemptionDateFilter">{{l("RedemptionDateRange")}}</label>
+									<div class="input-group">
+                                        <input class="form-control m-input" id="MinRedemptionDateFilter" name="MinRedemptionDateFilter" type="datetime" bsDatepicker  placeholder="{{l('MinValue')}}" [(ngModel)]="minRedemptionDateFilter">
+			                            <span style="line-height: 40px;padding: 0 15px 0 15px;"> &mdash; </span>
+                                        <input class="form-control m-input" id="MaxRedemptionDateFilter" name="MaxRedemptionDateFilter" type="datetime" bsDatepicker  placeholder="{{l('MaxValue')}}" [(ngModel)]="maxRedemptionDateFilter">
+									</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label for="MinRedemptionTenantIdFilter">{{l("MinMax")}} {{l("RedemptionTenantId")}}</label>
+									<div class="input-group">
+                                        <input type="number" class="form-control" id="MinRedemptionTenantIdFilter" [(ngModel)]="minRedemptionTenantIdFilter" placeholder="{{l('MinValue')}}" name="minRedemptionTenantIdFilter" />
+                                        <input type="number" class="form-control" [(ngModel)]="maxRedemptionTenantIdFilter" placeholder="{{l('MaxValue')}}" name="maxRedemptionTenantIdFilter" />
+									</div>
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RedeemCodeCodeFilter">({{l("RedeemCode")}}) {{l("Code")}}</label>
+									<input type="text" class="form-control" id="RedeemCodeCodeFilter" name="redeemCodeCodeFilter" [(ngModel)]="redeemCodeCodeFilter">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container col-12"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable
+                                     (onLazyLoad)="getRedemptionCodes($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Administration.RedemptionCodes.Edit', 'Pages.Administration.RedemptionCodes.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 150px" pSortableColumn="redeemCodeFk.code">
+                                        {{l('Code')}}
+                                        <p-sortIcon field="redeemCodeCode"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="redemptionDate">
+                                        {{l('RedemptionDate')}}
+                                        <p-sortIcon field="redemptionCode.redemptionDate"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="redemptionTenantId">
+                                        {{l('RedemptionTenantId')}}
+                                        <p-sortIcon field="redemptionCode.redemptionTenantId"></p-sortIcon>
+                                    </th>
+
+                                </tr>
+                            </ng-template>                           
+							<ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                                <tr>
+                                    <td style="width: 130px"
+                                        [hidden]="!isGrantedAny('Pages.Administration.RedemptionCodes.Edit', 'Pages.Administration.RedemptionCodes.Delete')">
+                                       <div class="btn-group dropdown" dropdown container="body">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                            </button>
+												<ul class="dropdown-menu"  *dropdownMenu>
+												<li>
+													<a href="javascript:;" class="dropdown-item"
+														(click)="viewRedemptionCodeModal.show(record)">{{l('View')}}</a>
+												</li>
+												<li>
+                                                <a href="javascript:;" *ngIf="permission.isGranted('Pages.Administration.RedemptionCodes.Edit')" class="dropdown-item"
+														(click)="createOrEditRedemptionCodeModal.show(record.redemptionCode.id)">{{l('Edit')}}</a>												
+                                                </li>
+												<li>
+											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.Administration.RedemptionCodes.Delete')"
+														(click)="deleteRedemptionCode(record.redemptionCode)">{{l('Delete')}}</a>
+												</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('Code')}}</span>
+												{{record.redeemCodeCode}}
+											</td>
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('RedemptionDate')}}</span>
+                                        <span *ngIf="record.redemptionCode.redemptionDate">
+											{{record.redemptionCode.redemptionDate |  momentFormat:'L' }}
+                                        </span>
+                                        <span *ngIf="!record.redemptionCode.redemptionDate">-</span>
+                                    </td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('RedemptionTenantId')}}</span>
+											{{record.redemptionCode.redemptionTenantId}}
+										</td>
+
+                                </tr>
+                               
+                            </ng-template>
+                        </p-table>
+						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                         #paginator
+                                         (onPageChange)="getRedemptionCodes($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                                         [showCurrentPageReport]="true"
+                                         [currentPageReportTemplate]="'TotalRecordsCount' | localize:primengTableHelper.totalRecordsCount"    
+                            >
+                            </p-paginator>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <createOrEditRedemptionCodeModal #createOrEditRedemptionCodeModal (modalSave)="getRedemptionCodes()"></createOrEditRedemptionCodeModal>    
+    <viewRedemptionCodeModal #viewRedemptionCodeModal></viewRedemptionCodeModal>
+    
+  </div>
+</div>
