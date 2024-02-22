@@ -290,25 +290,25 @@ namespace TACHYON.Authorization.Users
 
             #endregion
 
-            try
-            {
+            // try
+            // {
                 var htmlTemplate = await GetContent(EmailTemplateTypesEnum.ResetPassword);
                 htmlTemplate = htmlTemplate.Replace("{{CompanyName}}", companyName)
                     .Replace("{{Link}}", link);
 
-                if (user.TenantId.HasValue)
+                //if (user.TenantId.HasValue)
                     await _emailSender.SendAsync(new MailMessage
                     {
-                        To = { await GetTenantAdminEmailAddress(user.TenantId.Value) },
+                        To = { user.EmailAddress },
                         Subject = L("ResetPassword"),
                         Body = htmlTemplate,
                         IsBodyHtml = true
                     });
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e.Message, e);
-            }
+            // }
+            // catch (Exception e)
+            // {
+            //     Logger.Error(e.Message, e);
+            // }
         }
 
         public async Task SendPasswordUpdatedEmail(int? tenantId,
