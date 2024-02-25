@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Administration_RedemptionCodes = "Pages.Administration.RedemptionCodes";
+        public const string Pages_Administration_RedemptionCodes_Create = "Pages.Administration.RedemptionCodes.Create";
+        public const string Pages_Administration_RedemptionCodes_Edit = "Pages.Administration.RedemptionCodes.Edit";
+        public const string Pages_Administration_RedemptionCodes_Delete = "Pages.Administration.RedemptionCodes.Delete";
+
+        public const string Pages_Administration_RedeemCodes = "Pages.Administration.RedeemCodes";
+        public const string Pages_Administration_RedeemCodes_Create = "Pages.Administration.RedeemCodes.Create";
+        public const string Pages_Administration_RedeemCodes_Edit = "Pages.Administration.RedeemCodes.Edit";
+        public const string Pages_Administration_RedeemCodes_Delete = "Pages.Administration.RedeemCodes.Delete";
+
         public const string Pages_Administration_BayanIntegrationResults = "Pages.Administration.BayanIntegrationResults";
         public const string Pages_Administration_BayanIntegrationResults_Create = "Pages.Administration.BayanIntegrationResults.Create";
         public const string Pages_Administration_BayanIntegrationResults_Edit = "Pages.Administration.BayanIntegrationResults.Edit";
@@ -55,7 +65,7 @@
         public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
 
         public const string App_Shipper = "App.Shipper";
-       
+
         public const string App_Carrier = "App.Carrier";
         public const string App_TachyonDealer = "App.TachyonDealer";
 
@@ -66,7 +76,6 @@
 
         public const string Pages_CarrierDashboard = "Pages.CarrierDashboard";
         public const string Pages_BrokerDashboard = "Pages.BrokerDashboard";
-
 
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
         public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
@@ -618,7 +627,6 @@
         public const string Pages_InvoiceNote_View = "Pages.InvoiceNotes.View";
         #endregion
 
-
         #region Dynamic Invoices
 
         public const string Pages_DynamicInvoices = "Pages.DynamicInvoices";
@@ -634,7 +642,6 @@
         public const string Pages_DedicatedDynamicInvoices_Create = "Pages.DedicatedDynamicInvoices.Create";
         public const string Pages_DedicatedDynamicInvoices_Update = "Pages.DedicatedDynamicInvoices.Update";
         public const string Pages_DedicatedDynamicInvoices_Delete = "Pages.DedicatedDynamicInvoices.Delete";
-
 
         //actor invoices
         public const string Pages_DedicatedDynamicActorInvoices = "Pages.DedicatedDynamicActorInvoices";
@@ -655,7 +662,7 @@
         public const string Pages_Tracking_ResetPointReceiverCode = "Pages.Shipment.Tracking.ResetPointReceiverCode";
         public const string Pages_Tracking_BulkDeliverTrip = "Pages.Shipment.Tracking.BulkDeliverTrip";
         public const string Pages_Tracking_DirectShipmentTracking = "Pages.Shipment.Tracking.DirectShipmentTracking";
-        
+
         public const string Pages_ShippingRequestUpdates = "Pages.ShippingRequestUpdates";
         public const string Pages_ShippingRequestUpdates_TakeAction = "Pages.ShippingRequestUpdates.TakeAction";
 
@@ -667,7 +674,6 @@
         public const string Pages_PricePackages_Create = "Pages.PricePackages.Create";
         public const string Pages_PricePackages_Update = "Pages.PricePackages.Update";
         public const string Pages_PricePackages_Delete = "Pages.PricePackages.Delete";
-        
 
         #endregion
 
@@ -682,7 +688,6 @@
 
         #endregion
 
-
         #region Price Package Appendix
 
         public const string Pages_PricePackageAppendix = "Pages.PricePackageAppendix";
@@ -692,8 +697,6 @@
         public const string Pages_PricePackageAppendix_Accept = "Pages.PricePackageAppendix.Accept";
         public const string Pages_PricePackageAppendix_Reject = "Pages.PricePackageAppendix.Reject";
         public const string Pages_PricePackageAppendix_Activation = "Pages.PricePackageAppendix.Activation";
-        
-        
 
         #endregion
 

@@ -1,0 +1,61 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #redeemCodeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="redeemCode.id">{{l("EditRedeemCode")}}</span>
+                        <span *ngIf="!redeemCode.id">{{l("CreateNewRedeemCode")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+
+								<div class="form-group">
+									<label for="RedeemCode_ExpiryDate">{{l("ExpiryDate")}}</label>
+									 <input class="form-control m-input" #RedeemCode_ExpiryDate type="datetime" bsDatepicker  datePickerMomentModifier  [(date)]="redeemCode.expiryDate" id="RedeemCode_ExpiryDate" name="RedeemCode_ExpiryDate">
+									<validation-messages [formCtrl]="RedeemCode_ExpiryDate"></validation-messages>
+								</div>
+					
+								<br/><div class="m-checkbox-list">
+									<label for="RedeemCode_IsActive" class="kt-checkbox">
+										<input id="RedeemCode_IsActive" #RedeemCode_IsActive="ngModel" type="checkbox" name="IsActive" [(ngModel)]="redeemCode.isActive"> 
+										{{l("IsActive")}}
+										<span></span>
+									</label>
+									<validation-messages [formCtrl]="RedeemCode_IsActive"></validation-messages>
+								</div>
+					
+								<div class="form-group">
+									<label for="RedeemCode_Value">{{l("Value")}}</label>
+									<input type="number" #RedeemCode_Value="ngModel" id="RedeemCode_Value" class="form-control" [(ngModel)]="redeemCode.value" name="Value"   />
+									<validation-messages [formCtrl]="RedeemCode_Value"></validation-messages>
+								</div>
+					
+								<div class="form-group">
+									<label for="RedeemCode_Note">{{l("Note")}}</label>
+									<input type="text" #RedeemCode_Note="ngModel" id="RedeemCode_Note" class="form-control" [(ngModel)]="redeemCode.note" name="Note"    />
+								    <validation-messages [formCtrl]="RedeemCode_Note"></validation-messages>
+								</div>
+					
+								<div class="form-group">
+									<label for="RedeemCode_percentage">{{l("percentage")}}</label>
+									<input type="number" #RedeemCode_percentage="ngModel" id="RedeemCode_percentage" class="form-control" [(ngModel)]="redeemCode.percentage" name="percentage"  min="0"  max="100" />
+									<validation-messages [formCtrl]="RedeemCode_percentage"></validation-messages>
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!redeemCodeForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
