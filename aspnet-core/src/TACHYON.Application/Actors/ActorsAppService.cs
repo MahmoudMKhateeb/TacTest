@@ -1,6 +1,4 @@
-﻿using TACHYON.Actors;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
@@ -18,13 +16,11 @@ using Abp.Organizations;
 using Microsoft.EntityFrameworkCore;
 using Abp.UI;
 using TACHYON.Authorization.Roles;
-using TACHYON.Organizations.Dto;
-using TACHYON.Storage;
 using TACHYON.Documents.DocumentFiles;
-using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Invoices.ActorInvoices;
+using TACHYON.WebHooks;
 
 namespace TACHYON.Actors
 {
@@ -38,6 +34,7 @@ namespace TACHYON.Actors
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly ActorInvoicesManager _actorInvoicesManager;
         private readonly RoleManager _roleManager;
+        private readonly AppWebhookPublisher _webhookPublisher;
 
 
         public ActorsAppService(
@@ -47,7 +44,8 @@ namespace TACHYON.Actors
             DocumentFilesAppService documentFilesAppService,
             IRepository<DocumentFile, Guid> documentFileRepository,
             ActorInvoicesManager actorInvoicesManager,
-            RoleManager roleManager)
+            RoleManager roleManager,
+            AppWebhookPublisher webhookPublisher)
         {
             _actorRepository = actorRepository;
             _organizationUnitManager = organizationUnitManager;
@@ -56,6 +54,7 @@ namespace TACHYON.Actors
             _documentFileRepository = documentFileRepository;
             _actorInvoicesManager = actorInvoicesManager;
             _roleManager = roleManager;
+            _webhookPublisher = webhookPublisher;
         }
 
         public async Task<PagedResultDto<GetActorForViewDto>> GetAll(GetAllActorsInput input)
@@ -88,7 +87,22 @@ namespace TACHYON.Actors
                              o.MobileNumber,
                              o.Email,
                              Id = o.Id,
-                             isactive = o.IsActive
+                             isactive = o.IsActive,
+                              CityId = o.CityId ,
+                              FirstName = o.FirstName ,
+                            LastName = o.LastName,
+                            SalesOfficeType = o.SalesOfficeType,
+                            SalesGroup = o.SalesGroup,
+                            TrasportationZone = o.TrasportationZone ,
+                            Reconsaccoun = o.Reconsaccoun,
+                            PostalCode = o.PostalCode,
+                            Division = o.Division,
+                            District = o.District ,
+                            CustomerGroup= o.CustomerGroup ,
+                            BuildingCode = o.BuildingCode,
+                            AccountType = o.AccountType
+
+
                          };
 
             var totalCount = await filteredActors.CountAsync();
@@ -110,7 +124,20 @@ namespace TACHYON.Actors
                         MobileNumber = o.MobileNumber,
                         Email = o.Email,
                         Id = o.Id,
-                        IsActive = o.isactive
+                        IsActive = o.isactive,
+                        CityId = o.CityId ,
+                        FirstName = o.FirstName ,
+                        LastName = o.LastName,
+                        SalesOfficeType = o.SalesOfficeType,
+                        SalesGroup = o.SalesGroup,
+                        TrasportationZone = o.TrasportationZone ,
+                        Reconsaccoun = o.Reconsaccoun,
+                        PostalCode = o.PostalCode,
+                        Division = o.Division,
+                        District = o.District ,
+                        CustomerGroup= o.CustomerGroup ,
+                        BuildingCode = o.BuildingCode,
+                        AccountType = o.AccountType
                     }
                 };
 
@@ -278,6 +305,12 @@ namespace TACHYON.Actors
                 docFileDto.ActorId = actorId;
                 await _documentFilesAppService.CreateOrEdit(docFileDto);
             }
+
+            // publish Actor-Creted-Webhook 
+            {
+                input.Id = actorId;
+                await _webhookPublisher.PublishNewActorCreatedWebhook(input);
+            }
         }
 
         private async Task CreateInternalShipperClientsRole()
@@ -390,6 +423,29 @@ namespace TACHYON.Actors
             }
         }
 
+        #endregion
+
+        #region SAB
+
+        public async Task<GetActorByPurchNoCDto> GetActorByPurchNoC(int purchNoC){
+            
+              return await  _actorRepository.GetAll()
+                .Where(x => x.Id == purchNoC)
+                .Select(x=> new GetActorByPurchNoCDto {
+                    Salesoffice = x.SalesOfficeType,
+                    Street = x.Address,
+                    PostalCode = x.PostalCode,
+                    Phone = x.MobileNumber,
+                    Vatregisteration = x.VatCertificate,
+                    Registeration = x.CR,
+                    Lastname = x.LastName,
+                    Firstname = x.FirstName,
+                    District = x.District,
+                    Dischannel = x.ActorType,
+                    City = x.CityFk.DisplayName,
+                    BuildingCode = x.BuildingCode
+                }).FirstOrDefaultAsync();
+        }
         #endregion
 
         #region DropDowns

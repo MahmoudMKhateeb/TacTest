@@ -321,7 +321,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this._PointsService.currentUsedIn.subscribe((res) => {
       this.usedIn = res;
     });
-    this.createEmptyPoints();
+    if (this.usedIn != 'view') {
+      this.createEmptyPoints();
+    }
   }
 
   /**

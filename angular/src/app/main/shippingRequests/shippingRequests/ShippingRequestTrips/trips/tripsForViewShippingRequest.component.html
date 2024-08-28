@@ -210,6 +210,9 @@
                 {{ l('ReferenceID') }}
                 <p-sortIcon field="TripReferenceID"></p-sortIcon>
               </th>
+              <th *ngIf="isSab">
+                {{ l('SapSaleId') }}
+              </th>
               <th pSortableColumn="startTripDate">
                 {{ l('StartDate') }}
                 <p-sortIcon field="startTripDate"></p-sortIcon>
@@ -243,8 +246,14 @@
                 <p-sortIcon field="waybillNo"></p-sortIcon>
               </th>
               <th>
-                {{ l('BayanId') }}
+                {{ l('containerReturnDate') }}
               </th>
+              <th>
+                {{ l('isContainerReturned') }}
+              </th>
+              <!--              <th>-->
+              <!--                {{ l('BayanId') }}-->
+              <!--              </th>-->
 
               <th>
                 {{ l('Actions') }}
@@ -267,6 +276,10 @@
               <td>
                 <span class="ui-column-title"> {{ l('bulkUploadReference') }}</span>
                 {{ record.bulkUploadRef }}
+              </td>
+              <td *ngIf="isSab">
+                <span class="ui-column-title"> {{ l('sabOrderId') }}</span>
+                {{ record.sabOrderId }}
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('startTripDate') }}</span>
@@ -341,12 +354,13 @@
                 <span class="ui-column-title"> {{ l('waybillNumber') }}</span>
                 {{ record.waybillNumber }}
               </td>
+              <td>{{ record.containerReturnDate | momentFormat: 'L' }}</td>
+              <td>{{ record.isContainerReturned ? l('yes') : l('no') }}</td>
+              <!--              <td>-->
+              <!--                <span class="ui-column-title"> {{ l('BayanId') }}</span>-->
 
-              <td>
-                <span class="ui-column-title"> {{ l('BayanId') }}</span>
-
-                <a *ngIf="record.bayanId" (click)="printBayanTrip(record.id)">{{ record.bayanId }}</a>
-              </td>
+              <!--                <a *ngIf="record.bayanId" (click)="printBayanTrip(record.id)">{{ record.bayanId }}</a>-->
+              <!--              </td>-->
 
               <td>
                 <span class="ui-column-title"> {{ l('Actions') }}</span>

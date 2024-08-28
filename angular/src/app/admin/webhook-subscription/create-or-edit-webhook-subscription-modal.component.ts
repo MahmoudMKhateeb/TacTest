@@ -63,6 +63,8 @@ export class CreateOrEditWebhookSubscriptionModalComponent extends AppComponentB
   }
 
   save(): void {
+    console.log('test webhook');
+
     this.webhookSubscription.webhooks = this.webhooks.map((wh) => wh.name);
 
     let observable: Observable<void>;

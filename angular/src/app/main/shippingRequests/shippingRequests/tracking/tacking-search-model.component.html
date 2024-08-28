@@ -21,6 +21,30 @@
       <div class="modal-body">
         <div class="form-body">
           <div class="row">
+            <!--             CMS Tenants Only   -->
+            <div class="dx-field col-6" *ngIf="hasCarrierClients || hasShipperClients">
+              <label class="dx-field-label">{{ 'Actor' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-text-box id="Actor" [(value)]="input.actor" name="input.actor" placeholder="{{ 'SearchWithThreeDot' | localize }}"> </dx-text-box>
+              </div>
+            </div>
+
+            <div class="dx-field col-6" *ngIf="hasCarrierClients || hasShipperClients">
+              <label class="dx-field-label">{{ 'ActorType' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-select-box
+                  [searchEnabled]="true"
+                  id="actorType"
+                  name="input.actorType"
+                  [(value)]="input.actorType"
+                  [dataSource]="AllActorTypes"
+                  displayExpr="value"
+                  valueExpr="key"
+                  placeholder="{{ 'Select' | localize }}"
+                ></dx-select-box>
+              </div>
+            </div>
+            <!-- end of CMS Tenants only-->
             <div class="dx-field col-6">
               <label class="dx-field-label">{{ 'ShippingRequestId' | localize }}</label>
               <div class="dx-field-value">
@@ -43,7 +67,7 @@
                 ></dx-text-box>
               </div>
             </div>
-            <div class="dx-field col-6" *ngIf="!isCarrier">
+            <div class="dx-field col-6" *ngIf="!isCarrier && !feature.isEnabled('App.CMS')">
               <label class="dx-field-label">{{ 'Carrier' | localize }}</label>
               <div class="dx-field-value">
                 <dx-text-box

@@ -449,27 +449,161 @@
               </div>
             </div>
 
-            <div class="form-group col-md-6">
-              <label for="Truck_PlateNumber">{{ l('PlateNumber') }}<span class="text-danger">*</span> </label>
-              <input
-                [(ngModel)]="truck.plateNumber"
-                #plateNumberInput="ngModel"
-                pattern="^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$"
-                class="form-control"
-                id="Truck_PlateNumber"
-                maxlength="64"
-                minlength="0"
-                name="PlateNumber"
-                required
-                type="text"
-                [ngClass]="{
-                  'is-valid': plateNumberInput.valid,
-                  'is-invalid': truckForm.submitted && plateNumberInput.invalid
-                }"
-              />
-              <validation-messages [formCtrl]="plateNumberInput"></validation-messages>
-              <span class="form-text text-muted">1234 a a a </span>
+            <!-- New Plate Number/OTP Component -->
+            <div class="col-md-6">
+              <label>{{ l('PlateNumber') }}<span class="text-danger">*</span></label>
+              <div class="form-row">
+                <div class="form-group col p-1">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    maxlength="1"
+                    [(ngModel)]="truck.plateNumberDto.firstNumber"
+                    name="firstNumber"
+                    #firstNumber="ngModel"
+                    (ngModelChange)="setFocusToNextInput('secondNumber')"
+                    pattern="[0-9]*"
+                    placeholder="1"
+                    required
+                    [ngClass]="{
+                      'custom-valid': firstNumber.valid,
+                      'custom-invalid': firstNumber.touched && !firstNumber.valid
+                    }"
+                  />
+                </div>
+                <div class="form-group col p-1">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    maxlength="1"
+                    [(ngModel)]="truck.plateNumberDto.secondNumber"
+                    name="secondNumber"
+                    #secondNumber="ngModel"
+                    (ngModelChange)="setFocusToNextInput('thirdNumber')"
+                    pattern="[0-9]*"
+                    placeholder="2"
+                    required
+                    [ngClass]="{
+                      'custom-valid': secondNumber.valid,
+                      'custom-invalid': secondNumber.touched && !secondNumber.valid
+                    }"
+                  />
+                </div>
+                <div class="form-group col p-1">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    maxlength="1"
+                    [(ngModel)]="truck.plateNumberDto.thirdNumber"
+                    name="thirdNumber"
+                    #thirdNumber="ngModel"
+                    (ngModelChange)="setFocusToNextInput('fourthNumber')"
+                    pattern="[0-9]*"
+                    placeholder="3"
+                    required
+                    [ngClass]="{
+                      'custom-valid': thirdNumber.valid,
+                      'custom-invalid': thirdNumber.touched && !thirdNumber.valid
+                    }"
+                  />
+                </div>
+                <div class="form-group col p-1">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    maxlength="1"
+                    [(ngModel)]="truck.plateNumberDto.fourthNumber"
+                    name="fourthNumber"
+                    #fourthNumber="ngModel"
+                    (ngModelChange)="setFocusToNextInput('firstChar')"
+                    pattern="[0-9]*"
+                    placeholder="4"
+                    required
+                    [ngClass]="{
+                      'custom-valid': fourthNumber.valid,
+                      'custom-invalid': fourthNumber.touched && !fourthNumber.valid
+                    }"
+                  />
+                </div>
+                <div class="form-group col p-1">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    maxlength="1"
+                    [(ngModel)]="truck.plateNumberDto.firstChar"
+                    name="firstChar"
+                    #firstChar="ngModel"
+                    (ngModelChange)="setFocusToNextInput('secondChar')"
+                    pattern="[a-zA-Z\u0600-\u06FF]{1}"
+                    placeholder="a"
+                    required
+                    [ngClass]="{
+                      'custom-valid': firstChar.valid,
+                      'custom-invalid': firstChar.touched && !firstChar.valid
+                    }"
+                  />
+                </div>
+                <div class="form-group col p-1">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    maxlength="1"
+                    [(ngModel)]="truck.plateNumberDto.secondChar"
+                    name="secondChar"
+                    #secondChar="ngModel"
+                    (ngModelChange)="setFocusToNextInput('thirdChar')"
+                    pattern="[a-zA-Z\u0600-\u06FF]{1}"
+                    placeholder="a"
+                    required
+                    [ngClass]="{
+                      'custom-valid': secondChar.valid,
+                      'custom-invalid': secondChar.touched && !secondChar.valid
+                    }"
+                  />
+                </div>
+                <div class="form-group col p-1">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    maxlength="1"
+                    [(ngModel)]="truck.plateNumberDto.thirdChar"
+                    name="thirdChar"
+                    #thirdChar="ngModel"
+                    pattern="[a-zA-Z\u0600-\u06FF]{1}"
+                    placeholder="a"
+                    required
+                    [ngClass]="{
+                      'custom-valid': thirdChar.valid,
+                      'custom-invalid': thirdChar.touched && !thirdChar.valid
+                    }"
+                  />
+                </div>
+              </div>
             </div>
+
+            <!--            <ng-container *ngIf="!isSab">-->
+            <!--              <div class="form-group col-md-6">-->
+            <!--                <label for="Truck_PlateNumber">{{ l('PlateNumber') }}<span class="text-danger">*</span></label>-->
+            <!--                <input-->
+            <!--                  [(ngModel)]="truck.plateNumber"-->
+            <!--                  #plateNumberInput="ngModel"-->
+            <!--                  pattern="^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$"-->
+            <!--                  class="form-control"-->
+            <!--                  id="Truck_PlateNumber"-->
+            <!--                  maxlength="64"-->
+            <!--                  minlength="0"-->
+            <!--                  name="PlateNumber"-->
+            <!--                  required-->
+            <!--                  type="text"-->
+            <!--                  [ngClass]="{-->
+            <!--                    'is-valid': plateNumberInput.valid,-->
+            <!--                    'is-invalid': truckForm.submitted && plateNumberInput.invalid-->
+            <!--                  }"-->
+            <!--                />-->
+            <!--                <validation-messages [formCtrl]="plateNumberInput"></validation-messages>-->
+            <!--                <span class="form-text text-muted">1234 a a a</span>-->
+            <!--              </div>-->
+            <!--            </ng-container>-->
 
             <div class="form-group col-md-6">
               <label for="Truck_ModelName"> {{ l('ModelName') }}<span class="text-danger">*</span> </label>

@@ -86,7 +86,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             undefined,
             undefined,
             {
-              showType: 1,
+              showType: 2,
             },
             () => this.isEnabled('App.Carrier')
           ),

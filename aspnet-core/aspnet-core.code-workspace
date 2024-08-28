@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.fontFamily": "Fira Code",
+		"editor.fontLigatures": true,
+		"cSpell.words": [
+			"Bayan",
+			"Consts",
+			"Dtos",
+			"Newtonsoft"
+		],
+		"terminal.integrated.suggest.enabled": true,
+		"gitlens.ai.experimental.model": "openai:gpt-3.5-turbo"
+	}
+}

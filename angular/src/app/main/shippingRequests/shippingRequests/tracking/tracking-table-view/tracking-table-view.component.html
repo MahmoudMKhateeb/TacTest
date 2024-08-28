@@ -41,6 +41,8 @@
           dataField="name"
           caption="{{ 'CarrierName' | localize }}"
         ></dxi-column>
+        <dxi-column *ngIf="isSab" dataField="sabOrderId" caption="{{ 'SapSaleId' | localize }}"></dxi-column>
+
         <dxi-column dataField="shippingRequestFlagTitle" caption="{{ 'TripType' | localize }}"></dxi-column>
         <dxi-column dataField="shippingTypeTitle" caption="{{ 'ShippingType' | localize }}"></dxi-column>
         <dxi-column
@@ -59,12 +61,20 @@
         <dxi-column dataField="plateNumber" caption="{{ 'PlateNumber' | localize }}"></dxi-column>
         <dxi-column dataField="routeType" caption="{{ 'RouteType' | localize }}"></dxi-column>
         <dxi-column dataField="driver" caption="{{ 'Driver' | localize }}"></dxi-column>
+        <dxi-column dataField="replacedDriver" caption="{{ 'ReplacedDriver' | localize }}"></dxi-column>
+
         <dxi-column dataField="goodsCategory" caption="{{ 'GoodsCategory' | localize }}"></dxi-column>
         <dxi-column dataField="numberOfDrops" caption="{{ 'NumberOfDrops' | localize }}"></dxi-column>
         <dxi-column dataField="containerNumber" caption="{{ 'ContainerNumber' | localize }}"></dxi-column>
-        <dxi-column dataField="bookingNumber" caption="{{ 'ShipperBookingNumber' | localize }}"></dxi-column>
+        <dxi-column dataField="bookingNumber" caption="{{ 'ShipperBooking' | localize }}"></dxi-column>
+        <dxi-column dataField="shipperReference" caption="{{ 'shipperReference' | localize }}"></dxi-column>
+        <dxi-column *ngIf="hasShipperClients" dataField="actorShipperSubTotalAmountWithCommission" caption="{{ l('shipperPrice') }}"></dxi-column>
+        <dxi-column *ngIf="hasShipperClients" dataField="actorShipperTotalAmountWithCommission" caption="{{ l('shipperTotalAmount') }}"></dxi-column>
         <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>
         <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}" cellTemplate="statusTitleCellTemplate"></dxi-column>
+        <dxi-column dataField="containerReturnDate" caption="{{ 'containerReturnDate' | localize }}" cellTemplate="containerReturnDate"></dxi-column>
+        <dxi-column dataField="isContainerReturned" caption="{{ 'isContainerReturned' | localize }}"></dxi-column>
+
         <dxi-column dataField="actualPickupDate" caption="{{ 'PickupDate' | localize }}"></dxi-column>
         <dxi-column dataField="actualDeliveryDate" caption="{{ 'DeliveryDate' | localize }}"></dxi-column>
         <dxi-column dataField="isPODUploaded" caption="{{ 'IsPODUploaded' | localize }}"></dxi-column>
@@ -97,6 +107,9 @@
               <new-tracking-conponent (getForViewReady)="getForViewReady()" [trip]="masterDetailItem.data"></new-tracking-conponent>
             </div>
           </div>
+        </div>
+        <div *dxTemplate="let d of 'containerReturnDate'">
+          {{ d.data.containerReturnDate | momentFormat: 'L' }}
         </div>
         <div *dxTemplate="let d of 'trackCellTemplate'">
           <button class="btn btn-primary" (click)="track(d)">

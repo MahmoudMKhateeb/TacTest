@@ -51,6 +51,8 @@ namespace TACHYON.Shipping.Drivers.Dto
         public List<PointTransactionDto> AvailableTransactions { get; set; }
         public List<RoutPointTransactionDto> Statues { get; set; }
 
+        public int? StorageDays { get; set; }
+
         public bool IsShow
         {
             get

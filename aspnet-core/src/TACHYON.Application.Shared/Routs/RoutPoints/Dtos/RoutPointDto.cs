@@ -66,7 +66,11 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public TripAppointmentDataDto AppointmentDataDto { get; set; }
         public TripClearancePricesDto TripClearancePricesDto { get; set; }
 
+        public long? TruckId { set; get; }
+        public long? DriverUserId { set; get; }
 
+        public int? StorageDays { get; set; }
+        public decimal? StoragePricePerDay { get; set; }
 
 
         //to do receiver attribute

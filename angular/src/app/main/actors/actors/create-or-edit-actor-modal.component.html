@@ -22,130 +22,238 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label for="Actor_CompanyName">{{ l('CompanyName') }} <span class="required-fileds">*</span></label>
-            <input
-              type="text"
-              #Actor_CompanyName="ngModel"
-              id="Actor_CompanyName"
-              class="form-control"
-              [(ngModel)]="actor.companyName"
-              name="CompanyName"
-              minlength="0"
-              maxlength="255"
-              required
-            />
-            <validation-messages [formCtrl]="Actor_CompanyName"></validation-messages>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="Actor_CompanyName">{{ l('CompanyName') }} <span *ngIf="!isSaab" class="required-fileds">*</span></label>
+              <input
+                type="text"
+                #Actor_CompanyName="ngModel"
+                id="Actor_CompanyName"
+                class="form-control"
+                [(ngModel)]="actor.companyName"
+                name="CompanyName"
+                minlength="0"
+                maxlength="255"
+                [required]="!isSaab"
+              />
+              <validation-messages [formCtrl]="Actor_CompanyName"></validation-messages>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="Actor_ActorType">{{ isSaab ? l('ActorType') : l('ActorType') }} <span class="required-fileds">*</span></label>
+              <dx-select-box
+                id="Actor_ActorType"
+                name="ActorType"
+                [(value)]="actor.actorType"
+                [dataSource]="[
+                  { displayName: l('Shipper'), value: 1, visible: hasShipperClients },
+                  { displayName: l('Carrier'), value: 2, visible: hasCarrierClients }
+                ]"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="value"
+                [disabled]="isInUpdateStage()"
+                (onSelectionChanged)="BindRequiredDocs()"
+                placeholder="{{ l('Select type') }}"
+                required
+              >
+              </dx-select-box>
+            </div>
+          </div>
+          <div class="form-row" *ngIf="isSaab">
+            <div class="form-group col-md-6">
+              <label for="Dischannel">{{ l('Dischannel') }} <span class="required-fileds">*</span></label>
+              <dx-select-box
+                id="Dischannel"
+                name="Dischannel"
+                [(value)]="actor.actorDischannelEnum"
+                [dataSource]="DisChannels"
+                [searchEnabled]="false"
+                displayExpr="value"
+                valueExpr="key"
+                placeholder="{{ l('Select type') }}"
+                required
+              >
+              </dx-select-box>
+            </div>
+          </div>
+          <div class="form-row" *ngIf="isSaab">
+            <div class="form-group col-md-6">
+              <label for="Actor_FirstName">{{ l('FirstName') }}</label>
+              <input
+                type="text"
+                #Actor_FirstName="ngModel"
+                id="Actor_FirstName"
+                class="form-control"
+                [(ngModel)]="actor.firstName"
+                name="FirstName"
+              />
+              <validation-messages [formCtrl]="Actor_FirstName"></validation-messages>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="Actor_LastName">{{ l('LastName') }}</label>
+              <input type="text" #Actor_LastName="ngModel" id="Actor_LastName" class="form-control" [(ngModel)]="actor.lastName" name="LastName" />
+              <validation-messages [formCtrl]="Actor_LastName"></validation-messages>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="Actor_ActorType">{{ l('ActorType') }} <span class="required-fileds">*</span></label>
-            <dx-select-box
-              id="Actor_ActorType"
-              name="ActorType"
-              [(value)]="actor.actorType"
-              [dataSource]="[
-                { displayName: l('Shipper'), value: 1, visible: hasShipperClients },
-                { displayName: l('Carrier'), value: 2, visible: hasCarrierClients }
-              ]"
-              [searchEnabled]="true"
-              displayExpr="displayName"
-              valueExpr="value"
-              [disabled]="isInUpdateStage()"
-              (onSelectionChanged)="BindRequiredDocs()"
-              placeholder="{{ l('Select type') }}"
-              required
-            >
-            </dx-select-box>
-            <!--            <select-->
-            <!--              class="form-select form-control custom-select"-->
-            <!--              #Actor_ActorType="ngModel"-->
-            <!--              required-->
-            <!--              name="ActorType"-->
-            <!--              id="Actor_ActorType"-->
-            <!--              [(ngModel)]="actor.actorType"-->
-            <!--              [disabled]="isInUpdateStage()"-->
-            <!--              (change)="BindRequiredDocs()"-->
-            <!--            >-->
-            <!--              <option *ngIf="HaveShipperClients" value="1">{{ l('Shipper') }}</option>-->
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="Actor_Address">{{ isSaab ? l('Street') : l('Address') }} <span *ngIf="!isSaab" class="required-fileds">*</span></label>
+              <input
+                type="text"
+                maxlength="100"
+                #Actor_Address="ngModel"
+                id="Actor_Address"
+                class="form-control"
+                [(ngModel)]="actor.address"
+                name="Address"
+                [required]="!isSaab"
+              />
+              <validation-messages [formCtrl]="Actor_Address"></validation-messages>
+            </div>
 
-            <!--              <option *ngIf="HaveCarrierClients" value="2">{{ l('Carrier') }}</option>-->
-            <!--            </select>-->
-            <!--            <validation-messages [formCtrl]="Actor_ActorType"></validation-messages>-->
+            <div class="form-group col-md-6">
+              <label for="city">{{ l('City') }} <span class="required-fileds">*</span></label>
+              <div>
+                <dx-select-box
+                  id="city"
+                  name="city"
+                  [(value)]="actor.cityId"
+                  [dataSource]="cities"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  required
+                >
+                </dx-select-box>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="Actor_MoiNumber">{{ l('MoiNumber') }} <span class="required-fileds">*</span></label>
-            <input
-              (keypress)="numberOnly($event)"
-              type="text"
-              #Actor_MoiNumber="ngModel"
-              id="Actor_MoiNumber"
-              class="form-control"
-              [(ngModel)]="actor.moiNumber"
-              name="MoiNumber"
-              pattern="^7\d{9}$"
-              maxlength="10"
-              required
-            />
-            <span class="text-muted small pt-2">{{ 'MoiNumberPatternMsg' | localize }}</span>
-            <validation-messages [formCtrl]="Actor_MoiNumber"></validation-messages>
+          <div class="form-row" *ngIf="isSaab">
+            <div class="form-group col-md-6">
+              <label for="salesOfficeType">{{ l('SalesOffice') }}</label>
+              <dx-select-box
+                id="salesOfficeType"
+                name="salesOfficeType"
+                [(ngModel)]="actor.salesOfficeType"
+                [dataSource]="SalesOfficeTypes"
+                [searchEnabled]="false"
+                displayExpr="value"
+                valueExpr="key"
+                placeholder="{{ l('Select type') }}"
+              >
+              </dx-select-box>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="Actor_BuildingCode">{{ l('BuildingCode') }}</label>
+              <input
+                type="number"
+                #Actor_BuildingCode="ngModel"
+                id="Actor_BuildingCode"
+                class="form-control"
+                [(ngModel)]="actor.buildingCode"
+                name="BuildingCode"
+              />
+              <validation-messages [formCtrl]="Actor_BuildingCode"></validation-messages>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="Actor_Address">{{ l('Address') }} <span class="required-fileds">*</span></label>
-            <input
-              type="text"
-              maxlength="100"
-              #Actor_Address="ngModel"
-              id="Actor_Address"
-              class="form-control"
-              [(ngModel)]="actor.address"
-              name="Address"
-              required
-            />
-            <validation-messages [formCtrl]="Actor_Address"></validation-messages>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="Actor_MobileNumber"
+                >{{ isSaab ? l('Phone') : l('MobileNumber') }} <span *ngIf="!isSaab" class="required-fileds">*</span></label
+              >
+              <input
+                (keypress)="numberOnly($event)"
+                type="tel"
+                #Actor_MobileNumber="ngModel"
+                id="Actor_MobileNumber"
+                class="form-control"
+                [(ngModel)]="actor.mobileNumber"
+                name="MobileNumber"
+                pattern="^5\d{8}$"
+                maxlength="9"
+                [required]="!isSaab"
+                placeholder="5xxxxxxxx"
+              />
+              <span class="text-muted small px-2">{{ 'PhoneNumberPatternMsg' | localize }}</span>
+              <validation-messages [formCtrl]="Actor_MobileNumber"></validation-messages>
+            </div>
+
+            <div class="form-group col-md-6" *ngIf="isSaab">
+              <label for="Actor_PostalCode">{{ l('PostalCode') }}</label>
+              <input
+                type="number"
+                #Actor_PostalCode="ngModel"
+                id="Actor_PostalCode"
+                class="form-control"
+                [(ngModel)]="actor.postalCode"
+                name="PostalCode"
+              />
+              <validation-messages [formCtrl]="Actor_PostalCode"></validation-messages>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="Actor_MobileNumber">{{ l('MobileNumber') }} <span class="required-fileds">*</span></label>
-            <input
-              (keypress)="numberOnly($event)"
-              type="tel"
-              #Actor_MobileNumber="ngModel"
-              id="Actor_MobileNumber"
-              class="form-control"
-              [(ngModel)]="actor.mobileNumber"
-              name="MobileNumber"
-              pattern="^5\d{8}$"
-              maxlength="9"
-              required
-              placeholder="5xxxxxxxx"
-            />
-            <span class="text-muted small px-2">{{ 'PhoneNumberPatternMsg' | localize }}</span>
-            <validation-messages [formCtrl]="Actor_MobileNumber"></validation-messages>
+          <div class="form-row">
+            <div class="form-group col-md-6" *ngIf="isSaab">
+              <label for="Actor_Division">{{ l('Division') }}</label>
+              <input type="number" #Actor_Division="ngModel" id="Actor_Division" class="form-control" [(ngModel)]="actor.division" name="Division" />
+              <validation-messages [formCtrl]="Actor_Division"></validation-messages>
+            </div>
+            <div class="form-group col-md-6" *ngIf="isSaab">
+              <label for="Actor_District">{{ l('District') }}</label>
+              <input type="text" #Actor_District="ngModel" id="Actor_District" class="form-control" [(ngModel)]="actor.district" name="District" />
+              <validation-messages [formCtrl]="Actor_District"></validation-messages>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="Actor_Email">{{ l('Email') }} <span class="required-fileds">*</span></label>
-            <input type="text" #Actor_Email="ngModel" id="Actor_Email" class="form-control" [(ngModel)]="actor.email" name="Email" required />
-            <validation-messages [formCtrl]="Actor_Email"></validation-messages>
-          </div>
+          <div *ngIf="!isSaab">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="Actor_MoiNumber">{{ l('MoiNumber') }} <span class="required-fileds">*</span></label>
+                <input
+                  (keypress)="numberOnly($event)"
+                  type="text"
+                  #Actor_MoiNumber="ngModel"
+                  id="Actor_MoiNumber"
+                  class="form-control"
+                  [(ngModel)]="actor.moiNumber"
+                  name="MoiNumber"
+                  pattern="^7\d{9}$"
+                  maxlength="10"
+                  required
+                />
+                <span class="text-muted small pt-2">{{ 'MoiNumberPatternMsg' | localize }}</span>
+                <validation-messages [formCtrl]="Actor_MoiNumber"></validation-messages>
+              </div>
 
-          <div class="form-group">
-            <label for="Actor_Email">{{ l('InvoiceDueDays') }} <span class="required-fileds">*</span></label>
-            <input
-              (keypress)="numberOnly($event)"
-              type="number"
-              min="1"
-              #Actor_InvoiceDueDays="ngModel"
-              id="Actor_InvoiceDueDays"
-              class="form-control"
-              [(ngModel)]="actor.invoiceDueDays"
-              name="InvoiceDueDays"
-              required
-            />
-            <validation-messages [formCtrl]="Actor_InvoiceDueDays"></validation-messages>
+              <div class="form-group col-md-6">
+                <label for="Actor_Email">{{ l('Email') }} <span class="required-fileds">*</span></label>
+                <input type="text" #Actor_Email="ngModel" id="Actor_Email" class="form-control" [(ngModel)]="actor.email" name="Email" required />
+                <validation-messages [formCtrl]="Actor_Email"></validation-messages>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="Actor_InvoiceDueDays">{{ l('InvoiceDueDays') }} <span class="required-fileds">*</span></label>
+                <input
+                  (keypress)="numberOnly($event)"
+                  type="number"
+                  min="1"
+                  #Actor_InvoiceDueDays="ngModel"
+                  id="Actor_InvoiceDueDays"
+                  class="form-control"
+                  [(ngModel)]="actor.invoiceDueDays"
+                  name="InvoiceDueDays"
+                  required
+                />
+                <validation-messages [formCtrl]="Actor_InvoiceDueDays"></validation-messages>
+              </div>
+            </div>
           </div>
 
           <div *ngIf="actor.createOrEditDocumentFileDtos != undefined ? (actor.createOrEditDocumentFileDtos.length > 0 ? true : false) : false">
@@ -161,23 +269,25 @@
           </div>
 
           <div *ngIf="actor.createOrEditDocumentFileDtos == undefined || actor.createOrEditDocumentFileDtos.length == 0">
-            <div class="form-group">
-              <label for="Actor_CR">{{ l('CR') }} <span class="required-fileds">*</span></label>
-              <input type="text" #Actor_CR="ngModel" id="Actor_CR" class="form-control" [(ngModel)]="actor.cr" name="CR" required />
-              <validation-messages [formCtrl]="Actor_CR"></validation-messages>
-            </div>
-            <div class="form-group">
-              <label for="Actor_VatCertificate">{{ l('VatCertificate') }} <span class="required-fileds">*</span></label>
-              <input
-                type="text"
-                #Actor_VatCertificate="ngModel"
-                id="Actor_VatCertificate"
-                class="form-control"
-                [(ngModel)]="actor.vatCertificate"
-                name="VatCertificate"
-                required
-              />
-              <validation-messages [formCtrl]="Actor_VatCertificate"></validation-messages>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="Actor_CR">{{ l('CR') }} <span class="required-fileds">*</span></label>
+                <input type="text" #Actor_CR="ngModel" id="Actor_CR" class="form-control" [(ngModel)]="actor.cr" name="CR" required />
+                <validation-messages [formCtrl]="Actor_CR"></validation-messages>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="Actor_VatCertificate">{{ l('VatCertificate') }} <span *ngIf="!isSaab" class="required-fileds">*</span></label>
+                <input
+                  type="text"
+                  #Actor_VatCertificate="ngModel"
+                  id="Actor_VatCertificate"
+                  class="form-control"
+                  [(ngModel)]="actor.vatCertificate"
+                  name="VatCertificate"
+                  [required]="!isSaab"
+                />
+                <validation-messages [formCtrl]="Actor_VatCertificate"></validation-messages>
+              </div>
             </div>
           </div>
 

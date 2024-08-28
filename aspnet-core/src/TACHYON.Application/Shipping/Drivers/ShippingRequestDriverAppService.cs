@@ -120,14 +120,13 @@ namespace TACHYON.Shipping.Drivers
         .AsNoTracking()
         .Include(i => i.ShippingRequestFk)
         .Include(i => i.OriginFacilityFk)
-       .ThenInclude(i=>i.CityFk)
-       .Include(i => i.DestinationFacilityFk).ThenInclude(x=> x.CityFk)
-           .Where(t => 
-           t.AssignedDriverUserId == AbpSession.UserId &&
-           t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => (e.Status == ShippingRequestTripStatus.Delivered || e.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Comming, e => e.StartTripDate.Date > Clock.Now.Date)
+        .ThenInclude(i => i.CityFk)
+        .Include(i => i.DestinationFacilityFk).ThenInclude(x => x.CityFk)
+        .Where(x=> x.AssignedDriverUserId == AbpSession.UserId || x.ReplacesDriverId == AbpSession.UserId)
+        .Where(t => t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.AssignedDriverUserId == AbpSession.UserId && e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => ((e.AssignedDriverUserId == AbpSession.UserId ) && (e.Status == ShippingRequestTripStatus.Delivered || e.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)) || e.ReplacesDriverId == AbpSession.UserId)
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Comming, e => e.AssignedDriverUserId == AbpSession.UserId && e.StartTripDate.Date > Clock.Now.Date)
         .OrderBy(input.Sorting ?? "Status asc");
 
             //.PageBy(input);
@@ -724,6 +723,28 @@ namespace TACHYON.Shipping.Drivers
             if (AbpSession.UserId != null)
                 await _appNotifier.NotifyDriverOnlyWhenTripUpdated(id, waybillNumber,
                     new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value));
+        }
+        
+        public async Task UpdateTripAdditionalDataAsync( long pointId , int? driverWorkingHour,int? distance){
+
+             var trip = await _ShippingRequestTrip
+            .GetAllIncluding(x=> x.RoutPoints)
+            .Where(x => x.RoutPoints.Any(p => p.Id == pointId ))
+            .FirstAsync();
+
+            if (driverWorkingHour.HasValue )
+                trip.RoutPoints.First(x=> x.Id == pointId ).DriverWorkingHour = driverWorkingHour.Value;
+                trip.RoutPoints.First(x=> x.Id == pointId ).DriverUserId = AbpSession.UserId;
+                
+
+            if (distance.HasValue )
+                trip.RoutPoints.First(x=> x.Id == pointId ).Distance = distance.Value;
+                trip.RoutPoints.First(x=> x.Id == pointId ).DriverUserId = AbpSession.UserId;
+
+            var DriverPoints = trip.RoutPoints.Where(x => x.DriverUserId == AbpSession.UserId);
+            trip.DriverWorkingHour = DriverPoints.Sum(x=> x.DriverWorkingHour);
+            trip.Distance = DriverPoints.Sum(x=> x.Distance);
+
         }
 
     }

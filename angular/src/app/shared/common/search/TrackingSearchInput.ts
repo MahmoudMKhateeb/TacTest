@@ -1,4 +1,4 @@
-import { ShippingRequestRouteType, ShippingRequestTripStatus } from '@shared/service-proxies/service-proxies';
+import { ActorTypesEnum, ShippingRequestRouteType, ShippingRequestTripStatus } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 export class TrackingSearchInput {
   shipper!: string;
@@ -23,6 +23,8 @@ export class TrackingSearchInput {
   deliveryFromDate!: moment.Moment | undefined;
   deliveryToDate!: moment.Moment | undefined;
   containerNumber!: string;
+  actor!: string;
+  actorType!: ActorTypesEnum;
   isInvoiceIssued!: boolean;
   isSubmittedPOD!: boolean;
   requestTypeId!: number;

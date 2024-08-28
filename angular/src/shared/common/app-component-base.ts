@@ -52,6 +52,8 @@ export abstract class AppComponentBase {
   private ngxSpinnerTextService: NgxSpinnerTextService;
   dateFormatterService: DateFormatterService;
   http: HttpClient;
+  sabErrorIcon = AppConsts.appBaseUrl + '/assets/common/images/error-sab.png';
+
   /**
    * max file size that  user can upload
    */
@@ -297,11 +299,15 @@ export abstract class AppComponentBase {
   get hasShipperClients(): boolean {
     return this.feature.isEnabled('App.ShipperClients');
   }
-
+  get isSab(): boolean {
+    return this.feature.isEnabled('App.Sab');
+  }
   IfOther(items: any, id: any) {
-    // id return string or number
-    if (id != undefined) return items?.filter((x) => x.id == id && x.isOther).length > 0;
-    else return false;
+    if (id != undefined) {
+      return items?.filter((x) => x.id == id && x.isOther).length > 0;
+    } else {
+      return false;
+    }
   }
 
   cannotContainSpace(input: string) {

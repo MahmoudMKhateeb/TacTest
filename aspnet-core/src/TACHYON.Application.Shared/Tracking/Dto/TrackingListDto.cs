@@ -83,6 +83,19 @@ namespace TACHYON.Tracking.Dto
         public string ActualPickupDate { get; set; }
         public bool IsPODUploaded { get; set; }
         public bool IsInvoiceIssued { get; set; }
+        public string SabOrderId { get; set; }
 
+        public DateTime? ContainerReturnDate { get; set; }
+        public bool? IsContainerReturned {get;set;}
+
+        public string ShipperReference { get; set; }
+
+        public decimal? ActorShipperTotalAmountWithCommission { get; set; }
+        public decimal? ActorShipperSubTotalAmountWithCommission { get; set; }
+
+        public long? ReplacesDriverId {get;set;}
+
+        public string ReplacedDriver { get; set; }
+        
     }
 }

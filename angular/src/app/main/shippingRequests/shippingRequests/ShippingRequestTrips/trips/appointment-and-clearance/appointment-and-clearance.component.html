@@ -39,7 +39,7 @@
                       openOnFieldClick="true"
                       [(value)]="tripAppointment.appointmentDateTime"
                       [disabled]="
-                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper) ||
+                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper && !isSab) ||
                         (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
                       "
                     >
@@ -54,7 +54,7 @@
                       name="appointmentNumber"
                       [(value)]="tripAppointment.appointmentNumber"
                       [disabled]="
-                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper) ||
+                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper && !isSab) ||
                         (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
                       "
                     >
@@ -64,7 +64,7 @@
                 <div class="col-lg-6 form-group mr-8">
                   <label>
                     {{
-                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper) ||
+                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper && !isSab) ||
                       (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
                         ? l('Attachments')
                         : !isEdit || (isEdit && !tripAppointment.documentName)
@@ -77,6 +77,7 @@
                     class="custom-file"
                     *ngIf="
                       (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
+                      isSab ||
                       (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
                         hasShipperClients &&
                         hasCarrierClients &&
@@ -90,14 +91,14 @@
                       class="custom-file-input"
                       accept="image/x-png,image/jpeg,application/pdf"
                       [disabled]="
-                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper) ||
+                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper && !isSab) ||
                         (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients) ||
                         ((isCarrier || isCarrierSaas) && tripAppointment.documentName)
                       "
                     />
                     <label
                       [attr.disabled]="
-                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper) ||
+                        (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isShipper && !isSab) ||
                         (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients) ||
                         ((isCarrier || isCarrierSaas) && tripAppointment.documentName)
                       "
@@ -111,7 +112,7 @@
                   <div
                     class="margin-top-5"
                     *ngIf="
-                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
+                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper && !isSab) ||
                       (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
                         !hasShipperClients &&
                         !hasCarrierClients &&
@@ -159,6 +160,7 @@
                   class="col-lg-4 form-group"
                   *ngIf="
                     (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
+                    isSab ||
                     (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && hasShipperClients && hasCarrierClients) ||
                     (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && isCarrierSaas && !isSaasRequest)
                   "
@@ -332,6 +334,7 @@
                 <div
                   class="col-lg-4 form-group"
                   *ngIf="
+                    isSab ||
                     (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
                     (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && hasShipperClients && hasCarrierClients) ||
                     (isCarrierSaas && !isSaasRequest)
@@ -358,7 +361,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
+                <div class="col-lg-4 form-group" *ngIf="isSab || !isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('VatAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -366,7 +369,7 @@
                     <dx-number-box id="VatAmount" name="VatAmount" [(value)]="tripClearance.vatAmount" [disabled]="true"> </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
+                <div class="col-lg-4 form-group" *ngIf="isSab || !isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('TotalAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -427,7 +430,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
+                <div class="col-lg-4 form-group" *ngIf="(!isCarrier && !isSab) || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('VatAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -436,7 +439,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
+                <div class="col-lg-4 form-group" *ngIf="(!isCarrier && !isSab) || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('TotalAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -476,8 +479,10 @@
             </button>
             <dx-button
               *ngIf="
-                usedIn == 'createOrEdit' &&
-                (isTachyonDealer || (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && hasShipperClients && hasCarrierClients))
+                isSab ||
+                (usedIn == 'createOrEdit' &&
+                  (isTachyonDealer ||
+                    (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && hasShipperClients && hasCarrierClients)))
               "
               type="submit"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"

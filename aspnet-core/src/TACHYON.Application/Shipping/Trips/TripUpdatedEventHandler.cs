@@ -10,6 +10,7 @@ using Abp.Extensions;
 using Abp.Threading;
 using Microsoft.EntityFrameworkCore;
 using NPOI.HSSF.Record;
+using RestSharp.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.WebHooks;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -32,17 +34,19 @@ namespace TACHYON.Shipping.Trips
         private readonly BayanIntegrationManagerV3 _bayanIntegrationManagerV3;
         private readonly IAppNotifier _appNotifier;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly AppWebhookPublisher _webhookPublisher;
 
 
         public TripUpdatedEventHandler(BayanIntegrationManagerV2 bayanIntegrationManager,
             IAppNotifier appNotifier,
             IUnitOfWorkManager unitOfWorkManager,
-            BayanIntegrationManagerV3 bayanIntegrationManagerV3)
+            BayanIntegrationManagerV3 bayanIntegrationManagerV3, AppWebhookPublisher webhookPublisher)
         {
             _bayanIntegrationManager = bayanIntegrationManager;
             _appNotifier = appNotifier;
             _unitOfWorkManager = unitOfWorkManager;
             _bayanIntegrationManagerV3 = bayanIntegrationManagerV3;
+            _webhookPublisher = webhookPublisher;
         }
 
         public void HandleEvent(EntityUpdatedEventData<ShippingRequestTrip> eventData)
@@ -50,7 +54,7 @@ namespace TACHYON.Shipping.Trips
             //todo send notification for driver and shipper and carrier using eventBus
             using (var unitOfWork = _unitOfWorkManager.Begin())
             {
-              //  AsyncHelper.RunSync(() => _appNotifier.NotifyTripUpdated(eventData.Entity));
+                //  AsyncHelper.RunSync(() => _appNotifier.NotifyTripUpdated(eventData.Entity));
 
                 // Add BayanIntegration Jobs To the Queue
                 if (eventData.Entity.AssignedDriverUserId.HasValue && eventData.Entity.AssignedTruckId.HasValue)
@@ -67,6 +71,20 @@ namespace TACHYON.Shipping.Trips
                     }
                 }
 
+                //  check if the trip status has changed
+                if (eventData.Entity.SabOrderId.IsNullOrEmpty())
+                {
+                    if (eventData.Entity.Status == ShippingRequestTripStatus.Delivered)
+                    {
+                        AsyncHelper.RunSync(() =>
+                            _webhookPublisher.PublishDeliveredTripUpdatedWebhook(eventData.Entity.Id));
+                        
+                    }                        
+
+                   
+                }
+
+                // 
                 unitOfWork.Complete();
             }
         }

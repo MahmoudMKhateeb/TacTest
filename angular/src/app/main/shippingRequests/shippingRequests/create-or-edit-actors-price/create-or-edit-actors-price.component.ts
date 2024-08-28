@@ -6,11 +6,13 @@ import {
   CreateOrEditActorShipperPriceDto,
   CreateOrEditSrActorCarrierPriceInput,
   CreateOrEditSrActorShipperPriceInput,
+  SaasPricePackageServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Component({
   selector: 'app-create-or-edit-actors-price',
@@ -34,7 +36,12 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   shipperSaving: any;
   carrierSaving: any;
 
-  constructor(injector: Injector, private actorsPriceOffersServiceProxy: ActorsPriceOffersServiceProxy) {
+  constructor(
+    injector: Injector,
+    private actorsPriceOffersServiceProxy: ActorsPriceOffersServiceProxy,
+    private _TripService: TripService,
+    private _saasPricePackageServiceProxy: SaasPricePackageServiceProxy
+  ) {
     super(injector);
 
     this.shipperPriceInput.actorShipperPriceDto = new CreateOrEditActorShipperPriceDto();
@@ -141,5 +148,37 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
       this.saveCarrierPrice();
     }
     this.close();
+  }
+
+  getPriceFromPricePackage() {
+    let actorShipperId = this._TripService?.GetShippingRequestForViewOutput?.shipperActorId;
+    let originCityId = this._TripService?.GetShippingRequestForViewOutput?.originalCityId;
+    let destinationCity = null;
+    let truckType = this._TripService?.GetShippingRequestForViewOutput?.truckTypeId;
+    let ShippingType = this._TripService?.GetShippingRequestForViewOutput?.shippingRequest.shippingTypeId || undefined;
+    let GoodCat = this._TripService?.GetShippingRequestForViewOutput?.goodCategoryId;
+    //let loadingType = this._TripService?.GetShippingRequestForViewOutput?.lo;
+    let RoundTripType = this._TripService?.GetShippingRequestForViewOutput?.roundTripType || undefined;
+
+    if (ShippingType == 1) {
+      destinationCity = originCityId;
+    } else {
+      if (this._TripService?.GetShippingRequestForViewOutput?.destinationCitiesDtos?.length > 0) {
+        destinationCity = this._TripService?.GetShippingRequestForViewOutput?.destinationCitiesDtos[0]?.cityId || null;
+      }
+    }
+    let validation = true;
+
+    if (validation) {
+      this._saasPricePackageServiceProxy
+        .getForPricing(actorShipperId, originCityId, destinationCity, undefined, truckType, ShippingType, GoodCat, undefined, RoundTripType)
+        .subscribe((result) => {
+          if (!result) {
+            this.notify.info(this.l('cantFindMatchingPricePackages'));
+          }
+          this.shipperPriceInput.actorShipperPriceDto.subTotalAmountWithCommission = result;
+          this.calculatePrices(this.shipperPriceInput.actorShipperPriceDto);
+        });
+    }
   }
 }

@@ -2,10 +2,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, V
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
+  ActorDischannelEnum,
   ActorsServiceProxy,
   CreateOrEditActorDto,
   CreateOrEditDocumentFileDto,
   DocumentFilesServiceProxy,
+  SalesOfficeTypeEnum,
+  TenantCityLookupTableDto,
+  TenantRegistrationServiceProxy,
   UpdateDocumentFileInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -16,6 +20,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'createOrEditActorModal',
@@ -50,15 +55,29 @@ export class CreateOrEditActorModalComponent extends AppComponentBase {
    * DocFileUploader onProgressItem file name
    */
   docProgressFileName: any;
+  //to be removed later on
+  isSaab = this.feature.isEnabled('App.Sab');
+
+  plant: any;
+  paymentTerms: any;
+  //end of to be removed
+  cities: TenantCityLookupTableDto[];
+  DisChannels = this.enumToArray.transform(ActorDischannelEnum);
+
+  SalesOfficeTypes = this.enumToArray.transform(SalesOfficeTypeEnum);
+
   constructor(
     injector: Injector,
     private _actorsServiceProxy: ActorsServiceProxy,
     public _fileDownloadService: FileDownloadService,
     private _tokenService: TokenService,
     private cdref: ChangeDetectorRef,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private _countriesServiceProxy: TenantRegistrationServiceProxy,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
+    this.getAllcities();
   }
 
   show(actorId?: number): void {
@@ -80,8 +99,12 @@ export class CreateOrEditActorModalComponent extends AppComponentBase {
         this.active = true;
         this.BindRequiredDocs();
         this.modal.show();
+        (this.actor.cityId as any) = result.actor.cityId.toString();
+        (this.actor.salesOfficeType as any) = result.actor.salesOfficeType.toString();
+        (this.actor.actorDischannelEnum as any) = result.actor.actorDischannelEnum.toString();
       });
     }
+
     this.initDocsUploader();
     this.cdref.detectChanges();
   }
@@ -223,5 +246,12 @@ export class CreateOrEditActorModalComponent extends AppComponentBase {
         this.actor.createOrEditDocumentFileDtos = result;
       });
     }
+  }
+
+  getAllcities() {
+    //2 for saudi Arabia
+    this._countriesServiceProxy.getAllCitiesForTableDropdown(2).subscribe((result) => {
+      this.cities = result;
+    });
   }
 }

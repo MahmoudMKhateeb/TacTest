@@ -9,6 +9,7 @@ import {
   GetShippingRequestSearchListDto,
   ComboboxItemDto,
   ShippingRequestRouteType,
+  ActorTypesEnum,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
@@ -44,6 +45,7 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
   truckCapacities: ComboboxItemDto[] = [];
   statusData: { displayText: string; value: number | string }[] = [];
   routeTypes: any[] = [];
+  AllActorTypes = this.enumToArray.transform(ActorTypesEnum);
 
   constructor(injector: Injector, private _currentSrv: PriceOfferServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(injector);

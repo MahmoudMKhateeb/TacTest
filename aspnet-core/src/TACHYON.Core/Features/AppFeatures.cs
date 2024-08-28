@@ -127,6 +127,7 @@
         public static string TruckDirectRequestVasCommissionPercentage = "App.Shipper.TruckDirectRequestVASCommissionPercentage";
         public static string TruckDirectRequestVasCommissionValue = "App.Shipper.TruckDirectRequestVASCommissionValue";
         public static string TruckDirectRequestVasCommissionMinValue = "App.Shipper.TruckDirectRequestVASCommissionMinValue";
+       
 
         #endregion
 
@@ -238,5 +239,7 @@
         public const string TripDetailsReport = "App.Reporting.TripDetails";
         public const string PodPerformanceReport = "App.Reporting.PodPerformance";
         public const string FinancialReportFeature = "App.Reporting.Financial";
+
+        public const string Sab = "App.Sab";
     }
 }

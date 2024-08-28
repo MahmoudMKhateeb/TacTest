@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>    <text name="RedemptionCode">Redemption code</text>
+	<texts>
+    <text name="RedemptionCode">Redemption code</text>
     <text name="TACHYON.Redemption.RedemptionCode">RedemptionCode</text>
     <text name="RedemptionDate">Redemption date</text>
     <text name="RedemptionTenantId">Redemption tenant id</text>
@@ -3563,7 +3564,14 @@
 	<text name="FleetManagement">Fleet Management</text>
 	<text name="ClientsAndTransporters"><![CDATA[Clients & transporters]]></text>
 	<text name="PromotionCode">Promotion Code</text>
-
+	<text name="TripVatAmount">Vat Amount</text>
+	<text name="ScopeOfWork">Scope Of Work</text>
+	<text name="ShowAsTable">Table View</text>
+	<text name="ShowAsList">List View</text>
+	<text name="StorageDetails">Storage Details</text>
+	<text name="areYouSureYouWantToChangeDriverAndTruck">Are You Sure You Want To Change Driver And Truck ?</text>
+	<text name="areYouSureYouWantToChangeDriver">Are You Sure You Want To Change The Driver?</text>
+	<text name="areYouSureYouWantToChangeTheTruck">Are You Sure You Want To Change The Truck ?</text>
 
 	</texts>
 </localizationDictionary>

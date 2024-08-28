@@ -1,5 +1,5 @@
 /* tslint:disable:member-ordering */
-import { ChangeDetectorRef, Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Output, Renderer2, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
@@ -8,6 +8,7 @@ import {
   DocumentFileDto,
   DocumentFilesServiceProxy,
   ISelectItemDto,
+  PlateNumberDto,
   PlateTypeSelectItemDto,
   PriceOfferServiceProxy,
   SelectItemDto,
@@ -32,7 +33,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as moment from '@node_modules/moment';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
-import { NgForm } from '@angular/forms';
+import { NgForm, NgModel } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
@@ -125,7 +126,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef,
     private _shippingRequestsService: ShippingRequestsServiceProxy,
-    private _priceOfferService: PriceOfferServiceProxy
+    private _priceOfferService: PriceOfferServiceProxy,
+    private renderer: Renderer2
   ) {
     super(injector);
     this.plateTypesLoading = false;
@@ -133,6 +135,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
   show(truckId?: number): void {
     this.truck = new CreateOrEditTruckDto();
+    this.truck.plateNumberDto = new PlateNumberDto();
     this.truck.plateTypeId = null;
     this.plateTypesLoading = true;
     this._trucksServiceProxy
@@ -437,6 +440,15 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   onValueChanged(event: any, property: string) {
     if (event.value) {
       this.truck[property] = event.value.toString();
+    }
+  }
+  setFocusToNextInput(inputName: string) {
+    // Query the input element by name
+    const inputElement = this.renderer.selectRootElement(`input[name="${inputName}"]`, true);
+
+    // Set focus on the input element
+    if (inputElement) {
+      inputElement.focus();
     }
   }
 }

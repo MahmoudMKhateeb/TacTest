@@ -365,6 +365,9 @@ import { DxScrollViewModule } from '@node_modules/devextreme-angular/ui/scroll-v
 import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area';
 import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directive/make-scrollable.module';
 import { ReportingModule } from '@app/main/reporting/reporting.module';
+import { SaasPricePackageModule } from '@app/main/saaSpricePackages/saas-price-package.module';
+import { DxListModule, DxTagBoxModule } from '@node_modules/devextreme-angular';
+import { StorageDetailsModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points-for-port-movement/storage-details/storage-details.component';
 
 @NgModule({
   imports: [
@@ -446,6 +449,9 @@ import { ReportingModule } from '@app/main/reporting/reporting.module';
     DxTextAreaModule,
     MakeScrollableModule,
     ReportingModule,
+    SaasPricePackageModule,
+    DxListModule,
+    DxTagBoxModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -697,6 +703,7 @@ import { ReportingModule } from '@app/main/reporting/reporting.module';
     ShippingRequestsTableComponent,
     ShippingRequestCardComponent,
     TruckFilterModalComponent,
+    StorageDetailsModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

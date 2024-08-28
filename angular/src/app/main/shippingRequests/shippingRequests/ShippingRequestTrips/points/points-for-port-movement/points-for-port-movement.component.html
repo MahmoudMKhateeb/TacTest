@@ -31,9 +31,20 @@
           <th>
             {{ l('Notes') }}
           </th>
-          <th>
-            <!--                        {{ l('PaymentMethod') }}-->
-          </th>
+
+          <!--          <th *ngIf="isImportWithStorage">-->
+          <!--            {{ l('Driver') }}-->
+          <!--          </th>-->
+          <!--          <th *ngIf="isImportWithStorage">-->
+          <!--            {{ l('Truck') }}-->
+          <!--          </th>-->
+          <!--          <th *ngIf="isImportWithStorage">-->
+          <!--            {{ l('StorageDays') }}-->
+          <!--          </th>-->
+          <!--          <th *ngIf="isImportWithStorage">-->
+          <!--            {{ l('SPricePerDay') }}-->
+          <!--          </th>-->
+          <th *ngIf="isImportWithStorage">{{ l('StorageDetails') }}</th>
           <th>
             {{ l('AppointmentsAndClearance') }}
           </th>
@@ -47,7 +58,9 @@
         </tr>
         <tr *ngIf="i === 2">
           <td [colSpan]="8" rowspan="1" class="pt-8 border-bottom-0">
-            <strong>{{ (isExportRequest ? 'SecondTrip' : 'ReturnTrip') | localize }}</strong>
+            <strong *ngIf="isExportRequest">{{ 'SecondTrip' | localize }}</strong>
+            <strong *ngIf="isImportWithStorage">{{ 'StorageTrip' | localize }}</strong>
+            <strong *ngIf="!isExportRequest && !isImportWithStorage">{{ 'ReturnTrip' | localize }}</strong>
           </td>
         </tr>
         <tr *ngIf="i === 4">
@@ -69,7 +82,7 @@
                 class="form-control p-0"
                 name="facility{{ i }}"
                 [(value)]="wayPointsList[i].facilityId"
-                [dataSource]="record.pickingType === PickingType.Pickup ? filteredPickupFacilities[i] : filteredDropFacilities[i]"
+                [dataSource]="facilitiesDataSource(record, i)"
                 [searchEnabled]="true"
                 (onValueChanged)="
                   RouteStepCordSetter(i, wayPointsList[i].facilityId);
@@ -84,27 +97,7 @@
                 placeholder="{{ l('SelectaFacility') }}"
               >
               </dx-select-box>
-              <!--              <select-->
-              <!--                #pointFacility="ngModel"-->
-              <!--                name="facility{{ i }}"-->
-              <!--                class="form-control"-->
-              <!--                [(ngModel)]="wayPointsList[i].facilityId"-->
-              <!--                (change)="-->
-              <!--                  RouteStepCordSetter(i, wayPointsList[i].facilityId);-->
-              <!--                  wayPointsSetter();-->
-              <!--                  loadReceivers(wayPointsList[i].facilityId);-->
-              <!--                  wayPointsList[i].receiverId = null;-->
-              <!--                  onChangedWayPointsList()-->
-              <!--                "-->
-              <!--                [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"-->
-              <!--                [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"-->
-              <!--                [disabled]="isFacilityDisabled(i)"-->
-              <!--              >-->
-              <!--                <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>-->
-              <!--                <option *ngFor="let item of filterFacilitiesForDropDown(record.pickingType === PickingType.Pickup, i)" [ngValue]="item.id">-->
-              <!--                  {{ item.displayName }}-->
-              <!--                </option>-->
-              <!--              </select>-->
+              <!--              {{ wayPointsList[i].facilityId }}-->
               <div *ngIf="isShipper || isCarrierSaas || isTachyonDealer" class="input-group-btn">
                 <button class="btn btn-light-danger" [disabled]="facilityLoading" (click)="createOrEditFacilityModalShow()">
                   <i class="flaticon2-add"></i>
@@ -129,22 +122,7 @@
                 placeholder="{{ l('SelectContact') }}"
               >
               </dx-select-box>
-              <!--              <select-->
-              <!--                #pointReciver="ngModel"-->
-              <!--                name="reciver{{ i }}"-->
-              <!--                class="form-control"-->
-              <!--                [(ngModel)]="wayPointsList[i].receiverId"-->
-              <!--                [disabled]="!wayPointsList[i].facilityId"-->
-              <!--                [busyIf]="receiverLoading"-->
-              <!--                [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"-->
-              <!--                [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"-->
-              <!--                (change)="onChangedWayPointsList(); selectContact(i)"-->
-              <!--              >-->
-              <!--                <option value="">{{ l('SelectContact') }}</option>-->
-              <!--                <option *ngFor="let item of allPointsSendersAndReceivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">-->
-              <!--                  {{ item.displayName }}-->
-              <!--                </option>-->
-              <!--              </select>-->
+
               <div *ngIf="isShipper || isCarrierSaas || isTachyonDealer" class="input-group-btn">
                 <button
                   class="btn btn-light-danger"
@@ -223,8 +201,49 @@
               {{ wayPointsList[i]?.note?.length > 18 ? (wayPointsList[i].note | slice: 0:18) + ' ....' : wayPointsList[i].note }}
             </a>
           </td>
+
+          <td *ngIf="isImportWithStorage && i == 3">
+            <!--      td Storage Details -->
+            <a
+              (click)="StorageDetailsModal.show(i)"
+              class="btn btn-sm mr-3"
+              [ngClass]="{
+                'btn-light-danger': !StorageDetailsButtonClass,
+                'btn-light-success': StorageDetailsButtonClass
+              }"
+            >
+              <i
+                [ngClass]="{
+                  'flaticon2-check-mark': StorageDetailsButtonClass,
+                  'flaticon2-plus-1': !StorageDetailsButtonClass
+                }"
+              ></i>
+              <span *ngIf="usedIn != 'createOrEdit'">{{ l('Show') }} </span>
+            </a>
+          </td>
+          <td *ngIf="isImportWithStorage && i != 3"></td>
+          <!--          <td *ngIf="isImportWithStorage">-->
+          <!--            {{ i == 3 ? '' : '-' }}-->
+          <!--            <dx-text-box-->
+          <!--              name="sd-{{ i }}"-->
+          <!--              *ngIf="i == 3"-->
+          <!--              [(value)]="wayPointsList[i].storageDays"-->
+          <!--              [disabled]="usedIn != 'createOrEdit'"-->
+          <!--              placeholder="10"-->
+          <!--            ></dx-text-box>-->
+          <!--          </td>-->
+          <!--          <td *ngIf="isImportWithStorage">-->
+          <!--            {{ i == 3 ? '' : '-' }}-->
+          <!--            <dx-text-box-->
+          <!--              name="pricePd-{{ i }}"-->
+          <!--              *ngIf="i == 3"-->
+          <!--              [(value)]="wayPointsList[i].storagePricePerDay"-->
+          <!--              [disabled]="usedIn != 'createOrEdit'"-->
+          <!--              placeholder="100"-->
+          <!--            ></dx-text-box>-->
+          <!--          </td>-->
           <td>
-            <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn == 'createOrEdit'">
+            <div *ngIf="showAppointmentsAndClearanceButton(i)">
               <div class="checkbox-list mb-2">
                 <label class="checkbox ml-2">
                   <input
@@ -233,10 +252,7 @@
                     id="dropNeedsClearance-{{ i }}"
                     name="dropNeedsClearance-{{ i }}"
                     value="false"
-                    [disabled]="
-                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
-                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
-                    "
+                    [disabled]="(!hasShipperClients && !hasCarrierClients) || usedIn != 'createOrEdit'"
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsClearance') }}
@@ -248,92 +264,23 @@
                     id="dropNeedsAppointment-{{ i }}"
                     name="dropNeedsAppointment-{{ i }}"
                     value="false"
-                    [disabled]="
-                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
-                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
-                    "
+                    [disabled]="(!hasShipperClients && !hasCarrierClients) || usedIn != 'createOrEdit'"
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsAppointment') }}
                 </label>
               </div>
             </div>
-            <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn != 'createOrEdit'">
-              <div class="checkbox-list mb-2">
-                <label class="checkbox ml-2">
-                  <input
-                    type="checkbox"
-                    [(ngModel)]="record.needsClearance"
-                    id="dropNeedsClearance-{{ i }}"
-                    name="dropNeedsClearance-{{ i }}"
-                    value="false"
-                    [disabled]="
-                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
-                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
-                    "
-                  />
-                  <span class="ml-2 mt-1"></span>
-                  {{ l('needsClearance') }}
-                </label>
-                <label class="checkbox ml-2">
-                  <input
-                    type="checkbox"
-                    [(ngModel)]="record.needsAppointment"
-                    id="dropNeedsAppointment-{{ i }}"
-                    name="dropNeedsAppointment-{{ i }}"
-                    value="false"
-                    [disabled]="
-                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
-                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
-                    "
-                  />
-                  <span class="ml-2 mt-1"></span>
-                  {{ l('needsAppointment') }}
-                </label>
-              </div>
-            </div>
-          </td>
-          <td>
             <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn == 'createOrEdit'">
               <button *ngIf="record.dropNeedsClearance || record.dropNeedsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
-                <i
-                  [ngClass]="
-                    (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
-                    (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && hasShipperClients && hasCarrierClients)
-                      ? (!record.appointmentDataDto || !record.tripClearancePricesDto) && !isEdit
-                        ? 'fa fa-plus'
-                        : 'fa fa-pen'
-                      : 'fa fa-eye'
-                  "
-                ></i>
+                <i [ngClass]="getClassForCreateOrEdit(record)"></i>
               </button>
             </div>
             <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn != 'createOrEdit'">
               <button *ngIf="record.needsClearance || record.needsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
-                <i
-                  [ngClass]="
-                    (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
-                    (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                      hasShipperClients &&
-                      hasCarrierClients &&
-                      ((record.needsAppointment && !record.appointmentDataDto) || (record.needsClearance && !record.tripClearancePricesDto)))
-                      ? 'fa fa-pen'
-                      : 'fa fa-eye'
-                  "
-                ></i>
+                <i [ngClass]="'fa fa-eye'"></i>
               </button>
             </div>
-            <!--                        <span *ngIf="usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>-->
-            <!--                        <div *ngIf="usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff" class="input-group">-->
-            <!--                            <select-->
-            <!--                                name="PaymentMethod-{{ i }}"-->
-            <!--                                id="PaymentMethod-{{ i }}"-->
-            <!--                                [(ngModel)]="wayPointsList[i].dropPaymentMethod"-->
-            <!--                                class="form-control"-->
-            <!--                            >-->
-            <!--                                <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>-->
-            <!--                            </select>-->
-            <!--                        </div>-->
           </td>
         </tr>
       </ng-template>
@@ -352,3 +299,4 @@
   (carrierSetAppointmentData)="carrierSetAppointmentData($event)"
   [isEdit]="isEdit"
 ></appointment-and-clearance-modal>
+<Storage-Details-Modal [wayPointsList]="wayPointsList" [usedIn]="usedIn" #StorageDetailsModal></Storage-Details-Modal>

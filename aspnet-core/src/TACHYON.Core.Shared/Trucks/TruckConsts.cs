@@ -23,5 +23,8 @@
 
         public const int MaxInternalTruckIdLength = 10;
 
+        public const string ExactlyOneCharacterLong = "The field {0} must be exactly one character long.";
+        public const string NumericCharacter = "The field {0} must be a numeric character.";
+
     }
 }

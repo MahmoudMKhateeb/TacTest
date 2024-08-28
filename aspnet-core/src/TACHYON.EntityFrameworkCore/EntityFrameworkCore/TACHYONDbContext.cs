@@ -110,6 +110,7 @@ using TACHYON.Reports.ReportParameterDefinitions;
 using TACHYON.Reports.ReportParameters;
 using TACHYON.Reports.ReportPermissions;
 using TACHYON.Reports.ReportTemplates;
+using TACHYON.Saas.SaasPricePackages;
 using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.EntityFrameworkCore
@@ -117,6 +118,8 @@ namespace TACHYON.EntityFrameworkCore
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
         public virtual DbSet<RedemptionCode> RedemptionCodes { get; set; }
+        
+        public virtual DbSet<SaasPricePackage> SaasPricePackages { get; set; }
 
         public virtual DbSet<RedeemCode> RedeemCodes { get; set; }
 

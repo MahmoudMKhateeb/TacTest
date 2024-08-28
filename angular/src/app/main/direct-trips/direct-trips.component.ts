@@ -26,6 +26,7 @@ import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-direct-trips',
@@ -298,4 +299,5 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
   // getStatusString(statusId: number) {
   //   return ShippingRequestTripStatus[statusId];
   // }
+  protected readonly isNotNullOrUndefined = isNotNullOrUndefined;
 }

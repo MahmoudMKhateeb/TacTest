@@ -63,12 +63,6 @@
                     placeholder="{{ l('Select') }}"
                   >
                   </dx-select-box>
-                  <!--                  <select class="form-select" name="ActorTypeFilter" id="ActorTypeFilterSelect" [(ngModel)]="actorTypeFilter">-->
-                  <!--                    <option value="-1">{{ l('All') }}</option>-->
-                  <!--                    <option value="1">{{ l('Shipper') }}</option>-->
-
-                  <!--                    <option value="2">{{ l('Carrier') }}</option>-->
-                  <!--                  </select>-->
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
@@ -88,7 +82,7 @@
                     <input type="text" class="form-control" id="MobileNumberFilter" name="mobileNumberFilter" [(ngModel)]="mobileNumberFilter" />
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3" *ngIf="isSaab">
                   <div class="form-group">
                     <label for="EmailFilter">{{ l('Email') }}</label>
                     <input type="text" class="form-control" id="EmailFilter" name="emailFilter" [(ngModel)]="emailFilter" />
@@ -112,7 +106,6 @@
           </form>
 
           <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
             <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
               <p-table
                 #dataTable
@@ -139,23 +132,83 @@
                       {{ l('ActorType') }}
                       <p-sortIcon field="actor.actorType"></p-sortIcon>
                     </th>
-                    <th style="width: 150px" pSortableColumn="moiNumber">
+                    <th style="width: 150px" pSortableColumn="moiNumber" *ngIf="!isSaab">
                       {{ l('MoiNumber') }}
                       <p-sortIcon field="actor.moiNumber"></p-sortIcon>
                     </th>
                     <th style="width: 150px" pSortableColumn="address">
-                      {{ l('Address') }}
+                      {{ isSaab ? l('Street') : l('Address') }}
                       <p-sortIcon field="actor.address"></p-sortIcon>
                     </th>
                     <th style="width: 150px" pSortableColumn="mobileNumber">
-                      {{ l('MobileNumber') }}
+                      {{ isSaab ? l('Phone') : l('MobileNumber') }}
                       <p-sortIcon field="actor.mobileNumber"></p-sortIcon>
                     </th>
-                    <th style="width: 150px" pSortableColumn="email">
+                    <th style="width: 150px" pSortableColumn="email" *ngIf="isSaab">
                       {{ l('Email') }}
                       <p-sortIcon field="actor.email"></p-sortIcon>
                     </th>
-                    <th style="width: 150px" pSortableColumn="email">
+                    <th style="width: 150px" pSortableColumn="cityId" *ngIf="isSaab">
+                      {{ l('City') }}
+                      <p-sortIcon field="actor.cityId"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="region" *ngIf="isSaab">
+                      {{ l('Region') }}
+                      <p-sortIcon field="actor.region"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="firstName" *ngIf="isSaab">
+                      {{ l('FirstName') }}
+                      <p-sortIcon field="actor.firstName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="lastName" *ngIf="isSaab">
+                      {{ l('LastName') }}
+                      <p-sortIcon field="actor.lastName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="salesOfficeType" *ngIf="isSaab">
+                      {{ l('SalesOffice') }}
+                      <p-sortIcon field="actor.salesOfficeType"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="salesGroup" *ngIf="isSaab">
+                      {{ l('SalesGroup') }}
+                      <p-sortIcon field="actor.salesGroup"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="trasportationZone" *ngIf="isSaab">
+                      {{ l('Trasportationzone') }}
+                      <p-sortIcon field="actor.trasportationZone"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="reconsaccoun" *ngIf="isSaab">
+                      {{ l('Reconsaccoun') }}
+                      <p-sortIcon field="actor.reconsaccoun"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="postalCode" *ngIf="isSaab">
+                      {{ l('PostalCode') }}
+                      <p-sortIcon field="actor.postalCode"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="division" *ngIf="isSaab">
+                      {{ l('Division') }}
+                      <p-sortIcon field="actor.division"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="district" *ngIf="isSaab">
+                      {{ l('District') }}
+                      <p-sortIcon field="actor.district"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="customerGroup" *ngIf="isSaab">
+                      {{ l('CustomerGroup') }}
+                      <p-sortIcon field="actor.customerGroup"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="buildingCode" *ngIf="isSaab">
+                      {{ l('BuildingCode') }}
+                      <p-sortIcon field="actor.buildingCode"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="accountType" *ngIf="isSaab">
+                      {{ l('AccountType') }}
+                      <p-sortIcon field="actor.accountType"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="paymentTerms" *ngIf="isSaab">
+                      {{ l('PaymentTerms') }}
+                      <p-sortIcon field="actor.paymentTerms"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="isActive">
                       {{ l('Active') }}
                       <p-sortIcon field="actor.isActive"></p-sortIcon>
                     </th>
@@ -181,15 +234,6 @@
                               >{{ l('Edit') }}</a
                             >
                           </li>
-                          <!-- <li>
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Administration.Actors.Edit')"
-                              (click)="generateInvoice(record.actor)"
-                              >{{ l('GenerateInvoice') }}</a
-                            >
-                          </li> -->
                           <li>
                             <a
                               class="dropdown-item"
@@ -207,24 +251,84 @@
                       {{ record.actor.companyName }}
                     </td>
                     <td style="width: 150px">
-                      <span class="ui-column-title"> {{ l('ActorType') }}</span>
+                      <span class="ui-column-title"> {{ isSaab ? l('Dischannel') : l('ActorType') }}</span>
                       {{ l(actorTypesEnum[record.actor.actorType]) }}
                     </td>
-                    <td style="width: 150px">
+                    <td style="width: 150px" *ngIf="!isSaab">
                       <span class="ui-column-title"> {{ l('MoiNumber') }}</span>
                       {{ record.actor.moiNumber }}
                     </td>
                     <td style="width: 150px">
-                      <span class="ui-column-title"> {{ l('Address') }}</span>
+                      <span class="ui-column-title"> {{ isSaab ? l('Street') : l('Address') }}</span>
                       {{ record.actor.address }}
                     </td>
                     <td style="width: 150px">
-                      <span class="ui-column-title"> {{ l('MobileNumber') }}</span>
+                      <span class="ui-column-title"> {{ isSaab ? l('Phone') : l('MobileNumber') }}</span>
                       {{ record.actor.mobileNumber }}
                     </td>
-                    <td style="width: 150px">
+                    <td style="width: 150px" *ngIf="isSaab">
                       <span class="ui-column-title"> {{ l('Email') }}</span>
                       {{ record.actor.email }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('City') }}</span>
+                      {{ getCityDisplayName(record.actor.cityId) }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('Region') }}</span>
+                      {{ record.actor.region }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('FirstName') }}</span>
+                      {{ record.actor.firstName }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('LastName') }}</span>
+                      {{ record.actor.lastName }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('SalesOffice') }}</span>
+                      {{ record.actor.salesOfficeType }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('SalesGroup') }}</span>
+                      {{ record.actor.salesGroup }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('Trasportationzone') }}</span>
+                      {{ record.actor.trasportationZone }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('Reconsaccoun') }}</span>
+                      {{ record.actor.reconsaccoun }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('PostalCode') }}</span>
+                      {{ record.actor.postalCode }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('Division') }}</span>
+                      {{ record.actor.division }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('District') }}</span>
+                      {{ record.actor.district }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('CustomerGroup') }}</span>
+                      {{ record.actor.customerGroup }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('BuildingCode') }}</span>
+                      {{ record.actor.buildingCode }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('AccountType') }}</span>
+                      {{ record.actor.accountType }}
+                    </td>
+                    <td style="width: 150px" *ngIf="isSaab">
+                      <span class="ui-column-title"> {{ l('PaymentTerms') }}</span>
+                      {{ record.actor.paymentTerms }}
                     </td>
                     <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Active') }}</span>
@@ -250,11 +354,11 @@
                 </p-paginator>
               </div>
             </div>
-            <!--<Primeng-Datatable-End>-->
           </div>
         </div>
       </div>
     </div>
+
     <createOrEditActorModal #createOrEditActorModal (modalSave)="getActors()"></createOrEditActorModal>
     <viewActorModal #viewActorModal></viewActorModal>
   </div>

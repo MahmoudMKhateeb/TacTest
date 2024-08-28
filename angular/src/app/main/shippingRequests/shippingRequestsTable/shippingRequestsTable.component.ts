@@ -142,6 +142,8 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
         this.searchInput.isTachyonDeal,
         this.searchInput.isTMSRequest,
         this.searchInput.requestFlag,
+        this.searchInput.actorName,
+        this.searchInput.actorType,
         '',
         this.skipCount,
         this.maxResultCount,

@@ -18,23 +18,23 @@ namespace TACHYON.Actors.Dtos
 
         public ActorTypesEnum ActorType { get; set; }
 
-        [Required]
+        
         [RegularExpression(ActorConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
 
-        [Required]
+       
         public string Address { get; set; }
 
         public string Logo { get; set; }
 
-        [Required]
+        
         public string MobileNumber { get; set; }
 
-        [Required]
+       
         public string Email { get; set; }
 
-        [Range(1,int.MaxValue)]
-        public int InvoiceDueDays { get; set; }
+        
+        public int? InvoiceDueDays { get; set; }
         public bool IsActive { get; set; }
         public string CR { get; set; }
         public string VatCertificate { get; set; }
@@ -49,6 +49,23 @@ namespace TACHYON.Actors.Dtos
         /// </summary>
         public List<CreateOrEditDocumentFileDto> CreateOrEditDocumentFileDtos { get; set; }
 
+        #region SAP
+        public int CityId {get;set;}
+        public string Region {get;set;}
+        public string FirstName {get;set;}
+        public string LastName {get;set;}
+        public SalesOfficeTypeEnum SalesOfficeType {get;set;}
+        public string SalesGroup {get;set;}
+        public string TrasportationZone {get;set;}
+        public string Reconsaccoun {get;set;}
+        public string PostalCode {get;set;}
+        public string Division {get;set;}
+        public string District {get;set;}
+        public string CustomerGroup {get;set;}
+        public string BuildingCode {get;set;}
+        public string AccountType {get;set;}
+        public ActorDischannelEnum? actorDischannelEnum{get;set;}
+        #endregion
         public void AddValidationErrors(CustomValidationContext context)
         {
             if(CreateOrEditDocumentFileDtos is null || CreateOrEditDocumentFileDtos.Count == 0)

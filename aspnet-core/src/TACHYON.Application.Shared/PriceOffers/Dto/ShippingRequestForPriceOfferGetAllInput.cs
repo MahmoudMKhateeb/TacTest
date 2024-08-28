@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
 using System;
+using TACHYON.Actors;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PriceOffers.Dto
@@ -34,6 +35,10 @@ namespace TACHYON.PriceOffers.Dto
         public bool isTMSRequest { get; set; }
 
         public ShippingRequestFlag? RequestFlag { get; set; }
+
+        public string ActorName { get; set; }
+
+        public  ActorTypesEnum? ActorType { get; set; }
 
         public void Normalize()
         {

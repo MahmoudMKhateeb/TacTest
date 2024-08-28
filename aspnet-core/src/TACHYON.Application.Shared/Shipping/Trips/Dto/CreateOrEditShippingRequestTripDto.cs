@@ -66,6 +66,9 @@ namespace TACHYON.Shipping.Trips.Dto
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
         public long? TruckId { set; get; }
         public long? DriverUserId { set; get; }
+
+        public long? ReplacesDriverId {get;set;}
+        
         public int? ShipperActorId { get; set; }
 
 
@@ -99,6 +102,33 @@ namespace TACHYON.Shipping.Trips.Dto
         public List<ShippingRequestDestinationCitiesDto> ShippingRequestDestinationCities { get; set; }
         public int? CountryId { get; set; }
         public int? PackingTypeId { get; set; }
+
+        #region SAB
+        public TripLoadingTypeEnum LoadingType { get; set; }
+        public SalesOfficeTypeEnum SalesOfficeType { get; set; }
+        public int Quantity { get; set; }
+        public int DriverWorkingHour { get; set; }
+        public int Distance  { get; set; }
+
+         public int ReplacedDriverWorkingHour { get; set; }
+        public int ReplacedDriverDistance  { get; set; }
+        public int ReplacedDriverCommission {get;set;}
+        
+        public DateTime? ContainerReturnDate { get; set; }
+        public bool? IsContainerReturned {get;set;}
+        
+
+        #endregion
+
+         /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+
+        /// <summary>
+        /// shipper add his invoice number manually, this updated currently to booking number 
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
 
         #endregion
         public void AddValidationErrors(CustomValidationContext context)

@@ -1256,6 +1256,7 @@ namespace TACHYON.Features
 
             #endregion
 
+            var SabFeature = context.Create(AppFeatures.Sab,"false", L("SabFeature"),inputType: new CheckboxInputType());
 
         }
 

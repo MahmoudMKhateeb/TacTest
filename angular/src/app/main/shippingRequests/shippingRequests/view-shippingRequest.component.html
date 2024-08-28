@@ -49,6 +49,7 @@
       <!--  start:: PriceOfferingSection -->
       <ng-template [ngIf]="canSeePriceOffers()">
         <shipping-request-offers-list
+          [ShippingRequest]="_trip.GetShippingRequestForViewOutput"
           [shippingRequestId]="activeShippingRequestId"
           [isTachyonDeal]="_trip.GetShippingRequestForViewOutput.shippingRequest.isTachyonDeal"
           [isForDedicated]="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1"
@@ -140,7 +141,7 @@
                   <input
                     class="form-control"
                     type="text"
-                    name="numberOfDrops"
+                    name="TransportType"
                     value="{{ _trip.GetShippingRequestForViewOutput.transportTypeDisplayName }}"
                     disabled
                   />
@@ -151,7 +152,7 @@
                   <input
                     class="form-control"
                     type="text"
-                    name="numberOfDrops"
+                    name="TruckType"
                     value="{{ _trip.GetShippingRequestForViewOutput.truckTypeDisplayName }}"
                     disabled
                   />
@@ -161,7 +162,7 @@
                   <input
                     class="form-control"
                     type="text"
-                    name="numberOfDrops"
+                    name="Capacity"
                     value="{{ _trip.GetShippingRequestForViewOutput.capacityDisplayName }}"
                     disabled
                   />

@@ -91,7 +91,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             undefined,
             undefined,
             {
-              showType: 1,
+              showType: 2,
             },
             () => this.isEnabled('App.Shipper')
           ),

@@ -1,6 +1,12 @@
 /* tslint:disable:triple-equals */
 import { Component, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CreateOrEditRoutPointDto, PickingType, ShippingRequestRouteType } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrEditGoodsDetailDto,
+  CreateOrEditRoutPointDto,
+  PickingType,
+  RoundTripType,
+  ShippingRequestRouteType,
+} from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
@@ -98,6 +104,17 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
       this.Point.receiverFullName = null;
     }
     this.modal.hide();
+    this.makePointGoodsAlike(3, 1);
+  }
+  makePointGoodsAlike(firstPointIndex: number, secoundPointIndex: number) {
+    let isImportWithStorage = this._tripService.CreateOrEditShippingRequestTripDto?.roundTripType == RoundTripType.WithStorage;
+    if (this._PointService.currentPointIndex == 1 && isImportWithStorage) {
+      if (!isNotNullOrUndefined(this._tripService.CreateOrEditShippingRequestTripDto.routPoints[firstPointIndex].goodsDetailListDto)) {
+        this._tripService.CreateOrEditShippingRequestTripDto.routPoints[firstPointIndex].goodsDetailListDto = [];
+      }
+      this._tripService.CreateOrEditShippingRequestTripDto.routPoints[firstPointIndex].goodsDetailListDto =
+        this._tripService.CreateOrEditShippingRequestTripDto.routPoints[secoundPointIndex].goodsDetailListDto;
+    }
     this._PointService.currentPointIndex = null;
   }
 

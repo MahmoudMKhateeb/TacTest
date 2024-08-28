@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.ShippingRequestVases;
@@ -6,16 +7,19 @@ using TACHYON.ShippingRequestVases;
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Table("ActorShipperPrices")]
-    public class ActorShipperPrice :FullAuditedEntity
+    public class 
+        ActorShipperPrice :FullAuditedEntity
     {
         public long? ShippingRequestId { get; set; }
 
         [ForeignKey(nameof(ShippingRequestId))]
+        [JsonIgnore]
         public ShippingRequest ShippingRequest { get; set; }
         
         public long? ShippingRequestVasId { get; set; }
         
         [ForeignKey(nameof(ShippingRequestVasId))]
+        [JsonIgnore]
         public ShippingRequestVas ShippingRequestVas { get; set; }
         public decimal? TotalAmountWithCommission { get; set; }
         public decimal? SubTotalAmountWithCommission { get; set; }
@@ -26,7 +30,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [ForeignKey(nameof(ShippingRequestTrip))]
         public int? ShippingRequestTripId { get; set; }
 
-        
+        [JsonIgnore]
         public ShippingRequestTrip ShippingRequestTrip { get; set; }
     }
 }

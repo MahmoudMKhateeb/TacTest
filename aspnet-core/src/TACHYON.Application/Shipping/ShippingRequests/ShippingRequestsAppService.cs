@@ -1235,6 +1235,28 @@ namespace TACHYON.Shipping.ShippingRequests
                                 : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName)
                         ),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
+
+
+                    ReplacedDriverName = x.ReplacesDriverId.HasValue ? x.ReplacesDriverFk.FullName : "",
+                    ReplacedDriverUserId = x.ReplacesDriverId,
+                    //ReplacedTruckTypeTranslationList = x.ReplacedTruckFk.TrucksTypeFk.Translations,
+                    ReplacedTruckTypeDisplayName = x.ReplacedTruckFk == null
+                       ? ""
+                       : 
+                           (x.ReplacedTruckFk.TransportTypeFk == null
+                               ? ""
+                               : x.ReplacedTruckFk.TransportTypeFk.DisplayName) + "-" + 
+                           (x.ReplacedTruckFk.TrucksTypeFk == null
+                               ? ""
+                               : x.ReplacedTruckFk.TrucksTypeFk .DisplayName) + " - " +
+                           (x.ReplacedTruckFk.CapacityFk == null
+                               ? ""
+                               : x.ReplacedTruckFk.CapacityFk.DisplayName)
+                       
+                       ,
+                    ReplacedPlateNumber = x.ReplacedTruckFk != null ? x.ReplacedTruckFk.PlateNumber : "",
+
+
                     IsMultipDrops = x.ShippingRequestFk.NumberOfDrops > 1 ? true : false,
                     TotalDrops = x.RouteType != null ? x.NumberOfDrops : x.ShippingRequestFk.NumberOfDrops,
                     StartTripDate = x.StartTripDate,
@@ -1261,12 +1283,12 @@ namespace TACHYON.Shipping.ShippingRequests
                                                ( x.ShippingRequestFk != null && x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
                                                 x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                                                 ? "الرحلات" : "الحمولات"
-                });
+                }).ToList();
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
 
 
-                var finalOutput = query.ToList().Select(x
+                var finalOutput = query.Select(x
                     => new GetMasterWaybillOutput()
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
@@ -1279,6 +1301,13 @@ namespace TACHYON.Shipping.ShippingRequests
                         DriverIqamaNo = GetDriverIqamaNo(x.driverUserId),
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         PlateNumber = x.PlateNumber,
+
+                        ReplacedDriverName = x.ReplacedDriverName,
+                        ReplacedDriverIqamaNo = GetDriverIqamaNo(x.ReplacedDriverUserId),
+                        ReplacedTruckTypeDisplayName = x.ReplacedTruckTypeDisplayName,
+                        ReplacedPlateNumber = x.ReplacedPlateNumber,
+
+
                         IsMultipDrops = x.IsMultipDrops,
                         TotalDrops = x.TotalDrops,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,

@@ -38,6 +38,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.Driver,
                     opt => opt.MapFrom(src =>
                         src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name : string.Empty))
+                .ForMember(dst => dst.ReplacedDriver,
+                    opt => opt.MapFrom(src =>
+                        src.ReplacesDriverFk != null ? src.ReplacesDriverFk.Name : string.Empty))
                 .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src =>
                     src.DriverStatus == ShippingRequestTripDriverStatus.None
                     && src.AssignedDriverUserFk != null
@@ -124,7 +127,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.TripStatus,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.RoutePointStatus))
-                .ForMember(dst => dst.IsDirectTrip, opt => opt.MapFrom(src => src.ShippingRequestFk == null));
+                .ForMember(dst => dst.IsDirectTrip, opt => opt.MapFrom(src => src.ShippingRequestFk == null))
+                .ForMember(dst => dst.SabOrderId, opt => opt.MapFrom(src => src.SabOrderId));
 
 
             //GoodsDetails

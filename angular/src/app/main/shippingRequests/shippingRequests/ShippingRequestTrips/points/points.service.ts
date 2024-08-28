@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { CreateOrEditRoutPointDto, GetShippingRequestForViewOutput, RoutPointDto } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { HttpHeaders, HttpClientModule, HttpClient } from '@angular/common/http';
+import { map } from '@node_modules/rxjs/internal/operators';
+import { catchError } from 'rxjs/operators';
+import { Observable } from '@node_modules/rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +13,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 export class PointsService {
   currentShippingRequest: GetShippingRequestForViewOutput;
   currentPointIndex: number;
-  constructor(private _TripService: TripService) {}
+  constructor(private _TripService: TripService, private http: HttpClient) {}
 
   private singleWayPoint = new BehaviorSubject<CreateOrEditRoutPointDto>(new CreateOrEditRoutPointDto());
   currentSingleWayPoint = this.singleWayPoint.asObservable();
@@ -18,7 +22,6 @@ export class PointsService {
 
   private usedIn = new BehaviorSubject<any>('view');
   currentUsedIn = this.usedIn.asObservable();
-
   /**
    * Takes the single point as an input and updates it
    * @param inComingSinglePointUpdate
@@ -43,5 +46,33 @@ export class PointsService {
   updateCurrentUsedIn(usedIn: 'view' | 'createOrEdit') {
     console.log('mode is : ', usedIn);
     this.usedIn.next(usedIn);
+  }
+
+  /**
+   * this method is for Saab-->ReachWere integration for checking the water Qnty
+   */
+  checkAvailability(Quantity: number): Observable<boolean> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    console.log(Quantity, 'QuantityQuantityQuantityQuantityQuantityQuantity');
+    const body = {
+      subGoodsCategoryName: 'Water',
+      Quantity: Quantity,
+      isMarkedAsSaleOrder: true,
+    };
+
+    const url = 'https://api.reachware.com/tachyon/CheckGoodsAvailability';
+
+    return this.http.post<any>(url, body, { headers: headers, withCredentials: false }).pipe(
+      map((response) => {
+        console.log('Goods availability response:', response);
+        return response.isAvailable === true;
+      }),
+      catchError((error) => {
+        console.error('Error checking goods availability:', error);
+        return of(false); // return false in case of an error
+      })
+    );
   }
 }

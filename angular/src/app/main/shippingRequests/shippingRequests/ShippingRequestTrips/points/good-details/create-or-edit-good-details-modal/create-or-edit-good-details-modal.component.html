@@ -188,7 +188,15 @@
                       <!--                                      [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"-->
                       <!--                                      required-->
                       <!--                                  />-->
-                      <dx-number-box id="goodsDetail.amount" name="goodsDetail.amount" [(value)]="amount" [min]="1" required>
+                      <dx-number-box
+                        id="goodsDetail.amount"
+                        name="goodsDetail.amount"
+                        [(value)]="amount"
+                        (onChange)="checkWaterStock()"
+                        [disabled]="!goodCategoryId"
+                        [min]="1"
+                        required
+                      >
                         <dx-validator [validationGroup]="'goodsDetailGroup'">
                           <dxi-validation-rule
                             type="required"
@@ -200,6 +208,12 @@
                             [min]="1"
                             message="{{ l('Quantity') }}: {{ l('PleaseEnterAtLeastNCharacter', 1) }}"
                             *ngIf="(!isHomeDelivery && !isForPortsMovement) || isQtyRequiredForPortMovement"
+                          ></dxi-validation-rule>
+                          <dxi-validation-rule
+                            type="custom"
+                            [validationCallback]="validateStock"
+                            [message]="l('WaterStockNotAvailable')"
+                            *ngIf="!isWaterStockAvailable"
                           ></dxi-validation-rule>
                         </dx-validator>
                       </dx-number-box>

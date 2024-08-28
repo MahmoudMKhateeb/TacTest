@@ -1,5 +1,5 @@
 import { Component, ViewChild, Injector, Input, OnInit } from '@angular/core';
-import { PriceOfferServiceProxy, PriceOfferChannel } from '@shared/service-proxies/service-proxies';
+import { PriceOfferServiceProxy, PriceOfferChannel, GetShippingRequestForViewOutput } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LazyLoadEvent } from 'primeng/api';
 
@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 export class ShippingRequestOffersList extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @Input() ShippingRequest: GetShippingRequestForViewOutput;
   @Input() shippingRequestId: number;
   @Input() Channel: PriceOfferChannel;
   @Input() isTachyonDeal: boolean;

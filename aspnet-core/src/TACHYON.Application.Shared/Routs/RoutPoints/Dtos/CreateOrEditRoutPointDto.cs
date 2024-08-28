@@ -61,6 +61,12 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         #endregion
 
+        public long? TruckId { set; get; }
+        public long? DriverUserId { set; get; }
+
+        public int? StorageDays { get; set; }
+        public decimal? StoragePricePerDay { get; set; }
+
         public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)

@@ -10,6 +10,7 @@ import {
   GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
+  RoundTripType,
   RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
   SelectItemDto,
@@ -87,7 +88,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   minEndDate: NgbDateStruct;
   minHijriTripdate: NgbDateStruct;
   minGrogTripdate: NgbDateStruct;
-
+  RoundTripTypes = this.enumToArray.transform(RoundTripType);
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -129,6 +130,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           (this.shippingRequest.capacityId as any) = result.shippingRequest.capacityId.toString();
           (this.shippingRequest.shippingTypeId as any) = result.shippingRequest.shippingTypeId.toString();
           (this.shippingRequest.packingTypeId as any) = result.shippingRequest.packingTypeId.toString();
+          (this.shippingRequest.roundTripType as any) = result.shippingRequest.roundTripType?.toString();
 
           if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined) {
             this.startBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidStartDate);

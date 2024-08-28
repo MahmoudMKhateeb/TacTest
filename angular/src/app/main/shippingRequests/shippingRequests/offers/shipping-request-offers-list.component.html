@@ -119,4 +119,4 @@
   </div>
 </div>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalRefresh)="reloadPage()"></price-offer-view-model>
-<price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="reloadPage()"></price-offer-model>
+<price-offer-model [ShippingRequest]="ShippingRequest" #ModelPrice [Channel]="Channel" (modalSave)="reloadPage()"></price-offer-model>

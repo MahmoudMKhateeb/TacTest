@@ -34,6 +34,8 @@ import {
   GetAllGoodsCategoriesForDropDownOutput,
   GetAllTrucksWithDriversListDto,
   ActorSelectItemDto,
+  TripLoadingTypeEnum,
+  SalesOfficeTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -102,7 +104,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   allOriginPorts: SelectFacilityItemDto[] = [];
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   allpackingTypes: SelectItemDto[];
-
+  LoadingTypes = this.enumToArray.transform(TripLoadingTypeEnum);
+  SalesOffices = this.enumToArray.transform(SalesOfficeTypeEnum);
+  active = false;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -129,6 +133,14 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.TruckTypeId = this._TripService.GetShippingRequestForViewOutput?.truckTypeId;
     this.activeTripId = this._Router.snapshot.queryParams['tripId'];
     this.fillData();
+    abp.event.on('storageTripStorageDataChangedFromView', () => {
+      this.loading = true;
+      this.active = false;
+      this.close();
+      this.show(this._TripService.activeTripId, this.shippingRequestForView);
+      // this.modalSave.emit(null);
+      //this.close();
+    });
   }
 
   private fillData() {
@@ -190,6 +202,11 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       this.getAllTrucksForDirectShipment();
       this._shippingRequestTripsService.getShippingRequestTripForEdit(id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
+        (this._TripService.CreateOrEditShippingRequestTripDto.loadingType as any) = res.loadingType?.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.truckId as any) = res.truckId?.toString();
+
+        (this._TripService.CreateOrEditShippingRequestTripDto.salesOfficeType as any) = res.salesOfficeType?.toString();
+
         (this.originCountry as any) = res.countryId;
         if (!shippingRequestForView) {
           this.loadCitiesByCountryId(this.originCountry, 'source', true);
@@ -233,13 +250,31 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.pickUpPointSender = res.routPoints.length > 0 ? res.routPoints[0].senderOrReceiverContactName : null;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
+        if (!isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto)) {
+          this._TripService.CreateOrEditShippingRequestTripDto = new CreateOrEditShippingRequestTripDto();
+        }
+        this._TripService.CreateOrEditShippingRequestTripDto.driverWorkingHour = res.driverWorkingHour;
+        this._TripService.CreateOrEditShippingRequestTripDto.distance = res.distance;
+        this._TripService.CreateOrEditShippingRequestTripDto.quantity = res.quantity;
+        this._TripService.CreateOrEditShippingRequestTripDto.sealNumber = res.sealNumber;
+        this._TripService.CreateOrEditShippingRequestTripDto.containerNumber = res.containerNumber;
+
+        this._TripService.CreateOrEditShippingRequestTripDto.replacesDriverId = res.replacesDriverId;
+        this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverDistance = res.replacedDriverDistance;
+        this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverWorkingHour = res.replacedDriverWorkingHour;
+        this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverCommission = res.replacedDriverCommission;
+
+        (this._TripService.CreateOrEditShippingRequestTripDto.salesOfficeType as any) = res.salesOfficeType.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.loadingType as any) = res.loadingType.toString();
+
+        //this._TripService.sh = res;
         this.assignDriverAndTruck.containerNumber = this.trip.containerNumber;
         this.assignDriverAndTruck.sealNumber = this.trip.sealNumber;
         this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
         this._changeDetectorRef.detectChanges();
         this.canAssignTrucksAndDrivers = res.canAssignDriversAndTrucks;
+        this.active = true;
       });
-
     this.modal.show();
   }
 
@@ -250,9 +285,11 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.allTrucks = [];
     this.loading = true;
     this._PointsService.updateWayPoints([]);
-    this.modal.hide();
     this._changeDetectorRef.detectChanges();
-    this._TripService.CreateOrEditShippingRequestTripDto = undefined;
+    this._TripService.CreateOrEditShippingRequestTripDto = new CreateOrEditShippingRequestTripDto();
+    this.modal.hide();
+
+    this.active = false;
   }
 
   checkData(category) {
@@ -464,5 +501,12 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
+  }
+
+  formatSecondsToHoursMinutes(seconds: number): string {
+    const duration = moment.duration(seconds, 'seconds');
+    const hours = Math.floor(duration.asHours());
+    const minutes = Math.floor(duration.minutes());
+    return `${hours} h ${minutes} m`;
   }
 }
