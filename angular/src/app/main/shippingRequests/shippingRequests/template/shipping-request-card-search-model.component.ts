@@ -11,6 +11,7 @@ import {
   PriceOfferChannel,
   ShippingRequestType,
   ShippingRequestForPriceOfferGetAllInput,
+  ActorTypesEnum,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { finalize } from 'rxjs/operators';
@@ -42,6 +43,7 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
   statusData: { displayText: string; value: number }[] = [];
   routeTypes: any;
   requestTypes: any;
+  AllActorTypes = this.enumToArray.transform(ActorTypesEnum);
   constructor(injector: Injector, private _currentSrv: PriceOfferServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(injector);
   }

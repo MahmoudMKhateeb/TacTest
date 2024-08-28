@@ -61,11 +61,14 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => src.DriverStatus.GetEnumDescription()))
             .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => src.RouteType != null ? src.RouteType.GetEnumDescription() : src.ShippingRequestFk.RouteTypeId.GetEnumDescription()))
             .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
-            .ForMember(dst => dst.BookingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo  :""))
+            .ForMember(dst => dst.BookingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo  :src.ShipperInvoiceNo))
             .ForMember(dst => dst.ActualDeliveryDate, opt => opt.MapFrom(src => src.ActualDeliveryDate != null ?src.ActualDeliveryDate.Value.ToString("dd/MM/yyyy")  :""))
             .ForMember(dst => dst.ActualPickupDate, opt => opt.MapFrom(src => src.StartTripDate.ToString("dd/MM/yyyy")))
             .ForMember(dst => dst.IsPODUploaded, opt => opt.MapFrom(src => src.RoutPoints.Where(x=>x.PickingType == PickingType.Dropoff).All(x=>x.IsPodUploaded)))
             .ForMember(dst => dst.IsInvoiceIssued, opt => opt.MapFrom(src => src.IsShipperHaveInvoice))
+            .ForMember(dst => dst.ActorShipperSubTotalAmountWithCommission, opt => opt.MapFrom(src => src.ActorShipperPrice.SubTotalAmountWithCommission))
+            .ForMember(dst => dst.ActorShipperTotalAmountWithCommission, opt => opt.MapFrom(src => src.ActorShipperPrice.TotalAmountWithCommission))
+            .ForMember(dst => dst.ReplacedDriver, opt => opt.MapFrom(src => src.ReplacesDriverFk != null ? src.ReplacesDriverFk.Name+" "+ src.ReplacesDriverFk.Surname : ""))
             ;
 
 

@@ -57,6 +57,8 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public List<PointTransactionDto> AvailableTransactions { get; set; }
         public List<AdditionalStepDto> AdditionalSteps { get; set; }
 
+         public int? StorageDays { get; set; }
+
 
         // public double TotalWeight { get; set; }
 

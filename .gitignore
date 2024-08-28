@@ -33,3 +33,6 @@ aspnet-core/AspNetZeroRadTool/
 
 *.yml
 aspnet-core/.cr/personal/
+aspnet-core/.vscode/launch.json
+aspnet-core/.vscode/settings.json
+aspnet-core/.vscode/tasks.json

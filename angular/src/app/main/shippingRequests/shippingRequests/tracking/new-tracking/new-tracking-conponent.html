@@ -165,8 +165,10 @@
                         <div class="trip-step-container" *ngIf="i === 2">
                           <div class="trip-step d-flex flex-column">
                             <div>
-                              <!--                                <strong>{{ (isExportRequest ? 'SecondTrip' : 'ReturnTrip') | localize }}</strong>-->
-                              <b>{{ (shippingType === ShippingTypeEnum.ExportPortMovements ? 'SecondTrip' : 'ReturnTrip') | localize }}</b>
+                              <b
+                                >{{ (shippingType === ShippingTypeEnum.ExportPortMovements || shippingType === ShippingTypeEnum.ImportPortMovements ?
+                                'SecondTrip' : 'ReturnTrip') | localize }}</b
+                              >
                             </div>
                             <div class="d-flex justify-content-between pt-2">
                               <div>
@@ -226,15 +228,17 @@
                             ></i>
                             <span class="pulse-ring"></span>
                           </div>
-                          <div class="timeline-content" [ngClass]="{ active: item === point.id }">
+                          <div class="timeline-content ribbon ribbon-clip ribbon-left" [ngClass]="{ active: item === point.id }">
+                            <div class="ribbon-target" style="top: 12px">
+                              <span class="ribbon-inner {{ point.pickingType === pickingTypeEnum.Pickup ? 'bg-success'  : 'bg-danger' }}"></span>{{
+                              point.pickingType === pickingTypeEnum.Pickup ? l('Pickup') : l('Drop') }}
+                            </div>
                             <div class="d-flex align-items-center justify-content-between mb-3 mt-1">
-                              <div class="mr-2">
-                                <a href="#" class="text-dark-75 text-hover-primary font-weight-bold"
-                                  >{{ point.pickingType === pickingTypeEnum.Pickup ? l('Pickup') : l('Drop') }}</a
-                                >
-                                <span class="text-muted ml-2" *ngIf="point.startTime">{{point.startTime | momentFormat: 'DD/MM/YYYY'}}</span>
-                                <span *ngIf="point.endTime"> -</span>
-                                <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'DD/MM/YYYY'}}</span>
+                              <div class="mr-2 mt-8">
+                                <a href="#" class="text-dark-75 text-hover-primary font-weight-bold"></a>
+                                <span class="text-muted" *ngIf="point.startTime">{{point.startTime | momentFormat: 'DD/MM/YYYY'}}</span>
+                                <span *ngIf="point.endTime"> - </span>
+                                <span class="text-muted" *ngIf="point.endTime">{{point.endTime | momentFormat: 'DD/MM/YYYY'}}</span>
                               </div>
 
                               <div class="btn-group mt-6" *ngIf="trip.driver ">

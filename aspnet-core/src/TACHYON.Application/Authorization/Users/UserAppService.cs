@@ -50,6 +50,7 @@ using TACHYON.Url;
 using static TACHYON.Authorization.Users.Nationalites;
 using TACHYON.Trucks;
 using TACHYON.Nationalities;
+using TACHYON.WebHooks;
 
 namespace TACHYON.Authorization.Users
 {
@@ -84,6 +85,7 @@ namespace TACHYON.Authorization.Users
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly ISmsSender _smsSender;
         private readonly WaslIntegrationManager _waslIntegrationManager;
+        private readonly AppWebhookPublisher _webhookPublisher;
 
         public UserAppService(
             IRepository<DocumentFile, Guid> documentFileRepository,
@@ -109,8 +111,11 @@ namespace TACHYON.Authorization.Users
 
             WaslIntegrationManager waslIntegrationManager,
             ISmsSender smsSender,
-            IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository,
-            DocumentFilesManager documentFilesManager, IRepository<Truck, long> truckRepository)
+            IRepository<User, long> userRepository,
+             IRepository<Tenant> tenantRepository,
+            DocumentFilesManager documentFilesManager,
+            IRepository<Truck, long> truckRepository,
+            AppWebhookPublisher webhookPublisher)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -141,6 +146,7 @@ namespace TACHYON.Authorization.Users
 
             AppUrlService = NullAppUrlService.Instance;
             _truckRepository = truckRepository;
+            _webhookPublisher = webhookPublisher;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_View)]
@@ -159,7 +165,7 @@ namespace TACHYON.Authorization.Users
 
             // Hide Internal Clients Users !!
             users.RemoveAll(x => GetUserInternalClientRole(x.Id, x.TenantId).Any());
-            
+
             userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
             await FillRoleNames(userListDtos);
 
@@ -175,34 +181,35 @@ namespace TACHYON.Authorization.Users
         public async Task<LoadResult> GetDrivers(GetDriversInput input)
         {
             await DisableTenancyFiltersIfTachyonDealer();
-            
+
             bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
-            
+
             List<long> userOrganizationUnits = null;
             if (isCmsEnabled)
             {
                 userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
                     .Select(x => x.OrganizationUnitId).ToListAsync();
             }
-            
-            var drivers = (from user in _userRepository.GetAll().Include(x => x.NationalityFk).ThenInclude(x=>x.Translations)
+
+            var drivers = (from user in _userRepository.GetAll().Include(x => x.NationalityFk).ThenInclude(x => x.Translations)
                            .Include(x => x.DedicatedShippingRequestDrivers)
                            .ThenInclude(x => x.ShippingRequest).AsNoTracking()
                            .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
-                               x=> x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId))
-                           where user.IsDriver 
-                join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
-                let dedicatedDriver = user.DedicatedShippingRequestDrivers.FirstOrDefault(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy)
-                           select new DriverMappingEntity(){ 
-                    User = user,
-                    CompanyName = tenant.companyName,
-                    RentedStatus=user.DedicatedShippingRequestDrivers.Any(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy)? "Busy" :"Active",
-                    RentedShippingRequestReference = dedicatedDriver != null 
-                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty, 
-                           Nationality = user.NationalityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                               x => x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId))
+                           where user.IsDriver
+                           join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
+                           let dedicatedDriver = user.DedicatedShippingRequestDrivers.FirstOrDefault(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy)
+                           select new DriverMappingEntity()
+                           {
+                               User = user,
+                               CompanyName = tenant.companyName,
+                               RentedStatus = user.DedicatedShippingRequestDrivers.Any(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy) ? "Busy" : "Active",
+                               RentedShippingRequestReference = dedicatedDriver != null
+                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty,
+                               Nationality = user.NationalityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
                 .TranslatedName ?? user.NationalityFk.Name
                            })
-                .Where(x=> x.User != null )
+                .Where(x => x.User != null)
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
             var result = await LoadResultAsync(drivers, input.LoadOptions);
@@ -351,8 +358,8 @@ namespace TACHYON.Authorization.Users
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
                 {
                     userTenantId = await (from user in UserManager.Users.AsNoTracking()
-                        where user.Id == userId && user.IsDriver
-                        select user.TenantId).FirstOrDefaultAsync();
+                                          where user.Id == userId && user.IsDriver
+                                          select user.TenantId).FirstOrDefaultAsync();
                 }
 
                 CurrentUnitOfWork.SetTenantId(userTenantId ?? AbpSession.TenantId);
@@ -363,11 +370,11 @@ namespace TACHYON.Authorization.Users
         private List<string> GetAllRoleNamesOfUsersOrganizationUnits(long userId)
         {
             return (from userOu in _userOrganizationUnitRepository.GetAll()
-                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
-                    .OrganizationUnitId
-                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
-                where userOu.UserId == userId
-                select userOuRoles.Name).ToList();
+                    join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                        .OrganizationUnitId
+                    join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                    where userOu.UserId == userId
+                    select userOuRoles.Name).ToList();
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
@@ -435,7 +442,7 @@ namespace TACHYON.Authorization.Users
             else user = await UserManager.GetUserByIdAsync(input.Id);
 
             CheckErrors(await UserManager.DeleteAsync(user));
-          
+
             //Wasl integration 
             if (user.TenantId != null && await FeatureChecker.IsEnabledAsync(user.TenantId.Value, AppFeatures.IntegrationWslDriverRegistration))
             {
@@ -499,7 +506,12 @@ namespace TACHYON.Authorization.Users
             {
                 await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
             }
-        }
+             //Webhooks
+            if (input.User.IsDriver)
+            {
+                await _webhookPublisher.PublishDriverUpdatedWebhook(input.User);
+            }
+       }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
         protected virtual async Task CreateUserAsync(CreateOrUpdateUserInput input)
@@ -528,7 +540,7 @@ namespace TACHYON.Authorization.Users
                 if (requiredDocs.Count > 0)
                 {
                     foreach (var item in requiredDocs)
-                    {                    
+                    {
                         var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
 
                         if (item.DocumentTypeDto.IsRequiredDocumentTemplate)
@@ -588,7 +600,7 @@ namespace TACHYON.Authorization.Users
                     await _documentFilesManager.CreateOrEditDocumentFile(item);
                 }
 
-                 // grant the tracking permission for driver (see issue TAC-4992)
+                // grant the tracking permission for driver (see issue TAC-4992)
                 var trackingPermission = PermissionManager.GetPermission(AppPermissions.Pages_Tracking);
                 await UserManager.GrantPermissionAsync(user, trackingPermission);
                 var iosLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.IosAppLink);
@@ -623,6 +635,14 @@ namespace TACHYON.Authorization.Users
             {
                 await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
             }
+
+            //Webhooks
+            if (input.User.IsDriver)
+            {
+                input.User.Id = user.Id; // fill id for the webhook 
+                await _webhookPublisher.PublishNewDriverCreatedWebhook(input.User);
+            }
+
         }
 
 
@@ -990,11 +1010,11 @@ namespace TACHYON.Authorization.Users
         private IQueryable<Role> GetUserInternalClientRole(long userId, int? tenantId)
         {
             return (from userOrganizationUnit in _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == userId)
-                join organizationUnitRole in _organizationUnitRoleRepository.GetAll() on userOrganizationUnit
-                    .OrganizationUnitId equals organizationUnitRole.OrganizationUnitId
-                join role in _roleRepository.GetAll() on organizationUnitRole.RoleId equals role.Id
-                where role.TenantId == tenantId && (role.Name == StaticRoleNames.Tenants.InternalCarrierClients || role.Name == StaticRoleNames.Tenants.InternalCarrierClients)
-                select role);
+                    join organizationUnitRole in _organizationUnitRoleRepository.GetAll() on userOrganizationUnit
+                        .OrganizationUnitId equals organizationUnitRole.OrganizationUnitId
+                    join role in _roleRepository.GetAll() on organizationUnitRole.RoleId equals role.Id
+                    where role.TenantId == tenantId && (role.Name == StaticRoleNames.Tenants.InternalCarrierClients || role.Name == StaticRoleNames.Tenants.InternalCarrierClients)
+                    select role);
         }
     }
 

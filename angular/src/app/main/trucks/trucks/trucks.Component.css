@@ -22,5 +22,11 @@
     margin-left: 7px !important;
   }
 }
+/* Add these styles to your component's CSS file */
+.custom-valid {
+  border-color: #28a745 !important;
+}
 
-
+.custom-invalid {
+  border-color: #dc3545 !important;
+}

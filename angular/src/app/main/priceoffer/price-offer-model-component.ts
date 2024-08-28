@@ -17,6 +17,9 @@ import {
   ShippingRequestUpdateServiceProxy,
   ShippingRequestUpdateStatus,
   SelectItemDto,
+  GetShippingRequestForViewOutput,
+  SaasPricePackageServiceProxy,
+  CreateOrEditActorShipperPriceDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
@@ -33,6 +36,7 @@ export class PriceOfferModelComponent extends AppComponentBase implements OnInit
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
   @Output() offerRepriced = new EventEmitter();
   @Output() postPriceOfferSubmitted = new EventEmitter<CreateOrEditPriceOfferInput>();
+  @Input() ShippingRequest!: GetShippingRequestForViewOutput;
 
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @ViewChild('Form', { static: false }) form: NgForm;
@@ -64,6 +68,8 @@ export class PriceOfferModelComponent extends AppComponentBase implements OnInit
     injector: Injector,
     private _srUpdateService: ShippingRequestUpdateServiceProxy,
     private _CurrentServ: PriceOfferServiceProxy,
+    private _saasPricePackageServiceProxy: SaasPricePackageServiceProxy,
+
     private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
@@ -364,5 +370,36 @@ export class PriceOfferModelComponent extends AppComponentBase implements OnInit
       this.Items = this.offer.items;
       console.log(this.offer);
     });
+  }
+  // getPriceFromPricePackage() {
+  //   let actorShipperId = this.ShippingRequest?.shipperActorId;
+  //   let originCityId = this.ShippingRequest?.originalCityId;
+  //   let destinationCity;
+  //
+  //   if (this.ShippingRequest?.shippingRequest.shippingTypeId == 1) {
+  //     destinationCity = originCityId;
+  //   } else {
+  //     destinationCity = this.ShippingRequest?.destinationCitiesDtos[0].cityId;
+  //   }
+  //
+  //   let truckId = this.ShippingRequest?.assignedTruckDto.truck.id;
+  //   let ShippingType = this.ShippingRequest?.shippingRequest.shippingTypeId;
+  //   let GoodCat = this.ShippingRequest?.shippingRequest?.goodCategoryId;
+  //   this._saasPricePackageServiceProxy
+  //     .getForPricing(actorShipperId, originCityId, destinationCity, truckId, ShippingType, GoodCat)
+  //     .subscribe((result) => {
+  //       if (!result) {
+  //         this.notify.info(this.l('cantFindMatchingPricePackeges'));
+  //       }
+  //       this.offer.itemSubTotalAmountWithCommission = result;
+  //       //  this.calculatePrices(this.ShippingRequest.price);
+  //     });
+  // }
+
+  calculatePrices(dto: CreateOrEditActorShipperPriceDto) {
+    if (dto) {
+      dto.vatAmountWithCommission = dto.subTotalAmountWithCommission * 0.15;
+      dto.totalAmountWithCommission = dto.vatAmountWithCommission + dto.subTotalAmountWithCommission;
+    }
   }
 }

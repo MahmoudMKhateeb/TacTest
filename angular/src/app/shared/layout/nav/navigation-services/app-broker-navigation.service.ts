@@ -56,7 +56,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             }
           ),
           new AppMenuItem('Tracking', 'Pages.shipment.Tracking', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, {
-            showType: 1,
+            showType: 2,
           }),
           new AppMenuItem(
             'Templates',
@@ -91,6 +91,20 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         undefined
       ),
       // end of TMS
+      //  ---------------------------------------------------------------------------------------------------------------------
+      // start of PricePackages
+      new AppMenuItem(
+        'PricePackages',
+        '',
+        '7 Price Packging.svg',
+        '',
+        [],
+        [new AppMenuItem('Price Packages', 'Pages.PricePackages', '', '/app/main/saaSpricePackages/saaSpricePackages')]
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+      ),
+      // end of PricePackages
+      // ---------------------------------------------------------------------------------------------------------------------
+
       //  ---------------------------------------------------------------------------------------------------------------------
       //Start Of AddressBook "Facilities Management"
       new AppMenuItem(

@@ -1,6 +1,13 @@
-﻿import { Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+﻿import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ActorDto, ActorsServiceProxy, ActorTypesEnum, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ActorDto,
+  ActorsServiceProxy,
+  ActorTypesEnum,
+  TenantCityLookupTableDto,
+  TenantRegistrationServiceProxy,
+  TokenAuthServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { LogService, NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { CreateOrEditActorModalComponent } from './create-or-edit-actor-modal.component';
@@ -17,7 +24,7 @@ import { LazyLoadEvent } from 'primeng/api';
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class ActorsComponent extends AppComponentBase {
+export class ActorsComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditActorModal', { static: true }) createOrEditActorModal: CreateOrEditActorModalComponent;
   @ViewChild('viewActorModalComponent', { static: true }) viewActorModal: ViewActorModalComponent;
 
@@ -34,16 +41,14 @@ export class ActorsComponent extends AppComponentBase {
   emailFilter = '';
 
   actorTypesEnum = ActorTypesEnum;
+  isSaab = this.feature.isEnabled('App.Sab');
+  cities: TenantCityLookupTableDto[];
 
-  constructor(
-    injector: Injector,
-    private _actorsServiceProxy: ActorsServiceProxy,
-    private _notifyService: NotifyService,
-    private _tokenAuth: TokenAuthServiceProxy,
-    private _activatedRoute: ActivatedRoute,
-    private _fileDownloadService: FileDownloadService
-  ) {
+  constructor(injector: Injector, private _actorsServiceProxy: ActorsServiceProxy, private _countriesServiceProxy: TenantRegistrationServiceProxy) {
     super(injector);
+  }
+  ngOnInit() {
+    this.getAllcities();
   }
 
   getActors(event?: LazyLoadEvent) {
@@ -92,6 +97,18 @@ export class ActorsComponent extends AppComponentBase {
           this.notify.success(this.l('SuccessfullyDeleted'));
         });
       }
+    });
+  }
+
+  getCityDisplayName(CityId: string) {
+    if (this.cities?.length == 0) return;
+    return this.cities.find((x) => x.id == CityId)?.displayName || '';
+  }
+
+  getAllcities() {
+    //2 for saudi Arabia
+    this._countriesServiceProxy.getAllCitiesForTableDropdown(2).subscribe((result) => {
+      this.cities = result;
     });
   }
 }

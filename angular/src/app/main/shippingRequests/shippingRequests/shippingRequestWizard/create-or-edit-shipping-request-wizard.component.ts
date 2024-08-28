@@ -688,10 +688,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       .transform(RoundTripType)
       .filter((item) => {
         if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
-          return item.key == RoundTripType.WithoutReturnTrip || item.key == RoundTripType.WithReturnTrip;
+          return item.key == RoundTripType.WithoutReturnTrip || item.key == RoundTripType.WithReturnTrip || item.key == RoundTripType.WithStorage;
         }
         if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
-          return item.key != RoundTripType.WithoutReturnTrip && item.key != RoundTripType.WithReturnTrip;
+          return item.key != RoundTripType.WithoutReturnTrip && item.key != RoundTripType.WithReturnTrip && item.key != RoundTripType.WithStorage;
         }
       })
       .map((item) => {
@@ -1069,7 +1069,16 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
         this.step2Dto.numberOfDrops = 3;
         break;
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+      case RoundTripType.TwoWayRoutsWithoutPortShuttling: {
+        this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
+        this.step2Dto.numberOfDrops = 2;
+        break;
+      }
+      case RoundTripType.WithStorage: {
+        this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
+        this.step2Dto.numberOfDrops = 3;
+        break;
+      }
       case RoundTripType.WithReturnTrip: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
         this.step2Dto.numberOfDrops = 2;

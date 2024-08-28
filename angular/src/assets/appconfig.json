@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "https://localhost:44301",
-  "appBaseUrl": "http://localhost:4200",
+  "remoteServiceBaseUrl": "https://34.248.21.43:44301",
+  "appBaseUrl": "http://34.248.21.43:4200",
   "localeMappings": {
     "angular": [
       {

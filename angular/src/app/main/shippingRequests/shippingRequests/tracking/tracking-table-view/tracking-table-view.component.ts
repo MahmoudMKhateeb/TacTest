@@ -148,6 +148,8 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
               self.searchInput.isSubmittedPOD,
               self.searchInput.requestTypeId,
               trackingMode,
+              self.searchInput.actor,
+              self.searchInput.actorType,
               '',
               self.skipCount,
               self.maxResultCount
@@ -197,6 +199,8 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
             self.searchInput.isSubmittedPOD,
             self.searchInput.requestTypeId,
             ShipmentTrackingMode.DirectShipment,
+            self.searchInput.actor,
+            self.searchInput.actorType,
             '',
             self.skipCount,
             self.maxResultCount

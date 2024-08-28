@@ -112,5 +112,14 @@ namespace TACHYON.Routs.RoutPoints
         public bool HasAppointmentVas { get; set; }
         #endregion
 
+        public long? TruckId { set; get; }
+        public long? DriverUserId { set; get; }
+
+        public int? StorageDays { get; set; }
+        public decimal? StoragePricePerDay { get; set; }
+
+        public int DriverWorkingHour { get; set; }
+        public int Distance  { get; set; }
+        
     }
 }

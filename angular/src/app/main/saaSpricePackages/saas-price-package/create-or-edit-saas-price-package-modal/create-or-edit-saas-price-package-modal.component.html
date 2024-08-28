@@ -1,0 +1,271 @@
+<div #Modal="bs-modal" bsModal role="dialog" class="modal fade" [config]="{ backdrop: 'static' }">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form *ngIf="isFormActive" (ngSubmit)="createOrEdit()" [busyIf]="isFormLoading">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="pricePackageForSaasDto.id">{{ l('EditPricePackage') }}</span>
+            <span *ngIf="!pricePackageForSaasDto.id">{{ l('CreatePricePackage') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #PPForm="ngForm" novalidate autocomplete="off">
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label>{{ l('DisplayName') }} <span class="text-danger">*</span></label>
+                <input
+                  #displayName="ngModel"
+                  [(ngModel)]="pricePackageForSaasDto.displayName"
+                  required
+                  type="text"
+                  minlength="3"
+                  class="form-control"
+                  name="tmsPP_DisplayName"
+                  [ngClass]="{
+                    'is-invalid': displayName.invalid && (displayName.dirty || displayName.touched),
+                    'is-valid': displayName.valid && (displayName.dirty || displayName.touched)
+                  }"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('ScopeOfWork') }} </label>
+                <input
+                  #pricePackageReference="ngModel"
+                  [(ngModel)]="pricePackageForSaasDto.pricePackageReference"
+                  type="text"
+                  minlength="3"
+                  class="form-control"
+                  name="tmsPP_pricePackageReference"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('TransportType') }} <span class="text-danger">*</span></label>
+                <dx-select-box
+                  id="tmsPP_TransportType"
+                  name="tmsPP_TransportType"
+                  #transportType="ngModel"
+                  [(ngModel)]="pricePackageForSaasDto.transportTypeId"
+                  (onValueChanged)="transportTypeChanged()"
+                  [dataSource]="transportTypes"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [required]="true"
+                  placeholder="{{ l('SelectaTransportType') }}"
+                  [ngClass]="{
+                    'is-invalid': transportType.invalid && (transportType.dirty || transportType.touched),
+                    'is-valid': transportType.valid && (transportType.dirty || transportType.touched)
+                  }"
+                >
+                </dx-select-box>
+
+                <div *ngIf="transportType.invalid && (transportType.dirty || transportType.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidTransportTypeMsg' | localize }}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label>{{ l('TruckType') }} <span class="text-danger">*</span></label>
+                <div>
+                  <dx-select-box
+                    id="tmsPP_TruckType"
+                    name="tmsPP_TruckType"
+                    #truckType="ngModel"
+                    [(ngModel)]="pricePackageForSaasDto.truckTypeId"
+                    [dataSource]="truckTypes"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    [required]="true"
+                    [disabled]="!pricePackageForSaasDto.transportTypeId || !truckTypes"
+                    placeholder="{{ l('SelectaTruckType') }}"
+                    [ngClass]="{
+                      'is-invalid': truckType.invalid && (truckType.dirty || truckType.touched),
+                      'is-valid': truckType.valid && (truckType.dirty || truckType.touched)
+                    }"
+                  >
+                  </dx-select-box>
+
+                  <div *ngIf="truckType.invalid && (truckType.dirty || truckType.touched)" class="invalid-feedback">
+                    {{ 'PricePackageInvalidTruckTypeMsg' | localize }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
+
+                <dx-select-box
+                  id="PP_OriginCity"
+                  name="tmsPP_OriginCity"
+                  #originCity="ngModel"
+                  [(ngModel)]="pricePackageForSaasDto.originCityId"
+                  [dataSource]="pricePackageOriginLocations"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [required]="true"
+                  placeholder="{{ l('SelectanOriginCity') }}"
+                  [ngClass]="{
+                    'is-invalid': originCity.invalid && (originCity.dirty || originCity.touched),
+                    'is-valid': originCity.valid && (originCity.dirty || originCity.touched)
+                  }"
+                >
+                </dx-select-box>
+                <div *ngIf="originCity.invalid && (originCity.dirty || originCity.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidOriginCityMsg' | localize }}
+                </div>
+              </div>
+              <div class="form-group col-md-6" *ngIf="pricePackageForSaasDto.shippingTypeId != ShippingTypeEnum.LocalInsideCity">
+                <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
+
+                <dx-select-box
+                  id="PP_DestinationCity"
+                  name="tmsPP_DestinationCity"
+                  #destinationCity="ngModel"
+                  [(ngModel)]="pricePackageForSaasDto.destinationCityId"
+                  [dataSource]="pricePackageDestinationLocations"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [required]="true"
+                  placeholder="{{ l('SelectaDestination') }}"
+                  [ngClass]="{
+                    'is-invalid': destinationCity.invalid && (destinationCity.dirty || destinationCity.touched),
+                    'is-valid': destinationCity.valid && (destinationCity.dirty || destinationCity.touched)
+                  }"
+                >
+                </dx-select-box>
+
+                <div *ngIf="destinationCity.invalid && (destinationCity.dirty || destinationCity.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidDestinationCityMsg' | localize }}
+                </div>
+              </div>
+
+              <!--                good Cat-->
+              <div class="form-group col-md-6">
+                <label>{{ l('GoodCategory') }} <span class="text-danger">*</span></label>
+                <dx-select-box
+                  id="PP_GoodCat"
+                  name="PP_GoodCat"
+                  #PP_GoodCat="ngModel"
+                  [(ngModel)]="pricePackageForSaasDto.goodCategoryId"
+                  [dataSource]="allGoodCategorys"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [required]="true"
+                  placeholder="{{ l('SelectaGoodCat') }}"
+                  [ngClass]="{
+                    'is-invalid': PP_GoodCat.invalid && (PP_GoodCat.dirty || PP_GoodCat.touched),
+                    'is-valid': PP_GoodCat.valid && (PP_GoodCat.dirty || PP_GoodCat.touched)
+                  }"
+                >
+                </dx-select-box>
+              </div>
+
+              <!--                Loading type for Saas-->
+              <div class="form-group col-md-6" *ngIf="feature.isEnabled('App.Sab')">
+                <label>{{ l('LoadingType') }} <span class="text-danger">*</span></label>
+                <dx-select-box
+                  id="PP_LT"
+                  name="PP_LT"
+                  [(ngModel)]="pricePackageForSaasDto.tripLoadingType"
+                  [dataSource]="LoadingTypes"
+                  displayExpr="value"
+                  valueExpr="key"
+                  [required]="feature.isEnabled('App.Sab')"
+                  placeholder="{{ l('SelectLoadingType') }}"
+                >
+                </dx-select-box>
+              </div>
+              <!--          Shipping Type      -->
+
+              <!--          Shipping Type      -->
+              <div class="form-group col-md-6">
+                <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
+                <dx-select-box
+                  id="PP_ST"
+                  name="PP_ST"
+                  [(value)]="pricePackageForSaasDto.shippingTypeId"
+                  [dataSource]="allShippingTypes"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  (onValueChanged)="filteredRoundTripBasedOnShippingType()"
+                  valueExpr="id"
+                  required
+                  placeholder="{{ l('SelectashippingType') }}"
+                >
+                </dx-select-box>
+              </div>
+              <!--                Loading type for Saas-->
+              <div class="form-group col-md-6" *ngIf="canSelectRoundType()">
+                <label>{{ l('RoundType') }} <span class="text-danger">*</span></label>
+                <dx-select-box
+                  id="PP_RT"
+                  name="PP_RT"
+                  [(ngModel)]="pricePackageForSaasDto.roundTripType"
+                  [dataSource]="RoundTripType"
+                  displayExpr="value"
+                  valueExpr="key"
+                  [required]="canSelectRoundType()"
+                  placeholder="{{ l('SelectRoundTripType') }}"
+                >
+                </dx-select-box>
+              </div>
+
+              <!--                actors-->
+              <div class="form-group col-md-6">
+                <label>{{ l('Client') }} <span class="text-danger">*</span></label>
+
+                <dx-select-box
+                  id="PP_acShipper"
+                  name="PP_acShipper"
+                  [(value)]="pricePackageForSaasDto.actorShipperId"
+                  [dataSource]="AllActorsShipper"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  placeholder="{{ l('SelectaClient') }}"
+                  required
+                >
+                </dx-select-box>
+              </div>
+
+              <!--                carrier Actor-->
+              <div class="form-group col-md-6">
+                <label>{{ l('ClientPrice') }} <span class="text-danger">*</span></label>
+                <input
+                  #actorShipperPrice="ngModel"
+                  [(ngModel)]="pricePackageForSaasDto.actorShipperPrice"
+                  required
+                  type="number"
+                  minlength="3"
+                  class="form-control"
+                  name="actorShipperPrice"
+                  [ngClass]="{
+                    'is-invalid': actorShipperPrice.invalid && (actorShipperPrice.dirty || actorShipperPrice.touched),
+                    'is-valid': actorShipperPrice.valid && (actorShipperPrice.dirty || actorShipperPrice.touched)
+                  }"
+                />
+                <div *ngIf="actorShipperPrice.invalid && (actorShipperPrice.dirty || actorShipperPrice.touched)" class="invalid-feedback">
+                  {{ 'InvalidClientPrice' | localize }}
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" [disabled]="PPForm.invalid" class="btn btn-primary">
+            {{ 'Save' | localize }}
+          </button>
+          <button type="button" class="btn btn-light" (click)="close()">{{ 'Close' | localize }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

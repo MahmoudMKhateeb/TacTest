@@ -80,6 +80,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //VasList
         public List<CreateOrEditShippingRequestVasListDto> ShippingRequestVasList { get; set; }
 
+         /// <summary>
+        /// Round trip is used for port movements requests
+        /// </summary>
+        public RoundTripType? RoundTripType { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
             var localization = context.IocResolver

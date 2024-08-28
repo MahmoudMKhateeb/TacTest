@@ -57,6 +57,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string SealNumber { get; set; }
         public string MultipleDropsOrTripsLable { get; set; }
         public string MultipleDropsOrTripsLableAr { get; set; }
-
+        public string ReplacedDriverName { get; set; }
+        public string ReplacedDriverIqamaNo { get; set; }
+        public string ReplacedTruckTypeDisplayName { get; set; }
+        public string ReplacedPlateNumber { get; set; }
     }
 }

@@ -417,7 +417,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                   {
                       RoundTripType.WithReturnTrip when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
                       RoundTripType.WithReturnTrip when IsSecondTrip(point.PointOrder.Value)  => AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripVersion,
+
+                      RoundTripType.WithStorage when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
+                      RoundTripType.WithStorage when IsSecondTrip(point.PointOrder.Value)  => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
+                      RoundTripType.WithStorage when IsThirdTrip(point.PointOrder.Value)  => AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripVersion,
                       
+
                       RoundTripType.WithoutReturnTrip when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
                       
                       RoundTripType.TwoWayRoutsWithPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion,

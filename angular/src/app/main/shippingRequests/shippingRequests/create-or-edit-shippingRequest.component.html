@@ -320,6 +320,21 @@
                         </div>
                       </div>
                       <!--  End of Shipping Type -->
+                      <div class="col-lg-6" *ngIf="shippingRequest?.roundTripType">
+                        <div class="form-group">
+                          <label>{{ l('RoundTripType') }}</label>
+                          <dx-select-box
+                            name="goodCategory"
+                            [(value)]="shippingRequest.roundTripType"
+                            [dataSource]="RoundTripTypes"
+                            [searchEnabled]="true"
+                            [disabled]="true"
+                            displayExpr="value"
+                            valueExpr="key"
+                          >
+                          </dx-select-box>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

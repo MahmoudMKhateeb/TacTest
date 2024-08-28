@@ -61,6 +61,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public DateTime? ExpectedDeliveryTime { get; set; }
         public long? AssignedDriverUserId { get; set; }
 
+        public long? ReplacesDriverId {get;set;}
+        [ForeignKey("ReplacesDriverId")] public User ReplacesDriverFk { get; set; }
+
         /// <summary>
         /// Used for worker to reminder the driver to accept trip
         /// </summary>
@@ -96,6 +99,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string RejectedCancelingReason { get; set; }
         public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")] public Truck AssignedTruckFk { get; set; }
+
+
+          public long? ReplacedTruckId { get; set; }
+        [ForeignKey("ReplacedTruckId")] public Truck ReplacedTruckFk { get; set; }
+
+
         public long? ShippingRequestId { get; set; }
         [ForeignKey("ShippingRequestId")] public ShippingRequest ShippingRequestFk { get; set; }
 
@@ -181,8 +190,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
         /// <summary>
-        /// This reference is for import shipment from excel, it is unique reference for user to know the trips whick contains errors,
-        /// it is either entered menual or auto generated. it is unique in each request.
+        /// This reference is for import shipment from excel, it is unique reference for user to know the trips which contains errors,
+        /// it is either entered manual or auto generated. it is unique in each request.
         /// </summary>
         public string BulkUploadRef { get; set; }
             = DateTime.Now.ToString("dd") + DateTime.Now.ToString("HH") + RandomHelper.GetRandom(10, 99);
@@ -258,5 +267,32 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         #endregion
         public bool ExcludeFromBayanIntegration { get; set; }
+
+        #region SAB
+        public TripLoadingTypeEnum LoadingType { get; set; }
+        public SalesOfficeTypeEnum SalesOfficeType { get; set; }
+        public int Quantity { get; set; }
+        public int DriverWorkingHour { get; set; }
+        public int Distance  { get; set; }
+        public int DriverCommission {get;set;}
+
+        public int ReplacedDriverWorkingHour { get; set; }
+        public int ReplacedDriverDistance  { get; set; }
+        public int ReplacedDriverCommission {get;set;}
+        public string SabOrderId { get; set; }
+        public DateTime? ContainerReturnDate { get; set; }
+        public bool? IsContainerReturned {get;set;}
+
+        #endregion
+
+         /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+
+        /// <summary>
+        /// shipper add his invoice number manually, this updated currently to booking number 
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
     }
 }

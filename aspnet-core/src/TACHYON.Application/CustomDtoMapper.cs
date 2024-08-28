@@ -1119,6 +1119,7 @@ namespace TACHYON
 
             configuration.CreateMap<TrucksType, TrucksTypeSelectItemDto>()
                 .ForMember(x => x.Id, x => x.MapFrom(i => i.Id.ToString()))
+                .ForMember(dst => dst.IsOther, opt => opt.MapFrom(src => src.ContainsOther()))
                 .ForMember(x => x.DisplayName, x =>
                     x.MapFrom(i => i.GetTranslatedDisplayName<TrucksType, TrucksTypesTranslation, long>()));
 

@@ -117,7 +117,7 @@ namespace TACHYON.Waybills
             ArrayList data = new ArrayList();
             var masterWaybill = _shippingRequestAppService.GetMasterWaybill(shippingRequestTripId);
             names.Add("DataSet1");
-            data.Add(_shippingRequestAppService.GetMasterWaybill(shippingRequestTripId));
+            data.Add(masterWaybill);
 
             names.Add("GetDropDetailsDS");
             data.Add(_routPointAppService.GetDropsDetailsForMasterWaybill(shippingRequestTripId));

@@ -24,6 +24,26 @@ namespace TACHYON.Actors.Dtos
         public bool IsActive { get; set; }
         public DocumentFileDto DocumentFile { get; set; }
 
+        #region SAP
+        
+        public int? CityId {get;set;}
+        public string Region {get;set;}
+        public string FirstName {get;set;}
+        public string LastName {get;set;}
+        public SalesOfficeTypeEnum SalesOfficeType {get;set;}
+        public string SalesGroup {get;set;}
+        public string TrasportationZone {get;set;}
+        public string Reconsaccoun {get;set;}
+        public string PostalCode {get;set;}
+        public string Division {get;set;}
+        public string District {get;set;}
+        public string CustomerGroup {get;set;}
+        public string BuildingCode {get;set;}
+        public string AccountType {get;set;}
+        public ActorDischannelEnum? actorDischannelEnum{get;set;}
+
+        #endregion
+
 
     }
 }

@@ -152,6 +152,8 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
           this.searchInput.isSubmittedPOD,
           this.searchInput.requestTypeId,
           trackingMode,
+          this.searchInput.actor,
+          this.searchInput.actorType,
           '',
           this.skipCount,
           this.maxResultCount
@@ -195,6 +197,8 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this.searchInput.isSubmittedPOD,
         this.searchInput.requestTypeId,
         ShipmentTrackingMode.DirectShipment,
+        this.searchInput.actor,
+        this.searchInput.actorType,
         '',
         this.skipCount,
         this.maxResultCount

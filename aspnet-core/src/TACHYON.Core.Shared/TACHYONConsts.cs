@@ -126,7 +126,11 @@ namespace TACHYON
         #region Vases
         public const string AppointmentVasName = "Appointment";
         public const string ClearanceVasName = "Custom Clearance";
+
+        public const string StorgeVasName = "Storge";
         public const string ContainerUOM = "Container";
+
+        
         #endregion
         #endregion
 

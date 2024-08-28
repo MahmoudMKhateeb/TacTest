@@ -52,5 +52,11 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool NeedsDeliveryNote { get; set; }
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
         public bool IsDirectTrip { get; set; }
+
+        public int DriverWorkingHour { get; set; }
+        public int Distance  { get; set; }
+        public string SabOrderId { get; set; }
+
+        public TripLoadingTypeEnum LoadingType { get; set; }
     }
 }

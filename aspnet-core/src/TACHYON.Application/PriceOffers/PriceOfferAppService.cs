@@ -53,6 +53,7 @@ using TACHYON.Invoices.SubmitInvoices.Dto;
 using TACHYON.Common;
 using System.Threading.Channels;
 using TACHYON.Shipping.DirectRequests.Dto;
+using Abp.Extensions;
 
 namespace TACHYON.PriceOffers
 {
@@ -1194,8 +1195,18 @@ namespace TACHYON.PriceOffers
             .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
                 x => (x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId)) || (x.ShipperActorId.HasValue && userOrganizationUnits.Contains(x.ShipperActorFk.OrganizationUnitId)))
             .WhereIf(input.RequestFlag.HasValue, x => x.ShippingRequestFlag == input.RequestFlag.Value)
+            .WhereIf
+               (!input.ActorName.IsNullOrEmpty(),
+                 x => x.ShipperActorFk.CompanyName.ToLower().Contains(input.ActorName.ToLower())
+                 || x.CarrierActorFk.CompanyName.ToLower().Contains(input.ActorName.ToLower())
+                 )
+                .WhereIf
+                (input.ActorType == Actors.ActorTypesEnum.Shipper, x => x.ShipperActorId.HasValue)
+                .WhereIf
+                (input.ActorType == Actors.ActorTypesEnum.Carrier, x => x.CarrierActorId.HasValue)
+                 ;
             
-            ;
+            
             if(!getAllData) query = query.OrderBy(input.Sorting ?? "id desc").PageBy(input);
 
             //get truck type tranlation list

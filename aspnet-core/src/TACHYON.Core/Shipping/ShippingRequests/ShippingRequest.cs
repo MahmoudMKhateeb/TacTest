@@ -52,7 +52,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public string ShipperReference { get; set; }
 
         /// <summary>
-        /// shipper add his invoice number manually, this updated currnetly to booking number 
+        /// shipper add his invoice number manually, this updated currently to booking number 
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
 
@@ -116,7 +116,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public bool IsShipperHaveInvoice { get; set; }
 
         /// <summary>
-        /// check if this request is related with carrirer invoice
+        /// check if this request is related with carrier invoice
         /// </summary>
         public bool IsCarrierHaveInvoice { get; set; }
         /// <summary>
@@ -251,7 +251,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         //trips collection
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
-        //citites
+        //cities
         public ICollection<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
         public ICollection<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
         public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }

@@ -54,6 +54,7 @@ using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.WebHooks;
 using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
 namespace TACHYON.Trucks
@@ -84,12 +85,15 @@ namespace TACHYON.Trucks
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<UserOrganizationUnit,long> _userOrganizationUnitRepository;
         private readonly IFeatureChecker _featureChecker;
+        private readonly AppWebhookPublisher _webhookPublisher;
 
 
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository,
+        public TrucksAppService(
+            IRepository<DocumentType, long> documentTypeRepository,
+            IRepository<DocumentFile, Guid> documentFileRepository,
             IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter,
             IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository,
             IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager,
@@ -99,7 +103,11 @@ namespace TACHYON.Trucks
             WaslIntegrationManager waslIntegrationManager,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
-            IRepository<User, long> userRepository, IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, IFeatureChecker featureChecker)
+            IRepository<User, long> userRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IFeatureChecker featureChecker,
+            AppWebhookPublisher webhookPublisher
+            )
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -122,6 +130,7 @@ namespace TACHYON.Trucks
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _featureChecker = featureChecker;
+            _webhookPublisher = webhookPublisher;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
@@ -262,7 +271,7 @@ namespace TACHYON.Trucks
             //    output.UserName = _lookupUser?.Name?.ToString();
             //}
 
-
+            output.Truck.Normalize();
             return output;
         }
 
@@ -365,6 +374,10 @@ namespace TACHYON.Trucks
                 await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
 
             }
+
+            input.Id = truckId;
+            //Webhooks
+            await _webhookPublisher.PublishNewTruckCreatedWebhook(input);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
@@ -389,6 +402,10 @@ namespace TACHYON.Trucks
                   await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
 
             }
+                
+                 //Webhooks
+                await _webhookPublisher.PublishTruckUpdatedWebhook(input);
+            
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Delete)]

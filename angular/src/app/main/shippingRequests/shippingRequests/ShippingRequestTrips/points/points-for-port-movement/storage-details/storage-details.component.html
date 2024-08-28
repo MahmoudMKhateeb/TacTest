@@ -1,0 +1,90 @@
+<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+  (keydown.escape)="close(); $event.stopPropagation()"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ l('StorageDetails') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Existing form content -->
+
+          <!-- New Inputs Section -->
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>{{ l('Driver') }}</label>
+
+              <dx-select-box
+                class="form-control p-0"
+                name="driver-{{ i }}"
+                [(value)]="wayPointsList[i].driverUserId"
+                [dataSource]="allDrivers"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                [showClearButton]="true"
+                [disabled]="!isEdit"
+                placeholder="{{ l('SelectADriver') }}"
+              ></dx-select-box>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Truck') }}</label>
+
+              <dx-select-box
+                class="form-control p-0"
+                name="truck-{{ i }}"
+                [(value)]="wayPointsList[i].truckId"
+                [dataSource]="allTrucks"
+                [searchEnabled]="true"
+                displayExpr="truckName"
+                valueExpr="truckId"
+                [showClearButton]="true"
+                [disabled]="!isEdit"
+                placeholder="{{ l('SelectATruck') }}"
+              ></dx-select-box>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('StorageDays') }}</label>
+
+              <dx-text-box
+                name="sd-{{ i }}"
+                [(value)]="wayPointsList[i].storageDays"
+                [disabled]="usedIn != 'createOrEdit'"
+                placeholder="10"
+              ></dx-text-box>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('StoragePricePerDay') }}</label>
+
+              <dx-text-box
+                name="pricePd-{{ i }}"
+                [(value)]="wayPointsList[i].storagePricePerDay"
+                [disabled]="usedIn != 'createOrEdit'"
+                placeholder="100"
+              ></dx-text-box>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button *ngIf="_tripService.activeTripId" type="button" class="btn btn-outline-success" (click)="save()">{{ l('Save') }}</button>
+          <button type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Close') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

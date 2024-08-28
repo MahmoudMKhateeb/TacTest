@@ -339,6 +339,14 @@ namespace TACHYON.Waybills.Reports {
             
             private global::System.Data.DataColumn columnMultipleDropsOrTripsLableAr;
             
+            private global::System.Data.DataColumn columnReplacedDriverName;
+            
+            private global::System.Data.DataColumn columnReplacedDriverIqamaNo;
+            
+            private global::System.Data.DataColumn columnReplacedTruckTypeDisplayName;
+            
+            private global::System.Data.DataColumn columnReplacedPlateNumber;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public TrucksDataTable() {
@@ -614,6 +622,38 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ReplacedDriverNameColumn {
+                get {
+                    return this.columnReplacedDriverName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ReplacedDriverIqamaNoColumn {
+                get {
+                    return this.columnReplacedDriverIqamaNo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ReplacedTruckTypeDisplayNameColumn {
+                get {
+                    return this.columnReplacedTruckTypeDisplayName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ReplacedPlateNumberColumn {
+                get {
+                    return this.columnReplacedPlateNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -679,7 +719,11 @@ namespace TACHYON.Waybills.Reports {
                         string ContainerNumber, 
                         string SealNumber, 
                         string MultipleDropsOrTripsLable, 
-                        string MultipleDropsOrTripsLableAr) {
+                        string MultipleDropsOrTripsLableAr, 
+                        string ReplacedDriverName, 
+                        string ReplacedDriverIqamaNo, 
+                        string ReplacedTruckTypeDisplayName, 
+                        string ReplacedPlateNumber) {
                 TrucksRow rowTrucksRow = ((TrucksRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Date,
@@ -711,7 +755,11 @@ namespace TACHYON.Waybills.Reports {
                         ContainerNumber,
                         SealNumber,
                         MultipleDropsOrTripsLable,
-                        MultipleDropsOrTripsLableAr};
+                        MultipleDropsOrTripsLableAr,
+                        ReplacedDriverName,
+                        ReplacedDriverIqamaNo,
+                        ReplacedTruckTypeDisplayName,
+                        ReplacedPlateNumber};
                 rowTrucksRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTrucksRow);
                 return rowTrucksRow;
@@ -764,6 +812,10 @@ namespace TACHYON.Waybills.Reports {
                 this.columnSealNumber = base.Columns["SealNumber"];
                 this.columnMultipleDropsOrTripsLable = base.Columns["MultipleDropsOrTripsLable"];
                 this.columnMultipleDropsOrTripsLableAr = base.Columns["MultipleDropsOrTripsLableAr"];
+                this.columnReplacedDriverName = base.Columns["ReplacedDriverName"];
+                this.columnReplacedDriverIqamaNo = base.Columns["ReplacedDriverIqamaNo"];
+                this.columnReplacedTruckTypeDisplayName = base.Columns["ReplacedTruckTypeDisplayName"];
+                this.columnReplacedPlateNumber = base.Columns["ReplacedPlateNumber"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -829,6 +881,14 @@ namespace TACHYON.Waybills.Reports {
                 base.Columns.Add(this.columnMultipleDropsOrTripsLable);
                 this.columnMultipleDropsOrTripsLableAr = new global::System.Data.DataColumn("MultipleDropsOrTripsLableAr", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMultipleDropsOrTripsLableAr);
+                this.columnReplacedDriverName = new global::System.Data.DataColumn("ReplacedDriverName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReplacedDriverName);
+                this.columnReplacedDriverIqamaNo = new global::System.Data.DataColumn("ReplacedDriverIqamaNo", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReplacedDriverIqamaNo);
+                this.columnReplacedTruckTypeDisplayName = new global::System.Data.DataColumn("ReplacedTruckTypeDisplayName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReplacedTruckTypeDisplayName);
+                this.columnReplacedPlateNumber = new global::System.Data.DataColumn("ReplacedPlateNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReplacedPlateNumber);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1451,6 +1511,70 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ReplacedDriverName {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.ReplacedDriverNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReplacedDriverName\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.ReplacedDriverNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ReplacedDriverIqamaNo {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.ReplacedDriverIqamaNoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReplacedDriverIqamaNo\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.ReplacedDriverIqamaNoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ReplacedTruckTypeDisplayName {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.ReplacedTruckTypeDisplayNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReplacedTruckTypeDisplayName\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.ReplacedTruckTypeDisplayNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ReplacedPlateNumber {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.ReplacedPlateNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReplacedPlateNumber\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.ReplacedPlateNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsDateNull() {
                 return this.IsNull(this.tableTrucks.DateColumn);
             }
@@ -1807,6 +1931,54 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetMultipleDropsOrTripsLableArNull() {
                 this[this.tableTrucks.MultipleDropsOrTripsLableArColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsReplacedDriverNameNull() {
+                return this.IsNull(this.tableTrucks.ReplacedDriverNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetReplacedDriverNameNull() {
+                this[this.tableTrucks.ReplacedDriverNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsReplacedDriverIqamaNoNull() {
+                return this.IsNull(this.tableTrucks.ReplacedDriverIqamaNoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetReplacedDriverIqamaNoNull() {
+                this[this.tableTrucks.ReplacedDriverIqamaNoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsReplacedTruckTypeDisplayNameNull() {
+                return this.IsNull(this.tableTrucks.ReplacedTruckTypeDisplayNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetReplacedTruckTypeDisplayNameNull() {
+                this[this.tableTrucks.ReplacedTruckTypeDisplayNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsReplacedPlateNumberNull() {
+                return this.IsNull(this.tableTrucks.ReplacedPlateNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetReplacedPlateNumberNull() {
+                this[this.tableTrucks.ReplacedPlateNumberColumn] = global::System.Convert.DBNull;
             }
         }
         

@@ -8,7 +8,7 @@
   [config]="{ backdrop: 'static' }"
 >
   <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
+    <div class="modal-content" *ngIf="active">
       <div class="modal-header">
         <p class="modal-title">
           <span>{{ l('TripDetails') }}</span> <small> - {{ trip.waybillNumber }}</small>
@@ -492,6 +492,25 @@
               </div>
             </div>
           </div>
+          <div class="col-lg-6" *ngIf="isPortMovement && _TripService.CreateOrEditShippingRequestTripDto">
+            <label> {{ l('ContainerReturnDate') }} </label>
+            <dx-date-box
+              name="containerReturnDate"
+              [(value)]="_TripService.CreateOrEditShippingRequestTripDto.containerReturnDate"
+              type="date"
+              pickerType="list"
+              [min]="_TripService.CreateOrEditShippingRequestTripDto.startTripDate"
+              [interval]="20"
+              [disabled]="true"
+            >
+            </dx-date-box>
+            <div class="checkbox-container" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.id">
+              <label>
+                <input disabled type="checkbox" [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.isContainerReturned" />
+                {{ l('IsContainerReturned') }}
+              </label>
+            </div>
+          </div>
           <div class="col-lg-6 form-group d-inline-flex">
             <div class="input-group d-inline-block">
               <label> {{ l('supposedPickupTimeFrom') }}</label>
@@ -579,29 +598,15 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-6" *ngIf="trip.isRequestOwner && _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id">
-            <div class="form-group">
-              <!--                expected trip Delivery Date-->
-              <label>{{ l('ContainerNumber') }}</label>
-              <input
-                #ContainerNumber
-                id="ContainerNumber"
-                class="form-control"
-                name="ContainerNumber"
-                [(ngModel)]="trip.containerNumber"
-                type="text"
-                disabled
-              />
-            </div>
-          </div>
-          <div class="col-lg-6" *ngIf="trip.isRequestOwner && _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id">
-            <div class="form-group">
-              <!--                expected trip Delivery Date-->
-              <label>{{ l('SealNumber') }}</label>
-              <input #SealNumber id="SealNumber" class="form-control" name="SealNumber" [(ngModel)]="trip.sealNumber" type="text" disabled />
-            </div>
-          </div>
-          <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">
+
+          <!--          <div class="col-lg-6" *ngIf="trip?.sealNumber">-->
+          <!--            <div class="form-group">-->
+          <!--              &lt;!&ndash;                expected trip Delivery Date&ndash;&gt;-->
+          <!--              <label>{{ l('SealNumber') }}</label>-->
+          <!--              <input #SealNumber id="SealNumber" class="form-control" name="SealNumber" [(ngModel)]="trip.sealNumber" type="text" disabled />-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto?.containerNumber">
             <div class="form-group">
               <label>{{ l('ContainerNumber') }}</label>
               <input
@@ -615,7 +620,7 @@
               />
             </div>
           </div>
-          <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">
+          <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto?.sealNumber">
             <div class="form-group">
               <!--                expected trip Delivery Date-->
               <label>{{ l('SealNumber') }}</label>
@@ -774,7 +779,142 @@
 
           <!--   EndOf::Driver&Truck -->
           <!--  start:: Notes-->
+          <!--                SAAB Stuff-->
+          <ng-container *ngIf="isSab">
+            <div class="form-group col-lg-6">
+              <label>{{ l('LoadingType') }}</label>
+              <dx-select-box
+                id="LoadingType"
+                name="LoadingType"
+                [(value)]="_TripService.CreateOrEditShippingRequestTripDto.loadingType"
+                [dataSource]="LoadingTypes"
+                [searchEnabled]="false"
+                displayExpr="value"
+                valueExpr="key"
+                placeholder="{{ l('SelectLoadingType') }}"
+                [disabled]="true"
+              >
+              </dx-select-box>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>{{ l('SalesOffice') }}</label>
+              <dx-select-box
+                id="SalesOffice"
+                name="SalesOffice"
+                [(value)]="_TripService.CreateOrEditShippingRequestTripDto.salesOfficeType"
+                [dataSource]="SalesOffices"
+                [searchEnabled]="false"
+                displayExpr="value"
+                valueExpr="key"
+                placeholder="{{ l('SelectSalesOffices') }}"
+                [disabled]="true"
+              >
+              </dx-select-box>
+            </div>
 
+            <div class="col-lg-6 mt-3">
+              <div class="form-group">
+                <label>{{ l('Quantity') }} </label>
+                <div class="input-group">
+                  <input
+                    #Quantity="ngModel"
+                    type="number"
+                    class="form-control"
+                    name="Quantity"
+                    (keypress)="numberOnly($event)"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.quantity"
+                    [min]="1"
+                    disabled
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 mt-3">
+              <div class="form-group">
+                <label>{{ l('DriverWorkingHours') }} </label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="DriverWorkingHours"
+                    [value]="formatSecondsToHoursMinutes(_TripService.CreateOrEditShippingRequestTripDto.driverWorkingHour)"
+                    [min]="1"
+                    disabled
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 mt-3">
+              <div class="form-group">
+                <label>{{ l('Distance') }} </label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="Distance2"
+                    [value]="_TripService.CreateOrEditShippingRequestTripDto.distance"
+                    [min]="1"
+                    disabled
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="_TripService.CreateOrEditShippingRequestTripDto?.replacesDriverId">
+              <div class="col-lg-6 mt-3">
+                <div class="form-group">
+                  <label>{{ l('ReplacedDriverWorkingHours') }} </label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="NewDriverWorkingHours"
+                      [value]="formatSecondsToHoursMinutes(_TripService.CreateOrEditShippingRequestTripDto.replacedDriverWorkingHour)"
+                      [min]="1"
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 mt-3">
+                <div class="form-group">
+                  <label>{{ l('ReplacedDriverDistance') }} </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="NewDriverDistance"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.replacedDriverDistance"
+                      [min]="1"
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 mt-3">
+                <div class="form-group">
+                  <label>{{ l('ReplacedDriverCommission') }} </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="NewDriverCommission"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.replacedDriverCommission"
+                      disabled
+                      [min]="1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+
+          <!--Saab Stuff -- End -->
           <div class="col-lg-12" *ngIf="trip.note">
             <label>{{ l('Notes') }}</label>
             <div class="input-group">
@@ -835,7 +975,7 @@
           <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
           <PointsComponent
-            *ngIf="viewTripDetails.isShown"
+            *ngIf="active"
             [isPortMovement]="isPortMovement"
             [isHomeDelivery]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
           ></PointsComponent>

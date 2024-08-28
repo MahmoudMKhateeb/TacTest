@@ -359,6 +359,11 @@ import { DirectTripsComponent } from '@app/main/direct-trips/direct-trips.compon
             loadChildren: () => import('@app/main/pricePackages/price-package.module').then((m) => m.PricePackageModule), //Lazy load main module
             data: { preload: true },
           },
+          {
+            path: 'saaSpricePackages',
+            loadChildren: () => import('@app/main/saaSpricePackages/saas-price-package.module').then((m) => m.SaasPricePackageModule), //Lazy load main module
+            data: { preload: true },
+          },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: 'directShipments', component: DirectTripsComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           {

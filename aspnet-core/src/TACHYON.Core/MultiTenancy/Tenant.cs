@@ -91,6 +91,8 @@ namespace TACHYON.MultiTenancy
         public string FinancialPhone { get; set; }
         public string FinancialEmail { get; set; }
 
+        public bool IsSAB {get;set;}
+
         [NotMapped]
         public ICollection<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
         public ICollection<DedicatedDynamicActorInvoice> DedicatedDynamicActorInvoices { get; set; }

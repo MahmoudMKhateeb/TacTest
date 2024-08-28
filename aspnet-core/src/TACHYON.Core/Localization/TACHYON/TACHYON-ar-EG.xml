@@ -3252,6 +3252,12 @@
 	<text name="FleetManagement">إدارة الأسطول</text>
 	<text name="ClientsAndTransporters">العملاء والناقلين</text>
 	<text name="PromotionCode">كود خصم</text>
+	<text name="ShowAsTable">العرض كجدول</text>
+	<text name="ShowAsList">العرض كقائمة</text>
+	<text name="StorageDetails">تفاصيل التخزين</text>
+	<text name="areYouSureYouWantToChangeDriverAndTruck">هل انت متأكد انك تريد تغيير السائق والشاحنة ؟</text>
+	<text name="areYouSureYouWantToChangeDriver">هل انت متأكد انك تريد تغيير السائق ؟</text>
+	<text name="areYouSureYouWantToChangeTheTruck">هل انت متأكد انك تريد تغيير الشاحنة ؟</text>
 
 	</texts>
 </localizationDictionary>

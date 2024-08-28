@@ -49,8 +49,8 @@ namespace TACHYON.Invoices.ActorInvoices
 
             List<ShippingRequestTrip> trips = await GetAllShipperActorUnInvoicedTrips(actorId, SelectedTrips);
 
-            var dueDate = Clock.Now.AddDays(actor.InvoiceDueDays);
-
+            
+            var dueDate =actor.InvoiceDueDays.HasValue? Clock.Now.AddDays(actor.InvoiceDueDays.Value):Clock.Now.AddDays(0);
 
 
 
@@ -170,7 +170,7 @@ namespace TACHYON.Invoices.ActorInvoices
 
             List<ShippingRequestTrip> trips = await GetAllCarrierActorUnInvoicedTrips(actorId, SelectedTrips);
 
-            var dueDate = Clock.Now.AddDays(actor.InvoiceDueDays);
+            var dueDate =actor.InvoiceDueDays.HasValue? Clock.Now.AddDays(actor.InvoiceDueDays.Value):Clock.Now.AddDays(0);
 
 
             if (trips != null && trips.Count > 0)

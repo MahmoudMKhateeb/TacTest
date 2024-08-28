@@ -13,6 +13,7 @@ import {
   RoundTripType,
   SelectItemDto,
   ShippingRequestsServiceProxy,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -60,18 +61,27 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   isForPortsMovement: boolean;
   currentShippingRequest: GetShippingRequestForViewOutput;
   goodCategoryDefaultId: number;
+  isWaterStockAvailable: boolean = true; // Set default value
 
   get shouldDisableCategoryForPortsMovement() {
-    return (
-      this.isForPortsMovement &&
-      ((this._PointsService?.currentPointIndex > 1 &&
-        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType === RoundTripType.WithReturnTrip) ||
-        (this._PointsService?.currentPointIndex == 1 &&
-          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType != RoundTripType.OneWayRoutWithoutPortShuttling &&
-          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithReturnTrip &&
-          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithoutReturnTrip))
-    );
-    // return this.isForPortsMovement && this._PointsService?.currentPointIndex > 1;
+    let roundTripType = this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType;
+    const isReturnTrip = roundTripType === RoundTripType.WithReturnTrip;
+    const isNotOneWayWithoutPortShuttling = roundTripType !== RoundTripType.OneWayRoutWithoutPortShuttling;
+    const isNotReturnTrip = roundTripType !== RoundTripType.WithReturnTrip;
+    const isNotWithoutReturnTrip = roundTripType !== RoundTripType.WithoutReturnTrip;
+    const isFirstPoint = this._PointsService?.currentPointIndex == 1;
+    const isAfterFirstPoint = this._PointsService?.currentPointIndex > 1;
+    const isWithStorage = this._TripService.CreateOrEditShippingRequestTripDto.roundTripType == RoundTripType.WithStorage;
+    if (isWithStorage) {
+      if (this._PointsService.currentPointIndex === 5) {
+        return true;
+      }
+      return false;
+    }
+    const isEligibleForDisablingCategory =
+      (isAfterFirstPoint && isReturnTrip) || (isFirstPoint && isNotOneWayWithoutPortShuttling && isNotReturnTrip && isNotWithoutReturnTrip);
+
+    return this.isForPortsMovement && isEligibleForDisablingCategory;
   }
 
   get isWeightRequiredForPortMovement() {
@@ -140,62 +150,84 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.loadGoodDangerousTypes();
   }
 
-  show(id?, isForDedicated = false, isForPortsMovement = false) {
+  show(id?: number, isForDedicated = false, isForPortsMovement = false) {
     this.isForDedicated = isForDedicated;
     this.isForPortsMovement = isForPortsMovement;
     this.active = true;
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
-    //if there is an id this is an edit
+
+    // Check if editing an existing record
     if (isNotNullOrUndefined(id)) {
-      console.log('this.myGoodsDetailList', this.myGoodsDetailList);
-      this.activeEditId = id;
-      this.goodCategoryId = this.myGoodsDetailList[id].goodCategoryId;
-      this.weight = this.myGoodsDetailList[id].weight;
-      this.amount = this.myGoodsDetailList[id].amount;
-      this.unitOfMeasureId = this.myGoodsDetailList[id].unitOfMeasureId;
-      this.description = this.myGoodsDetailList[id].description;
-      this.isDangerousGood = this.myGoodsDetailList[id].isDangerousGood;
-      this.dangerousGoodsCode = this.myGoodsDetailList[id].dangerousGoodsCode;
-      this.dangerousGoodsTypeId = this.myGoodsDetailList[id].dangerousGoodTypeId;
-      this.otherUnitOfMeasureName = this.myGoodsDetailList[id].otherUnitOfMeasureName;
-      this.dimentions = this.myGoodsDetailList[id].dimentions;
+      this.populateGoodsDetailForEdit(id);
     }
-    if (isForPortsMovement) {
-      if (!isNotNullOrUndefined(id)) {
-        this.amount = this._PointsService.currentShippingRequest?.shippingRequest?.numberOfPacking;
-        this.weight = this._PointsService.currentShippingRequest?.shippingRequest?.totalWeight;
-        this.goodCategoryId = this.allSubGoodCategorys?.length > 0 ? this.allSubGoodCategorys[0].id : null;
-        if (
-          (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.WithReturnTrip ||
-            this._PointsService.currentShippingRequest?.roundTripType === RoundTripType.WithReturnTrip) &&
-          this._PointsService.currentPointIndex === 3
-        ) {
-          this.weight = null;
-          this.getContainerUOMDefaultId();
-        }
-        if (
-          (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
-            this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling ||
-            this._PointsService.currentShippingRequest?.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
-            this._PointsService.currentShippingRequest?.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling) &&
-          this._PointsService.currentPointIndex === 1
-        ) {
-          this.weight = null;
-          this.getContainerUOMDefaultId();
-        }
-      }
-      this.loadGoodSubCategory(null);
+
+    const isImportWithStorage = this._PointsService.currentShippingRequest?.roundTripType === RoundTripType.WithStorage;
+    //isForPortsMovement = isImportWithStorage;
+    // Handle specific logic for port movements
+    if (isForPortsMovement || isImportWithStorage) {
+      this.handlePortsMovement(id);
     }
+
+    // Validate weight and show detail modal or show error
     if (this.weightValidation() || isForDedicated) {
       this.createOrEditGoodDetail.show();
     } else {
       this.active = false;
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: this.l('WeightLimitReached'),
-      });
+      this.showWeightLimitError();
     }
+  }
+
+  private populateGoodsDetailForEdit(id: number) {
+    console.log('this.myGoodsDetailList', this.myGoodsDetailList);
+    this.activeEditId = id;
+    const detail = this.myGoodsDetailList[id];
+    this.goodCategoryId = detail.goodCategoryId;
+    this.weight = detail.weight;
+    this.amount = detail.amount;
+    this.unitOfMeasureId = detail.unitOfMeasureId;
+    this.description = detail.description;
+    this.isDangerousGood = detail.isDangerousGood;
+    this.dangerousGoodsCode = detail.dangerousGoodsCode;
+    this.dangerousGoodsTypeId = detail.dangerousGoodTypeId;
+    this.otherUnitOfMeasureName = detail.otherUnitOfMeasureName;
+    this.dimentions = detail.dimentions;
+  }
+
+  private handlePortsMovement(id?: number) {
+    console.log('handlePortsMovement');
+    if (!isNotNullOrUndefined(id)) {
+      // if there is a good id (edit)
+      console.log('handlePortsMovement', id);
+      this.amount = this._PointsService.currentShippingRequest?.shippingRequest?.numberOfPacking;
+      this.weight = this._PointsService.currentShippingRequest?.shippingRequest?.totalWeight;
+      this.goodCategoryId = this.allSubGoodCategorys?.length > 0 ? this.allSubGoodCategorys[0].id : null;
+
+      const currentShippingRequest = this._PointsService.currentShippingRequest;
+      const createOrEditShippingRequestTripDto = this._TripService.CreateOrEditShippingRequestTripDto;
+      let isRoundTypeWithReturnTrip =
+        createOrEditShippingRequestTripDto?.roundTripType === RoundTripType.WithReturnTrip ||
+        currentShippingRequest?.roundTripType === RoundTripType.WithReturnTrip;
+
+      if (isRoundTypeWithReturnTrip && this._PointsService.currentPointIndex === 3) {
+        this.weight = null;
+        this.getContainerUOMDefaultId();
+      }
+
+      if (createOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements && this._PointsService.currentPointIndex === 1) {
+        this.weight = null;
+        this.getContainerUOMDefaultId();
+      }
+    } else {
+      this.loadGoodSubCategory(null);
+    }
+  }
+
+  private showWeightLimitError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: this.l('WeightLimitReached'),
+    });
   }
 
   close() {
@@ -252,19 +284,22 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     //Get All Sub-Good Category
     console.log('FatherID', FatherID);
     if (this.shouldDisableCategoryForPortsMovement) {
+      console.log('this.shouldDisableCategoryForPortsMovement ................................ ');
       this._goodsDetailsServiceProxy
         .getEmptyGoodsCategoryForDropDown()
         .pipe(retry(3))
         .subscribe((result) => {
           this.allSubGoodCategorys = [result];
-          this.goodCategoryId = this.allSubGoodCategorys[0].id;
+          this.goodCategoryId = this.allSubGoodCategorys[this._PointsService.currentPointIndex]?.id;
           this.description = this.l('EmptyContainer');
         });
       return;
     }
-    if (FatherID) {
+    let goodCat = this._TripService.CreateOrEditShippingRequestTripDto.goodCategoryId;
+    if (FatherID || goodCat) {
+      console.log('Normal Good Cat ...................');
       this._goodsDetailsServiceProxy
-        .getAllGoodCategoryForTableDropdown(FatherID)
+        .getAllGoodCategoryForTableDropdown(FatherID || goodCat)
         .pipe(retry(3))
         .subscribe((result) => {
           this.allSubGoodCategorys = result;
@@ -281,6 +316,33 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.isDangerousGoodLoading = false;
       this.allDangerousGoodTypes = res;
     });
+  }
+
+  isWaterSelected() {
+    const waterId = this.allSubGoodCategorys.find(
+      (category) => category.displayName.toLowerCase() === 'water' || category.displayName == 'مياه' || category.displayName == 'ماء'
+    )?.id;
+    return this.goodCategoryId === waterId;
+  }
+  /**
+   * check stock with reachwere
+   */
+  checkWaterStock(): void {
+    let isSab = this.feature.isEnabled('App.Sab');
+    if (isSab && this.isWaterSelected()) {
+      //logic here
+      this._PointsService.checkAvailability(this.amount).subscribe((isAvailable) => {
+        this.isWaterStockAvailable = isAvailable;
+      });
+    }
+  }
+
+  /**
+   * for custome dvx validator
+   * @param e
+   */
+  validateStock(e) {
+    return this.isWaterStockAvailable;
   }
 
   /**

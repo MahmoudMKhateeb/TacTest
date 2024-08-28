@@ -112,6 +112,8 @@ namespace TACHYON.Trucks
         public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
 
         public bool ExcludeFromBayanIntegration { get; set; }
+        
+        public string EquipNumber { get; set; } // SAB
 
 
         #region Helper

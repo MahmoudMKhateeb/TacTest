@@ -26,6 +26,7 @@ namespace TACHYON.Shipping.Trips.Dto
         }
 
         public string Driver { get; set; }
+        public string ReplacedDriver { get; set; }
         public string Truck { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
@@ -50,5 +51,19 @@ namespace TACHYON.Shipping.Trips.Dto
         public string BayanId { get; set; }
         public bool CanAssignTrucksAndDrivers { get; set; }
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
+
+        public string SabOrderId { get; set; }
+        public DateTime? ContainerReturnDate { get; set; }
+        public bool? IsContainerReturned {get;set;}
+
+        /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+
+        /// <summary>
+        /// shipper add his invoice number manually, this updated currently to booking number 
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
     }
 }

@@ -2,11 +2,14 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } f
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
+  DedicatedShippingRequestsServiceProxy,
   FacilityForDropdownDto,
   FacilityType,
+  GetAllTrucksWithDriversListDto,
   PickingType,
   ReceiverFacilityLookupTableDto,
   RoundTripType,
+  SelectItemDto,
   ShippingRequestsTripServiceProxy,
   TripAppointmentDataDto,
   TripClearancePricesDto,
@@ -15,6 +18,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
 import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { StorageDetailsModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points-for-port-movement/storage-details/storage-details.component';
 
 @Component({
   selector: 'PointsForPortsMovementComponent',
@@ -28,9 +32,11 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   filteredDropFacilities: FacilityForDropdownDto[][] = [];
 
   @ViewChild('appointmentAndClearanceModal', { static: true }) appointmentAndClearanceModal: AppointmentAndClearanceModalComponent;
+  @ViewChild('StorageDetailsModal', { static: true }) StorageDetailsModal: StorageDetailsModalComponent;
   @Input('isEdit') isEdit = false;
   @Input('wayPointsList') wayPointsList: CreateOrEditRoutPointDto[] = [];
   _pickupFacilities: FacilityForDropdownDto[] = [];
+  allfacilities: FacilityForDropdownDto[];
   @Input('pickupFacilities') set pickupFacilities(value: FacilityForDropdownDto[]) {
     this._pickupFacilities = value;
     if (this.wayPointsList.length > 0) {
@@ -60,6 +66,15 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     return this._dropFacilities;
   }
 
+  get isImportWithStorage() {
+    let isTripRouteTypeWithStorage = this._tripService.CreateOrEditShippingRequestTripDto?.roundTripType == RoundTripType.WithStorage;
+    let isShippingRequestRouteTypeWithStorage = this._tripService.GetShippingRequestForViewOutput?.roundTripType == RoundTripType.WithStorage;
+    // console.log(
+    //   'isTripRouteTypeWithStorage || isShippingRequestRouteTypeWithStorage',
+    //   isTripRouteTypeWithStorage || isShippingRequestRouteTypeWithStorage
+    // );
+    return isTripRouteTypeWithStorage || isShippingRequestRouteTypeWithStorage;
+  }
   @Input('usedIn') usedIn: 'view' | 'createOrEdit';
   @Input('allPointsSendersAndReceivers') allPointsSendersAndReceivers: ReceiverFacilityLookupTableDto[][] = [];
   @Input('facilityLoading') facilityLoading: boolean;
@@ -91,15 +106,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   }
 
   ngOnInit(): void {
-    console.log('PointsForPortsMovementComponent');
     this.wayPointsList.map((item, index) => (item.pointOrder = index + 1));
-    console.log('wayPointsList', this.wayPointsList);
-    console.log('usedIn', this.usedIn);
-    console.log('pickupFacilities', this.pickupFacilities);
-    console.log('dropFacilities', this.dropFacilities);
-    console.log('allPointsSendersAndReceivers', this.allPointsSendersAndReceivers);
-    console.log('facilityLoading', this.facilityLoading);
-    console.log('receiverLoading', this.receiverLoading);
   }
 
   RouteStepCordSetter(index: number, facilityId: number) {
@@ -112,47 +119,51 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
       this.wayPointsList[index + 1].facilityId = facilityId;
     }
     this.wayPointsList[index].dropNeedsAppointment = this.wayPointsList[index].dropNeedsClearance = false;
-    console.log('RouteStepCordSetter', index, facilityId);
+    // console.log('RouteStepCordSetter', index, facilityId);
   }
 
   wayPointsSetter() {
     this.wayPointsSetterEvent.emit(true);
-    console.log('wayPointsSetter');
+    // console.log('wayPointsSetter');
   }
 
   loadReceivers(facilityId: number) {
     this.loadReceiversEvent.emit(facilityId);
-    console.log('loadReceivers', facilityId);
+    // console.log('loadReceivers', facilityId);
   }
 
   onChangedWayPointsList() {
     this.onChangedWayPointsListEvent.emit(true);
-    console.log('onChangedWayPointsList');
+    // console.log('onChangedWayPointsList');
   }
 
   createOrEditFacilityModalShow() {
     this.createOrEditFacilityModalShowEvent.emit(true);
-    console.log('createOrEditFacilityModalShow');
+    // console.log('createOrEditFacilityModalShow');
   }
 
   createOrEditReceiverModalShow(param, facilityId: any) {
     this.createOrEditReceiverModalShowEvent.emit({ param, facilityId });
-    console.log('createOrEditReceiverModalShow', param, facilityId);
+    // console.log('createOrEditReceiverModalShow', param, facilityId);
   }
 
   createOrEditPointModalShow(index: number, goodDetails: string, goodsDetailListDto?: any) {
     this._PointsService.currentPointIndex = index;
     this.createOrEditPointModalShowEvent.emit({ index, goodDetails, goodsDetailListDto });
-    console.log('createOrEditPointModalShow', index, goodDetails, goodsDetailListDto);
+    // console.log('createOrEditPointModalShow', index, goodDetails, goodsDetailListDto);
   }
 
   showVasModal(index: number) {
     console.log('showVasModal');
+    //console.log(this.usedIn, 'this.usedIn');
     this.activePointIndex = index;
+    let test = this.usedIn == 'createOrEdit' ? this.wayPointsList[index].dropNeedsClearance : (this.wayPointsList[index] as any).needsClearance;
+    let test2 = this.usedIn == 'createOrEdit' ? this.wayPointsList[index].dropNeedsAppointment : (this.wayPointsList[index] as any).needsAppointment;
+    console.log('this.wayPointsList[index].dropNeedsClearance', this.wayPointsList[index].dropNeedsClearance);
     this.appointmentAndClearanceModal.show(
       this.wayPointsList[index].id,
-      this.usedIn == 'createOrEdit' ? this.wayPointsList[index].dropNeedsClearance : (this.wayPointsList[index] as any).needsClearance,
-      this.usedIn == 'createOrEdit' ? this.wayPointsList[index].dropNeedsAppointment : (this.wayPointsList[index] as any).needsAppointment,
+      test,
+      test2,
       this.wayPointsList[index].appointmentDataDto,
       this.wayPointsList[index].tripClearancePricesDto,
       this.usedIn
@@ -163,95 +174,92 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     // this.wayPointsList[index];
     if (this.isExportRequest && index === 0) {
       return false;
+    } else if (this.isImportWithStorage && index === 5) {
+      return false;
+    } else if (this.isImportWithStorage && index === 4) {
+      this.wayPointsList[index].facilityId = this.wayPointsList[index - 1].facilityId;
+      return true;
     }
     return index % 2 === 0;
   }
 
   filterFacilitiesForDropDown(isPickup: boolean, index: number) {
-    if (!this.isExportRequest) {
-      return isPickup && index === 0
-        ? this.pickupFacilities
-            .filter((fac) => {
-              if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
-                return fac.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
-              }
-              return fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId;
-            })
-            .filter((fac) => {
-              switch (index) {
-                case 0: {
-                  return fac.facilityType === FacilityType.Port;
-                }
-                default: {
-                  return true;
-                }
-              }
-            })
-        : this.dropFacilities
-            .filter((fac) => {
-              if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
-                return this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
-                  .map((city) => city.cityId)
-                  .includes(fac.cityId);
-              }
-              return this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId);
-            })
-            .filter((fac) => {
-              switch (index) {
-                case 1: {
-                  return fac.facilityType === FacilityType.Facility;
-                }
-                default:
-                case 2:
-                case 3: {
-                  return true;
-                }
-              }
-            });
+    // console.log('filterFacilitiesForDropDown called with isPickup:', isPickup, 'index:', index, 'isExportRequest:', this.isExportRequest);
+    if (this.isExportRequest) {
+      return this.filterExportFacilities(isPickup, index);
+    } else {
+      return this.filterNonExportFacilities(isPickup, index);
     }
-    return isPickup && index === 0
-      ? this.pickupFacilities
-          .filter((fac) => {
-            if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
-              return fac.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
-            }
-            return fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId;
-          })
-          .filter((fac) => {
-            switch (index) {
-              case 0: {
-                return fac.facilityType === FacilityType.Facility;
-              }
-              default: {
-                return true;
-              }
-            }
-          })
-      : this.dropFacilities
-          .filter((fac) => {
-            if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
-              return this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
-                .map((city) => city.cityId)
-                .includes(fac.cityId);
-            }
-            return this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId);
-          })
-          .filter((fac) => {
-            switch (index) {
-              case 1: {
-                return this.roundTripType === RoundTripType.OneWayRoutWithoutPortShuttling
-                  ? fac.facilityType === FacilityType.Port
-                  : fac.facilityType === FacilityType.Facility;
-              }
-              default:
-              case 3: {
-                return fac.facilityType === FacilityType.Facility;
-              }
-              case 5: {
-                return fac.facilityType === FacilityType.Port;
-              }
-            }
-          });
+  }
+
+  filterExportFacilities(isPickup: boolean, index: number) {
+    // console.log('filterExportFacilities called with isPickup:', isPickup, 'index:', index);
+    if (isPickup && index === 0) {
+      return this.filterPickupFacilities(index, FacilityType.Facility);
+    } else {
+      return this.filterDropFacilities(index, {
+        1: this.roundTripType === RoundTripType.OneWayRoutWithoutPortShuttling ? FacilityType.Port : FacilityType.Facility,
+        3: FacilityType.Facility,
+        5: FacilityType.Port,
+      });
+    }
+  }
+
+  filterNonExportFacilities(isPickup: boolean, index: number) {
+    if (isPickup && index === 0) {
+      return this.filterPickupFacilities(index, FacilityType.Port);
+    } else if (this.isImportWithStorage && index === 5) {
+      this.wayPointsList[5].facilityId = this.wayPointsList[0].facilityId;
+      return this.filterPickupFacilities(index, FacilityType.Port);
+    } else if (this.isImportWithStorage && index === 4) {
+      return this.filterDropFacilities(index, {
+        1: FacilityType.Facility,
+        2: true,
+        3: true,
+      });
+    } else {
+      return this.filterDropFacilities(index, {
+        1: FacilityType.Facility,
+        2: true,
+        3: true,
+      });
+    }
+  }
+
+  filterPickupFacilities(index: number, facilityType: FacilityType) {
+    return this.pickupFacilities
+      .filter((fac) => this.isCityMatching(fac.cityId))
+      .filter((fac) => (index === 0 ? fac.facilityType === facilityType : true));
+  }
+
+  filterDropFacilities(index: number, facilityTypeMap: { [key: number]: FacilityType | boolean }) {
+    return this.dropFacilities
+      .filter((fac) => this.isCityInDestination(fac.cityId))
+      .filter((fac) => facilityTypeMap[index] === true || fac.facilityType === facilityTypeMap[index]);
+  }
+
+  isCityMatching(cityId: number): boolean {
+    const shippingRequest = this._tripService.GetShippingRequestForViewOutput?.shippingRequest;
+    const originCityId = this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
+    const originalCityId = this._tripService.GetShippingRequestForViewOutput?.originalCityId;
+    return !shippingRequest?.id ? cityId == originCityId : cityId == originalCityId;
+  }
+
+  isCityInDestination(cityId: number): boolean {
+    const shippingRequest = this._tripService.GetShippingRequestForViewOutput?.shippingRequest;
+    console.log(
+      'this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities',
+      this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
+    );
+    console.log(
+      'this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos',
+      this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos
+    );
+    const destinationCityIds = !shippingRequest?.id
+      ? this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities?.map((city) => city.cityId)
+      : this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos?.map((city) => city.cityId);
+    console.log('destinationCityIds', destinationCityIds, cityId, destinationCityIds?.includes(cityId));
+    return destinationCityIds?.includes(cityId) ?? false;
   }
 
   selectContact(index: number) {
@@ -264,18 +272,22 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   }
 
   showAppointmentsAndClearanceButton(index): boolean {
-    if (
-      this.usedIn == 'createOrEdit' &&
-      ((isNotNullOrUndefined(this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id) && !this.isTachyonDealer) ||
-        (!this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !this.hasShipperClients && !this.hasCarrierClients)) &&
-      !this.isEdit
-    ) {
-      return false;
+    let shippingRequestId = this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id;
+    if (this.isImportWithStorage && (index == 0 || index == 4)) {
+      return true;
     }
+
+    // if (
+    //   (this.usedIn == 'createOrEdit' && !this.isTachyonDealer) ||
+    //   (!shippingRequestId && !this.hasShipperClients && !this.hasCarrierClients && !this.isEdit)
+    // ) {
+    //   return false;
+    // }
     if (this.usedIn != 'createOrEdit') {
       return (this.wayPointsList[index] as any).needsClearance || (this.wayPointsList[index] as any).needsAppointment;
     }
-    if (!this.isExportRequest) {
+
+    if (!this.isExportRequest && !this.isImportWithStorage) {
       switch (index) {
         case 3:
         case 0: {
@@ -318,5 +330,70 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
       this.notify.success(this.l('SavedSuccessfully'));
       this.wayPointsList[this.activePointIndex].appointmentDataDto = $event;
     });
+  }
+
+  facilitiesDataSource(record, index) {
+    let isTwoWayRoutsWithPortShuttling =
+      this._tripService.CreateOrEditShippingRequestTripDto.roundTripType == RoundTripType.TwoWayRoutsWithPortShuttling;
+    this.allfacilities = [...this.dropFacilities, ...this.pickupFacilities];
+
+    if ((index === 2 || index === 4) && isTwoWayRoutsWithPortShuttling) {
+      return this.allfacilities;
+    }
+    if (index === 5 && this.isImportWithStorage && !isNotNullOrUndefined(this.allfacilities)) {
+      //console.log('All Facilities is being returend', [...this.dropFacilities, ...this.pickupFacilities]);
+      // this.allfacilities = [...this.dropFacilities, ...this.pickupFacilities];
+      return this.allfacilities;
+    } else if (index === 4 && this.isImportWithStorage) {
+      return this.filteredDropFacilities[index - 1];
+    } else {
+      // console.log(index);
+      // console.log(this.filteredDropFacilities[index]);
+      return record.pickingType === PickingType.Pickup ? this.filteredPickupFacilities[index] : this.filteredDropFacilities[index];
+    }
+  }
+
+  getClassForCreateOrEdit(record: any) {
+    const shippingRequestId = this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id;
+    console.log('shippingRequestId && !this.isShipper', shippingRequestId && !this.isShipper);
+    // shipping request                                     // direct trip
+    if ((shippingRequestId && !this.isShipper) || (this.hasShipperClients && this.hasCarrierClients)) {
+      if ((!record.appointmentDataDto || !record.tripClearancePricesDto) && !this.isEdit) {
+        return 'fa fa-plus';
+      } else {
+        return 'fa fa-pen';
+      }
+    } else {
+      return 'fa fa-eye';
+    }
+  }
+
+  getClassForView(record: any) {
+    // Extract the shipping request ID
+    const shippingRequestId = this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id;
+
+    // Condition 1: Shipping request exists and user is not a shipper
+    if (shippingRequestId && !this.isShipper) {
+      return 'fa fa-pen';
+    }
+
+    // Condition 2: No shipping request ID, but both shipper and carrier clients exist
+    if (!shippingRequestId && this.hasShipperClients && this.hasCarrierClients) {
+      // Check if appointment or clearance is needed but data is missing
+      const needsAppointmentWithoutData = record.needsAppointment && !record.appointmentDataDto;
+      const needsClearanceWithoutData = record.needsClearance && !record.tripClearancePricesDto;
+
+      if (needsAppointmentWithoutData || needsClearanceWithoutData) {
+        return 'fa fa-pen';
+      }
+    }
+
+    // Default icon for viewing only
+    return 'fa fa-eye';
+  }
+
+  get StorageDetailsButtonClass(): boolean {
+    const point = this.wayPointsList[3];
+    return !!(point.driverUserId || point.truckId || point.storageDays || point.storagePricePerDay);
   }
 }

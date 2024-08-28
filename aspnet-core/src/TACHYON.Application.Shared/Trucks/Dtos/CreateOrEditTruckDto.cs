@@ -1,4 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Extensions;
+using Abp.Runtime.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,9 +9,10 @@ using TACHYON.Integration.BayanIntegration;
 
 namespace TACHYON.Trucks.Dtos
 {
-    public class CreateOrEditTruckDto : EntityDto<long?> , ICanBeExcludedFromBayanIntegration
+    public class CreateOrEditTruckDto : EntityDto<long?>, ICanBeExcludedFromBayanIntegration, ICustomValidate, IShouldNormalize
     {
-        [Required]
+
+
         [StringLength(TruckConsts.MaxPlateNumberLength, MinimumLength = TruckConsts.MinPlateNumberLength)]
         [RegularExpression(TruckConsts.PlateNumberRegularExpression)]
         public string PlateNumber { get; set; }
@@ -65,5 +68,83 @@ namespace TACHYON.Trucks.Dtos
         public string InternalTruckId { get; set; }
 
         public bool ExcludeFromBayanIntegration { get; set; }
+
+        public string EquipNumber { get; set; } //SAB
+
+        public PlateNumberDto PlateNumberDto { get; set; }
+
+        public void AddValidationErrors(CustomValidationContext context)
+        {
+            if (PlateNumber.IsNullOrEmpty() && PlateNumberDto == null)
+            {
+                context.Results.Add(new ValidationResult("The PlateNumber or PlateNumberDto should have a value."));
+            }
+        }
+
+        public void Normalize()
+        {
+            if ( PlateNumberDto != null)
+            {
+                PlateNumber = PlateNumberDto.GeneratePlateNumber();
+            }
+            else if (!PlateNumber.IsNullOrEmpty() && PlateNumberDto == null)
+            {
+                var cleanedPlateNumber = PlateNumber.Replace(" ", "");
+                PlateNumberDto = new PlateNumberDto
+                {
+                    FirstNumber = cleanedPlateNumber[0].ToString(),
+                    SecondNumber = cleanedPlateNumber[1].ToString(),
+                    ThirdNumber = cleanedPlateNumber[2].ToString(),
+                    FourthNumber = cleanedPlateNumber[3].ToString(),
+                    FirstChar = cleanedPlateNumber[4].ToString(),
+                    SecondChar = cleanedPlateNumber[5].ToString(),
+                    ThirdChar = cleanedPlateNumber[6].ToString()
+                };
+            }
+        }
+
+    }
+
+
+
+    public class PlateNumberDto
+    {
+        [Required]
+        [StringLength(1, ErrorMessage = TruckConsts.ExactlyOneCharacterLong)]
+        [RegularExpression(@"^\d$", ErrorMessage = TruckConsts.NumericCharacter)]
+        public string FirstNumber { get; set; }
+
+        [Required]
+        [StringLength(1, ErrorMessage = TruckConsts.ExactlyOneCharacterLong)]
+        [RegularExpression(@"^\d$", ErrorMessage = TruckConsts.NumericCharacter)]
+        public string SecondNumber { get; set; }
+
+        [Required]
+        [StringLength(1, ErrorMessage = TruckConsts.ExactlyOneCharacterLong)]
+        [RegularExpression(@"^\d$", ErrorMessage = TruckConsts.NumericCharacter)]
+        public string ThirdNumber { get; set; }
+
+        [Required]
+        [StringLength(1, ErrorMessage = TruckConsts.ExactlyOneCharacterLong)]
+        [RegularExpression(@"^\d$", ErrorMessage = TruckConsts.NumericCharacter)]
+        public string FourthNumber { get; set; }
+
+        [Required]
+        [StringLength(1, ErrorMessage = TruckConsts.ExactlyOneCharacterLong)]
+        public string FirstChar { get; set; }
+
+        [Required]
+        [StringLength(1, ErrorMessage = TruckConsts.ExactlyOneCharacterLong)]
+        public string SecondChar { get; set; }
+
+        [Required]
+        [StringLength(1, ErrorMessage = TruckConsts.ExactlyOneCharacterLong)]
+        public string ThirdChar { get; set; }
+
+        public string GeneratePlateNumber()
+        {
+            return $"{FirstNumber}{SecondNumber}{ThirdNumber}{FourthNumber} {FirstChar} {SecondChar} {ThirdChar}";
+        }
     }
 }
+

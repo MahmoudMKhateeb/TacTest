@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using TACHYON.Actors;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
 
@@ -47,6 +48,10 @@ namespace TACHYON.Tracking.Dto
         public int? RequestTypeId { get; set; }
 
         public ShipmentTrackingMode TrackingMode { get; set; }
+
+        public string ActorName { get; set; }
+
+        public  ActorTypesEnum? ActorType { get; set; }
 
     }
 }

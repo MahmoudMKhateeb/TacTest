@@ -53,7 +53,7 @@
                     item.shippingType == ShippingTypeEnum.ImportPortMovements ||
                     item.shippingType == ShippingTypeEnum.ExportPortMovements) &&
                   item.isSass
-                    ? '25px'
+                    ? '31px'
                     : '12px'
                 "
                 [style.left]="isRtl ? 'auto !important' : ''"
@@ -373,6 +373,18 @@
                       <a [buttonBusy]="downloadingForItem === item.id" (click)="DownloadSingleDropWaybillPdf(item.id)" class="font-weight-bolder">{{
                         item.waybillNumber
                       }}</a>
+                    </div>
+                  </div>
+                  <!--end: Item-->
+                  <!--begin: Item-->
+                  <div *ngIf="item.sabOrderId && isSab" class="d-flex align-items-center flex-lg-fill my-1">
+                    <span class="mr-4">
+                      <i class="flaticon2-notepad icon-2x text-muted font-weight-bold"></i>
+                    </span>
+                    <div class="d-flex flex-column">
+                      <span class="text-dark-75 font-weight-bolder font-size-sm">{{ l('SapSaleId') }}</span>
+
+                      <a class="font-weight-bolder">{{ item.sabOrderId }}</a>
                     </div>
                   </div>
                   <!--end: Item-->

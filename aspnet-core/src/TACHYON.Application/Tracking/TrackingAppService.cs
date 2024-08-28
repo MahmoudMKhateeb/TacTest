@@ -33,6 +33,7 @@ using System.Globalization;
 using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Abp.Extensions;
 
 namespace TACHYON.Tracking
 {
@@ -186,7 +187,8 @@ namespace TACHYON.Tracking
                 ShippingRequestFlagTitle = src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingRequestFlag.GetEnumDescription() : "SAAS",
                 ShippingTypeTitle = src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingTypeId.GetEnumDescription() : "",
                 PlateNumber = src.AssignedTruckFk != null ? src.AssignedTruckFk.PlateNumber : "",
-                BookingNumber = src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo :""
+                BookingNumber = src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo :"",
+                SabOrderId = src.SabOrderId
                 }).ToListAsync();
 
 
@@ -669,10 +671,24 @@ namespace TACHYON.Tracking
                .WhereIf
                (
                    !string.IsNullOrEmpty(input.DriverNameOrMobile),
-                   x => x.ShippingRequestFk.AssignedDriverUserFk.PhoneNumber == input.DriverNameOrMobile ||
+                   x => (x.ShippingRequestFk.AssignedDriverUserFk.PhoneNumber == input.DriverNameOrMobile ||
                         (x.ShippingRequestFk.AssignedDriverUserFk != null &&
                          (x.ShippingRequestFk.AssignedDriverUserFk.Name.ToLower().Contains(input.DriverNameOrMobile) ||
-                          x.ShippingRequestFk.AssignedDriverUserFk.Surname.ToLower().Contains(input.DriverNameOrMobile)))
+                          x.ShippingRequestFk.AssignedDriverUserFk.Surname.ToLower().Contains(input.DriverNameOrMobile))))
+
+                          ||
+
+                         ( x.AssignedDriverUserFk.PhoneNumber == input.DriverNameOrMobile ||
+                        (x.AssignedDriverUserFk != null &&
+                         (x.AssignedDriverUserFk.Name.ToLower().Contains(input.DriverNameOrMobile) ||
+                          x.AssignedDriverUserFk.Surname.ToLower().Contains(input.DriverNameOrMobile))))
+                          ||
+
+                          ( x.ReplacesDriverFk.PhoneNumber == input.DriverNameOrMobile ||
+                        (x.ReplacesDriverFk != null &&
+                         (x.ReplacesDriverFk.Name.ToLower().Contains(input.DriverNameOrMobile) ||
+                          x.ReplacesDriverFk.Surname.ToLower().Contains(input.DriverNameOrMobile))))
+                          
                )
                .WhereIf
                (
@@ -705,7 +721,21 @@ namespace TACHYON.Tracking
                            (x.ShippingRequestFk.CarrierActorFk.OrganizationUnitId)) || (x.ShippingRequestFk.ShipperActorId.HasValue &&
                                                                                         userOrganizationUnits.Contains
                                                                                             (x.ShippingRequestFk.ShipperActorFk.OrganizationUnitId))
-               );
+               )
+               .WhereIf
+               (!input.ActorName.IsNullOrEmpty(),
+                 x => x.ShipperActorFk.CompanyName.ToLower().Contains(input.ActorName.ToLower())
+                 || x.CarrierActorFk.CompanyName.ToLower().Contains(input.ActorName.ToLower())
+                 )
+                .WhereIf
+                (input.ActorType == Actors.ActorTypesEnum.Shipper, x => x.ShipperActorFk.ActorType == Actors.ActorTypesEnum.Shipper)
+                .WhereIf
+                (input.ActorType == Actors.ActorTypesEnum.Carrier, x => x.CarrierActorFk.ActorType == Actors.ActorTypesEnum.Carrier)
+                .WhereIf
+                (input.ActorType == Actors.ActorTypesEnum.MySelf, x => x.CarrierActorFk.ActorType == Actors.ActorTypesEnum.MySelf || x.ShipperActorFk.ActorType == Actors.ActorTypesEnum.MySelf )
+                
+                 ;
+
         }
 
 
