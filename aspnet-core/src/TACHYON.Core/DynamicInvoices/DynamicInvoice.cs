@@ -58,5 +58,7 @@ namespace TACHYON.DynamicInvoices
         public decimal TotalAmount { get; set; }
         
         public List<DynamicInvoiceItem> Items { get; set; }
+
+        public List<DynamicInvoiceCustomItem> CustomItems { get; set; }
     }
 }

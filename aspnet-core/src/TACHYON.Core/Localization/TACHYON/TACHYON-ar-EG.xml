@@ -3258,6 +3258,26 @@
 	<text name="areYouSureYouWantToChangeDriverAndTruck">هل انت متأكد انك تريد تغيير السائق والشاحنة ؟</text>
 	<text name="areYouSureYouWantToChangeDriver">هل انت متأكد انك تريد تغيير السائق ؟</text>
 	<text name="areYouSureYouWantToChangeTheTruck">هل انت متأكد انك تريد تغيير الشاحنة ؟</text>
+	<text name="SapSaleId">معرف بيع ساب</text>
+	<text name="replaceDriver">السائق المستبدل</text>
+	<text name="shipperPrice">سعر الشاحن</text>
+	<text name="shipperTotalAmount">اجمالي سعر الشاحن</text>
+	<text name="shipperReference">مرجع الشاحن</text>
+	<text name="ShipperBooking">رقم حجز الشاحن</text>
+	<text name="containerReturnedDate">تاريخ إرجاع الحاوية</text>
+	<text name="isContainerReturned">هل تم إرجاع الحاوية</text>
+	<text name="ActorShipper">جهة الشحن</text>
+	<text name="ActorCarrier">جهة النقل</text>
+	<text name="LoadingType">نوع التحميل</text>
+	<text name="SalesOffice">مكتب المبيعات</text>
+	<text name="DriverWorkingHours">ساعات عمل السائق</text>
+	<text name="StorageTrip">رحلة التخزين</text>
+	<text name="ReplacedDriverWorkingHours">ساعات عمل السائق البديل</text>
+	<text name="ReplacedDriverDistance">مسافة السائق البديل</text>
+	<text name="ReplacedDriverCommission">عمولة السائق البديل</text>
+	<text name="ClientPrice">سعر العميل</text>
+	<text name="RoundType">نوع الجولة</text>
+	<text name="locationPermissionMessage">تقوم تاكيون بجمع بيانات الموقع لتمكين حساب المسافة المقطوعة وقياس السعر بناءً على هذه المسافة المقطوعة حتى عندما يكون التطبيق مغلقًا أو غير مستخدم - يقوم تاكيون بجمع بيانات الموقع لتمكين تتبع السائق من منصة تاكيون ومعرفة تفاصيل الرحلة</text>
 
 	</texts>
 </localizationDictionary>

@@ -38,11 +38,11 @@ namespace TACHYON.Invoices.Reports
         {
             DisableTenancyFilters();
             AsyncHelper.RunSync(() => DisableInvoiceDraftedFilter());
-            var invoice = _invoiceRepository.GetAll().Select(x=> new { x.Channel, x.Id }).FirstOrDefault(i => i.Id == invoiceId);
+            var invoice = _invoiceRepository.GetAll().Select(x => new { x.Channel, x.Id }).FirstOrDefault(i => i.Id == invoiceId);
 
             if (invoice.Channel == InvoiceChannel.Trip)
             {
-               return DownloadTripInvoice(invoiceId);
+                return DownloadTripInvoice(invoiceId);
             }
             else if (invoice.Channel == InvoiceChannel.SaasTrip)
             {
@@ -87,8 +87,8 @@ namespace TACHYON.Invoices.Reports
         {
             var reportPath = "/Invoices/Reports/LandScapeInvoice_SAAS.rdlc";
 
-            ArrayList names = new ();
-            ArrayList data = new ();
+            ArrayList names = new();
+            ArrayList data = new();
 
             var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
             names.Add("GetInvoiceReportInfoDataset");
@@ -104,8 +104,8 @@ namespace TACHYON.Invoices.Reports
         {
             var reportPath = "/Invoices/Reports/PenaltyInvoice.rdlc";
 
-            ArrayList names = new ();
-            ArrayList data = new ();
+            ArrayList names = new();
+            ArrayList data = new();
 
             var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
             names.Add("GetInvoiceReportInfoDataset");
@@ -121,14 +121,17 @@ namespace TACHYON.Invoices.Reports
         {
             var reportPath = "/Invoices/Reports/DynamicInvoice.rdlc";
 
-            ArrayList names = new ();
-            ArrayList data = new ();
+            ArrayList names = new();
+            ArrayList data = new();
             var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
             names.Add("GetInvoiceReportInfoDataset");
             data.Add(invoiceDto);
 
             names.Add("GetInvoiceShippingRequestsReportInfoDataset");
             data.Add(_invoiceAppService.GetDynamicInvoiceItemsReportInfo(invoiceId));
+
+            names.Add("GetDynamicInvoiceCustomItemsReportInfoDataset");
+            data.Add(_invoiceAppService.GetDynamicInvoiceCustomItemsReportInfo(invoiceId));
 
             return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data);
         }
@@ -137,8 +140,8 @@ namespace TACHYON.Invoices.Reports
         {
             var reportPath = "/Invoices/Reports/DedicatedInvoice.rdlc";
 
-            ArrayList names = new ();
-            ArrayList data = new ();
+            ArrayList names = new();
+            ArrayList data = new();
 
             var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
 
@@ -148,15 +151,15 @@ namespace TACHYON.Invoices.Reports
             names.Add("GetDedicatedInvoiceItemReportInfo");
             data.Add(_invoiceAppService.GetDedicatedDynamicInvoiceItemsReportInfo(invoiceId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data) ;
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data);
         }
 
         public FileDto DownloadInvoiceNoteReportPdf(long invoiceNoteId)
         {
             var reportPath = "/Invoices/Reports/InvoiceNote.rdlc";
 
-            ArrayList names = new ();
-            ArrayList data = new ();
+            ArrayList names = new();
+            ArrayList data = new();
 
             names.Add("GetInvoiceNoteReportInfoDataset");
             data.Add(_InvoiceNoteAppService.GetInvoiceNoteReportInfo(invoiceNoteId));
@@ -200,7 +203,7 @@ namespace TACHYON.Invoices.Reports
 
             else
             {
-               // Complete here download dedicated invoice
+                // Complete here download dedicated invoice
                 var reportPath = "/Invoices/Reports/DedicatedInvoice_Actor.rdlc";
 
                 ArrayList names = new ArrayList();

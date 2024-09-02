@@ -353,6 +353,7 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DynamicInvoiceItem> DynamicInvoiceItems { get; set; }
         public DbSet<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
         public DbSet<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
+        public DbSet<DynamicInvoiceCustomItem> DynamicInvoiceCustomItems { get; set; }
 
         public DbSet<DedicatedDynamicActorInvoice> DedicatedDynamicActorInvoices { get; set; }
         public DbSet<DedicatedDynamicActorInvoiceItem> DedicatedDynamicActorInvoiceItems { get; set; }

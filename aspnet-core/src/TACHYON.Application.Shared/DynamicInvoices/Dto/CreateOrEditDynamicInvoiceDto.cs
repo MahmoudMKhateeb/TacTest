@@ -20,6 +20,7 @@ namespace TACHYON.DynamicInvoices.Dto
         public string Notes { get; set; }
 
         public List<CreateOrEditDynamicInvoiceItemDto> Items { get; set; }
+        public List<CreateOrEditDynamicInvoiceCustomItemDto> CustomItems { get; set; }
         
         public void AddValidationErrors(CustomValidationContext context)
         {
@@ -29,7 +30,7 @@ namespace TACHYON.DynamicInvoices.Dto
             if (!CreditTenantId.HasValue && !DebitTenantId.HasValue)
                 context.Results.Add(new ValidationResult("YouMustSelectADebitOrCreditTenant"));
             
-            if (Items.IsNullOrEmpty())
+            if (Items.IsNullOrEmpty() && CustomItems.IsNullOrEmpty())
                 context.Results.Add(new ValidationResult(("YouMustAddAtLeastOneItem")));
             
         }

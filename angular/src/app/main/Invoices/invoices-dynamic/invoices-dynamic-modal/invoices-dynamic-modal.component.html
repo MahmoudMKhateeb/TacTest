@@ -69,59 +69,44 @@
               pInputTextarea
             ></textarea>
           </div>
-          <!--                    <div class="form-group m-form__group">-->
-          <!--                        <label class="mr-2" for="waybills">{{ l('Waybills') }}</label>-->
-          <!--                        <p-multiSelect [options]="Waybills" name="waybills" id="waybills" [(ngModel)]="SelectedWaybills"-->
-          <!--                                       optionLabel="displayName"></p-multiSelect>-->
-          <!--                    </div>-->
+
+          <!-- Waybills Section -->
+          <div class="section-divider mt-4 mb-2">
+            <h5>{{ l('Waybills') }}</h5>
+          </div>
 
           <div class="d-flex justify-content-end mb-2">
-            <!--            <button *ngIf="dataSourceForEdit" type="button" class="btn btn-sm btn-danger" (click)="cancelAddToArray()">{{ l('Cancel') }}</button>-->
             <button *ngIf="!isView && !dataSourceForEdit" class="btn btn-sm btn-dark" (click)="addNew()">
-              <i class="fa fa-plus" aria-hidden="true"></i>
+              <i class="fa fa-plus" aria-hidden="true"></i> {{ l('Add Waybill') }}
             </button>
           </div>
           <table class="table">
             <tr>
               <th>{{ l('WaybillNumber') }}</th>
-              <!--              <th>{{ l('Price') }}</th>-->
               <th>{{ l('Price') }} {{ l('SAR') }}</th>
               <th>{{ l('VatTax') }}</th>
               <th>{{ l('VatAmount') }}</th>
-              <th>
-                {{ l('Total') }}
-              </th>
+              <th>{{ l('Total') }}</th>
               <th>{{ l('Description') }}</th>
               <th>{{ l('OriginCity') }}</th>
               <th>{{ l('DestinationCity') }}</th>
-              <!--              <th>{{ l('TruckType') }}</th>-->
               <th>{{ l('Date') }}</th>
               <th>{{ l('Quantity') }}</th>
-              <!--              <th>{{ l('PlateNumber') }}</th>-->
               <th>{{ l('ContainerNumber') }}</th>
               <th>{{ l('Trucks') }}</th>
               <th style="width: 8rem"></th>
             </tr>
             <tr *ngFor="let row of root.items; let i = index">
               <td>{{ row.waybillNumber }}</td>
-              <td>
-                {{ row.price | number: '1.0-0' }} {{ l('SAR') }}
-                <!--                <br *ngIf="row.price > 0" />-->
-                <!--                <span *ngIf="row.price > 0"> {{ l('TaxVat') }}: {{ row.price * 0.15 }} </span>-->
-                <!--                <br *ngIf="row.price > 0"/>-->
-                <!--                <span *ngIf="row.price > 0"> {{ l('Total') }}: {{ row.price + row.price * 0.15 }} </span>-->
-              </td>
-
+              <td>{{ row.price | number: '1.0-0' }} {{ l('SAR') }}</td>
               <td>{{ row.vatTax }} {{ l('%') }}</td>
               <td>{{ row.vatAmount | number: '1.0-0' }} {{ l('SAR') }}</td>
               <td>{{ row.totalAmount | number: '1.0-0' }} {{ l('SAR') }}</td>
               <td>{{ row.description }}</td>
               <td>{{ getCityToDisplay(row.originCityId) }}</td>
               <td>{{ getCityToDisplay(row.destinationCityId) }}</td>
-              <!--              <td>{{ getTruckToDisplay(row.truckTypeId) }}</td>-->
               <td>{{ getWorkDate(row.workDate) | date }}</td>
               <td>{{ row.quantity }}</td>
-              <!--              <td>{{ row.plateNumber }}</td>-->
               <td>{{ row.containerNumber }}</td>
               <td>{{ getTruckToDisplay(row.truckId) }}</td>
               <td>
@@ -135,15 +120,12 @@
                 </div>
               </td>
             </tr>
-            <!--                        <tbody>-->
-            <!--                        </tbody>-->
           </table>
+
           <div class="row" *ngIf="!!dataSourceForEdit">
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="waybillNumber">
-                  {{ l('WaybillNumber') }}
-                </label>
+                <label class="form-label" for="waybillNumber">{{ l('WaybillNumber') }}</label>
                 <p-autoComplete
                   class="p-0"
                   styleClass="w-100"
@@ -162,19 +144,7 @@
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="date">
-                  {{ l('Date') }}
-                </label>
-                <!--                <p-calendar-->
-                <!--                  [disabled]="!!dataSourceForEdit.waybillNumber"-->
-                <!--                  class="p-0"-->
-                <!--                  styleClass="w-100"-->
-                <!--                  inputStyleClass="form-control"-->
-                <!--                  name="date"-->
-                <!--                  id="date"-->
-                <!--                  [(ngModel)]="dataSourceForEdit.workDate"-->
-                <!--                  [dateFormat]=""-->
-                <!--                ></p-calendar>-->
+                <label class="form-label" for="date">{{ l('Date') }}</label>
                 <input
                   [disabled]="!!dataSourceForEdit.waybillNumber"
                   #modelYear="bsDatepicker"
@@ -191,36 +161,25 @@
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="price">
-                  {{ l('Price') }}
-                  <span class="required-fileds"> *</span>
-                </label>
+                <label class="form-label" for="price">{{ l('Price') }}<span class="required-fileds"> *</span></label>
                 <input required type="number" class="form-control" name="price" id="price" [(ngModel)]="dataSourceForEdit.price" />
               </div>
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="vatTax">
-                  {{ l('vatTax') }} {{ '%' }}
-                  <span class="required-fileds"> *</span>
-                </label>
+                <label class="form-label" for="vatTax">{{ l('vatTax') }} {{ '%' }}<span class="required-fileds"> *</span></label>
                 <input required type="number" class="form-control" name="vatTax" id="vatTax" [(ngModel)]="dataSourceForEdit.vatTax" />
               </div>
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="description">
-                  {{ l('Description') }}
-                  <span class="required-fileds"> *</span>
-                </label>
+                <label class="form-label" for="description">{{ l('Description') }}<span class="required-fileds"> *</span></label>
                 <input required class="form-control" name="description" id="description" [(ngModel)]="dataSourceForEdit.description" />
               </div>
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="quantity">
-                  {{ l('Quantity') }}
-                </label>
+                <label class="form-label" for="quantity">{{ l('Quantity') }}</label>
                 <input
                   [disabled]="!!dataSourceForEdit.waybillNumber"
                   class="form-control"
@@ -231,12 +190,9 @@
                 />
               </div>
             </div>
-
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="containerNumber">
-                  {{ l('ContainerNumber') }}
-                </label>
+                <label class="form-label" for="containerNumber">{{ l('ContainerNumber') }}</label>
                 <input
                   [disabled]="!!dataSourceForEdit.waybillNumber"
                   class="form-control"
@@ -248,9 +204,7 @@
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="originCity">
-                  {{ l('OriginCity') }}
-                </label>
+                <label class="form-label" for="originCity">{{ l('OriginCity') }}</label>
                 <p-autoComplete
                   [disabled]="!!dataSourceForEdit.waybillNumber"
                   class="p-0"
@@ -268,9 +222,7 @@
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="destinationCity">
-                  {{ l('DestinationCity') }}
-                </label>
+                <label class="form-label" for="destinationCity">{{ l('DestinationCity') }}</label>
                 <p-autoComplete
                   [disabled]="!!dataSourceForEdit.waybillNumber"
                   class="p-0"
@@ -288,9 +240,7 @@
             </div>
             <div class="col-6 mb-4">
               <div>
-                <label class="form-label" for="destinationCity">
-                  {{ l('Trucks') }}
-                </label>
+                <label class="form-label" for="destinationCity">{{ l('Trucks') }}</label>
                 <p-autoComplete
                   [disabled]="!!dataSourceForEdit.waybillNumber"
                   class="p-0"
@@ -308,11 +258,134 @@
             </div>
 
             <div class="col-12 d-flex justify-content-end">
-              <button class="btn btn-sm btn-outline-danger" (click)="cancelAddToArray()">
-                {{ l('Cancel') }}
-              </button>
-              <button class="btn btn-sm btn-dark" (click)="saveToArray()">
-                {{ ('' + activeIndex).length > 0 ? l('Save') : l('Add') }}
+              <button class="btn btn-sm btn-outline-danger" (click)="cancelAddToArray()">{{ l('Cancel') }}</button>
+              <button class="btn btn-sm btn-dark" (click)="saveToArray()">{{ ('' + activeIndex).length > 0 ? l('Save') : l('Add') }}</button>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <hr class="my-4" />
+
+          <!-- Custom Items Section -->
+          <div class="section-divider mt-4 mb-2">
+            <h5>{{ l('Custom Items') }}</h5>
+          </div>
+
+          <div class="d-flex justify-content-end mb-2">
+            <button *ngIf="!isView && !customItemForEdit" class="btn btn-sm btn-dark" (click)="addNewCustomItem()">
+              <i class="fa fa-plus" aria-hidden="true"></i> {{ l('Add Custom Item') }}
+            </button>
+          </div>
+          <table class="table">
+            <tr>
+              <th>{{ l('ItemName') }}</th>
+              <th>{{ l('Description') }}</th>
+              <th>{{ l('Price') }} {{ l('SAR') }}</th>
+              <th>{{ l('VatTax') }}</th>
+              <th>{{ l('VatAmount') }}</th>
+              <th>{{ l('Total') }}</th>
+              <th>{{ l('Quantity') }}</th>
+              <th style="width: 8rem"></th>
+            </tr>
+            <tr *ngFor="let row of root.customItems; let i = index">
+              <td>{{ row.itemName }}</td>
+              <td>{{ row.description }}</td>
+              <td>{{ row.price | number: '1.0-0' }} {{ l('SAR') }}</td>
+              <td>{{ row.vatTax }} {{ l('%') }}</td>
+              <td>{{ row.vatAmount | number: '1.0-0' }} {{ l('SAR') }}</td>
+              <td>{{ row.totalAmount | number: '1.0-0' }} {{ l('SAR') }}</td>
+              <td>{{ row.quantity }}</td>
+              <td>
+                <div *ngIf="!isView" class="d-flex">
+                  <button class="btn btn-xs btn-info" (click)="editCustomItem(i, row)">
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-xs btn-danger" (click)="deleteCustomItem(i)">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <div class="row" *ngIf="!!customItemForEdit">
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="itemName">{{ l('Item Name') }}</label>
+                <input class="form-control" name="itemName" id="itemName" [(ngModel)]="customItemForEdit.itemName" />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="description">{{ l('Description') }}</label>
+                <input class="form-control" name="description" id="description" [(ngModel)]="customItemForEdit.description" />
+              </div>
+            </div>
+            <!-- Price SAR -->
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('Price') }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="price"
+                  id="price"
+                  [(ngModel)]="customItemForEdit.price"
+                  (ngModelChange)="calculateCustomItemTotals()"
+                />
+              </div>
+            </div>
+
+            <!-- Vat Tax % -->
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="vatTax">
+                  {{ l('VatTax') }} {{ '%' }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="vatTax"
+                  id="vatTax"
+                  [(ngModel)]="customItemForEdit.vatTax"
+                  (ngModelChange)="calculateCustomItemTotals()"
+                />
+              </div>
+            </div>
+
+            <!-- Vat Amount SAR (auto-calculated) -->
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="vatAmount"> {{ l('VatAmount') }} {{ l('SAR') }} </label>
+                <input type="number" disabled class="form-control" name="vatAmount" id="vatAmount" [(ngModel)]="customItemForEdit.vatAmount" />
+              </div>
+            </div>
+
+            <!-- Total Amount SAR (auto-calculated) -->
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="totalAmount"> {{ l('TotalAmount') }} {{ l('SAR') }} </label>
+                <input type="number" disabled class="form-control" name="totalAmount" id="totalAmount" [(ngModel)]="customItemForEdit.totalAmount" />
+              </div>
+            </div>
+
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="quantity">{{ l('Quantity') }}</label>
+                <input type="number" class="form-control" name="quantity2" id="quantity2" [(ngModel)]="customItemForEdit.quantity" />
+              </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-end">
+              <button class="btn btn-sm btn-outline-danger" (click)="cancelAddToCustomItemsArray()">{{ l('Cancel') }}</button>
+              <button class="btn btn-sm btn-dark" (click)="saveToCustomItemsArray()">
+                {{ ('' + activeCustomItemIndex).length > 0 ? l('Save') : l('Add') }}
               </button>
             </div>
           </div>

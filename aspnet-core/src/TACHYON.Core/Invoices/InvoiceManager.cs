@@ -777,10 +777,11 @@ namespace TACHYON.Invoices
                     x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods))
             );
 
-            decimal subTotalAmount = dynamicInvoice.Items.Sum(r => r.Price);
+            decimal subTotalAmount = dynamicInvoice.Items.Sum(r => r.Price) + dynamicInvoice.CustomItems.Sum(r => r.Price);
+            
             //var tax = GetTax();
 
-            decimal vatAmount = dynamicInvoice.Items.Sum(r => r.VatAmount);
+            decimal vatAmount = dynamicInvoice.Items.Sum(r => r.VatAmount) + dynamicInvoice.CustomItems.Sum(r => r.VatAmount);
             decimal totalAmount = subTotalAmount + vatAmount;
 
             DateTime dueDate = Clock.Now;
