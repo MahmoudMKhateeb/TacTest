@@ -3572,6 +3572,26 @@
 	<text name="areYouSureYouWantToChangeDriverAndTruck">Are You Sure You Want To Change Driver And Truck ?</text>
 	<text name="areYouSureYouWantToChangeDriver">Are You Sure You Want To Change The Driver?</text>
 	<text name="areYouSureYouWantToChangeTheTruck">Are You Sure You Want To Change The Truck ?</text>
+	<text name="SapSaleId">Sap Sale Id</text>
+	<text name="replaceDriver">Replace driver</text>
+	<text name="shipperPrice">Shipper Price</text>
+	<text name="shipperTotalAmount">Shipper Total Amount</text>
+	<text name="shipperReference">Shipper Reference</text>
+	<text name="ShipperBooking">Shipper Booking</text>
+	<text name="containerReturnedDate">Container Returned Date</text>
+	<text name="isContainerReturned">Is Container Returned</text>
+	<text name="ActorShipper">Actor Shipper</text>
+	<text name="ActorCarrier">Actor Carrier</text>
+	<text name="LoadingType">Loading Type</text>
+	<text name="SalesOffice">Sales Office</text>
+	<text name="DriverWorkingHours">Driver Working Hours</text>
+	<text name="StorageTrip">Storage Trip</text>
+	<text name="ReplacedDriverWorkingHours">Replaced Driver Working Hours</text>
+	<text name="ReplacedDriverDistance">Replaced Driver Distance</text>
+	<text name="ReplacedDriverCommission">Replaced Driver Commission</text>
+	<text name="ClientPrice">Client Price</text>
+	<text name="RoundType">Round Type</text>
+	<text name="locationPermissionMessage">Tachyon collects location data to enable to calculate the traveled distance and measure the price based on this distance traveled even when the app is closed or not in use \n- Tachyon collects location data to enable tracking the driver from Tachyon platform and see trip details.</text>
 
 	</texts>
 </localizationDictionary>

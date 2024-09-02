@@ -16,6 +16,7 @@ import {
   TenantCityLookupTableDto,
   CreateOrEditDynamicInvoiceDto,
   PricePackageServiceProxy,
+  CreateOrEditDynamicInvoiceCustomItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import * as moment from 'moment';
@@ -53,6 +54,11 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   activeIndex: number = null;
   isView: boolean;
 
+  // Custom Items
+  customItemsDataSource: CreateOrEditDynamicInvoiceCustomItemDto[] = [];
+  customItemForEdit: CreateOrEditDynamicInvoiceCustomItemDto;
+  activeCustomItemIndex: number = null;
+
   constructor(
     injector: Injector,
     private _currentSrv: InvoiceServiceProxy,
@@ -70,6 +76,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   ngOnInit() {
     if (!isNotNullOrUndefined(this.root.items)) {
       this.root.items = [];
+    }
+    if (!isNotNullOrUndefined(this.root.customItems)) {
+      this.root.customItems = [];
     }
     this.getAllTrucksTypeForTableDropdown();
     this.GetAllCitiesForTableDropdown();
@@ -110,16 +119,21 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   save(): void {
     this.saving = true;
 
-    if (this.Tenant?.id) {
-    } else {
-      this.Tenant = undefined;
-    }
     if (!this.Tenant?.id) {
+      Swal.fire({
+        title: this.l('Tenant is required'),
+        icon: 'warning',
+        showCloseButton: true,
+      });
+      this.saving = false;
       return;
     }
+
     const items = [...this.root.items];
-    items.map((item) => {
-      if (isNotNullOrUndefined(item.waybillNumber)) {
+
+    // Process items to reset certain fields if waybillNumber is present
+    items.forEach((item) => {
+      if (item.waybillNumber) {
         item.truckId = null;
         item.workDate = null;
         item.quantity = null;
@@ -128,20 +142,13 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
         item.containerNumber = null;
       }
     });
-    const body = new CreateOrEditDynamicInvoiceDto();
-    /*
-    * {
-      id: ,
-      creditTenantId: this.isForShipper ?  : null,
-      debitTenantId: !this.isForShipper ? Number(this.Tenant.id) : null,
-      notes: this.notes,
-      items: items,
-    }
-    * */
 
-    body.id = isNotNullOrUndefined(this.root.id) ? this.root.id : null;
+    const body = new CreateOrEditDynamicInvoiceDto();
+    body.id = this.root.id ? this.root.id : null;
     body.items = items;
     body.notes = this.notes;
+    body.customItems = this.root.customItems || []; // Default to empty array if customItems is not set
+
     if (this.edition === 'shipper' || (this.edition === 'broker' && this.isBrokerPayableInvoice)) {
       body.creditTenantId = Number(this.Tenant.id);
     } else if (this.edition === 'carrier' || (this.edition === 'broker' && !this.isBrokerPayableInvoice)) {
@@ -149,29 +156,18 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     }
 
     this._DynamicInvoiceServiceProxy.createOrEdit(body).subscribe(
-      (result) => {
+      () => {
         this.notify.info(this.l('SavedSuccessfully'));
         this.close();
         this.modalSave.emit(null);
-        this.saving = false;
       },
-      (error) => {
+      () => {
         this.saving = false;
       },
       () => {
         this.saving = false;
       }
     );
-    this.activeIndex = null;
-    // this._currentSrv
-    //     .onDemand(parseInt(this.Tenant.id), this.SelectedWaybills)
-    //     .pipe(
-    //         finalize(() => {
-    //             this.saving = false;
-    //         })
-    //     )
-    //     .subscribe(() => {
-    //     });
   }
 
   close(): void {
@@ -185,10 +181,13 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.SelectedWaybills = [];
     this.dataSource = [];
     this.dataSourceForEdit = null;
+    this.customItemsDataSource = [];
+    this.customItemForEdit = null;
     this.notes = null;
     this.trucks = [];
     this.cities = [];
     this.activeIndex = null;
+    this.activeCustomItemIndex = null;
   }
 
   search(tenantName: string, initValue = false) {
@@ -204,19 +203,12 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   LoadWaybills(event): void {
     this.getAllTrucksTypeForTableDropdown();
     this.GetAllCitiesForTableDropdown();
-    // this._currentSrv.getUnInvoicedWaybillsByTenant(parseInt(this.Tenant.id)).subscribe((res) => {
-    //     // this.Waybills = res;
-    // });
   }
 
   searchForWaybills(event): void {
     this._DynamicInvoiceServiceProxy.searchByWaybillNumber(event.query).subscribe((res) => {
       this.Waybills = res;
     });
-  }
-
-  logEvent(eventName) {
-    // this.events.unshift(eventName);
   }
 
   private getForView(id: number) {
@@ -227,6 +219,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
         let tenantName = isNotNullOrUndefined(data.creditCompany) ? data.creditCompany : data.debitCompany;
         this.search(tenantName, true);
         this.dataSource = this.root.items;
+        this.customItemsDataSource = this.root.customItems;
         if (this.root.items.length > 0) {
           this.root.items.map((item) => {
             item.workDate = !!item.waybillNumber ? null : moment(item.workDate);
@@ -240,27 +233,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     );
   }
 
-  onRowEditInit(item: DynamicInvoiceItemDto) {
-    // this.root.items[item.id] = {...item};
-  }
-
-  onRowEditSave(item: DynamicInvoiceItemDto) {
-    // if (item.price > 0) {
-    //     delete this.clonedProducts[item.id];
-    // }
-    // else {
-    //     this.messageService.add({severity:'error', summary: 'Error', detail:'Invalid Price'});
-    // }
-  }
-
-  onRowEditCancel(item: DynamicInvoiceItemDto, index: number) {
-    // this.products2[index] = this.clonedProducts[product.id];
-    // delete this.clonedProducts[product.id];
-  }
-
+  // Waybills Logic
   addNew() {
     this.dataSourceForEdit = new DynamicInvoiceItemDto();
-    // this.dataSource.push(new DynamicInvoiceItemDto());
   }
 
   saveToArray() {
@@ -292,9 +267,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     if (isNotNullOrUndefined(this.dataSourceForEdit.truckId) && (this.dataSourceForEdit.truckId as any) instanceof Object) {
       this.dataSourceForEdit.truckId = (this.dataSourceForEdit.truckId as any).id;
     }
-    // if (isNotNullOrUndefined(this.dataSourceForEdit.truckTypeId) && (this.dataSourceForEdit.truckTypeId as any) instanceof Object) {
-    //     this.dataSourceForEdit.truckTypeId = (this.dataSourceForEdit.truckTypeId as any).id;
-    // }
+
     if (
       !isNotNullOrUndefined(this.dataSourceForEdit.id) &&
       isNotNullOrUndefined(this.dataSourceForEdit.price) &&
@@ -306,15 +279,89 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
       return;
     }
     this.root.items[this.activeIndex] = this.dataSourceForEdit;
-    // const index = this.root.items.findIndex((item) => item.id === this.dataSourceForEdit.id);
-    // if (index > -1 && isNotNullOrUndefined(this.dataSourceForEdit.price) && isNotNullOrUndefined(this.dataSourceForEdit.description)) {
-    // }
     this.activeIndex = null;
     this.dataSourceForEdit = null;
   }
 
+  editRow(i: number, row: DynamicInvoiceItemDto) {
+    this.dataSourceForEdit = DynamicInvoiceItemDto.fromJS(row.toJSON());
+    this.activeIndex = i;
+    (this.dataSourceForEdit.workDate as any) = !!row.workDate ? moment(moment(row.workDate).format('yyyy-MM-DD')).toDate() : null;
+    (this.dataSourceForEdit.truckId as any) = !((row.truckId as any) instanceof Object)
+      ? this.trucks.find((truck) => Number(truck.id) === Number(row.truckId))
+      : row.truckId;
+    (this.dataSourceForEdit.originCityId as any) = !((row.originCityId as any) instanceof Object)
+      ? this.cities.find((city) => Number(city.id) === Number(row.originCityId))
+      : row.originCityId;
+    (this.dataSourceForEdit.destinationCityId as any) = !((row.destinationCityId as any) instanceof Object)
+      ? this.cities.find((city) => Number(city.id) === Number(row.destinationCityId))
+      : row.destinationCityId;
+  }
+
   deleteRow(i: number) {
     this.root.items.splice(i, 1);
+  }
+
+  cancelAddToArray() {
+    this.dataSourceForEdit = null;
+    this.activeIndex = null;
+  }
+
+  // Custom Items Logic
+  addNewCustomItem() {
+    this.customItemForEdit = new CreateOrEditDynamicInvoiceCustomItemDto();
+  }
+
+  saveToCustomItemsArray() {
+    if (
+      !isNotNullOrUndefined(this.customItemForEdit) ||
+      !isNotNullOrUndefined(this.customItemForEdit.price) ||
+      !isNotNullOrUndefined(this.customItemForEdit.description) ||
+      ('' + this.customItemForEdit.description).length === 0
+    ) {
+      Swal.fire({
+        title: this.l('FormIsNotValidMessage'),
+        icon: 'warning',
+        showCloseButton: true,
+      });
+      return;
+    }
+
+    // Calculate Vat Amount and Total Amount
+    this.customItemForEdit.vatAmount = (this.customItemForEdit.price * this.customItemForEdit.vatTax) / 100;
+    this.customItemForEdit.totalAmount = this.customItemForEdit.price + this.customItemForEdit.vatAmount;
+
+    if (!isNotNullOrUndefined(this.root.customItems)) {
+      this.root.customItems = [];
+    }
+
+    if (
+      !isNotNullOrUndefined(this.customItemForEdit.id) &&
+      isNotNullOrUndefined(this.customItemForEdit.price) &&
+      isNotNullOrUndefined(this.customItemForEdit.description) &&
+      !isNotNullOrUndefined(this.activeCustomItemIndex)
+    ) {
+      this.root.customItems.push(this.customItemForEdit);
+      this.customItemForEdit = null;
+      return;
+    }
+    this.root.customItems[this.activeCustomItemIndex] = this.customItemForEdit;
+    this.activeCustomItemIndex = null;
+    this.customItemForEdit = null;
+  }
+
+  editCustomItem(i: number, item: CreateOrEditDynamicInvoiceCustomItemDto) {
+    this.customItemForEdit = CreateOrEditDynamicInvoiceCustomItemDto.fromJS(item.toJSON());
+    this.activeCustomItemIndex = i;
+  }
+
+  deleteCustomItem(i: number) {
+    this.root.customItems.splice(i, 1);
+  }
+
+  cancelAddToCustomItemsArray() {
+    this.customItemForEdit = null;
+    this.activeCustomItemIndex = null;
   }
 
   filterCity(event: any, src: number) {
@@ -333,9 +380,10 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     return foundCity;
   }
 
-  // getTruckToDisplay(truckTypeId) {
-  //   return !!truckTypeId ? this.cities.find((city) => Number(city.id) === Number('' + truckTypeId)).displayName : '';
-  // }
+  getTruckToDisplay(truckId) {
+    const id = truckId instanceof Object ? truckId.id : truckId;
+    return !!truckId && this.trucks.length > 0 ? this.trucks.find((truck) => Number(truck.id) === Number('' + id)).displayName : '';
+  }
 
   getWorkDate(workDate): string {
     return this._DateFormatterService.ToString(this._DateFormatterService.MomentToNgbDateStruct(workDate));
@@ -357,38 +405,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     });
   }
 
-  editRow(i: number, row: DynamicInvoiceItemDto) {
-    console.log('row', row);
-    this.dataSourceForEdit = DynamicInvoiceItemDto.fromJS(row.toJSON());
-    this.activeIndex = i;
-    (this.dataSourceForEdit.workDate as any) = !!row.workDate ? moment(moment(row.workDate).format('yyyy-MM-DD')).toDate() : null;
-    (this.dataSourceForEdit.truckId as any) = !((row.truckId as any) instanceof Object)
-      ? this.trucks.find((truck) => Number(truck.id) === Number(row.truckId))
-      : row.truckId;
-    (this.dataSourceForEdit.originCityId as any) = !((row.originCityId as any) instanceof Object)
-      ? this.cities.find((city) => Number(city.id) === Number(row.originCityId))
-      : row.originCityId;
-    (this.dataSourceForEdit.destinationCityId as any) = !((row.destinationCityId as any) instanceof Object)
-      ? this.cities.find((city) => Number(city.id) === Number(row.destinationCityId))
-      : row.destinationCityId;
-    // this.filterCity({query: (row.originCityId as any).displayName} , 1);
-    // this.filterCity({query: (row.destinationCityId as any).displayName} , 2);
-    // this.filterTrucks({query: (row.truckId as any).displayName});
-    console.log('this.dataSourceForEdit', this.dataSourceForEdit);
-  }
-
-  cancelAddToArray() {
-    this.dataSourceForEdit = null;
-    this.activeIndex = null;
-  }
-
-  getTruckToDisplay(truckId) {
-    const id = truckId instanceof Object ? truckId.id : truckId;
-    return !!truckId && this.trucks.length > 0 ? this.trucks.find((truck) => Number(truck.id) === Number('' + id)).displayName : '';
-  }
-
   isFormInvalid(Form: NgForm): boolean {
-    return Form.invalid || !this.root.items || this.root.items.length === 0 || isNotNullOrUndefined(this.dataSourceForEdit);
+    return Form.invalid;
   }
 
   clearWaybillRelatedFields() {
@@ -398,5 +416,15 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.dataSourceForEdit.quantity = null;
     this.dataSourceForEdit.originCityId = null;
     this.dataSourceForEdit.truckId = null;
+  }
+  calculateCustomItemTotals() {
+    if (this.customItemForEdit && this.customItemForEdit.price && this.customItemForEdit.vatTax !== null) {
+      // Calculate Vat Amount and Total Amount
+      this.customItemForEdit.vatAmount = (this.customItemForEdit.price * this.customItemForEdit.vatTax) / 100;
+      this.customItemForEdit.totalAmount = this.customItemForEdit.price + this.customItemForEdit.vatAmount;
+    } else {
+      this.customItemForEdit.vatAmount = 0;
+      this.customItemForEdit.totalAmount = this.customItemForEdit.price || 0;
+    }
   }
 }

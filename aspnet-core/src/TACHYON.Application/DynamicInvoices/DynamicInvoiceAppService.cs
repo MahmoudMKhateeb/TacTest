@@ -28,27 +28,31 @@ namespace TACHYON.DynamicInvoices
     [AbpAuthorize(AppPermissions.Pages_DynamicInvoices)]
     public class DynamicInvoiceAppService : TACHYONAppServiceBase, IDynamicInvoiceAppService
     {
-        private readonly IRepository<DynamicInvoice,long> _dynamicInvoiceRepository;
-        private readonly IRepository<DynamicInvoiceItem,long> _dynamicInvoiceItemRepository;
-        private readonly IRepository<Truck,long> _truckRepository;
+        private readonly IRepository<DynamicInvoice, long> _dynamicInvoiceRepository;
+        private readonly IRepository<DynamicInvoiceItem, long> _dynamicInvoiceItemRepository;
+
+        private readonly IRepository<DynamicInvoiceCustomItem, long> _dynamicInvoiceCustomItemRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
 
         public DynamicInvoiceAppService(
-            IRepository<DynamicInvoice,long> dynamicInvoiceRepository,
+            IRepository<DynamicInvoice, long> dynamicInvoiceRepository,
             IRepository<DynamicInvoiceItem, long> dynamicInvoiceItemRepository,
             IRepository<ShippingRequestTrip> tripRepository,
-            IRepository<Truck, long> truckRepository)
+            IRepository<Truck, long> truckRepository,
+            IRepository<DynamicInvoiceCustomItem, long> dynamicInvoiceCustomItemRepository)
         {
             _dynamicInvoiceRepository = dynamicInvoiceRepository;
             _dynamicInvoiceItemRepository = dynamicInvoiceItemRepository;
             _tripRepository = tripRepository;
             _truckRepository = truckRepository;
+            _dynamicInvoiceCustomItemRepository = dynamicInvoiceCustomItemRepository;
         }
 
         public async Task<PagedResultDto<DynamicInvoiceListDto>> GetAll(GetDynamicInvoicesInput input)
         {
             DisableTenancyFilters();
-            
+
             var dynamicInvoices = _dynamicInvoiceRepository.GetAll()
                 .WhereIf(!input.Filter.IsNullOrEmpty(),
                     x => x.DebitTenant.Name.Contains(input.Filter) || x.DebitTenant.companyName.Contains(input.Filter))
@@ -63,25 +67,29 @@ namespace TACHYON.DynamicInvoices
 
             return new PagedResultDto<DynamicInvoiceListDto>()
             {
-                Items = pageResult, TotalCount = await dynamicInvoices.CountAsync(),
+                Items = pageResult,
+                TotalCount = await dynamicInvoices.CountAsync(),
             };
         }
 
         public async Task<DynamicInvoiceForViewDto> GetForView(long dynamicInvoiceId)
         {
             DisableTenancyFilters();
-            
-            var dynamicInvoice = await _dynamicInvoiceRepository.GetAllIncluding(x => x.Items)
-                .ProjectTo<DynamicInvoiceForViewDto>(AutoMapperConfigurationProvider).SingleAsync(x=> x.Id == dynamicInvoiceId);
+
+            var dynamicInvoice = await _dynamicInvoiceRepository
+            .GetAllIncluding(x => x.Items)
+            .Include(x => x.CustomItems)
+            .ProjectTo<DynamicInvoiceForViewDto>(AutoMapperConfigurationProvider)
+            .SingleAsync(x => x.Id == dynamicInvoiceId);
 
             return dynamicInvoice;
         }
 
-        
+
         public async Task CreateOrEdit(CreateOrEditDynamicInvoiceDto input)
         {
             DisableTenancyFilters();
-            
+
             if (input.Id.HasValue)
             {
                 await Update(input);
@@ -90,52 +98,79 @@ namespace TACHYON.DynamicInvoices
 
             await Create(input);
         }
-        
+
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Create)]
         protected virtual async Task Create(CreateOrEditDynamicInvoiceDto input)
         {
             var createdDynamicInvoice = ObjectMapper.Map<DynamicInvoice>(input);
-            createdDynamicInvoice.Items = new List<DynamicInvoiceItem>();
-            var itemsList = (from item in input.Items
-                from trip in _tripRepository.GetAll().Where(x=> x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
-                select new {item.WaybillNumber, TripId = trip?.Id}).ToList();
 
+            createdDynamicInvoice.Items = new List<DynamicInvoiceItem>();
+
+            var itemsList = (from item in input.Items
+                             from trip in _tripRepository.GetAll().Where(x => x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
+                             select new { item.WaybillNumber, TripId = trip?.Id }).ToList();
+
+            //Items
             foreach (var item in input.Items)
             {
                 var createdItem = ObjectMapper.Map<DynamicInvoiceItem>(item);
-                createdItem.VatAmount = (createdItem.VatTax / 100)  * createdItem.Price;
+                createdItem.VatAmount = (createdItem.VatTax / 100) * createdItem.Price;
                 createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
-                if (item.WaybillNumber.HasValue) 
-                    createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
+                if (item.WaybillNumber.HasValue)
+                    createdItem.TripId = itemsList.FirstOrDefault(x => x.WaybillNumber == item.WaybillNumber)?.TripId
                                          ?? throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", item.WaybillNumber));
                 createdDynamicInvoice.Items.Add(createdItem);
             }
 
+            //Custom items
+            foreach (var item in input.CustomItems)
+            {
+                var createdItem = ObjectMapper.Map<DynamicInvoiceCustomItem>(item);
+                createdItem.VatAmount = (createdItem.VatTax / 100) * createdItem.Price;
+                createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
+                // Auto mapped
+                //createdDynamicInvoice.CustomItems.Add(createdItem);
+            }
+
             await _dynamicInvoiceRepository.InsertAsync(createdDynamicInvoice);
         }
-        
+
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Update)]
         protected virtual async Task Update(CreateOrEditDynamicInvoiceDto input)
         {
             // Important Note: in case of update dynamic invoice, the waybill number is not mapped 
             // that's mean you can't change trip id of Dynamic invoice
-            
+
             if (!input.Id.HasValue) throw new UserFriendlyException(L("IdCanNotBeEmpty"));
-            var dynamicInvoice = await _dynamicInvoiceRepository.GetAllIncluding(x=> x.Items)
+
+            var dynamicInvoice = await _dynamicInvoiceRepository
+                .GetAllIncluding(x => x.Items)
+                .Include(x => x.CustomItems)
                 .SingleAsync(x => x.Id == input.Id);
-            
+
             if (dynamicInvoice.InvoiceId.HasValue || dynamicInvoice.SubmitInvoiceId.HasValue)
                 throw new UserFriendlyException(L("YouCanNotEditAfterTheInvoiceIsGenerated"));
-            
+
             var deletedItems = dynamicInvoice.Items
                 .Where(x => input.Items.All(i => i.Id != x.Id))
                 .ToList();
 
-            foreach (DynamicInvoiceItem deletedItem in deletedItems)
+            var deletedCustomItems = dynamicInvoice.CustomItems
+            .Where(x => input.CustomItems.All(i => i.Id != x.Id))
+            .ToList();
+
+            foreach (var deletedItem in deletedItems)
                 await _dynamicInvoiceItemRepository.DeleteAsync(deletedItem);
+
+            foreach (var deletedCustomItem in deletedCustomItems)
+                await _dynamicInvoiceCustomItemRepository.DeleteAsync(deletedCustomItem);
 
             var addedItems = input.Items
                 .Where(x => !x.Id.HasValue);
+
+            var addedCustomItems = input.CustomItems
+                .Where(x => !x.Id.HasValue);
+
             var itemsList = (from item in input.Items
                              from trip in _tripRepository.GetAll().Where(x => x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
                              select new { item.WaybillNumber, TripId = trip?.Id }).ToList();
@@ -151,8 +186,16 @@ namespace TACHYON.DynamicInvoices
                 dynamicInvoice.Items.Add(createdItem);
             }
 
-            foreach (DynamicInvoiceItem deletedItem in deletedItems)
-                await _dynamicInvoiceItemRepository.DeleteAsync(deletedItem);
+            foreach (var item in addedCustomItems)
+            {
+
+                var createdItem = ObjectMapper.Map<DynamicInvoiceCustomItem>(item);
+                createdItem.VatAmount = (createdItem.VatTax / 100) * createdItem.Price;
+                createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
+                dynamicInvoice.CustomItems.Add(createdItem);
+
+            }
+
 
             ObjectMapper.Map(input, dynamicInvoice);
 
@@ -165,28 +208,28 @@ namespace TACHYON.DynamicInvoices
         /// <returns></returns>
         public async Task<List<long>> SearchByWaybillNumber(string input)
         {
-           return await _tripRepository.GetAll().Where(x => x.WaybillNumber.HasValue && x.WaybillNumber.ToString().StartsWith(input))
-                .Select(x=> x.WaybillNumber.Value).Take(15).ToListAsync();
+            return await _tripRepository.GetAll().Where(x => x.WaybillNumber.HasValue && x.WaybillNumber.ToString().StartsWith(input))
+                 .Select(x => x.WaybillNumber.Value).Take(15).ToListAsync();
         }
 
         public async Task<DynamicInvoiceItemLookupDto> GetDynamicInvoiceItemInfo(long waybillNumber)
         {
             DisableTenancyFilters();
             var dto = await (from trip in _tripRepository.GetAll()
-                where trip.WaybillNumber == waybillNumber
-                select new DynamicInvoiceItemLookupDto()
-                {
-                    Quantity = trip.ShippingRequestFk.NumberOfDrops,
-                    WorkDate = trip.EndTripDate,
-                    PlateNumber = trip.AssignedTruckFk != null ? trip.AssignedTruckFk.PlateNumber : string.Empty,
-                    DestinationCityName = trip.DestinationFacilityFk != null ? trip.DestinationFacilityFk.CityFk.DisplayName : string.Empty,
-                    OriginCityName = trip.OriginFacilityFk != null? trip.OriginFacilityFk.CityFk.DisplayName: string.Empty,
-                    ContainerNumber = trip.ContainerNumber,
-                }).FirstOrDefaultAsync();
+                             where trip.WaybillNumber == waybillNumber
+                             select new DynamicInvoiceItemLookupDto()
+                             {
+                                 Quantity = trip.ShippingRequestFk.NumberOfDrops,
+                                 WorkDate = trip.EndTripDate,
+                                 PlateNumber = trip.AssignedTruckFk != null ? trip.AssignedTruckFk.PlateNumber : string.Empty,
+                                 DestinationCityName = trip.DestinationFacilityFk != null ? trip.DestinationFacilityFk.CityFk.DisplayName : string.Empty,
+                                 OriginCityName = trip.OriginFacilityFk != null ? trip.OriginFacilityFk.CityFk.DisplayName : string.Empty,
+                                 ContainerNumber = trip.ContainerNumber,
+                             }).FirstOrDefaultAsync();
 
             if (dto == null)
                 throw new UserFriendlyException(L("TripWithWaybillNumberIsNotFound"));
-            
+
             return dto;
         }
 
@@ -195,10 +238,11 @@ namespace TACHYON.DynamicInvoices
             DisableTenancyFilters();
             var trucks = await _truckRepository.GetAll().Select(x => new SelectItemDto()
             {
-                DisplayName = x.PlateNumber.ToString(), Id = x.Id.ToString()
+                DisplayName = x.PlateNumber.ToString(),
+                Id = x.Id.ToString()
             }).ToListAsync();
 
-            return new ListResultDto<SelectItemDto>() {Items = trucks};
+            return new ListResultDto<SelectItemDto>() { Items = trucks };
         }
 
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Delete)]

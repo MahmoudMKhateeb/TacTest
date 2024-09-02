@@ -15,5 +15,10 @@ namespace TACHYON.DynamicInvoices.Dto
         public long? InvoiceNumber { get; set; }
 
         public List<DynamicInvoiceItemDto> Items { get; set; }
+
+        public List<DynamicInvoiceCustomItemDto> CustomItems { get; set; }
+
+
+    
     }
 }
