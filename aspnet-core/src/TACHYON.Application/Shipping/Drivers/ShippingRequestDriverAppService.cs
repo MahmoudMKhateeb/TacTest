@@ -741,9 +741,9 @@ namespace TACHYON.Shipping.Drivers
                 trip.RoutPoints.First(x=> x.Id == pointId ).Distance = distance.Value;
                 trip.RoutPoints.First(x=> x.Id == pointId ).DriverUserId = AbpSession.UserId;
 
-            var DriverPoints = trip.RoutPoints.Where(x => x.DriverUserId == AbpSession.UserId);
-            trip.DriverWorkingHour = DriverPoints.Sum(x=> x.DriverWorkingHour);
-            trip.Distance = DriverPoints.Sum(x=> x.Distance);
+            //var DriverPoints = trip.RoutPoints.Where(x => x.DriverUserId == AbpSession.UserId);
+            trip.DriverWorkingHour = trip.RoutPoints.Sum(x=> x.DriverWorkingHour);
+            trip.Distance = trip.RoutPoints.Sum(x=> x.Distance);
 
         }
 

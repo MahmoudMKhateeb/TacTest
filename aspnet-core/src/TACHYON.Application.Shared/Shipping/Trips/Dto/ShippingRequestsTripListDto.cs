@@ -65,5 +65,7 @@ namespace TACHYON.Shipping.Trips.Dto
         /// shipper add his invoice number manually, this updated currently to booking number 
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
+
+        public string ContainerNumber { get; set; }
     }
 }
