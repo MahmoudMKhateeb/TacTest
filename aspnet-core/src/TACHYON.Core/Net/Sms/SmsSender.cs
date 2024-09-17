@@ -13,7 +13,7 @@ using TACHYON.Net.Sms.UnifonicSms;
 
 namespace TACHYON.Net.Sms
 {
-    public class SmsSender : ISmsSender, ITransientDependency
+    public class SmsSender :SmsSenderBase, ISmsSender, ITransientDependency
     {
         public ILogger Logger { get; set; }
         private readonly ILocalizationContext _localizationContext;
@@ -68,22 +68,6 @@ namespace TACHYON.Net.Sms
             return jobId.IsNullOrEmpty();
         }
 
-        private static ILocalizableString L(string message)
-        {
-            return new LocalizableString(message, TACHYONConsts.LocalizationSourceName);
-        }
-
-        private string AddCountryCode(string number)
-        {
-            if (number.StartsWith("0"))
-
-            {
-                number = $"966{number.Remove(0, 1)}";
-            }
-            else if (!number.StartsWith("966"))
-                number = $"966{number}";
-
-            return number;
-        }
+        
     }
 }

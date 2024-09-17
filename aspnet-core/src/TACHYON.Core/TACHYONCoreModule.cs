@@ -31,6 +31,8 @@ using TACHYON.Friendships.Cache;
 using TACHYON.Localization;
 using TACHYON.MultiTenancy;
 using TACHYON.Net.Emailing;
+using TACHYON.Net.Sms;
+using TACHYON.Net.Sms.DeewanSms;
 using TACHYON.Notifications;
 using TACHYON.WebHooks;
 
@@ -82,6 +84,9 @@ namespace TACHYON
 
             //Twilio - Enable this line to activate Twilio SMS integration
             //Configuration.ReplaceService<ISmsSender,TwilioSmsSender>();
+            
+            // DeewanSms - Enable this line to activate Deewan SMS integration
+            Configuration.ReplaceService<ISmsSender,DeewanSmsSender>();
 
             //Adding DynamicEntityParameters definition providers
             Configuration.DynamicEntityParameters.Providers.Add<AppDynamicEntityParameterDefinitionProvider>();

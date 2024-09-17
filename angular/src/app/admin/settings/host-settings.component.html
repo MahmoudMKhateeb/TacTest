@@ -540,50 +540,50 @@
               </div>
             </tab>
             <tab class="p-5" *ngIf="true" heading="{{ 'SMS' | localize }}">
-              <h5>{{ 'SMSSettings' | localize }}</h5>
-              <div class="form-group">
-                <label for="UnifonicAppSid">{{ 'UnifonicAppSid' | localize }}</label>
-                <input
-                  id="UnifonicAppSid"
-                  type="text"
-                  name="UnifonicAppSid"
-                  class="form-control"
-                  [(ngModel)]="hostSettings.smsSettings.unifonicAppSid"
-                />
-              </div>
-              <div class="form-group">
-                <label for="unifonicSenderId">{{ 'unifonicSenderId' | localize }}</label>
-                <input
-                  id="unifonicSenderId"
-                  type="text"
-                  name="unifonicSenderId"
-                  class="form-control"
-                  [(ngModel)]="hostSettings.smsSettings.unifonicSenderId"
-                />
-              </div>
+              <!--              <h5>{{ 'SMSSettings' | localize }}</h5>-->
+              <!--              <div class="form-group">-->
+              <!--                <label for="UnifonicAppSid">{{ 'UnifonicAppSid' | localize }}</label>-->
+              <!--                <input-->
+              <!--                  id="UnifonicAppSid"-->
+              <!--                  type="text"-->
+              <!--                  name="UnifonicAppSid"-->
+              <!--                  class="form-control"-->
+              <!--                  [(ngModel)]="hostSettings.smsSettings.unifonicAppSid"-->
+              <!--                />-->
+              <!--              </div>-->
+              <!--              <div class="form-group">-->
+              <!--                <label for="unifonicSenderId">{{ 'unifonicSenderId' | localize }}</label>-->
+              <!--                <input-->
+              <!--                  id="unifonicSenderId"-->
+              <!--                  type="text"-->
+              <!--                  name="unifonicSenderId"-->
+              <!--                  class="form-control"-->
+              <!--                  [(ngModel)]="hostSettings.smsSettings.unifonicSenderId"-->
+              <!--                />-->
+              <!--              </div>-->
 
-              <div class="form-group">
-                <label for="unifonicAdvertisingSenderId">{{ 'unifonicAdvertisingSenderId' | localize }}</label>
-                <input
-                  id="unifonicAdvertisingSenderId"
-                  type="text"
-                  name="unifonicAdvertisingSenderId"
-                  class="form-control"
-                  [(ngModel)]="hostSettings.smsSettings.unifonicAdvertisingSenderId"
-                />
-              </div>
-              <div class="form-group">
-                <label for="unifonicNotificationSenderId">{{ 'unifonicNotificationSenderId' | localize }}</label>
-                <input
-                  id="unifonicNotificationSenderId"
-                  type="text"
-                  name="unifonicNotificationSenderId"
-                  class="form-control"
-                  [(ngModel)]="hostSettings.smsSettings.unifonicNotificationSenderId"
-                />
-              </div>
+              <!--              <div class="form-group">-->
+              <!--                <label for="unifonicAdvertisingSenderId">{{ 'unifonicAdvertisingSenderId' | localize }}</label>-->
+              <!--                <input-->
+              <!--                  id="unifonicAdvertisingSenderId"-->
+              <!--                  type="text"-->
+              <!--                  name="unifonicAdvertisingSenderId"-->
+              <!--                  class="form-control"-->
+              <!--                  [(ngModel)]="hostSettings.smsSettings.unifonicAdvertisingSenderId"-->
+              <!--                />-->
+              <!--              </div>-->
+              <!--              <div class="form-group">-->
+              <!--                <label for="unifonicNotificationSenderId">{{ 'unifonicNotificationSenderId' | localize }}</label>-->
+              <!--                <input-->
+              <!--                  id="unifonicNotificationSenderId"-->
+              <!--                  type="text"-->
+              <!--                  name="unifonicNotificationSenderId"-->
+              <!--                  class="form-control"-->
+              <!--                  [(ngModel)]="hostSettings.smsSettings.unifonicNotificationSenderId"-->
+              <!--                />-->
+              <!--              </div>-->
 
-              <h5>{{ 'TestUnifonicSms' | localize }}</h5>
+              <h5>{{ 'TestSms' | localize }}</h5>
 
               <div class="form-group">
                 <label for="testUnifonicSmsInput.number">{{ 'mobile' | localize }}</label>
@@ -607,7 +607,7 @@
                 />
               </div>
               <div class="form-group col-md-2">
-                <button class="btn btn-primary" type="button" (click)="TestUnifonicSms()">{{ 'SendTestUnifonicSmsInput' | localize }}</button>
+                <button class="btn btn-primary" type="button" (click)="TestUnifonicSms()">{{ 'SendTestSms' | localize }}</button>
               </div>
             </tab>
             <tab class="p-5" *ngIf="true" heading="{{ 'Invoice' | localize }}">

@@ -246,6 +246,9 @@
                 <p-sortIcon field="waybillNo"></p-sortIcon>
               </th>
               <th>
+                {{ l('containerNumber') }}
+              </th>
+              <th>
                 {{ l('containerReturnDate') }}
               </th>
               <th>
@@ -353,6 +356,10 @@
               <td>
                 <span class="ui-column-title"> {{ l('waybillNumber') }}</span>
                 {{ record.waybillNumber }}
+              </td>
+              <td>
+                <span class="ui-column-title"> {{ l('containerNumber') }}</span>
+                {{ record.containerNumber }}
               </td>
               <td>{{ record.containerReturnDate | momentFormat: 'L' }}</td>
               <td>{{ record.isContainerReturned ? l('yes') : l('no') }}</td>
