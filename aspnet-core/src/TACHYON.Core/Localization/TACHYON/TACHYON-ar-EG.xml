@@ -3279,5 +3279,21 @@
 	<text name="RoundType">نوع الجولة</text>
 	<text name="locationPermissionMessage">تقوم تاكيون بجمع بيانات الموقع لتمكين حساب المسافة المقطوعة وقياس السعر بناءً على هذه المسافة المقطوعة حتى عندما يكون التطبيق مغلقًا أو غير مستخدم - يقوم تاكيون بجمع بيانات الموقع لتمكين تتبع السائق من منصة تاكيون ومعرفة تفاصيل الرحلة</text>
 
+	<text name="CreateNewActor">اضافة عميل جديد</text>
+	<text name="ActorType">نوع العميل</text>
+	<text name="InvoiceDueDays">ايام الدفع</text>
+	<text name="CR">السجل التجاري</text>
+	<text name="VatCertificate">شهادة الضريبة القيمة المضافة</text>
+	<text name="ActorCarrier">العميل الناقل</text>
+	<text name="DriverIssueNumber">رقم تعريف السائق</text>
+	<text name="ActorShipper">العميل الممثل</text>
+	<text name="TripType">نوع الرحله</text>
+	<text name="SelectATripType">اختر نوع الرحله</text>
+	<text name="SelectShipperActor">اختر العميل الممثل</text>
+	<text name="SelectCarrierActor">اختر العميل الناقل</text>
+	<text name="SelectAGoodCategory">اختر نوع البضاعة</text>
+
+	<text name="ServiceArea">مدينة النقل</text>
+
 	</texts>
 </localizationDictionary>

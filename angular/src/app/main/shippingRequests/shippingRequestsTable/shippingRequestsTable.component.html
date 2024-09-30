@@ -141,9 +141,9 @@
             <dxo-sorting mode="none"></dxo-sorting>
 
             <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
-            <dxi-column dataField="shipperName" caption="{{ 'ShipperName' | localize }}"></dxi-column>
+            <dxi-column dataField="shipperName" *ngIf="!isCarrier" caption="{{ 'ShipperName' | localize }}"></dxi-column>
             <dxi-column
-              *ngIf="selectedFilterShippingRequestFlag == ShippingRequestFlag.Normal"
+              *ngIf="selectedFilterShippingRequestFlag == ShippingRequestFlag.Normal && !isShipper"
               dataField="carrier"
               caption="{{ 'CarrierName' | localize }}"
             ></dxi-column>
@@ -160,9 +160,10 @@
             ></dxi-column>
             <dxi-column dataField="transportType" caption="{{ 'TransportType' | localize }}"></dxi-column>
             <dxi-column dataField="truckType" caption="{{ 'TrucksType' | localize }}"></dxi-column>
+            <dxi-column dataField="numberOfTrucks" caption="{{ 'NumberOfTrucks' | localize }}"></dxi-column>
             <dxi-column cellTemplate="shippingTypeCellTemplate" dataField="shippingTypeId" caption="{{ 'ShippingType' | localize }}"></dxi-column>
             <dxi-column dataField="originCity" caption="{{ 'Origin' | localize }}"></dxi-column>
-            <dxi-column dataField="destinationCity" caption="{{ 'Destination' | localize }}"></dxi-column>
+            <dxi-column dataField="destinationCity" caption="{{ 'ServiceArea' | localize }}"></dxi-column>
             <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}"></dxi-column>
             <dxi-column dataField="creationTime" caption="{{ 'CreationDate' | localize }}" dataType="date"></dxi-column>
             <dxi-column
@@ -183,8 +184,8 @@
               dataField="totalOffers"
               caption="{{ 'Price' | localize }}"
             ></dxi-column>
-            <dxi-column dataField="shipperInvoiceNo" caption="{{ 'ShipperBookingNumber' | localize }}"></dxi-column>
-            <dxi-column dataField="numberOfTrips" caption="{{ 'NumberOfTrips' | localize }}"></dxi-column>
+            <!--            <dxi-column dataField="shipperInvoiceNo" caption="{{ 'ShipperBookingNumber' | localize }}"></dxi-column>-->
+            <!--            <dxi-column dataField="numberOfTrips" caption="{{ 'NumberOfTrips' | localize }}"></dxi-column>-->
             <dxi-column dataField="numberOfCompletedTrips" caption="{{ 'CompletedTrips' | localize }}"></dxi-column>
             <dxi-column dataField="startTripDate" caption="{{ 'EstimatedPickUpDate' | localize }}" dataType="date"></dxi-column>
             <dxi-column dataField="goodsCategory" caption="{{ 'GoodsCategory' | localize }}"></dxi-column>
