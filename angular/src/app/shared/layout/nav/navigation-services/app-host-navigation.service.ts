@@ -293,7 +293,6 @@ export class AppHostNavigationService extends AppBaseNavigationService {
           new AppMenuItem('RedemptionCodes', 'Pages.Administration.RedemptionCodes', '', '/app/admin/redemption/redemptionCodes'),
 
           new AppMenuItem('RedeemCodes', 'Pages.Administration.RedeemCodes', '', '/app/admin/redemption/redeemCodes'),
-
         ]
       ),
       // end of Administration
@@ -465,7 +464,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       //host
       //start of Settings
 
-        new AppMenuItem(
+      new AppMenuItem(
         'Settings',
         'Pages.Administration',
         '10 Setting.svg',
@@ -524,7 +523,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', '', '/app/admin/auditLogs'),
           new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', '', '/app/admin/maintenance'),
           new AppMenuItem('GeneralSettings', 'Pages.Administration.Host.Settings', '', '/app/admin/hostSettings'),
-          // new AppMenuItem('EmailTemplates', 'Pages.EmailTemplates', '', '/app/main/emailTemplates/emailTemplates'),
+          new AppMenuItem('EmailTemplates', 'Pages.EmailTemplates', '', '/app/main/emailTemplates/emailTemplates'),
         ]
       ),
       //end of Settings

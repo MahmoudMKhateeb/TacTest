@@ -23,6 +23,8 @@ namespace TACHYON.AutoMapper.Tracking
             CreateMap<ShippingRequestTrip, TrackingListDto>()
              .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestFk!= null ? src.ShippingRequestFk.Tenant.Name :src.ShipperTenantFk.Name))
              .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.CarrierTenantFk.Name :src.CarrierTenantFk.Name))
+             .ForMember(dst => dst.ShipperActorNAme, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShipperActorFk.CompanyName: src.ShipperActorFk.CompanyName))
+             .ForMember(dst => dst.CarrierActorNam, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.CarrierActorFk.CompanyName :src.CarrierActorFk.CompanyName))
              .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.RouteType != null ? src.RouteType : src.ShippingRequestFk.RouteTypeId))
             .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name+" "+ src.AssignedDriverUserFk.Surname : ""))
             .ForMember(dst => dst.DriverImageProfile, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.ProfilePictureId : null))
@@ -66,8 +68,8 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.ActualPickupDate, opt => opt.MapFrom(src => src.StartTripDate.ToString("dd/MM/yyyy")))
             .ForMember(dst => dst.IsPODUploaded, opt => opt.MapFrom(src => src.RoutPoints.Where(x=>x.PickingType == PickingType.Dropoff).All(x=>x.IsPodUploaded)))
             .ForMember(dst => dst.IsInvoiceIssued, opt => opt.MapFrom(src => src.IsShipperHaveInvoice))
-            .ForMember(dst => dst.ActorShipperSubTotalAmountWithCommission, opt => opt.MapFrom(src => src.ActorShipperPrice.SubTotalAmountWithCommission))
-            .ForMember(dst => dst.ActorShipperTotalAmountWithCommission, opt => opt.MapFrom(src => src.ActorShipperPrice.TotalAmountWithCommission))
+            .ForMember(dst => dst.ActorShipperSubTotalAmountWithCommission, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission : src.ActorShipperPrice.SubTotalAmountWithCommission))
+            .ForMember(dst => dst.ActorShipperTotalAmountWithCommission, opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.ActorShipperPrice.TotalAmountWithCommission :  src.ActorShipperPrice.TotalAmountWithCommission))
             .ForMember(dst => dst.ReplacedDriver, opt => opt.MapFrom(src => src.ReplacesDriverFk != null ? src.ReplacesDriverFk.Name+" "+ src.ReplacesDriverFk.Surname : ""))
             ;
 
