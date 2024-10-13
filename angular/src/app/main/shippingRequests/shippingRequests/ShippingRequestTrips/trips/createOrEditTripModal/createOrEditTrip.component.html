@@ -885,14 +885,6 @@
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.containerNumber"
                     type="text"
                     [disabled]="_TripService?.CreateOrEditShippingRequestTripDto?.id && IsHaveContainerNumberValue && !isTachyonDealer"
-                    [required]="
-                      (!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                        (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
-                      (_TripService?.GetShippingRequestForViewOutput &&
-                        (_TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
-                    "
                   />
                 </div>
               </div>
@@ -923,14 +915,6 @@
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.sealNumber"
                     type="text"
                     [disabled]="_TripService?.CreateOrEditShippingRequestTripDto?.id && IsHaveSealNumberValue && !isTachyonDealer"
-                    [required]="
-                      (!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                        (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
-                      (_TripService?.GetShippingRequestForViewOutput != null &&
-                        (_TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
-                    "
                   />
                 </div>
               </div>

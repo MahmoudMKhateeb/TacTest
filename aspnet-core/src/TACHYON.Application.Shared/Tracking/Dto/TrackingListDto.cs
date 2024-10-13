@@ -96,6 +96,10 @@ namespace TACHYON.Tracking.Dto
         public long? ReplacesDriverId {get;set;}
 
         public string ReplacedDriver { get; set; }
+        
+        public string ShipperActorNAme { get; set; }
+        
+        public string CarrierActorNam { get; set; }
 
         
         

@@ -194,7 +194,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     destinationCity: ['', Validators.required],
     routeType: ['', Validators.required],
     numberOfDrops: ['', [Validators.minLength(1), Validators.maxLength(3)]],
-    NumberOfTrips: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(2), Validators.min(1), Validators.max(20)]],
+    NumberOfTrips: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(2), Validators.min(1)]],
   });
   step3Form = this.fb.group({
     goodCategory: ['', Validators.required],

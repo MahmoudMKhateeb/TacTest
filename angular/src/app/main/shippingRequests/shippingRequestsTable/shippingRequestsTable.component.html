@@ -142,6 +142,10 @@
 
             <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
             <dxi-column dataField="shipperName" *ngIf="!isCarrier" caption="{{ 'ShipperName' | localize }}"></dxi-column>
+
+            <dxi-column dataField="shipperActor" *ngIf="hasShipperClients" caption="{{ 'ActorShipper' | localize }}"></dxi-column>
+            <dxi-column dataField="carrierActor" *ngIf="hasShipperClients" caption="{{ 'ActorCarrier' | localize }}"></dxi-column>
+
             <dxi-column
               *ngIf="selectedFilterShippingRequestFlag == ShippingRequestFlag.Normal && !isShipper"
               dataField="carrier"

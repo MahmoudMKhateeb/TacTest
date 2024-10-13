@@ -68,6 +68,9 @@
         <dxi-column dataField="containerNumber" caption="{{ 'ContainerNumber' | localize }}"></dxi-column>
         <dxi-column dataField="bookingNumber" caption="{{ 'ShipperBooking' | localize }}"></dxi-column>
         <dxi-column dataField="shipperReference" caption="{{ 'shipperReference' | localize }}"></dxi-column>
+        <dxi-column *ngIf="hasShipperClients" dataField="shipperActorNAme" caption="{{ l('ActorShipper') }}"></dxi-column>
+        <dxi-column *ngIf="hasShipperClients" dataField="carrierActorNam" caption="{{ l('ActorCarrier') }}"></dxi-column>
+
         <dxi-column *ngIf="hasShipperClients" dataField="actorShipperSubTotalAmountWithCommission" caption="{{ l('shipperPrice') }}"></dxi-column>
         <dxi-column *ngIf="hasShipperClients" dataField="actorShipperTotalAmountWithCommission" caption="{{ l('shipperTotalAmount') }}"></dxi-column>
         <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>

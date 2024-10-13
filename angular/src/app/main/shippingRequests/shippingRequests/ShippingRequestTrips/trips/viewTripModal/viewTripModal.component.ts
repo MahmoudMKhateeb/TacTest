@@ -264,6 +264,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverWorkingHour = res.replacedDriverWorkingHour;
         this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverCommission = res.replacedDriverCommission;
 
+        this._TripService.CreateOrEditShippingRequestTripDto.containerReturnDate = res.containerReturnDate;
+
         (this._TripService.CreateOrEditShippingRequestTripDto.salesOfficeType as any) = res.salesOfficeType.toString();
         (this._TripService.CreateOrEditShippingRequestTripDto.loadingType as any) = res.loadingType.toString();
 
