@@ -30,7 +30,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.DriverImageProfile, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.ProfilePictureId : null))
             .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? src.OriginFacilityFk.Name : ""))
             .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationFacilityFk.Name))
-            .ForMember(dst => dst.ReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.ReferenceNumber))
+            .ForMember(dst => dst.ReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestId.HasValue? src.ShippingRequestFk.ShipperReference :  src.ShippingRequestFk.ReferenceNumber))
             .ForMember(dst => dst.ShippingRequestFlag, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingRequestFlag))
             .ForMember(dst => dst.NumberOfTrucks, opt => opt.MapFrom(src => src.ShippingRequestFk.NumberOfTrucks))
             .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.ShippingRequestFk.TenantId))

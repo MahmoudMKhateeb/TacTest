@@ -492,7 +492,39 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-6" *ngIf="isPortMovement && _TripService.CreateOrEditShippingRequestTripDto">
+          <!--            in case of normal trip and  shipping request id show the below inputs -->
+
+          <div *ngIf="shippingRequestForView.shippingRequest.id && isPortMovement" class="col-lg-6">
+            <label> {{ l('ContainerReturnDate') }} </label>
+            <div class="">
+              <dx-date-box
+                name="containerReturnDate"
+                [(value)]="_TripService.CreateOrEditShippingRequestTripDto.containerReturnDate"
+                type="date"
+                pickerType="list"
+                openOnFieldClick="true"
+                [min]="_TripService.CreateOrEditShippingRequestTripDto.startTripDate"
+                [interval]="20"
+              >
+              </dx-date-box>
+            </div>
+
+            <div class="checkbox-container">
+              <label>
+                <input name="isContainerReturned" type="checkbox" [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.isContainerReturned" />
+                {{ l('IsContainerReturned') }}
+              </label>
+            </div>
+            <div>
+              <button class="btn btn-primary" type="button" (click)="saveContainerInfo()">Save</button>
+            </div>
+          </div>
+
+          <!--            in case of direct trip and no shipping request id show the below inputs -->
+          <div
+            class="col-lg-6"
+            *ngIf="isPortMovement && _TripService.CreateOrEditShippingRequestTripDto && !shippingRequestForView.shippingRequest.id"
+          >
             <label> {{ l('ContainerReturnDate') }} </label>
             <dx-date-box
               name="containerReturnDate"
