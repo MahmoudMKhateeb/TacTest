@@ -263,8 +263,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverDistance = res.replacedDriverDistance;
         this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverWorkingHour = res.replacedDriverWorkingHour;
         this._TripService.CreateOrEditShippingRequestTripDto.replacedDriverCommission = res.replacedDriverCommission;
-
         this._TripService.CreateOrEditShippingRequestTripDto.containerReturnDate = res.containerReturnDate;
+        this._TripService.CreateOrEditShippingRequestTripDto.isContainerReturned = res.isContainerReturned;
 
         (this._TripService.CreateOrEditShippingRequestTripDto.salesOfficeType as any) = res.salesOfficeType.toString();
         (this._TripService.CreateOrEditShippingRequestTripDto.loadingType as any) = res.loadingType.toString();
@@ -510,5 +510,13 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     const hours = Math.floor(duration.asHours());
     const minutes = Math.floor(duration.minutes());
     return `${hours} h ${minutes} m`;
+  }
+  saveContainerInfo() {
+    let id = this._TripService.activeTripId;
+    let date = this._TripService.CreateOrEditShippingRequestTripDto.containerReturnDate;
+    let isReturned = this._TripService.CreateOrEditShippingRequestTripDto.isContainerReturned;
+    this._shippingRequestTripsService.changeContainerReturnDate(id, date, isReturned).subscribe((res) => {
+      this.notify.success(this.l('success'));
+    });
   }
 }
