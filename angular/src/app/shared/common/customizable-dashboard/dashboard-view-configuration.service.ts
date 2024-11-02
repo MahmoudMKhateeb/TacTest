@@ -83,6 +83,7 @@ import { GoodTypesUsageComponent } from '@app/shared/common/customizable-dashboa
 import { CostVsSellingVsProfitOfTruckAggregationTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/cost-vs-selling-vs-profit-of-truck-aggregation-trips/cost-vs-selling-vs-profit-of-truck-aggregation-trips.component';
 import { NewRegisteredCompaniesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/new-registered-companies/new-registered-companies.component';
 import { NumberOfDedicatedTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-dedicated-trips/number-of-dedicated-trips.component';
+import { ReturnContainerWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/return-container-widget/return-container-widget.component';
 
 @Injectable({
   providedIn: 'root',
@@ -845,6 +846,12 @@ export class DashboardViewConfigurationService {
       10
     );
 
+    let ReturnContainerWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.tenant.ReturnContainerWidget,
+      ReturnContainerWidgetComponent,
+      15,
+      8
+    );
     //shipperPush
     this.WidgetViewDefinitions.push(shippercompletedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
@@ -857,6 +864,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(upcomingTripsWidget_Shipper);
     this.WidgetViewDefinitions.push(needsActionWidget_Shipper);
     this.WidgetViewDefinitions.push(newOffersWidget_Shipper);
+    this.WidgetViewDefinitions.push(ReturnContainerWidget);
 
     //Carrier
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid);

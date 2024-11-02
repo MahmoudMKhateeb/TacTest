@@ -313,7 +313,7 @@ namespace TACHYON.Shipping.Trips.Importing
             foreach (var point in points)
             {
                 var pointDB = await CreatePointAsync(point);
-                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(point.TripNeedsDeliveryNote, ShippingRequestTripFlag.Normal,request?.ShippingTypeId,request?.RoundTripType, pointDB);
+                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(request.TenantId,point.TripNeedsDeliveryNote, ShippingRequestTripFlag.Normal,request?.ShippingTypeId,request?.RoundTripType, pointDB);
 
             }
 

@@ -398,57 +398,106 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public void AssignWorkFlowVersionToRoutPoints(bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag,ShippingTypeEnum? shippingType = null,RoundTripType? roundTrip = null, params RoutPoint[] routPoints)
+        public void AssignWorkFlowVersionToRoutPoints(int tenantId , bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag,ShippingTypeEnum? shippingType = null,RoundTripType? roundTrip = null, params RoutPoint[] routPoints)
         {
             if (routPoints == null || !routPoints.Any()) return;
-            
 
+            var otpEnabled = _featureChecker.IsEnabled(tenantId, AppFeatures.Otp);
             foreach (var point in routPoints)
             {
-                  point.WorkFlowVersion = point.PickingType switch
+                point.WorkFlowVersion = point.PickingType switch
                 {
-                    PickingType.Dropoff => GetDropOffWorkflowVersion(point),
-                    PickingType.Pickup => tripFlag == ShippingRequestTripFlag.HomeDelivery ? WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion : WorkflowVersionConst.PickupPointWorkflowVersion,
+                    PickingType.Dropoff => GetDropOffWorkflowVersion(point, otpEnabled),
+                    PickingType.Pickup => tripFlag == ShippingRequestTripFlag.HomeDelivery
+                        ? WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion
+                        : WorkflowVersionConst.PickupPointWorkflowVersion,
                     _ => throw new ArgumentOutOfRangeException(nameof(point.PickingType))
                 };
-                  if (roundTrip is null || point.PointOrder is null || point.PickingType is PickingType.Pickup) continue;
-                  
-                  point.AdditionalStepWorkFlowVersion = roundTrip.Value switch
-                  {
-                      RoundTripType.WithReturnTrip when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
-                      RoundTripType.WithReturnTrip when IsSecondTrip(point.PointOrder.Value)  => AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripVersion,
+                
+                if (roundTrip is null || point.PointOrder is null || point.PickingType is PickingType.Pickup) continue;
+                
+                point.AdditionalStepWorkFlowVersion = GetAdditionalStepWorkFlowVersion(point.PointOrder.Value, roundTrip.Value, otpEnabled);
 
-                      RoundTripType.WithStorage when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
-                      RoundTripType.WithStorage when IsSecondTrip(point.PointOrder.Value)  => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
-                      RoundTripType.WithStorage when IsThirdTrip(point.PointOrder.Value)  => AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripVersion,
-                      
-
-                      RoundTripType.WithoutReturnTrip when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
-                      
-                      RoundTripType.TwoWayRoutsWithPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion,
-                      RoundTripType.TwoWayRoutsWithPortShuttling when IsSecondTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripVersion,
-                      RoundTripType.TwoWayRoutsWithPortShuttling when IsThirdTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
-                      
-                      RoundTripType.TwoWayRoutsWithoutPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion,
-                      RoundTripType.TwoWayRoutsWithoutPortShuttling when IsSecondTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripVersion,
-                      
-                      RoundTripType.OneWayRoutWithoutPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
-                      _ => null
-                  };
 
             }
             
-            int GetDropOffWorkflowVersion(RoutPoint point)
+            int GetAdditionalStepWorkFlowVersion(int pointOrder, RoundTripType roundTripType , bool otpEnabled)
+            {
+
+                
+                
+                return roundTripType switch
+                {
+                    RoundTripType.WithReturnTrip when IsFirstTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripWithoutReceiverCode,
+
+                    RoundTripType.WithReturnTrip when IsSecondTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripWithoutReceiverCode,
+
+                    RoundTripType.WithStorage when IsFirstTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripWithoutReceiverCode,
+
+                    RoundTripType.WithStorage when IsSecondTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripWithoutReceiverCode,
+
+                    RoundTripType.WithStorage when IsThirdTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripWithoutReceiverCode,
+
+                    RoundTripType.WithoutReturnTrip when IsFirstTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripWithoutReceiverCode,
+
+                    RoundTripType.TwoWayRoutsWithPortShuttling when IsFirstTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripWithoutReceiverCode,
+
+                    RoundTripType.TwoWayRoutsWithPortShuttling when IsSecondTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripWithoutReceiverCode,
+
+                    RoundTripType.TwoWayRoutsWithPortShuttling when IsThirdTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripWithoutReceiverCode,
+
+                    RoundTripType.TwoWayRoutsWithoutPortShuttling when IsFirstTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripWithoutReceiverCode,
+
+                    RoundTripType.TwoWayRoutsWithoutPortShuttling when IsSecondTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripWithoutReceiverCode,
+
+                    RoundTripType.OneWayRoutWithoutPortShuttling when IsFirstTrip(pointOrder) => otpEnabled
+                        ? AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion
+                        : AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripWithoutReceiverCode,
+                    _ => throw new NotImplementedException(),
+                };
+            }
+
+            int GetDropOffWorkflowVersion(RoutPoint point, bool otpEnabled)
             {
                 if (shippingType is ShippingTypeEnum.ExportPortMovements or ShippingTypeEnum.ImportPortMovements)
                     return WorkflowVersionConst.DropOffPortsMovementWorkflowVersion;
-
+                
                 switch (tripFlag)
                 {
+                    case ShippingRequestTripFlag.Normal when tripNeedsDeliveryNote:
+                        {
+                            return otpEnabled
+                                ? WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion
+                                : WorkflowVersionConst.DropOffWithDeliveryNoteWithoutReceiverCodePointWorkflowVersion;
+                        }
                     case ShippingRequestTripFlag.Normal:
-                        return tripNeedsDeliveryNote
-                            ? WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion
-                            : WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion;
+                        {
+                            return otpEnabled
+                                ? WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion
+                                : WorkflowVersionConst.DropOffWithoutDeliveryNoteWithoutReceiverCodePointWorkflowVersion;
+                        }
                     case ShippingRequestTripFlag.HomeDelivery:
 
                         switch (point.NeedsReceiverCode)

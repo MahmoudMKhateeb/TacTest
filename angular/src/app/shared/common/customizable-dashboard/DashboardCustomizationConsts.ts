@@ -9,6 +9,7 @@ export class DashboardCustomizationConst {
       topStats: 'Widgets_Tenant_TopStats',
       generalStats: 'Widgets_Tenant_GeneralStats',
       dailySales: 'Widgets_Tenant_DailySales',
+      ReturnContainerWidget: 'Widgets_Tenant_Container_Return_Tracker_Widget',
     },
     //Shipper Only Widgets
     Shipper: {
@@ -204,6 +205,13 @@ export class DashboardCustomizationConst {
               positionY: 0,
             },
             {
+              widgetId: 'Widgets_Tenant_Container_Return_Tracker_Widget',
+              height: 5,
+              width: 9,
+              positionX: 0,
+              positionY: 0,
+            },
+            {
               widgetId: 'Widgets_Tenant_shipper_Upcoming_Trips_Widget',
               height: 10,
               width: 6,
@@ -296,6 +304,13 @@ export class DashboardCustomizationConst {
               height: 10,
               width: 6,
               positionX: 24,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Container_Return_Tracker_Widget',
+              height: 5,
+              width: 9,
+              positionX: 0,
               positionY: 0,
             },
             {
@@ -392,6 +407,13 @@ export class DashboardCustomizationConst {
               width: 6,
               positionX: 26,
               positionY: 20,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Container_Return_Tracker_Widget',
+              height: 5,
+              width: 9,
+              positionX: 0,
+              positionY: 0,
             },
             {
               widgetId: 'Widgets_Tenant_shipper_Counters_Widget',

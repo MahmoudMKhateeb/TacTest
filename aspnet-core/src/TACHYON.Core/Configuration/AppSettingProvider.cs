@@ -793,6 +793,15 @@ namespace TACHYON.Configuration
                                     PositionX = 0,
                                     PositionY = 30
                                 },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
+                                        .ContainerReturnTrackerWidget,
+                                    Height = 10,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 30
+                                },
                             }
                         },
                         new Page
@@ -906,7 +915,16 @@ namespace TACHYON.Configuration
                                     Width = 10,
                                     PositionX = 14,
                                     PositionY = 10
-                                }
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
+                                        .ContainerReturnTrackerWidget,
+                                    Height = 10,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 30
+                                },
                             }
 
                         },
@@ -1631,8 +1649,17 @@ namespace TACHYON.Configuration
                                     Width = 8,
                                     PositionX = 0,
                                     PositionY = 50
-                                  }
-                        
+                                  },
+                                  new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
+                                        .ContainerReturnTrackerWidget,
+                                    Height = 10,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 30
+                                },
+
                             }
                         },
                         new Page

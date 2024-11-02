@@ -963,7 +963,9 @@ namespace TACHYON.Shipping.Trips
             //AssignWorkFlowVersionToRoutPoints(trip);
             var shippingType = request != null ? request.ShippingTypeId : trip.ShippingTypeId;
             var roundTrip = request!= null ? request.RoundTripType :trip.RoundTripType;
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints( trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,shippingType,roundTrip, trip.RoutPoints.ToArray());
+            var tenantId = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
+
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(tenantId, trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,shippingType,roundTrip, trip.RoutPoints.ToArray());
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -999,14 +1001,14 @@ namespace TACHYON.Shipping.Trips
                 await _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
 
             //notify TMS if tenant reach max number of waybills
-            var tenant = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
-            var maxNumberOfWaybills = await _shippingRequestTripManager.GetMaxNumberOfWaybills(tenant);
+            
+            var maxNumberOfWaybills = await _shippingRequestTripManager.GetMaxNumberOfWaybills(tenantId);
             if(maxNumberOfWaybills != null)
             {
-                var createdTrips =await _shippingRequestTripManager.GetWaybillsNo(tenant);
+                var createdTrips =await _shippingRequestTripManager.GetWaybillsNo(tenantId);
                 if(maxNumberOfWaybills.Value == createdTrips)
                 {
-                    await _appNotifier.NotifyTMSWithMaxWaybillsExceeds(tenant);
+                    await _appNotifier.NotifyTMSWithMaxWaybillsExceeds(tenantId);
                 }
             }
 
@@ -1140,7 +1142,10 @@ namespace TACHYON.Shipping.Trips
                 var roundTrip = request != null ? request.RoundTripType : trip.RoundTripType;
 
                 if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0)
-                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, shippingType,roundTrip, pointHasAbilityToChangeWorkflow.ToArray());
+                {
+                         var tenantId = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
+                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(tenantId,trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, shippingType,roundTrip, pointHasAbilityToChangeWorkflow.ToArray());
+                }
             }
 
             if (!trip.BayanId.IsNullOrEmpty())

@@ -1,6 +1,14 @@
 ﻿using Abp.Auditing;
 using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Timing;
+using Microsoft.EntityFrameworkCore;
+using RestSharp.Extensions;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Dashboards.Shared.Dto;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Tenants.Dashboard.Dto;
 
 namespace TACHYON.Tenants.Dashboard
@@ -9,6 +17,13 @@ namespace TACHYON.Tenants.Dashboard
     [AbpAuthorize(AppPermissions.Pages_Tenant_Dashboard)]
     public class TenantDashboardAppService : TACHYONAppServiceBase, ITenantDashboardAppService
     {
+       private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+
+        public TenantDashboardAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        {
+            _shippingRequestTripRepository = shippingRequestTripRepository;
+        }
+
         public GetMemberActivityOutput GetMemberActivity()
         {
             return new GetMemberActivityOutput
@@ -89,5 +104,39 @@ namespace TACHYON.Tenants.Dashboard
                 BouncePercent = DashboardRandomDataGenerator.GetRandomInt(10, 100)
             };
         }
+    
+         public async Task<ContainerReturnTrackerWidgetDataDto> GetContainerReturnTrackerWidgetData(int UpcomingUnreturnedContainersFactor)
+        {
+            DisableTenancyFilters();
+
+            var list = await _shippingRequestTripRepository
+                .GetAll()
+                .AsNoTracking()
+                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShipperTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
+                .Where(x => x.IsContainerReturned != true)
+                .Where(x=> x.ContainerNumber != null)
+                .Select(x => new
+                {
+                    x.ContainerReturnDate,
+                    x.Id
+                })
+                .ToListAsync();
+
+                return new ContainerReturnTrackerWidgetDataDto()
+                {
+                    TotalUnreturnedContainers = list.Count(),
+                    DelayedUnreturnedContainers = list.Count(x=> x.ContainerReturnDate >= Clock.Now),
+                    UpcomingUnreturnedContainers = list.Count(x=> x.ContainerReturnDate >= Clock.Now.AddDays(-1 * UpcomingUnreturnedContainersFactor)),
+
+                };
+
+
+
+
+
+        }
+
+
+    
     }
 }

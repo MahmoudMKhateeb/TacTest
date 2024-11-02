@@ -1,0 +1,45 @@
+<div class="container mt-3 p-4 rounded widget-container" [busyIf]="busy">
+  <h3 class="mb-3 text-center">{{ l('ContainerReturnTracker') }}</h3>
+  <p class="text-center mb-4"></p>
+
+  <div class="row justify-content-center">
+    <!-- Total Unreturned Containers -->
+    <div class="col-md-3 col-12 mb-3">
+      <div class="card-container">
+        <h5>{{ l('TotalUnreturnedContainer') }}&nbsp;&nbsp;</h5>
+        <div class="icon-container">
+          <div class="icon-circle" style="background-color: #dc2434">
+            <i class="fas fa-truck text-white"></i>
+          </div>
+          <h2 class="count">{{ data.totalUnreturnedContainers }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delayed Unreturned Containers -->
+    <div class="col-md-3 col-12 mb-3">
+      <div class="card-container">
+        <h5>{{ l('TotalDelayedUnreturnedContainer') }}&nbsp;&nbsp;</h5>
+        <div class="icon-container">
+          <div class="icon-circle" style="background-color: #333">
+            <i class="fas fa-clock text-white"></i>
+          </div>
+          <h2 class="count">{{ data.delayedUnreturnedContainers }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Containers Due in 3 Days -->
+    <div class="col-md-3 col-12 mb-3">
+      <div class="card-container">
+        <h5>{{ l('TotalShouldBeReturnedWithin3days') }}</h5>
+        <div class="icon-container">
+          <div class="icon-circle" style="background-color: #888">
+            <i class="fas fa-calendar-alt text-white"></i>
+          </div>
+          <h2 class="count">{{ data.upcomingUnreturnedContainers }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

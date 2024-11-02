@@ -3284,9 +3284,7 @@
 	<text name="InvoiceDueDays">ايام الدفع</text>
 	<text name="CR">السجل التجاري</text>
 	<text name="VatCertificate">شهادة الضريبة القيمة المضافة</text>
-	<text name="ActorCarrier">العميل الناقل</text>
 	<text name="DriverIssueNumber">رقم تعريف السائق</text>
-	<text name="ActorShipper">العميل الممثل</text>
 	<text name="TripType">نوع الرحله</text>
 	<text name="SelectATripType">اختر نوع الرحله</text>
 	<text name="SelectShipperActor">اختر العميل الممثل</text>
@@ -3294,6 +3292,12 @@
 	<text name="SelectAGoodCategory">اختر نوع البضاعة</text>
 
 	<text name="ServiceArea">مدينة النقل</text>
+
+
+	<text name="ContainerReturnTracker">تتبع إرجاع الحاويات</text>
+	<text name="TotalUnreturnedContainer">إجمالي الحاويات غير المرتجعة</text>
+	<text name="TotalDelayedUnreturnedContainer">إجمالي الحاويات المتأخرة غير المرتجعة</text>
+	<text name="TotalShouldBeReturnedWithin3days">الحاويات التي يجب ارجاعها خلال ٣ ايام</text>
 
 	</texts>
 </localizationDictionary>

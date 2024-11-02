@@ -3593,5 +3593,11 @@
 	<text name="RoundType">Round Type</text>
 	<text name="locationPermissionMessage">Tachyon collects location data to enable to calculate the traveled distance and measure the price based on this distance traveled even when the app is closed or not in use \n- Tachyon collects location data to enable tracking the driver from Tachyon platform and see trip details.</text>
 
+
+	<text name="ContainerReturnTracker">Container Return Tracking</text>
+	<text name="TotalUnreturnedContainer">Total non-returnable containers</text>
+	<text name="TotalDelayedUnreturnedContainer">Total delayed non-returned containers</text>
+	<text name="TotalShouldBeReturnedWithin3days">Containers must be returned in 3 days</text>
+
 	</texts>
 </localizationDictionary>

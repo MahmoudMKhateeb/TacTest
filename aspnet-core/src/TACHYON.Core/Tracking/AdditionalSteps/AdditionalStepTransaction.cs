@@ -18,5 +18,7 @@ namespace TACHYON.Tracking.AdditionalSteps
         /// if a transaction is required then the trip will not be delivered until this transaction is completed
         /// </summary>
         public bool IsRequired { get; set; }
+
+        
     }
 }

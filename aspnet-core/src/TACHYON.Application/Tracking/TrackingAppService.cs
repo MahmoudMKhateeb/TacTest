@@ -108,11 +108,11 @@ namespace TACHYON.Tracking
                 .AsNoTracking()
                 .OrderBy(input.Sorting ?? "id desc").PageBy(input).Select(src => new TrackingListDto
             {
-                Origin = src.OriginFacilityFk != null ? src.OriginFacilityFk.Address : "",
+                Origin = src.OriginFacilityFk != null ? src.OriginFacilityFk.Name : "",
                 Driver = src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.FullName : "",
                 DriverImageProfile = src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.ProfilePictureId : null,
                 RouteTypeId = src.RouteType != null ? src.RouteType.Value : src.ShippingRequestFk.RouteTypeId.Value,
-                Destination = src.DestinationFacilityFk.Address,
+                Destination =  src.DestinationFacilityFk != null ? src.DestinationFacilityFk.Name : "",
                 ReferenceNumber = src.ShippingRequestFk.ReferenceNumber,
                 ShippingRequestFlag = src.ShippingRequestFk.ShippingRequestFlag,
                 NumberOfTrucks = src.ShippingRequestFk.NumberOfTrucks,

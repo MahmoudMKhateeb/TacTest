@@ -66,6 +66,9 @@ namespace TACHYON.Tracking.AdditionalSteps
             _appNotifier = appNotifier;
             Flows = new List<WorkFlow<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>>
             {
+
+                // _____________________________ With receiver code _________________________________
+                   
                 // Ports Movement - Import -> With/out Return Trip -> `First Trip`
                 new()
                 {
@@ -190,7 +193,99 @@ namespace TACHYON.Tracking.AdditionalSteps
                             Func = UploadConfirmationDocument
                         }
                     }
+                },
+
+
+
+            // _____________________________ Without receiver code _________________________________
+
+            // Ports Movement - Import -> With/out Return Trip -> `First Trip`
+                new()
+                {
+                    Version = AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripWithoutReceiverCode,
+                    Transactions = new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>
+                    {
+                        new()
+                        {
+                            Action = AdditionalStepWorkflowActionConst.DeliveryConfirmation,
+                            AdditionalStepType = AdditionalStepType.Pod,
+                            RoutePointDocumentType = RoutePointDocumentType.POD,
+                            Name = "DeliveryConfirmation",
+                            IsRequired = true,
+                            Func = DeliveryConfirmation
+                        }
+                    },
+                },
+                // Ports Movement - Import -> Without Return Trip -> `Return Trip`
+                new()
+                {
+                    Version = AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripWithoutReceiverCode,
+                    Transactions = new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>
+                    {
+                        new()
+                        {
+                            Action = AdditionalStepWorkflowActionConst.UploadEirFile,
+                            AdditionalStepType = AdditionalStepType.Eir,
+                            RoutePointDocumentType = RoutePointDocumentType.Eir,
+                            Name = "UploadEirFile",
+                            IsRequired = true,
+                            Func = UploadEirFile
+                        }
+                    }
+                },
+                // Ports Movement - Export -> Two way Route with/out port shuttling -> `First Trip`
+                new()
+                {
+                    Version = AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripWithoutReceiverCode,
+                    Transactions = new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>
+                    {
+                        new()
+                        {
+                            Action = AdditionalStepWorkflowActionConst.UploadManifestFile,
+                            AdditionalStepType = AdditionalStepType.Manifest,
+                            RoutePointDocumentType = RoutePointDocumentType.Manifest,
+                            Name = "UploadManifestFile",
+                            IsRequired = true,
+                            Func = UploadManifestFile
+                        }
+                    }
+                },
+                // Ports Movement - Export -> Two way Route with/out port shuttling -> `Second Trip`
+                new()
+                {
+                    Version = AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripWithoutReceiverCode,
+                    Transactions = new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>
+                    {
+                        new()
+                        {
+                            Action = AdditionalStepWorkflowActionConst.DeliveryConfirmation,
+                            AdditionalStepType = AdditionalStepType.Pod,
+                            RoutePointDocumentType = RoutePointDocumentType.POD,
+                            Name = "DeliveryConfirmation",
+                            IsRequired = true,
+                            Func = DeliveryConfirmation
+                        }
+                    }
+                },
+                // Ports Movement - Export -> Two way Route with port shuttling, One way route  -> `One Trip Only, Third Trip`
+                new()
+                {
+                    Version = AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripWithoutReceiverCode,
+                    Transactions = new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>
+                    {
+                        new()
+                        {
+                            Action = AdditionalStepWorkflowActionConst.UploadConfirmationDocument,
+                            AdditionalStepType = AdditionalStepType.ConfirmationDocument,
+                            RoutePointDocumentType = RoutePointDocumentType.ConfirmationDocuments,
+                            Name = "ConfirmationDocument",
+                            IsRequired = true,
+                            Func = UploadConfirmationDocument
+                        }
+                    }
                 }
+            
+            
             };
             _documentFilesManager = documentFilesManager;
             AbpSession = abpSession;
