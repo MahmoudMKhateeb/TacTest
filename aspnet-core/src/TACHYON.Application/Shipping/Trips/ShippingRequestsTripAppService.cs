@@ -963,9 +963,9 @@ namespace TACHYON.Shipping.Trips
             //AssignWorkFlowVersionToRoutPoints(trip);
             var shippingType = request != null ? request.ShippingTypeId : trip.ShippingTypeId;
             var roundTrip = request!= null ? request.RoundTripType :trip.RoundTripType;
-            var tenantId = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
+            
 
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(tenantId, trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,shippingType,roundTrip, trip.RoutPoints.ToArray());
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,shippingType,roundTrip, trip.RoutPoints.ToArray());
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -1001,14 +1001,14 @@ namespace TACHYON.Shipping.Trips
                 await _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
 
             //notify TMS if tenant reach max number of waybills
-            
-            var maxNumberOfWaybills = await _shippingRequestTripManager.GetMaxNumberOfWaybills(tenantId);
+            var tenant = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
+            var maxNumberOfWaybills = await _shippingRequestTripManager.GetMaxNumberOfWaybills(tenant);
             if(maxNumberOfWaybills != null)
             {
-                var createdTrips =await _shippingRequestTripManager.GetWaybillsNo(tenantId);
+                var createdTrips =await _shippingRequestTripManager.GetWaybillsNo(tenant);
                 if(maxNumberOfWaybills.Value == createdTrips)
                 {
-                    await _appNotifier.NotifyTMSWithMaxWaybillsExceeds(tenantId);
+                    await _appNotifier.NotifyTMSWithMaxWaybillsExceeds(tenant);
                 }
             }
 
@@ -1143,8 +1143,8 @@ namespace TACHYON.Shipping.Trips
 
                 if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0)
                 {
-                         var tenantId = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
-                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(tenantId,trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, shippingType,roundTrip, pointHasAbilityToChangeWorkflow.ToArray());
+                         
+                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, shippingType,roundTrip, pointHasAbilityToChangeWorkflow.ToArray());
                 }
             }
 

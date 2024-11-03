@@ -398,11 +398,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public void AssignWorkFlowVersionToRoutPoints(int tenantId , bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag,ShippingTypeEnum? shippingType = null,RoundTripType? roundTrip = null, params RoutPoint[] routPoints)
+        public void AssignWorkFlowVersionToRoutPoints( bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag,ShippingTypeEnum? shippingType = null,RoundTripType? roundTrip = null, params RoutPoint[] routPoints)
         {
             if (routPoints == null || !routPoints.Any()) return;
 
-            var otpEnabled = _featureChecker.IsEnabled(tenantId, AppFeatures.Otp);
+            var otpEnabled = _featureChecker.IsEnabled(AppFeatures.Otp);
             foreach (var point in routPoints)
             {
                 point.WorkFlowVersion = point.PickingType switch

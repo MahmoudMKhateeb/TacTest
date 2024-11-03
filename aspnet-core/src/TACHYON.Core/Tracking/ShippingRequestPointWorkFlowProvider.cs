@@ -1961,6 +1961,8 @@ namespace TACHYON.Tracking
         /// </summary>
         private async Task SendSmsToReceivers(int tripId, long? tripWaybillNumber, ShippingRequestRouteType? routType)
         {
+            if(!await _featureChecker.IsEnabledAsync(AppFeatures.Otp))
+                return;
             var dropOffPoints = await _routPointRepository.GetAll()
                 .Include(x => x.ReceiverFk)
                 .Include(t => t.ShippingRequestTripFk)
