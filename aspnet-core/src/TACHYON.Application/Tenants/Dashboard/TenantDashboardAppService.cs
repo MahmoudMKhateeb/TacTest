@@ -126,7 +126,8 @@ namespace TACHYON.Tenants.Dashboard
                 {
                     TotalUnreturnedContainers = list.Count(),
                     DelayedUnreturnedContainers = list.Count(x=> x.ContainerReturnDate >= Clock.Now),
-                    UpcomingUnreturnedContainers = list.Count(x=> x.ContainerReturnDate >= Clock.Now.AddDays(-1 * UpcomingUnreturnedContainersFactor)),
+                    UpcomingUnreturnedContainers = list.Count(x=> x.ContainerReturnDate <= Clock.Now.AddDays( UpcomingUnreturnedContainersFactor) 
+                                                                && x.ContainerReturnDate >= Clock.Now),
 
                 };
 
