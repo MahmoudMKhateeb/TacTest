@@ -124,10 +124,12 @@ namespace TACHYON.Tenants.Dashboard
 
                 return new ContainerReturnTrackerWidgetDataDto()
                 {
-                    TotalUnreturnedContainers = list.Count(),
-                    DelayedUnreturnedContainers = list.Count(x=> x.ContainerReturnDate >= Clock.Now),
-                    UpcomingUnreturnedContainers = list.Count(x=> x.ContainerReturnDate <= Clock.Now.AddDays( UpcomingUnreturnedContainersFactor) 
-                                                                && x.ContainerReturnDate >= Clock.Now),
+                    Total = list.Count(),
+                    OverDue = list.Count(x=> x.ContainerReturnDate < Clock.Now ),
+                    LessThatXDaysRemaining = list.Count(x=> x.ContainerReturnDate <= Clock.Now.AddDays( UpcomingUnreturnedContainersFactor) && x.ContainerReturnDate >= Clock.Now),
+                    MoreThanXDaysRemaining = list.Count(x=> x.ContainerReturnDate > Clock.Now.AddDays( UpcomingUnreturnedContainersFactor)),
+                    WithoutReturnDate = list.Count(x=> x.ContainerReturnDate == null),
+
 
                 };
 

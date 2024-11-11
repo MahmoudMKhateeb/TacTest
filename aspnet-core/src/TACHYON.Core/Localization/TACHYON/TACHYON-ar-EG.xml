@@ -3295,9 +3295,12 @@
 
 
 	<text name="ContainerReturnTracker">تتبع إرجاع الحاويات</text>
-	<text name="TotalUnreturnedContainer">إجمالي الحاويات غير المرتجعة</text>
-	<text name="TotalDelayedUnreturnedContainer">إجمالي الحاويات المتأخرة غير المرتجعة</text>
-	<text name="TotalShouldBeReturnedWithin3days">الحاويات التي يجب ارجاعها خلال ٣ ايام</text>
+	<text name="UnreturnedContainer">الحاويات غير المُعادة</text>
+	<text name="NonReturnedContainersIn3Days">الحاويات غير المُعادة - مستحقة في غضون 3 أيام</text>
+	<text name="NonReturnedContainersOver3DaysRemaining">الحاويات غير المُعادة - متبقي أكثر من 3 أيام</text>
+	<text name="NonReturnedContainersOverDue">الحاويات غير المُعادة - متأخرة</text>
+	<text name="NonReturnedContainersWithoutReturnDate">الحاويات غير المُعادة - بدون تاريخ إرجاع محدد</text>
+
 
 	</texts>
 </localizationDictionary>

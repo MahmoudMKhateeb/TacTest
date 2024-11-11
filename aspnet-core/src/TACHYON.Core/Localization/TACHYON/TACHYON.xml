@@ -3595,9 +3595,14 @@
 
 
 	<text name="ContainerReturnTracker">Container Return Tracking</text>
-	<text name="TotalUnreturnedContainer">Total non-returnable containers</text>
-	<text name="TotalDelayedUnreturnedContainer">Total delayed non-returned containers</text>
-	<text name="TotalShouldBeReturnedWithin3days">Containers must be returned in 3 days</text>
+	<text name="UnreturnedContainer">Unreturned Containers</text>
+	<text name="NonReturnedContainersIn3Days">Non returned containers in 3 days</text>
+	<text name="NonReturnedContainersOver3DaysRemaining">Non returned containers - over 3 days remaining</text>
+	<text name="NonReturnedContainersOverDue">Non returned containers - overdue</text>
+	<text name="NonReturnedContainersWithoutReturnDate">Non returned containers - without target return date</text>
+
+
+	
 
 	</texts>
 </localizationDictionary>
