@@ -13,6 +13,7 @@ namespace TACHYON
         {
             public class Tenant
             {
+                public const string ContainerReturnTrackerWidget = "Widgets_Tenant_Container_Return_Tracker_Widget";
             }
 
             public class Shipper
@@ -51,6 +52,8 @@ namespace TACHYON
                 public const string ShipperUpcomingTripsWidget = "Widgets_Tenant_shipper_Upcoming_Trips_Widget";
                 public const string ShipperNeedsActionWidget = "Widgets_Tenant_shipper_Needs_Action_Widget";
                 public const string ShipperNewOffersWidget = "Widgets_Tenant_shipper_New_Offers_Widget";
+                
+                
             }
 
             public class Carrier
@@ -82,6 +85,7 @@ namespace TACHYON
                 public const string CarrierCountersWidget = "Widgets_Tenant_carrier_Counters_Widget";
                 public const string NeedsActionWidget = "Widgets_Tenant_carrier_Needs_Action_Widget";
                 public const string NewDirectRequestsWidget = "Widgets_Tenant_carrier_New_Direct_request";
+               
             }
 
             public class TachyonDealer
@@ -163,6 +167,7 @@ namespace TACHYON
                 public const string ActorsMostUsedDestinations = "Widgets_Tenant_Broker_Actors_Most_Used_Destinations";
                 public const string ActorsUpcomingTrips = "Widgets_Tenant_Broker_Actors_Upcoming_Trips";
                 public const string ActorsNeedsActions = "Widgets_Tenant_Broker_Actors_Needs_Actions";
+                
             }
         }
 

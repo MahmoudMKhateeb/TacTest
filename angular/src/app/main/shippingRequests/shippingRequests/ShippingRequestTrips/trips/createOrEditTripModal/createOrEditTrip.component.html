@@ -90,7 +90,7 @@
             >
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label for="TripType"> {{ l('TripType') }} </label>
+                  <label for="TripType"> {{ l('TripType') }} <span class="required-fileds">*</span> </label>
                   <dx-select-box
                     id="TripType"
                     name="TripType"
@@ -110,7 +110,7 @@
             <div class="row" [hidden]="_TripService?.GetShippingRequestForViewOutput">
               <div class="col-6" [hidden]="!this.feature.isEnabled('App.ShipperClients')">
                 <div class="form-group">
-                  <label>{{ l('ActorShipper') }}</label>
+                  <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span> </label>
                   <div
                     [ngClass]="{
                       'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
@@ -133,7 +133,7 @@
               </div>
               <div class="col-6" [hidden]="!this.feature.isEnabled('App.CarrierClients')">
                 <div class="form-group">
-                  <label>{{ l('ActorCarrier') }}</label>
+                  <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span> </label>
                   <div
                     [ngClass]="{
                       'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
@@ -409,7 +409,7 @@
                     _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
                   "
                 >
-                  <label>{{ l('NumberOfDrops') }}</label>
+                  <label>{{ l('NumberOfDrops') }} <span class="required-fileds">*</span> </label>
                   <input
                     #numberOfDrops="ngModel"
                     type="number"
@@ -922,7 +922,7 @@
 
               <ng-container *ngIf="_TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
                 <div class="form-group col-lg-6">
-                  <label>{{ l('Driver') }}</label>
+                  <label>{{ l('Driver') }} <span class="required-fileds">*</span></label>
                   <dx-select-box
                     id="driverUserId"
                     name="driverUserId"
@@ -939,7 +939,7 @@
                   </dx-select-box>
                 </div>
                 <div class="form-group col-lg-6">
-                  <label>{{ l('Truck') }}</label>
+                  <label>{{ l('Truck') }}<span class="required-fileds">*</span></label>
                   <dx-select-box
                     id="truckId"
                     name="truckId"
@@ -958,7 +958,7 @@
 
               <ng-container *ngIf="!_TripService?.GetShippingRequestForViewOutput">
                 <div class="form-group col-lg-6">
-                  <label>{{ l('Driver') }}</label>
+                  <label>{{ l('Driver') }} <span class="required-fileds">*</span></label>
                   <dx-select-box
                     id="driverUserId"
                     name="driverUserId"
@@ -990,7 +990,7 @@
                   </dx-select-box>
                 </div>
                 <div class="form-group col-lg-6">
-                  <label>{{ l('Truck') }}</label>
+                  <label>{{ l('Truck') }}<span class="required-fileds">*</span></label>
                   <dx-select-box
                     id="truckId"
                     name="truckId"
@@ -1010,7 +1010,7 @@
               <!--                SAAB Stuff-->
               <ng-container *ngIf="isSaab">
                 <div class="form-group col-lg-6">
-                  <label>{{ l('LoadingType') }}</label>
+                  <label>{{ l('LoadingType') }} <span class="required-fileds">*</span></label>
                   <dx-select-box
                     id="LoadingType"
                     name="LoadingType"
@@ -1025,7 +1025,7 @@
                   </dx-select-box>
                 </div>
                 <div class="form-group col-lg-6">
-                  <label>{{ l('SalesOffice') }}</label>
+                  <label>{{ l('SalesOffice') }} <span class="required-fileds">*</span></label>
                   <dx-select-box
                     id="SalesOffice"
                     name="SalesOffice"
@@ -1042,7 +1042,7 @@
 
                 <div class="col-lg-6 mt-3">
                   <div class="form-group">
-                    <label>{{ l('Quantity') }} </label>
+                    <label>{{ l('Quantity') }} <span class="required-fileds">*</span></label>
                     <div class="input-group">
                       <input
                         #Quantity="ngModel"
@@ -1060,7 +1060,7 @@
 
                 <div class="col-lg-6 mt-3">
                   <div class="form-group">
-                    <label>{{ l('DriverWorkingHours') }} </label>
+                    <label>{{ l('DriverWorkingHours') }} <span class="required-fileds">*</span></label>
                     <div class="input-group">
                       <input
                         #DriverWorkingHours="ngModel"
@@ -1078,7 +1078,7 @@
 
                 <div class="col-lg-6 mt-3">
                   <div class="form-group">
-                    <label>{{ l('Distance') }} </label>
+                    <label>{{ l('Distance') }} <span class="required-fileds">*</span></label>
                     <div class="input-group">
                       <input
                         #Distance="ngModel"
@@ -1298,7 +1298,7 @@
                 <div class="col-lg-3 mt-3">
                   <div class="d-flex justify-content-between">
                     <div class="form-group">
-                      <label>{{ l('NumberOfDrops') }}</label>
+                      <label>{{ l('NumberOfDrops') }} <span class="required-fileds">*</span></label>
                       <input
                         #numberOfDrops="ngModel"
                         type="number"

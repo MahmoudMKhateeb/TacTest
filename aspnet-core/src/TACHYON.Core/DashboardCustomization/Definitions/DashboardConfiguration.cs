@@ -36,8 +36,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             #region TenantWidgets
 
             var tenantWidgetsDefaultPermission = new List<string> { AppPermissions.Pages_Tenant_Dashboard };
-
+            var ContainerReturnTrackerWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Tenant.ContainerReturnTrackerWidget, "ContainerReturnTrackerWidget", side: MultiTenancySides.Tenant, permissions: tenantWidgetsDefaultPermission);
            
+            WidgetDefinitions.Add(ContainerReturnTrackerWidget);
+
             #endregion
 
             #region HostWidgets
@@ -126,6 +128,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             var shipperUpcomingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperUpcomingTripsWidget, "ShipperUpcomingTripsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNeedsActionWidget, "ShipperNeedsActionWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperNewOffersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNewOffersWidget, "ShipperNewOffersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            
 
             WidgetDefinitions.Add(shipperAcceptedVsRejectedRequestsWidget);
             WidgetDefinitions.Add(shipperCompletedTripsVsPodWidget);
@@ -137,6 +140,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(shipperUpcomingTripsWidget);
             WidgetDefinitions.Add(shipperNeedsActionWidget);
             WidgetDefinitions.Add(shipperNewOffersWidget);
+            
 
             #endregion
 
@@ -158,7 +162,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             var CarrierCountersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierCountersWidget, "CarrierCountersWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var CarrierNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.NeedsActionWidget, "NeedsActionWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var CarrierNewDirectRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.NewDirectRequestsWidget, "NewDirectRequestsWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
-
+           
 
 
 
@@ -173,6 +177,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(CarrierCountersWidget);
             WidgetDefinitions.Add(CarrierNeedsActionWidget);
             WidgetDefinitions.Add(CarrierNewDirectRequestsWidget);
+           
 
             #endregion
 
@@ -262,7 +267,7 @@ namespace TACHYON.DashboardCustomization.Definitions
               var ActorsMostUsedDestinations = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsMostUsedDestinations, "ActorsMostUsedDestinations", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
               var ActorsUpcomingTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsUpcomingTrips, "ActorsUpcomingTrips", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
               var ActorsNeedsActions = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsNeedsActions, "ActorsNeedsActions", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
-
+              
 
 
 
@@ -282,6 +287,7 @@ namespace TACHYON.DashboardCustomization.Definitions
               WidgetDefinitions.Add(ActorsMostUsedDestinations);
               WidgetDefinitions.Add(ActorsUpcomingTrips);
               WidgetDefinitions.Add(ActorsNeedsActions);
+              
 
             #endregion
 
@@ -310,6 +316,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     CarrierNeedsActionWidget.Id,
                     CarrierNewDirectRequestsWidget.Id,
                     shipperCompletedTripsVsPodWidget.Id,
+                    ContainerReturnTrackerWidget.Id
                 });
             DashboardDefinitions.Add(defaultCarrierDashboard);
 
@@ -332,6 +339,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     shipperUpcomingTripsWidget.Id,
                     shipperNeedsActionWidget.Id,
                     shipperNewOffersWidget.Id,
+                    ContainerReturnTrackerWidget.Id
                 });
             DashboardDefinitions.Add(defaultShipperDashboard);
 
@@ -436,6 +444,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     ActorsMostUsedDestinations.Id,
                     ActorsUpcomingTrips.Id,
                     ActorsNeedsActions.Id,
+                    ContainerReturnTrackerWidget.Id
                 });
             DashboardDefinitions.Add(defaultBrokerDashboard);
             // Add your dashboard definiton here

@@ -109,6 +109,7 @@ import { HostTmsWidgetFiltersComponent } from '@app/shared/common/customizable-d
 import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directive/make-scrollable.module';
 import { DailyMonthlyYearlyComponent } from '@app/shared/common/customizable-dashboard/daily-monthly-yearly/daily-monthly-yearly.component';
 import { NumberOfDedicatedTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-dedicated-trips/number-of-dedicated-trips.component';
+import { ReturnContainerWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/return-container-widget/return-container-widget.component';
 
 const widgets = [
   CompletedTripsWidgetComponent,
@@ -202,6 +203,7 @@ const widgets = [
   HostTmsWidgetFiltersComponent,
   DailyMonthlyYearlyComponent,
   NumberOfDedicatedTripsComponent,
+  ReturnContainerWidgetComponent,
 ];
 @NgModule({
   declarations: [...widgets],

@@ -963,7 +963,9 @@ namespace TACHYON.Shipping.Trips
             //AssignWorkFlowVersionToRoutPoints(trip);
             var shippingType = request != null ? request.ShippingTypeId : trip.ShippingTypeId;
             var roundTrip = request!= null ? request.RoundTripType :trip.RoundTripType;
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints( trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,shippingType,roundTrip, trip.RoutPoints.ToArray());
+            
+
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,shippingType,roundTrip, trip.RoutPoints.ToArray());
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -1140,7 +1142,10 @@ namespace TACHYON.Shipping.Trips
                 var roundTrip = request != null ? request.RoundTripType : trip.RoundTripType;
 
                 if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0)
+                {
+                         
                     _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, shippingType,roundTrip, pointHasAbilityToChangeWorkflow.ToArray());
+                }
             }
 
             if (!trip.BayanId.IsNullOrEmpty())

@@ -1,0 +1,22 @@
+<div class="container mt-3 p-4 rounded widget-container" [ngClass]="{ rtl: isRtl }">
+  <div class="row">
+    <div class="col-12 text-start">
+      <h3>{{ l('ContainerReturnTracker') }}</h3>
+      <p>{{ l('UnreturnedContainer') }}: {{ data.total }}</p>
+    </div>
+    <div class="col-12">
+      <apx-chart
+        *ngIf="data.total"
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [labels]="chartOptions.labels"
+        [colors]="chartOptions.colors"
+        [dataLabels]="chartOptions.dataLabels"
+        [plotOptions]="chartOptions.plotOptions"
+        [legend]="chartOptions.legend"
+        [tooltip]="chartOptions.tooltip"
+      >
+      </apx-chart>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+/* General container styling */
+.widget-container {
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    direction: ltr; /* Default direction */
+
+    &.rtl {
+        direction: rtl; /* RTL layout support */
+        text-align: right;
+
+        /* Adjustments for RTL layout */
+        .apexcharts-legend {
+            flex-direction: row-reverse;
+        }
+    }
+}
+
+/* Responsive font sizing */
+.widget-container h3 {
+    font-size: 1.5rem;
+}
+
+.widget-container p {
+    font-size: 1rem;
+}
+
+/* Chart size adjustments */
+.apexcharts-canvas {
+    max-width: 100%; /* Makes the chart responsive */
+    height: auto;
+}
+
+/* Extra small devices (phones, less than 576px) */
+@media (max-width: 576px) {
+    .widget-container {
+        padding: 1rem;
+    }
+    .widget-container h3 {
+        font-size: 1.2rem;
+    }
+    .widget-container p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Small devices (tablets, 576px and up) */
+@media (min-width: 576px) and (max-width: 768px) {
+    .widget-container {
+        padding: 1.5rem;
+    }
+    .widget-container h3 {
+        font-size: 1.4rem;
+    }
+    .widget-container p {
+        font-size: 1rem;
+    }
+}
+
+/* Medium devices (desktops, 768px and up) */
+@media (min-width: 768px) and (max-width: 992px) {
+    .widget-container {
+        padding: 2rem;
+    }
+    .widget-container h3 {
+        font-size: 1.6rem;
+    }
+    .widget-container p {
+        font-size: 1.1rem;
+    }
+}
+
+/* Large devices (large desktops, 992px and up) */
+@media (min-width: 992px) {
+    .widget-container {
+        padding: 2.5rem;
+    }
+    .widget-container h3 {
+        font-size: 1.8rem;
+    }
+    .widget-container p {
+        font-size: 1.2rem;
+    }
+}
+
+/* Additional custom styling */
+.widget-container h3,
+.widget-container p {
+    margin: 0;
+}
+
+.widget-container h3 {
+    font-size: 1.5rem;
+}
+
+.widget-container p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+/* In your SCSS file */
+.widget-container.rtl .apexcharts-canvas {
+    max-width: 100%; /* Adjust max-width for RTL */
+}

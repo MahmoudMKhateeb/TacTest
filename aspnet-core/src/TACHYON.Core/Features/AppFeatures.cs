@@ -241,5 +241,6 @@
         public const string FinancialReportFeature = "App.Reporting.Financial";
 
         public const string Sab = "App.Sab";
+        public const string Otp = "App.Otp";
     }
 }

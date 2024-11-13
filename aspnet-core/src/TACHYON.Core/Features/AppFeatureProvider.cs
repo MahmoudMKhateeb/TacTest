@@ -1258,6 +1258,8 @@ namespace TACHYON.Features
 
             var SabFeature = context.Create(AppFeatures.Sab,"false", L("SabFeature"),inputType: new CheckboxInputType());
 
+            var OTP = context.Create(AppFeatures.Otp,"true", L("OTP"),inputType: new CheckboxInputType());
+
         }
 
 

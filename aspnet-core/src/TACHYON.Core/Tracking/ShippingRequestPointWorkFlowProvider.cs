@@ -166,7 +166,7 @@ namespace TACHYON.Tracking
                         },
                     },
                 },
-                // Drop Off workflow without uplode delivery note
+                // Drop Off workflow without upload delivery note with receiver code 
                 new()
                 {
                     Version = WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion,
@@ -264,6 +264,67 @@ namespace TACHYON.Tracking
                         },
                     },
                 },
+
+                // Drop Off workflow without upload delivery note without receiver code 
+                new()
+                {
+                    Version = WorkflowVersionConst.DropOffWithoutDeliveryNoteWithoutReceiverCodePointWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.StartedMovingToOfLoadingLocation,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            Func = StartedMovingToOfLoadingLocation,
+                            Name = "StartedMovingToOfLoadingLocation",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.ArrivedToDestination,
+                            FromStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            ToStatus = RoutePointStatus.ArrivedToDestination,
+                            Func = ArrivedToDestination,
+                            Name = "ArrivedToDestination",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.StartOffloading,
+                            FromStatus = RoutePointStatus.ArrivedToDestination,
+                            ToStatus = RoutePointStatus.StartOffloading,
+                            Func = StartOffloading,
+                            Name = "StartOffloading",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.StartOffloading,
+                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            Func = FinishOffLoadShipment,
+                            Name = "FinishOffLoadShipment",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.FinishOffLoadShipmentDeliveryConfirmation,
+                            FromStatus = RoutePointStatus.FinishOffLoadShipment,
+                            ToStatus = RoutePointStatus.DeliveryConfirmation,
+                            Func = DeliveryConfirmation,
+                            Name = "UploadDeliveryConfirmation",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                    },
+                },
+
+                
                 // Drop Off workflow with uplode delivery note
                 new()
                 {
@@ -372,6 +433,117 @@ namespace TACHYON.Tracking
                         },
                     },
                 },
+
+                // Drop Off workflow with upload delivery note Without receiver code
+                new()
+                {
+                    Version = WorkflowVersionConst.DropOffWithDeliveryNoteWithoutReceiverCodePointWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.StartedMovingToOfLoadingLocation,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            Func = StartedMovingToOfLoadingLocation,
+                            Name = "StartedMovingToOfLoadingLocation",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.ArrivedToDestination,
+                            FromStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            ToStatus = RoutePointStatus.ArrivedToDestination,
+                            Func = ArrivedToDestination,
+                            Name = "ArrivedToDestination",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.StartOffloading,
+                            FromStatus = RoutePointStatus.ArrivedToDestination,
+                            ToStatus = RoutePointStatus.StartOffloading,
+                            Func = StartOffloading,
+                            Name = "StartOffloading",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.StartOffloading,
+                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            Func = FinishOffLoadShipment,
+                            Name = "FinishOffLoadShipment",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.UplodeDeliveryNote,
+                            FromStatus = RoutePointStatus.FinishOffLoadShipment,
+                            ToStatus = RoutePointStatus.DeliveryNoteUploded,
+                            Func = DeliveryNoteUploded,
+                            Name = "UplodeDeliveryNote",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        // new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        // {
+                        //     Action = WorkFlowActionConst.ReceiverConfirmed,
+                        //     FromStatus = RoutePointStatus.DeliveryNoteUploded,
+                        //     ToStatus = RoutePointStatus.ReceiverConfirmed,
+                        //     Func = ReceiverConfirmed,
+                        //     Name = "EnterReceiverCode",
+                        //     Permissions = new List<string>{},
+                        //     Features = new List<string>{},
+                        // },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.UplodeDeliveryNoteDeliveryConfirmation,
+                            FromStatus = RoutePointStatus.DeliveryNoteUploded,
+                            ToStatus = RoutePointStatus.DeliveryConfirmation,
+                            Func = DeliveryConfirmation,
+                            Name = "UploadDeliveryConfirmation",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        // new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        // {
+                        //     Action = WorkFlowActionConst.DeliveryConfirmation,
+                        //     FromStatus = RoutePointStatus.ReceiverConfirmed,
+                        //     ToStatus = RoutePointStatus.DeliveryConfirmation,
+                        //     Func = DeliveryConfirmation,
+                        //     Name = "UploadDeliveryConfirmation",
+                        //     Permissions = new List<string>{},
+                        //     Features = new List<string>{},
+                        // },
+                        // new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        // {
+                        //     Action = WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed,
+                        //     FromStatus = RoutePointStatus.DeliveryConfirmation,
+                        //     ToStatus = RoutePointStatus.ReceiverConfirmed,
+                        //     Func = ReceiverConfirmed,
+                        //     Name = "EnterReceiverCode",
+                        //     Permissions = new List<string>{},
+                        //     Features = new List<string>{},
+                        // },
+                          new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.UplodeGoodPictureReceiverConfirmed,
+                            FromStatus = RoutePointStatus.UplodeGoodPicture,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = "EnterReceiverCode",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                    },
+                },
+
+
                 new()
                 {
                     Version = WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion,
@@ -460,6 +632,8 @@ namespace TACHYON.Tracking
                         },
                     }
                 },
+
+
                 new()
                 {
                     Version = WorkflowVersionConst.DropOffHomeDeliveryWithPodAndReceiverCodeWorkflowVersion,
@@ -1787,6 +1961,8 @@ namespace TACHYON.Tracking
         /// </summary>
         private async Task SendSmsToReceivers(int tripId, long? tripWaybillNumber, ShippingRequestRouteType? routType)
         {
+            if(!await _featureChecker.IsEnabledAsync(AppFeatures.Otp))
+                return;
             var dropOffPoints = await _routPointRepository.GetAll()
                 .Include(x => x.ReceiverFk)
                 .Include(t => t.ShippingRequestTripFk)
