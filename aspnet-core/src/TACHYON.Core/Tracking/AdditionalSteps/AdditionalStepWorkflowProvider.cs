@@ -21,6 +21,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
+using TACHYON.WebHooks;
 using TACHYON.WorkFlows;
 
 namespace TACHYON.Tracking.AdditionalSteps
@@ -41,6 +42,7 @@ namespace TACHYON.Tracking.AdditionalSteps
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly CommonManager _commonManager;
         public IAbpSession AbpSession { set; get; }
+        private readonly AppWebhookPublisher _webhookPublisher;
 
 
 
@@ -55,7 +57,8 @@ namespace TACHYON.Tracking.AdditionalSteps
             DocumentFilesManager documentFilesManager,
             IAbpSession abpSession,
             IRepository<ShippingRequest, long> shippingRequestRepository,
-            CommonManager commonManager)
+            CommonManager commonManager,
+            AppWebhookPublisher webhookPublisher)
         {
             _routePointRepository = routePointRepository;
             _reasonProvider = reasonProvider;
@@ -284,13 +287,14 @@ namespace TACHYON.Tracking.AdditionalSteps
                         }
                     }
                 }
-            
-            
+
+
             };
             _documentFilesManager = documentFilesManager;
             AbpSession = abpSession;
             _shippingRequestRepository = shippingRequestRepository;
             _commonManager = commonManager;
+            _webhookPublisher = webhookPublisher;
         }
 
 
@@ -547,6 +551,10 @@ namespace TACHYON.Tracking.AdditionalSteps
                     {
                         x.Status = ShippingRequestTripStatus.Delivered;
                     });
+                    
+                    // Publish Delivered Trip Updated Webhook
+                    await _webhookPublisher.PublishDeliveredTripUpdatedWebhook(point.ShippingRequestTripId);
+
                     //send notification about rating
                     if(trip.ShippingRequestId != null)
                     {

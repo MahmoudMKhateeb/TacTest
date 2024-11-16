@@ -2,6 +2,7 @@
 using Abp.Json;
 using Abp.Webhooks;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using TACHYON.Actors.Dtos;
@@ -41,11 +42,17 @@ namespace TACHYON.WebHooks
         {
             var trip = await _tripRepository.GetAll()
                             .Include(x => x.ActorShipperPrice)
-                            .Include(x=> x.ActorShipperPrice)
+                            .Include(x=> x.ActorCarrierPrice)
+                            .Include(x=> x.ShippingRequestFk)
+                            .ThenInclude(x=> x.ActorCarrierPrice)
+                            .Include(x=> x.ShippingRequestFk.ActorShipperPrice)
                             .FirstOrDefaultAsync(x=> x.Id == tripId);
             
-            var json = trip.ToJsonString();
-            
+            string json = JsonConvert.SerializeObject(trip, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+
             await _webHookPublisher.PublishAsync(AppWebHookNames.DeliveredTripUpdated, json);
         }
 

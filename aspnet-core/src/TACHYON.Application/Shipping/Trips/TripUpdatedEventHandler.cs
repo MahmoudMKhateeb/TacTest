@@ -72,20 +72,20 @@ namespace TACHYON.Shipping.Trips
                 }
 
                 //  check if the trip status has changed
-                if (eventData.Entity.SabOrderId.IsNullOrEmpty())
-                {
-                    if (eventData.Entity.Status == ShippingRequestTripStatus.Delivered)
-                    {
-                        AsyncHelper.RunSync(() =>
-                            _webhookPublisher.PublishDeliveredTripUpdatedWebhook(eventData.Entity.Id));
+                // if (eventData.Entity.SabOrderId.IsNullOrEmpty())
+                // {
+                //     if (eventData.Entity.Status == ShippingRequestTripStatus.Delivered)
+                //     {
+                //         AsyncHelper.RunSync(() =>
+                //             _webhookPublisher.PublishDeliveredTripUpdatedWebhook(eventData.Entity.Id));
                         
-                    }                        
+                //     }                        
 
                    
-                }
+                // }
 
                 // 
-                unitOfWork.Complete();
+               // unitOfWork.Complete();
             }
         }
 

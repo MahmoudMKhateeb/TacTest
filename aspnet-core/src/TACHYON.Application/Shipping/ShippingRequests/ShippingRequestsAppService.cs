@@ -1135,6 +1135,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #region Truck Category DropDowns
 
+        
         public async Task<IEnumerable<ISelectItemDto>> GetAllTransportTypesForDropdown()
         {
             List<TransportType> transportTypes = await _transportTypeRepository
