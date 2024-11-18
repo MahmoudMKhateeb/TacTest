@@ -9,6 +9,7 @@ using Abp.Runtime.Session;
 using Abp.Threading;
 using Abp.UI;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Identity;
@@ -236,5 +237,7 @@ namespace TACHYON
         {
             return await IsEnabledAsync(AppFeatures.CarrierClients);
         }
+
+
     }
 }

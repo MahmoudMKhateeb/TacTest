@@ -725,12 +725,27 @@ namespace TACHYON.Shipping.Drivers
                     new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value));
         }
         
+        /// <summary>
+        /// Updates the additional data of the trip that is associated with the given point
+        /// </summary>
+        /// <param name="pointId">The id of the point associated with the trip</param>
+        /// <param name="driverWorkingHour">The total working hours of the driver for the trip</param>
+        /// <param name="distance">The total distance of the trip</param>
         public async Task UpdateTripAdditionalDataAsync( long pointId , int? driverWorkingHour,int? distance){
 
-             var trip = await _ShippingRequestTrip
-            .GetAllIncluding(x=> x.RoutPoints)
-            .Where(x => x.RoutPoints.Any(p => p.Id == pointId ))
-            .FirstAsync();
+            var trip = await _ShippingRequestTrip
+           .GetAllIncluding(x => x.RoutPoints, x => x.TripDrivers)
+           .Where(x => x.RoutPoints.Any(p => p.Id == pointId))
+           .FirstAsync();
+
+            var tripDriver = trip.TripDrivers.FirstOrDefault(x => x.DriverId == AbpSession.UserId);
+            
+            if (tripDriver != null)
+            {
+                tripDriver.TotalWorkingHours += driverWorkingHour.Value;
+                tripDriver.DistanceCovered += distance.Value;
+            }
+
 
             if (driverWorkingHour.HasValue )
                 trip.RoutPoints.First(x=> x.Id == pointId ).DriverWorkingHour = driverWorkingHour.Value;

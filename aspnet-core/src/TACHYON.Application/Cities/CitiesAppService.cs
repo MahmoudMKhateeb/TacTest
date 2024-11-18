@@ -53,6 +53,7 @@ namespace TACHYON.Cities
             return await LoadResultAsync(filteredCities, input.LoadOptions);
         }
 
+
         public async Task<GetCityForViewDto> GetCityForView(int id)
         {
             var city = await _cityRepository.GetAsync(id);

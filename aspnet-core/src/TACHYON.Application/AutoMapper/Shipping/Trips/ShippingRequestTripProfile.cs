@@ -59,6 +59,12 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                .ForMember(dst => dst.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases))
                .ForMember(dst => dst.TotalValue, opt => opt.MapFrom(src => src.TotalValue));
 
+               CreateMap<TripDriver, TripDriverForViewDto>()
+               .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.Driver != null ? $"{src.Driver.Name} ({src.Driver.Surname})" : "N/A"))
+               .ForMember(dst => dst.AssignedTruckPlateNumber, opt => opt.MapFrom(src => src.TruckFk != null ? src.TruckFk.PlateNumber : string.Empty))
+               .ForMember(dst => dst.TripWaybillNumber, opt => opt.MapFrom(src => src.ShippingRequestTrip.WaybillNumber))
+               .ForMember(dst => dst.ShippingRequestReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestTrip.ShippingRequestFk != null ? src.ShippingRequestTrip.ShippingRequestFk.ReferenceNumber : string.Empty));
+
             CreateMap<ShippingRequestTrip, ShippingRequestTripDriverListDto>()
                 .ForMember(dst => dst.Source,
                     opt => opt.MapFrom(src => $"{src.OriginFacilityFk.CityFk.DisplayName} - {src.OriginFacilityFk.Address}"))

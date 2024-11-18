@@ -56,6 +56,7 @@ using TACHYON.Commission;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.MultiTenancy.Dto;
 using TACHYON.WebHooks;
+using AutoMapper.QueryableExtensions;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -89,6 +90,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IFeatureChecker _featureChecker;
         private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
         private readonly AppWebhookPublisher _webhookPublisher;
+         private readonly IRepository<TripDriver, long> _tripDriverRepository;
 
 
         public ShippingRequestsTripAppService(
@@ -118,7 +120,8 @@ namespace TACHYON.Shipping.Trips
             PriceCommissionManager priceCommissionManager,
             IFeatureChecker featureChecker,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
-            AppWebhookPublisher webhookPublisher)
+            AppWebhookPublisher webhookPublisher,
+            IRepository<TripDriver, long> tripDriverRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -147,8 +150,16 @@ namespace TACHYON.Shipping.Trips
             _featureChecker = featureChecker;
             _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
             _webhookPublisher = webhookPublisher;
+            _tripDriverRepository = tripDriverRepository;
         }
 
+        /// <summary>
+        /// Retrieves a list of shipping request trips that have no associated request ID and are associated with the current tenant.
+        /// The results include detailed trip information such as trip dates, status, assigned driver, truck, origin and destination 
+        /// facilities, waybill number, and various financial and reference details.
+        /// </summary>
+        /// <param name="filter">A filter used to refine the queryable collection before returning the results.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a LoadResult with the filtered collection of trips.</returns>
         public async Task<LoadResult> GetAllDx(string filter)
         {
             DisableTenancyFilters();
@@ -186,14 +197,19 @@ namespace TACHYON.Shipping.Trips
                     ActorShipperSubTotalAmountWithCommission = x.ActorShipperPrice.SubTotalAmountWithCommission,
                     ActorShipperTotalAmountWithCommission = x.ActorShipperPrice.TotalAmountWithCommission,
 
-                    
-                
                 }
                 );
 
             return await LoadResultAsync(queryable, filter);
         }
 
+        /// <summary>
+        /// Retrieves a list of shipping request trips that have no associated request ID and are associated with the current tenant.
+        /// The results include detailed trip information such as trip dates, status, assigned driver, truck, origin and destination 
+        /// facilities, waybill number, and various financial and reference details.
+        /// </summary>
+        /// <param name="filter">A filter used to refine the queryable collection before returning the results.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a LoadResult with the filtered collection of trips.</returns>
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput input)
         {
             DisableTenancyFilters();
@@ -309,6 +325,12 @@ namespace TACHYON.Shipping.Trips
             return pageResult;
         }
 
+        /// <summary>
+        /// Retrieves a shipping request trip for view. The results include detailed trip information such as trip dates, status, assigned driver, truck, origin and destination 
+        /// facilities, waybill number, and various financial and reference details. The results also include the manifest data, appointment data, and clearance prices for each route point.
+        /// </summary>
+        /// <param name="id">The ID of the shipping request trip.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a ShippingRequestsTripForViewDto object.</returns>
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)
         {
             DisableTenancyFilters();
@@ -319,7 +341,7 @@ namespace TACHYON.Shipping.Trips
             var tripPoints = trip.RoutPoints.Where(x => x.NeedsAppointment && x.HasAppointmentVas || (x.NeedsClearance && x.HasClearanceVas));
 
             var pointHasManifest = await _shippingRequestPointWorkFlowProvider.GetPointHasManifest(id);
-            if(pointHasManifest != null)
+            if (pointHasManifest != null)
             {
                 shippingRequestTrip.TripManifestDataDto = new TripManifestDataDto();
                 var document = await _shippingRequestPointWorkFlowProvider.GetPointAttachment(pointHasManifest.Value, RoutePointDocumentType.Manifest);
@@ -384,7 +406,35 @@ namespace TACHYON.Shipping.Trips
             return shippingRequestTrip;
         }
 
+       
+        /// <summary>
+        /// Retrieves a list of assigned drivers to a trip.
+        /// The results include assigned driver and truck details.
+        /// </summary>
+        /// <param name="tripId">The trip id to fetch and project to DTO.</param>
+        /// <param name="filter">A filter used to refine the queryable collection before returning the results.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a LoadResult with the filtered collection of drivers.</returns>
+        public async Task<LoadResult> GetTripDriversByTripIdDX(long tripId , string filter)
+    {
+        // Fetch and project to DTO using AutoMapper's ProjectTo
+            var queryable =  _tripDriverRepository
+                .GetAllIncluding(td => td.Driver, td => td.TruckFk)
+                .Where(td => td.ShippingRequestTripId == tripId)
+                .OrderBy(x => x.CreationTime)
+                .ProjectTo<TripDriverForViewDto>(AutoMapperConfigurationProvider);
 
+
+            return await LoadResultAsync(queryable, filter);
+    }
+
+
+        /// <summary>
+        /// Retrieves a shipping request trip for editing by given trip id.
+        /// It returns a <see cref="CreateOrEditShippingRequestTripDto"/> which includes trip information,
+        /// rout points and their appointment and clearance details.
+        /// </summary>
+        /// <param name="input">The trip id to fetch and project to DTO.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="CreateOrEditShippingRequestTripDto"/>.</returns>
         public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForEdit(EntityDto input)
         {
             DisableTenancyFilters();
@@ -447,6 +497,10 @@ namespace TACHYON.Shipping.Trips
             return shippingRequestTrip;
         }
 
+        /// <summary>
+        /// Retrieves an empty shipping request trip for creation.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a CreateOrEditShippingRequestTripDto object with a document type set.</returns>
         public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForCreate()
         {
             var shippingRequestTrip =
@@ -478,6 +532,20 @@ namespace TACHYON.Shipping.Trips
             return shippingRequestTrip;
         }
 
+        /// <summary>
+        /// Creates or edits a shipping request trip.
+        /// </summary>
+        /// <param name="input">A CreateOrEditShippingRequestTripDto object containing the trip information.</param>
+        /// <exception cref="UserFriendlyException">If the user does not have permission to create a home delivery trip.</exception>
+        /// <exception cref="UserFriendlyException">If the goods category is not valid for the given shipping type.</exception>
+        /// <exception cref="UserFriendlyException">If the receiver is not provided.</exception>
+        /// <exception cref="UserFriendlyException">If the goods description or quantity is not provided.</exception>
+        /// <exception cref="UserFriendlyException">If the trip dates are not valid for the given shipping request.</exception>
+        /// <exception cref="UserFriendlyException">If the number of drops is not valid for the given shipping request.</exception>
+        /// <exception cref="UserFriendlyException">If the total weight of the goods is not valid for the given shipping request.</exception>
+        /// <exception cref="UserFriendlyException">If the dedicated request trip dates are not valid.</exception>
+        /// <exception cref="UserFriendlyException">If the truck and driver are not valid for the given shipping request.</exception>
+        /// <exception cref="UserFriendlyException">If the port movement request is not valid.</exception>
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripDto input)
         {
             await DisableTenancyFiltersIfTachyonDealer();
@@ -583,6 +651,13 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
+        /// <summary>
+        /// Sets the appointment data for given route point.
+        /// </summary>
+        /// <param name="input">The appointment data to set.</param>
+        /// <param name="point">The route point to set the appointment data for.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="UserFriendlyException">If the route point does not need an appointment.</exception>
         public async Task SetAppointmentData(TripAppointmentDataDto input, RoutPoint point)
         {
             if (!point.NeedsAppointment) { throw new UserFriendlyException(L("DropDoesNotNeedAppointment")); }
@@ -633,6 +708,13 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
+        /// <summary>
+        /// Sets the clearance prices for given route point.
+        /// </summary>
+        /// <param name="input">The clearance prices to set.</param>
+        /// <param name="point">The route point to set the clearance prices for.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="UserFriendlyException">If the route point does not need clearance.</exception>
         public async Task SetClearanceData(TripClearancePricesDto input, RoutPoint point)
         {
             if (!point.NeedsClearance) { throw new UserFriendlyException(L("DropDoesNotNeedClearance")); }
@@ -668,6 +750,12 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
+        /// <summary>
+        /// Sets the appointment data for a specified route point on behalf of a carrier or TMS.
+        /// </summary>
+        /// <param name="input">The appointment data to set.</param>
+        /// <param name="routePointId">The ID of the route point to set the appointment data for.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task CarrierSetAppointmentData(TripAppointmentDataDto input, long routePointId)
         {
             //carrier or TMS set appointment prices
@@ -692,6 +780,12 @@ namespace TACHYON.Shipping.Trips
             return point;
         }
 
+        /// <summary>
+        /// Sets the clearance data for a specified route point on behalf of a carrier or TMS.
+        /// </summary>
+        /// <param name="input">The clearance prices data to set.</param>
+        /// <param name="routePointId">The ID of the route point to set the clearance data for.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task CarrierSetClearanceData(TripClearancePricesDto input, long routePointId)
         {
             RoutPoint point = await GetDropPoint(routePointId);
@@ -699,6 +793,11 @@ namespace TACHYON.Shipping.Trips
             await SetClearanceData(input, point);
         }
 
+        /// <summary>
+        /// Retrieves the appointment file associated with a specific route point.
+        /// </summary>
+        /// <param name="pointId">The ID of the route point for which to retrieve the appointment file.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of uploaded file DTOs related to the appointment.</returns>
         public async Task<List<GetAllUploadedFileDto>> GetAppointmentFile(long pointId)
         {
             DisableTenancyFilters();
@@ -743,6 +842,13 @@ namespace TACHYON.Shipping.Trips
         }
 
        
+        /// <summary>
+        /// Updates the expected delivery time for a trip.
+        /// </summary>
+        /// <param name="input">An UpdateExpectedDeliveryTimeInput containing the trip ID and expected delivery time.</param>
+        /// <exception cref="UserFriendlyException">If the trip does not exist.</exception>
+        /// <exception cref="UserFriendlyException">If the trip is already started.</exception>
+        /// <exception cref="UserFriendlyException">If the expected delivery time is not valid for the given trip.</exception>
         public async Task UpdateExpectedDeliveryTimeForTrip(UpdateExpectedDeliveryTimeInput input)
         {
             DisableTenancyFilters();
@@ -753,180 +859,540 @@ namespace TACHYON.Shipping.Trips
             trip.ExpectedDeliveryTime = input.ExpectedDeliveryTime;
         }
 
+        #region AssignDriverAndTruck
+        /// <summary>
+        /// Assigns a driver and truck to a shipping request trip by the carrier.
+        /// </summary>
+        /// <param name="input">The input containing the trip ID, assigned driver user ID, and assigned truck ID.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input)
         {
-            ShippingRequestTrip trip;
-            bool isDriverChanged = false;
-
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            ShippingRequestTrip trip = await GetShippingRequestTrip(input.Id);
+            using (UnitOfWorkManager.Current.SetTenantId(trip.ShippingRequestFk.CarrierTenantId))
             {
-                trip = await _shippingRequestTripRepository.GetAll().Include(e => e.ShippingRequestFk)
-                    .Include(d => d.AssignedDriverUserFk)
-                    .Where(e => e.Id == input.Id)
-                    //.Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                    //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
-                    .FirstOrDefaultAsync();
-            }
-            trip.ContainerNumber = input.ContainerNumber;
-            trip.SealNumber = input.SealNumber;
-            var carrierTenantId = trip.ShippingRequestFk.CarrierTenantId;
-
-            using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
-            {
-
-
-                if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
-
-                if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
-                    throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
-                //check if truck or driver rented
-                if (await _shippingRequestManager.IsTruckBusyDuringTripDuration(input.AssignedTruckId, trip))
-                {
-                    throw new UserFriendlyException(L("TruckIsAlreadyRented"));
-                }
-                if (await _shippingRequestManager.IsDriverBusyDuringTripDuration(input.AssignedDriverUserId, trip))
-                {
-                    throw new UserFriendlyException(L("DriverIsAlreadyRented"));
-                }
+                await ValidateTripAndDriverAssignment(trip, input.AssignedDriverUserId, input.AssignedTruckId);
 
                 long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
                 long? oldAssignedTruckId = trip.AssignedTruckId;
-                trip.AssignedDriverUserId = input.AssignedDriverUserId;
-                trip.AssignedTruckId = input.AssignedTruckId;
+
+                AssignDriverAndTruckToTrip(trip, input);
+
+                ResetDriverStatusIfNeeded(trip);
+
+                bool isDriverChanged = oldAssignedDriverUserId != trip.AssignedDriverUserId;
                 bool isTruckChanged = oldAssignedTruckId != input.AssignedTruckId;
 
-                //reset driver status when change 
-                if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
+                if (isDriverChanged)
                 {
-                    trip.DriverStatus = ShippingRequestTripDriverStatus.None;
-                    trip.RejectedReason = string.Empty;
-                    trip.RejectReasonId = default(int?);
+                    await HandleDriverChangeNotifications(trip, oldAssignedDriverUserId);
                 }
 
-                if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
+                await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+
+                SetUpdateReason(isDriverChanged, isTruckChanged);
+
+                await UpdateDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
+
+                if (ShouldNotifyCarrier(oldAssignedTruckId, oldAssignedDriverUserId, trip))
                 {
-                    trip.AssignedDriverTime = Clock.Now;
-                    // Send Notification To New Driver
-                    if (oldAssignedDriverUserId.HasValue)
-                    {
-                        await _appNotifier.NotifyDriverWhenUnassignedTrip
-                        (
-                            trip.Id,
-                            trip.WaybillNumber.ToString(),
-                            new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value)
-                        );
-
-                        await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
-                        isDriverChanged = true;
-                    }
-                }
-
-                #region SetUpdateReason
-
-                string reason;
-
-                switch (isDriverChanged)
-                {
-                    case true when isTruckChanged:
-                        reason = nameof(RoutPointAction4);
-                        break;
-                    case true:
-                        reason = nameof(RoutPointAction1);
-                        break;
-                    case false when isTruckChanged:
-                        reason = nameof(RoutPointAction2);
-                        break;
-                    default: return;
-                }
-
-                _reasonProvider.Use(reason);
-
-                #endregion
-
-                await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
-
-                if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
-                {
-                    var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
-                    var notifyTripInput = new NotifyTripUpdatedInput()
-                    {
-                        CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
-                        TripId = trip.Id,
-                        WaybillNumber = trip.WaybillNumber.ToString(),
-                        DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
-                    };
-
-                    await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
+                    await NotifyCarrierOfTripUpdate(trip);
                 }
 
                 if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
-                    await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty
-                    (
-                        trip.ShippingRequestFk.CarrierTenantId.Value,
-                        trip.ShippingRequestFk.TenantId,
-                        trip.StartTripDate,
-                        trip.Id
-                    );
+                {
+                    await ApplyNotAssigningPenalty(trip);
+                }
 
-                // Send Notification To New Driver
-                await _appNotifier.NotifyDriverWhenAssignTrip
-                (
-                    trip.Id,
-                    new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value)
-                );
-
-
+                await NotifyDriverOfAssignment(trip);
 
                 await CurrentUnitOfWork.SaveChangesAsync();
-
             }
 
-            //Bayan integration job
-            await _bayanIntegrationManagerV3.QueueUpdateVehicleOrDriver
-            (
-                new UpdateVehicleOrDriverJobArgs { TripId = input.Id, DriverId = input.AssignedDriverUserId, TruckId = input.AssignedTruckId }
+            await QueueBayanIntegrationUpdate(input.Id, input.AssignedDriverUserId, input.AssignedTruckId);
+        }
+
+        /// <summary>
+        /// Retrieves a shipping request trip with its related shipping request and assigned driver.
+        /// If the trip does not exist, a user-friendly exception is thrown.
+        /// </summary>
+        /// <param name="tripId">The ID of the trip to retrieve.</param>
+        /// <returns>The retrieved shipping request trip.</returns>
+        private async Task<ShippingRequestTrip> GetShippingRequestTrip(long tripId)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                var trip = await _shippingRequestTripRepository.GetAll()
+                    .Include(e => e.ShippingRequestFk)
+                    .Include(d => d.AssignedDriverUserFk)
+                    .Include(x=> x.TripDrivers)
+                    .FirstOrDefaultAsync(e => e.Id == tripId);
+
+                if (trip == null)
+                {
+                    throw new UserFriendlyException(L("NoTripToAssignDriver"));
+                }
+                return trip;
+            }
+        }
+
+        /// <summary>
+        /// Validates a driver and truck assignment to a trip.
+        /// 
+        /// This method checks that the driver is not already working on another trip and that the truck is not already rented during the trip duration.
+        /// </summary>
+        /// <param name="trip">The trip to assign the driver and truck to.</param>
+        /// <param name="driverId">The id of the driver to assign.</param>
+        /// <param name="truckId">The id of the truck to assign.</param>
+        private async Task ValidateTripAndDriverAssignment(ShippingRequestTrip trip, long driverId, long truckId)
+        {
+            if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(driverId))
+            {
+                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+            }
+            if (await _shippingRequestManager.IsTruckBusyDuringTripDuration(truckId, trip))
+            {
+                throw new UserFriendlyException(L("TruckIsAlreadyRented"));
+            }
+            if (await _shippingRequestManager.IsDriverBusyDuringTripDuration(driverId, trip))
+            {
+                throw new UserFriendlyException(L("DriverIsAlreadyRented"));
+            }
+        }
+
+        
+        /// <summary>
+        /// Assigns a driver and truck to a trip.
+        /// 
+        /// This method updates the trip's driver and truck with the given ids and sets the assigned time to the current time.
+        /// It also sets the active trip driver to the given driver and truck.
+        /// </summary>
+        /// <param name="trip">The trip to assign the driver and truck to.</param>
+        /// <param name="input">The input containing the driver and truck ids.</param>
+        private void AssignDriverAndTruckToTrip(ShippingRequestTrip trip, AssignDriverAndTruckToShippmentByCarrierInput input)
+        {
+            trip.ContainerNumber = input.ContainerNumber;
+            trip.SealNumber = input.SealNumber;
+            trip.AssignedDriverUserId = input.AssignedDriverUserId;
+            trip.AssignedTruckId = input.AssignedTruckId;
+            trip.AssignedDriverTime = Clock.Now;
+
+            // implement TripDriver 
+            foreach (var tripDriver in trip.TripDrivers){
+                tripDriver.IsActive = false;
+            }        
+            trip.TripDrivers.Add(new TripDriver(){
+                DriverId = input.AssignedDriverUserId,
+                ShippingRequestTripId = trip.Id,
+                TruckId = input.AssignedTruckId
+            });
+
+        }
+
+        /// <summary>
+        /// Resets the driver status of a trip to its initial state.
+        /// </summary>
+        /// <param name="trip">The shipping request trip to reset the driver status of.</param>
+        /// <remarks>
+        /// The driver status is reset to <see cref="ShippingRequestTripDriverStatus.None"/>,
+        /// the rejected reason is cleared and the rejected reason id is set to null.
+        /// </remarks>
+        private void ResetDriverStatusIfNeeded(ShippingRequestTrip trip)
+        {
+            if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
+            {
+                trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+                trip.RejectedReason = string.Empty;
+                trip.RejectReasonId = default(int?);
+            }
+        }
+
+        /// <summary>
+        /// Handles notifications related to driver changes in a shipping request trip.
+        /// </summary>
+        /// <param name="trip">The shipping request trip for which the driver change notification is being handled.</param>
+        /// <param name="oldAssignedDriverUserId">The ID of the previously assigned driver, if any.</param>
+        /// <remarks>
+        /// If an old driver is assigned, this method sends a notification to inform them they have been unassigned from the trip.
+        /// </remarks>
+        private async Task HandleDriverChangeNotifications(ShippingRequestTrip trip, long? oldAssignedDriverUserId)
+        {
+
+            if (oldAssignedDriverUserId.HasValue)
+            {
+                await _appNotifier.NotifyDriverWhenUnassignedTrip(
+                    trip.Id,
+                    trip.WaybillNumber.ToString(),
+                    new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value)
+                );
+            }
+        }
+
+        /// <summary>
+        /// Sets the update reason for a trip update, based on whether the driver and/or truck were changed.
+        /// </summary>
+        /// <param name="isDriverChanged">True if the driver was changed, false otherwise.</param>
+        /// <param name="isTruckChanged">True if the truck was changed, false otherwise.</param>
+        /// <remarks>
+        /// The update reason is set to one of the following values, depending on the parameters:
+        /// <list type="bullet">
+        /// <item><see cref="RoutPointAction1"/> if only the driver was changed.</item>
+        /// <item><see cref="RoutPointAction2"/> if only the truck was changed.</item>
+        /// <item><see cref="RoutPointAction4"/> if both the driver and truck were changed.</item>
+        /// </list>
+        /// </remarks>
+        private void SetUpdateReason(bool isDriverChanged, bool isTruckChanged)
+        {
+            string reason = isDriverChanged switch
+            {
+                true when isTruckChanged => nameof(RoutPointAction4),
+                true => nameof(RoutPointAction1),
+                false when isTruckChanged => nameof(RoutPointAction2),
+                _ => null
+            };
+
+            if (reason != null)
+            {
+                _reasonProvider.Use(reason);
+            }
+        }
+
+        /// <summary>
+        /// Updates the driver status of a user.
+        /// </summary>
+        /// <param name="driverId">The ID of the user to update the driver status for.</param>
+        /// <param name="status">The new driver status for the user.</param>
+        private async Task UpdateDriverStatus(long driverId, UserDriverStatus status)
+        {
+            await UserManager.UpdateUserDriverStatus(driverId, status);
+        }
+
+        /// <summary>
+        /// Checks if the carrier should be notified of a trip update.
+        /// A notification is sent if the truck assigned to the trip has changed and the trip is related to a carrier.
+        /// </summary>
+        /// <param name="oldAssignedTruckId">The ID of the truck previously assigned to the trip, if any.</param>
+        /// <param name="oldAssignedDriverUserId">The ID of the driver previously assigned to the trip, if any.</param>
+        /// <param name="trip">The shipping request trip to check for notification.</param>
+        /// <returns>True if the carrier should be notified, false otherwise.</returns>
+        private bool ShouldNotifyCarrier(long? oldAssignedTruckId, long? oldAssignedDriverUserId, ShippingRequestTrip trip)
+        {
+            return oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null;
+        }
+
+        /// <summary>
+        /// Notifies the carrier of a trip update.
+        /// </summary>
+        /// <param name="trip">The shipping request trip that has been updated.</param>
+        /// <remarks>
+        /// This method retrieves the assigned driver and prepares a notification input object
+        /// with relevant trip details. It then sends a notification to the carrier
+        /// associated with the trip using the application notifier.
+        /// </remarks>
+
+        private async Task NotifyCarrierOfTripUpdate(ShippingRequestTrip trip)
+        {
+            var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
+            var notifyTripInput = new NotifyTripUpdatedInput
+            {
+                CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
+                TripId = trip.Id,
+                WaybillNumber = trip.WaybillNumber.ToString(),
+                DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
+            };
+
+            await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
+        }
+
+        /// <summary>
+        /// Applies a penalty to the carrier for not assigning a truck and driver to the trip.
+        /// </summary>
+        /// <param name="trip">The shipping request trip that had no truck and driver assigned.</param>
+        /// <remarks>
+        /// This method calls the penalty manager to apply a penalty to the carrier for not assigning a truck and driver to the trip.
+        /// The penalty is applied based on the carrier's tenant ID, the shipper's tenant ID, the start date of the trip and the trip ID.
+        /// </remarks>
+        private async Task ApplyNotAssigningPenalty(ShippingRequestTrip trip)
+        {
+            await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty(
+                trip.ShippingRequestFk.CarrierTenantId.Value,
+                trip.ShippingRequestFk.TenantId,
+                trip.StartTripDate,
+                trip.Id
             );
         }
 
-        public async Task ReplaceDriverAsync(long? newDriverId, int tripId)
+        /// <summary>
+        /// Notifies the driver of a trip assignment.
+        /// </summary>
+        /// <param name="trip">The shipping request trip that has been assigned to the driver.</param>
+        /// <remarks>
+        /// This method calls the application notifier to send a notification to the driver
+        /// that the trip has been assigned to them.
+        /// </remarks>
+        private async Task NotifyDriverOfAssignment(ShippingRequestTrip trip)
         {
-            var trip = await _shippingRequestTripRepository.GetAsync(tripId);
-            var oldDriverId = trip.AssignedDriverUserId;
-            if (oldDriverId != newDriverId)
+            await _appNotifier.NotifyDriverWhenAssignTrip(
+                trip.Id,
+                new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value)
+            );
+        }
+
+        /// <summary>
+        /// Queues an update of the specified trip, driver and truck to the Bayan integration.
+        /// </summary>
+        /// <param name="tripId">The ID of the trip to update.</param>
+        /// <param name="driverId">The ID of the driver to update.</param>
+        /// <param name="truckId">The ID of the truck to update.</param>
+        /// <remarks>
+        /// This method is called after a trip has been assigned to a driver and truck.
+        /// It sends a message to the Bayan integration to update the trip, driver and truck with the latest information.
+        /// </remarks>
+        private async Task QueueBayanIntegrationUpdate(long tripId, long driverId, long truckId)
+        {
+            await _bayanIntegrationManagerV3.QueueUpdateVehicleOrDriver(
+                new UpdateVehicleOrDriverJobArgs { TripId = (int)tripId, DriverId = driverId, TruckId = truckId }
+            );
+        }
+        #endregion
+        // public async Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input)
+        // {
+        //     ShippingRequestTrip trip;
+        //     bool isDriverChanged = false;
+
+        //     using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+        //     {
+        //         trip = await _shippingRequestTripRepository.GetAll().Include(e => e.ShippingRequestFk)
+        //             .Include(d => d.AssignedDriverUserFk)
+        //             .Where(e => e.Id == input.Id)
+        //             .FirstOrDefaultAsync();
+
+        //         if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
+        //     }
+        //     trip.ContainerNumber = input.ContainerNumber;
+        //     trip.SealNumber = input.SealNumber;
+        //     var carrierTenantId = trip.ShippingRequestFk.CarrierTenantId;
+
+        //     using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
+        //     {
+
+
+
+
+        //         if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
+        //             throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+        //         //check if truck or driver rented
+        //         if (await _shippingRequestManager.IsTruckBusyDuringTripDuration(input.AssignedTruckId, trip))
+        //         {
+        //             throw new UserFriendlyException(L("TruckIsAlreadyRented"));
+        //         }
+        //         if (await _shippingRequestManager.IsDriverBusyDuringTripDuration(input.AssignedDriverUserId, trip))
+        //         {
+        //             throw new UserFriendlyException(L("DriverIsAlreadyRented"));
+        //         }
+
+        //         long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
+        //         long? oldAssignedTruckId = trip.AssignedTruckId;
+        //         trip.AssignedDriverUserId = input.AssignedDriverUserId;
+        //         trip.AssignedTruckId = input.AssignedTruckId;
+        //         bool isTruckChanged = oldAssignedTruckId != input.AssignedTruckId;
+
+        //         //reset driver status when change 
+        //         if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
+        //         {
+        //             trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+        //             trip.RejectedReason = string.Empty;
+        //             trip.RejectReasonId = default(int?);
+        //         }
+
+        //         if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
+        //         {
+        //             trip.AssignedDriverTime = Clock.Now;
+        //             // Send Notification To New Driver
+        //             if (oldAssignedDriverUserId.HasValue)
+        //             {
+        //                 await _appNotifier.NotifyDriverWhenUnassignedTrip
+        //                 (
+        //                     trip.Id,
+        //                     trip.WaybillNumber.ToString(),
+        //                     new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value)
+        //                 );
+
+        //                 await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+        //                 isDriverChanged = true;
+        //             }
+        //         }
+
+        //         #region SetUpdateReason
+
+        //         string reason;
+
+        //         switch (isDriverChanged)
+        //         {
+        //             case true when isTruckChanged:
+        //                 reason = nameof(RoutPointAction4);
+        //                 break;
+        //             case true:
+        //                 reason = nameof(RoutPointAction1);
+        //                 break;
+        //             case false when isTruckChanged:
+        //                 reason = nameof(RoutPointAction2);
+        //                 break;
+        //             default: return;
+        //         }
+
+        //         _reasonProvider.Use(reason);
+
+        //         #endregion
+
+        //         await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
+
+        //         if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
+        //         {
+        //             var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
+        //             var notifyTripInput = new NotifyTripUpdatedInput()
+        //             {
+        //                 CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
+        //                 TripId = trip.Id,
+        //                 WaybillNumber = trip.WaybillNumber.ToString(),
+        //                 DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
+        //             };
+
+        //             await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
+        //         }
+
+        //         if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
+        //             await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty
+        //             (
+        //                 trip.ShippingRequestFk.CarrierTenantId.Value,
+        //                 trip.ShippingRequestFk.TenantId,
+        //                 trip.StartTripDate,
+        //                 trip.Id
+        //             );
+
+        //         // Send Notification To New Driver
+        //         await _appNotifier.NotifyDriverWhenAssignTrip
+        //         (
+        //             trip.Id,
+        //             new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value)
+        //         );
+
+
+
+        //         await CurrentUnitOfWork.SaveChangesAsync();
+
+        //     }
+
+        //     //Bayan integration job
+        //     await _bayanIntegrationManagerV3.QueueUpdateVehicleOrDriver
+        //     (
+        //         new UpdateVehicleOrDriverJobArgs { TripId = input.Id, DriverId = input.AssignedDriverUserId, TruckId = input.AssignedTruckId }
+        //     );
+        // }
+
+
+        /// <summary>
+        /// Replaces the driver or truck assigned to a shipping request trip.
+        /// </summary>
+        /// <param name="newDriverId">The ID of the new driver to be assigned to the trip, if any.</param>
+        /// <param name="newTruckId">The ID of the new truck to be assigned to the trip, if any.</param>
+        /// <param name="tripId">The ID of the trip for which the driver or truck is being replaced.</param>
+        /// <remarks>
+        /// If a new driver is provided, it updates the trip's assigned driver and deactivates previous trip drivers.
+        /// If a new truck is provided without a new driver, it updates the trip's assigned truck.
+        /// Sends a notification to the new driver if a driver change occurs.
+        /// </remarks>
+        public async Task ReplaceDriverOrTruckAsync(long? newDriverId, long? newTruckId, int tripId)
+        {
+
+            var trip = await _shippingRequestTripRepository
+           .GetAllIncluding(x => x.TripDrivers)
+           .FirstAsync(x => x.Id == tripId);
+
+
+
+            if (newDriverId != null)
             {
-                trip.ReplacesDriverId = oldDriverId;
-                trip.AssignedDriverUserId = newDriverId;
-                
-                trip.ReplacedDriverWorkingHour = trip.DriverWorkingHour;
-                trip.ReplacedDriverDistance = trip.Distance;
+                var oldDriverId = trip.AssignedDriverUserId;
 
-                trip.DriverWorkingHour = 0;
-                trip.Distance = 0;
- 
+                if (oldDriverId != newDriverId)
+                {
+                    trip.ReplacesDriverId = oldDriverId;
+                    trip.AssignedDriverUserId = newDriverId;
 
-                 // Send Notification To New Driver
-                await _appNotifier.NotifyDriverWhenAssignTrip
-                (
-                    trip.Id,
-                    new UserIdentifier(trip.CarrierTenantId, trip.AssignedDriverUserId.Value)
-                );
+                    trip.ReplacedDriverWorkingHour = trip.DriverWorkingHour;
+                    trip.ReplacedDriverDistance = trip.Distance;
 
+                    //trip.DriverWorkingHour = 0;
+                    //trip.Distance = 0;
+
+                    // implement TripDriver 
+                    foreach (var tripDriver in trip.TripDrivers)
+                    {
+                        tripDriver.IsActive = false;
+                    }
+                    trip.TripDrivers.Add(new TripDriver()
+                    {
+                        DriverId = newDriverId.Value,
+                        ShippingRequestTripId = trip.Id,
+                        TruckId = newTruckId != null ? newTruckId.Value : trip.AssignedTruckId,
+                        IsActive = true
+
+                    });
+
+                    // Send Notification To New Driver
+                    await _appNotifier.NotifyDriverWhenAssignTrip
+                    (
+                        trip.Id,
+                        new UserIdentifier(trip.CarrierTenantId, trip.AssignedDriverUserId.Value)
+                    );
+
+                }
             }
+
+
+            if (newTruckId != null && newDriverId == null)
+            {
+                var oldTruckId = trip.AssignedTruckId;
+                if (oldTruckId != newTruckId)
+                {
+                    trip.ReplacedTruckId = oldTruckId;
+                    trip.AssignedTruckId = newTruckId;
+
+                    var tripDriver = trip.TripDrivers.FirstOrDefault(x => x.IsActive);
+                    if (tripDriver == null) throw new UserFriendlyException(L("NoTripDriver"));
+                    tripDriver.TruckId = newTruckId;
+
+                }
+            }
+
+
 
         }
 
-        public async Task ReplaceTruckAsync(long? newTruckId, int tripId)
+        
+        
+        /// <summary>
+        /// Updates the commission percentage for a trip driver.
+        /// </summary>
+        /// <param name="dto">A TripDriverForViewDto object containing the ID of the trip driver and the new commission percentage.</param>
+        /// <exception cref="UserFriendlyException">If the trip driver does not exist.</exception>
+        public async Task UpdateTripDriver(TripDriverForViewDto dto)
         {
-            var trip = await _shippingRequestTripRepository.GetAsync(tripId);
-            var oldTruckId = trip.AssignedTruckId;
-            if (oldTruckId != newTruckId)
-            {
-                trip.ReplacedTruckId = oldTruckId;
-                trip.AssignedTruckId = newTruckId;
-            }
-
+            var tripDriver = await _tripDriverRepository
+            .FirstOrDefaultAsync(x=> x.Id == dto.Id);
+            
+            if (tripDriver == null ) throw new UserFriendlyException(L("NoTripDriver"));
+            
+            tripDriver.Commission = dto.Commission;
+    
         }
 
+        /// <summary>
+        /// Changes the container return date and/or sets if the container is returned of a trip.
+        /// </summary>
+        /// <param name="tripId">The ID of the trip to change the container return date and/or set if the container is returned.</param>
+        /// <param name="containerReturnDate">The new container return date, if any.</param>
+        /// <param name="isContainerReturned">A value indicating if the container is returned, if any.</param>
         public async Task ChangeContainerReturnDate(int tripId , DateTime? containerReturnDate , bool? isContainerReturned )
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
@@ -1020,6 +1486,12 @@ namespace TACHYON.Shipping.Trips
             
         }
 
+        /// <summary>
+        /// Adds SAB order id to the trip
+        /// </summary>
+        /// <param name="tripId">The id of the trip</param>
+        /// <param name="sabOrderId">The SAB order id</param>
+        /// <returns>A Task that represents the asynchronous operation</returns>
         public async Task AddSabOrderId(int tripId , string sabOrderId)
         {
             var trip = await _shippingRequestTripRepository.GetAll()
@@ -1027,6 +1499,11 @@ namespace TACHYON.Shipping.Trips
             trip.SabOrderId = sabOrderId;
             
         }
+        /// <summary>
+        /// Adds remarks to a trip.
+        /// </summary>
+        /// <param name="input">A RemarksInputDto object containing the remarks information.</param>
+        /// <exception cref="UserFriendlyException">If the trip is not found.</exception>
         public async Task AddRemarks(RemarksInputDto input)
         {
             DisableTenancyFilters();
@@ -1044,6 +1521,13 @@ namespace TACHYON.Shipping.Trips
             shippginRequstTrip.CanBePrinted = input.CanBePrinted;
             shippginRequstTrip.ContainerNumber = input.ContainerNumber;
         }
+        
+        /// <summary>
+        /// Retrieves the remarks of a shipping request trip by the given trip ID.
+        /// </summary>
+        /// <param name="tripId">The ID of the trip for which to retrieve remarks.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a RemarksInputDto object
+        /// with the trip remarks information such as round trip status, container number, and printability.</returns>
         public async Task<RemarksInputDto> GetRemarks(int tripId)
         {
             return await _shippingRequestTripRepository.GetAll()
@@ -1223,6 +1707,12 @@ namespace TACHYON.Shipping.Trips
         }
 
 
+        /// <summary>
+        /// Deletes a shipping request trip by given trip id.
+        /// The user must have <see cref="AppPermissions.Pages_ShippingRequestTrips_Delete"/> permission to be able to delete a trip.
+        /// </summary>
+        /// <param name="input">The trip id to delete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
         public async Task Delete(EntityDto input)
         {
@@ -1247,6 +1737,13 @@ namespace TACHYON.Shipping.Trips
 
 
 
+        /// <summary>
+        /// Cancels a shipping request trip based on the provided input.
+        /// The trip must be in a "New" or "InTransit" status and the associated shipping request must be in a "PrePrice" status.
+        /// The cancellation is only allowed if the trip's cancel status is "None" and certain tenant-specific conditions are met.
+        /// </summary>
+        /// <param name="input">A CancelTripInput object containing the trip cancellation details.</param>
+        /// <exception cref="UserFriendlyException">Thrown if the trip is not found.</exception>
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Cancel)]
         public async Task CancelTrip(CancelTripInput input)
         {
@@ -1276,6 +1773,13 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
+        /// <summary>
+        /// Updates the invoice flag for a shipping request trip by given trip id.
+        /// The invoice flag determines whether the trip can be invoiced separately or not.
+        /// </summary>
+        /// <param name="shippingRequesTripId">The trip id to update.</param>
+        /// <param name="invoiceFlag">The invoice flag to set.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task UpdateTripInvoiceFlag(int shippingRequesTripId, string invoiceFlag)
         {
             DisableTenancyFilters();
@@ -1285,11 +1789,21 @@ namespace TACHYON.Shipping.Trips
         }
 
 
+        /// <summary>
+        /// Initiates the creation of a trip in the Bayan integration system.
+        /// </summary>
+        /// <param name="tripId">The ID of the trip to be created in the Bayan integration.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task CreateBayanIntegrationTrip(int tripId)
         {
             await _bayanIntegrationManagerV3.CreateTrip(tripId);
         }
 
+        /// <summary>
+        /// Prints the details of a trip from the Bayan integration system.
+        /// </summary>
+        /// <param name="tripId">The ID of the trip to print.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a byte array of the printed trip details.</returns>
         public async Task<byte[]> PrintBayanIntegrationTrip(int tripId)
         {
             return await _bayanIntegrationManagerV3.PrintTrip(tripId);
@@ -1736,7 +2250,6 @@ namespace TACHYON.Shipping.Trips
             }
             input.ShippingRequestTripVases = vasList;
         }
-
 
         private async Task AddOrRemoveDestinationCities(List<ShippingRequestDestinationCitiesDto> destinationCitiesDtos, ShippingRequestTrip trip)
         {
