@@ -112,11 +112,31 @@ using TACHYON.Reports.ReportPermissions;
 using TACHYON.Reports.ReportTemplates;
 using TACHYON.Saas.SaasPricePackages;
 using TACHYON.Tracking.AdditionalSteps;
+using Abp.Runtime.Session;
+using System.Linq;
 
 namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+    public IPrincipalAccessor PrincipalAccessor { get; set; }
+
+        protected virtual int? CurrentActorShipperId => GetCurrentUsersActorShipperIdOrNull();
+
+        protected virtual int? GetCurrentUsersActorShipperIdOrNull()
+        {
+            var userOuClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AppConsts.UserActorShipperId);
+            if (string.IsNullOrEmpty(userOuClaim?.Value))
+            {
+                return null;
+            }
+
+            return Convert.ToInt32(userOuClaim.Value);
+        }
+
+        protected virtual bool IsActorShipperFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(TACHYONDataFilters.ShipperActorFilter) == true;
+
+
         public virtual DbSet<RedemptionCode> RedemptionCodes { get; set; }
         
         public virtual DbSet<SaasPricePackage> SaasPricePackages { get; set; }
@@ -433,6 +453,10 @@ namespace TACHYON.EntityFrameworkCore
             {
                 return true;
             }
+            if (typeof(IMayHaveShipperActor).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
 
             return base.ShouldFilterEntity<TEntity>(entityType);
         }
@@ -467,6 +491,11 @@ namespace TACHYON.EntityFrameworkCore
                 Expression<Func<TEntity, bool>> mustReportDefinitionActive = e =>
                     ((IPassivable)e).IsActive || (((IPassivable)e).IsActive == IsActiveReportDefinitionEnabled);
                 expression = expression == null ? mustReportDefinitionActive : CombineExpressions(expression, mustReportDefinitionActive);
+            }
+            else if (typeof(IMayHaveShipperActor).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> mayHaveActorShipperFilter = e => (((IMayHaveShipperActor)e).ShipperActorId == CurrentActorShipperId || CurrentActorShipperId == null) || (((IMayHaveShipperActor)e).ShipperActorId == CurrentActorShipperId) == IsActorShipperFilterEnabled;
+                expression = expression == null ? mayHaveActorShipperFilter : CombineExpressions(expression, mayHaveActorShipperFilter);
             }
 
             return expression;

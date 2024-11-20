@@ -11,8 +11,8 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20240828092956_3.28.0")]
-    partial class _3280
+    [Migration("20241121114902_Add_Correct_ActorShipperId_Name")]
+    partial class Add_Correct_ActorShipperId_Name
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1918,6 +1918,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
+                    b.Property<int?>("ShipperActorId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("ShouldChangePasswordOnNextLogin")
                         .HasColumnType("bit");
 
@@ -2918,6 +2921,67 @@ namespace TACHYON.Migrations
                     b.HasIndex("SubmitInvoiceId");
 
                     b.ToTable("DynamicInvoices");
+                });
+
+            modelBuilder.Entity("TACHYON.DynamicInvoices.DynamicInvoiceCustomItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("DynamicInvoiceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("VatAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("VatTax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DynamicInvoiceId");
+
+                    b.ToTable("DynamicInvoiceCustomItems");
                 });
 
             modelBuilder.Entity("TACHYON.DynamicInvoices.DynamicInvoiceItems.DynamicInvoiceItem", b =>
@@ -6853,6 +6917,9 @@ namespace TACHYON.Migrations
                     b.Property<byte?>("RoundTripType")
                         .HasColumnType("tinyint");
 
+                    b.Property<int?>("ShipperActorId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ShippingTypeId")
                         .HasColumnType("int");
 
@@ -10691,6 +10758,15 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Invoices.SubmitInvoices.SubmitInvoice", "SubmitInvoice")
                         .WithMany()
                         .HasForeignKey("SubmitInvoiceId");
+                });
+
+            modelBuilder.Entity("TACHYON.DynamicInvoices.DynamicInvoiceCustomItem", b =>
+                {
+                    b.HasOne("TACHYON.DynamicInvoices.DynamicInvoice", "DynamicInvoice")
+                        .WithMany("CustomItems")
+                        .HasForeignKey("DynamicInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TACHYON.DynamicInvoices.DynamicInvoiceItems.DynamicInvoiceItem", b =>

@@ -67,5 +67,19 @@ namespace TACHYON.Common
                 return claim.Value.To<int>();
             }
         }
+
+        public int? ActorShipperId
+        {
+            get
+            {
+                var claim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AppConsts.UserActorShipperId);
+                if (string.IsNullOrEmpty(claim?.Value))
+                {
+                    return null;
+                }
+
+                return claim.Value.To<int>();
+            }
+        }
     }
 }

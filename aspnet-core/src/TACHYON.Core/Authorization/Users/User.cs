@@ -12,14 +12,13 @@ using TACHYON.Integration.WaslIntegration;
 using TACHYON.Nationalities;
 using TACHYON.Rating;
 using TACHYON.Shipping.Dedicated;
-using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Authorization.Users
 {
     /// <summary>
     /// Represents a user in the system.
     /// </summary>
-    public class User : AbpUser<User>, IWaslIntegrated,IHasRating, IMayHaveCarrierActor , ICanBeExcludedFromBayanIntegration
+    public class User : AbpUser<User>, IWaslIntegrated,IHasRating, IMayHaveCarrierActor , ICanBeExcludedFromBayanIntegration,IMayHaveShipperActor
     {
         [StringLength(12)] public string AccountNumber { get; set; }
         public virtual Guid? ProfilePictureId { get; set; }
@@ -134,5 +133,6 @@ namespace TACHYON.Authorization.Users
         //    WorkingShippingRequestReference = "";
         //}
         public bool ExcludeFromBayanIntegration { get; set; }
+        public int? ShipperActorId { get ; set ; }
     }
 }

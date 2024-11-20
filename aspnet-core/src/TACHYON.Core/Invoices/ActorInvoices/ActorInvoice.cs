@@ -16,7 +16,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 namespace TACHYON.Invoices.ActorInvoices
 {
     [Table("ActorInvoices")]
-    public class ActorInvoice : FullAuditedEntity<long>, IMustHaveTenant
+    public class ActorInvoice : FullAuditedEntity<long>, IMustHaveTenant , IMayHaveShipperActor
     {
 
         public string InvoiceNumber { get; set; }

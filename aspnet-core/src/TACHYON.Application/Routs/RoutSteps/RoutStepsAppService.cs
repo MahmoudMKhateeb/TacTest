@@ -1,6 +1,7 @@
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
@@ -385,6 +386,12 @@ namespace TACHYON.Routs.RoutSteps
                 }).ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieves a list of facilities for a given shipping request, considering the cities related to the shipping request
+        /// and the tenant associated with the shipping request. The result can be filtered by the shipping request type.
+        /// </summary>
+        /// <param name="shippingRequestId">The id of the shipping request used to filter the facilities.</param>
+        /// <returns>A list of <see cref="FacilityForDropdownDto"/> representing the facilities available for the given shipping request.</returns>
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesByCityAndTenantForDropdown(long shippingRequestId)
         {
             ShippingRequest shippingRequest;
@@ -397,8 +404,10 @@ namespace TACHYON.Routs.RoutSteps
                 .AsNoTracking()
                 .WhereIf(shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalInsideCity, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId)) //inside city
                 //.WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId ); //between city
-                .WhereIf(shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId));
-                query = query.Where(x =>( x.FacilityType == FacilityType.Facility && x.TenantId == shippingRequest.TenantId) || x.FacilityType != FacilityType.Facility);
+                .WhereIf(shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId))
+                .WhereIf(shippingRequest.ShipperActorId.HasValue, x=> x.ShipperActorId == shippingRequest.ShipperActorId)
+                .Where(x =>( x.FacilityType == FacilityType.Facility && x.TenantId == shippingRequest.TenantId) || x.FacilityType != FacilityType.Facility);
+
                 var result = await query.Select(x => new FacilityForDropdownDto
                 {
                     Id = x.Id,
@@ -419,12 +428,18 @@ namespace TACHYON.Routs.RoutSteps
         }
 
 
-        public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDirectTrip()
+        /// <summary>
+        /// Retrieves a list of facilities for a direct trip, optionally filtered by the Shipper Actor ID.
+        /// </summary>
+        /// <param name="ShipperActorId">Optional ID of the shipper actor to filter the facilities.</param>
+        /// <returns>A list of <see cref="FacilityForDropdownDto"/> representing the facilities available for a direct trip.</returns>
+        public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDirectTrip(int? ShipperActorId)
         {
             DisableTenancyFilters();
             return await _lookup_FacilityRepository
                 .GetAll()
                 .Where(x=> (x.FacilityType == FacilityType.Facility && x.TenantId == AbpSession.TenantId) || x.FacilityType != FacilityType.Facility)
+                .WhereIf(ShipperActorId.HasValue , x=> x.ShipperActorId == ShipperActorId)
                 .Select
                 (
                     x => new FacilityForDropdownDto

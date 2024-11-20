@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.MultiTenancy;
 using TACHYON.Actors;
 using TACHYON.Rating;
-using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.AddressBook
 {

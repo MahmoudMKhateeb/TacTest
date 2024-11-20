@@ -33,7 +33,10 @@ namespace TACHYON.Authorization.Users
             if (user.TenantId.HasValue)
             {
                 var editionId = (await _tenantManager.GetByIdAsync(user.TenantId.Value)).EditionId;
+                
                 claim.Identities.First().AddClaim(new Claim(AppConsts.UserEditionId, editionId.ToString()));
+                claim.Identities.First().AddClaim(new Claim(AppConsts.UserActorShipperId, user.ShipperActorId.ToString()));
+
             }
 
             return claim;

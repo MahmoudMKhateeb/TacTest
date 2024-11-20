@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241120073654_Add_ActorShipperId_to_User")]
+    partial class Add_ActorShipperId_to_User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6914,9 +6916,6 @@ namespace TACHYON.Migrations
 
                     b.Property<byte?>("RoundTripType")
                         .HasColumnType("tinyint");
-
-                    b.Property<int?>("ShipperActorId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("ShippingTypeId")
                         .HasColumnType("int");
