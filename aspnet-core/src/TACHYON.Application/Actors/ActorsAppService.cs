@@ -21,6 +21,7 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Invoices.ActorInvoices;
 using TACHYON.WebHooks;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Actors
 {
@@ -35,6 +36,7 @@ namespace TACHYON.Actors
         private readonly ActorInvoicesManager _actorInvoicesManager;
         private readonly RoleManager _roleManager;
         private readonly AppWebhookPublisher _webhookPublisher;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
 
         public ActorsAppService(
@@ -45,7 +47,8 @@ namespace TACHYON.Actors
             IRepository<DocumentFile, Guid> documentFileRepository,
             ActorInvoicesManager actorInvoicesManager,
             RoleManager roleManager,
-            AppWebhookPublisher webhookPublisher)
+            AppWebhookPublisher webhookPublisher,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _actorRepository = actorRepository;
             _organizationUnitManager = organizationUnitManager;
@@ -55,6 +58,7 @@ namespace TACHYON.Actors
             _actorInvoicesManager = actorInvoicesManager;
             _roleManager = roleManager;
             _webhookPublisher = webhookPublisher;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         public async Task<PagedResultDto<GetActorForViewDto>> GetAll(GetAllActorsInput input)
@@ -393,6 +397,17 @@ namespace TACHYON.Actors
         {
             var actor = await _actorRepository.GetAll().Where(x => x.Id == input.Id)
                 .Select(x => new {x.OrganizationUnitId,x.ActorType}).FirstOrDefaultAsync();
+
+            // Check if the actor has trips
+            var actorHasTrips = await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ShipperActorId == input.Id)
+                .AnyAsync();
+
+            if (actorHasTrips)
+            {
+                throw new UserFriendlyException(L("ActorLinkedToTripsCannotBeDeleted"));
+            }
+
             if (actor?.ActorType == ActorTypesEnum.MySelf)
                 throw new UserFriendlyException(L("ThisActorCanNotBeDeleted"));
 
