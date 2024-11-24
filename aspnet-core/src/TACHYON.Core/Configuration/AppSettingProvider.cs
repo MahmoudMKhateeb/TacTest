@@ -128,6 +128,11 @@ namespace TACHYON.Configuration
 
                 //Bayan Integration
                 //todo add this to host settings page
+                new SettingDefinition(AppSettings.BayanIntegration.IsEnabled,
+                    GetFromAppSettings(AppSettings.BayanIntegration.IsEnabled, "false"),
+                    isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+
                 new SettingDefinition(AppSettings.BayanIntegration.Url,
                     GetFromAppSettings(AppSettings.BayanIntegration.Url, "https://bayan.api.elm.sa/api/v1/freight-forwarder/"),
                     isVisibleToClients: true,
