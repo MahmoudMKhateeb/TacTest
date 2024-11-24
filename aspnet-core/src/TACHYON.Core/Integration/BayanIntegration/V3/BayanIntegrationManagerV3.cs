@@ -58,7 +58,7 @@ namespace TACHYON.Integration.BayanIntegration.V3
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<Truck, long> _truckRepository;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
-
+        
         public BayanIntegrationManagerV3(IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripTripRepository,
             IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository,
             DocumentFilesManager documentFilesManager,
@@ -82,6 +82,7 @@ namespace TACHYON.Integration.BayanIntegration.V3
         }
 
 
+        private Task<bool> BayanIntegrationIsEnabled => _settingManager.GetSettingValueAsync<bool>(AppSettings.BayanIntegration.IsEnabled);
         private Task<string> Url => _settingManager.GetSettingValueAsync(AppSettings.BayanIntegration.Url);
         private Task<string> AppId => _settingManager.GetSettingValueAsync(AppSettings.BayanIntegration.AppId);
         private Task<string> AppKey => _settingManager.GetSettingValueAsync(AppSettings.BayanIntegration.AppKey);
@@ -512,6 +513,8 @@ namespace TACHYON.Integration.BayanIntegration.V3
 
         public async Task QueueCreateTrip(int tripId)
         {
+            if (await BayanIntegrationIsEnabled == false) return;
+            
             var x = await _shippingRequestTripTripRepository.GetAll()
                 .Where(x => x.Id == tripId)
                 .Select
@@ -533,16 +536,19 @@ namespace TACHYON.Integration.BayanIntegration.V3
 
         public async Task QueueUpdateVehicleOrDriver(UpdateVehicleOrDriverJobArgs args)
         {
+            if (await BayanIntegrationIsEnabled == false) return;
             var queueCreateConsignmentNoteJobId = await _backgroundJobManager.EnqueueAsync<UpdateVehicleOrDriverJob, UpdateVehicleOrDriverJobArgs>(args);
         }
 
         public async Task QueueUpdateWaybill(long routPointId)
         {
+            if (await BayanIntegrationIsEnabled == false) return;
             var queue = await _backgroundJobManager.EnqueueAsync<UpdateWaybillJob, long>(routPointId);
         } // todo integrate it in service 
 
         public async Task QueueCloseWaybillJob(long routPointId)
         {
+            if (await BayanIntegrationIsEnabled == false) return;
             var queue = await _backgroundJobManager.EnqueueAsync<CloseWaybillJob, long>(routPointId);
         } // todo integrate it in service 
 

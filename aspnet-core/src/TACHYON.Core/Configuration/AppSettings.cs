@@ -170,6 +170,7 @@
 
         public static class BayanIntegration
         {
+            public const string IsEnabled = "App.BayanIntegration.IsEnabled";
             public const string Url = "App.BayanIntegration.Url";
             public const string AppId = "App.BayanIntegration.AppId";
             public const string AppKey = "App.BayanIntegration.AppKey";
