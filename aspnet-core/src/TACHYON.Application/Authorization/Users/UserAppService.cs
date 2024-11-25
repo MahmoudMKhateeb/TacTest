@@ -51,6 +51,7 @@ using static TACHYON.Authorization.Users.Nationalites;
 using TACHYON.Trucks;
 using TACHYON.Nationalities;
 using TACHYON.WebHooks;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Authorization.Users
 {
@@ -86,6 +87,9 @@ namespace TACHYON.Authorization.Users
         private readonly ISmsSender _smsSender;
         private readonly WaslIntegrationManager _waslIntegrationManager;
         private readonly AppWebhookPublisher _webhookPublisher;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+
+
 
         public UserAppService(
             IRepository<DocumentFile, Guid> documentFileRepository,
@@ -115,7 +119,8 @@ namespace TACHYON.Authorization.Users
              IRepository<Tenant> tenantRepository,
             DocumentFilesManager documentFilesManager,
             IRepository<Truck, long> truckRepository,
-            AppWebhookPublisher webhookPublisher)
+            AppWebhookPublisher webhookPublisher,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -147,6 +152,7 @@ namespace TACHYON.Authorization.Users
             AppUrlService = NullAppUrlService.Instance;
             _truckRepository = truckRepository;
             _webhookPublisher = webhookPublisher;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_View)]
@@ -429,6 +435,16 @@ namespace TACHYON.Authorization.Users
             if (input.Id == AbpSession.GetUserId())
             {
                 throw new UserFriendlyException(L("YouCanNotDeleteOwnAccount"));
+            }
+
+            // Check if the driver has trips
+            var driverHasTrips = await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.AssignedDriverUserId == input.Id || x.ReplacesDriverId == input.Id)
+                .AnyAsync();
+
+            if (driverHasTrips)
+            {
+                throw new UserFriendlyException(L("DriverLinkedToTripsCannotBeDeleted"));
             }
 
             User user;
