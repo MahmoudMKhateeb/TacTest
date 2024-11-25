@@ -36,6 +36,7 @@ import {
   ActorSelectItemDto,
   TripLoadingTypeEnum,
   SalesOfficeTypeEnum,
+  ShippingRequestTripDriverStatus,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -49,6 +50,7 @@ import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.com
 import { Moment } from '@node_modules/moment';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import * as moment from '@node_modules/moment';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
 
 @Component({
   selector: 'viewTripModal',
@@ -268,6 +270,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
         (this._TripService.CreateOrEditShippingRequestTripDto.salesOfficeType as any) = res.salesOfficeType.toString();
         (this._TripService.CreateOrEditShippingRequestTripDto.loadingType as any) = res.loadingType.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType as any) = res.roundTripType?.toString();
 
         //this._TripService.sh = res;
         this.assignDriverAndTruck.containerNumber = this.trip.containerNumber;

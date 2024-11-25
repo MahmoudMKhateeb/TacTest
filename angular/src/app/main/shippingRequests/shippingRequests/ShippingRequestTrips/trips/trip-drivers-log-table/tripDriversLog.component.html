@@ -1,0 +1,31 @@
+<div class="mt-2" *ngIf="roundTripType == 6 && (tripId || isEditOrView)">
+  <dx-data-grid
+    id="dataGrid"
+    [dataSource]="dataSource"
+    [remoteOperations]="{ sorting: true, paging: true, filtering: true }"
+    [showColumnLines]="true"
+    [showRowLines]="false"
+    [showBorders]="true"
+    [rowAlternationEnabled]="true"
+    keyExpr="id"
+    (onRowUpdating)="updateRow($event)"
+  >
+    <dxo-editing mode="row" [allowUpdating]="true"> </dxo-editing>
+    <dxi-column dataField="driverId" caption="Driver ID" dataType="number" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="driverName" caption="Driver Name" dataType="string" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="totalWorkingHours" caption="Total Working Hours" dataType="number" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="distanceCovered" caption="Distance Covered" dataType="number" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="commission" caption="Commission" dataType="number"></dxi-column>
+    <dxi-column dataField="isActive" caption="Status" cellTemplate="statusCellTemplate" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="assignedTruckPlateNumber" caption="Truck Plate Number" dataType="string" [allowEditing]="false"></dxi-column>
+
+    <div *dxTemplate="let options of 'statusCellTemplate'">
+      <span
+        [ngClass]="options.data.isActive ? 'label label-lg label-light-success label-inline' : 'label label-lg label-light-danger label-inline'"
+        style="width: 137px; text-align: center"
+      >
+        {{ options.data.isActive ? l('Active') : l('inActive') }}
+      </span>
+    </div>
+  </dx-data-grid>
+</div>

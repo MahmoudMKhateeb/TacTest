@@ -368,6 +368,7 @@ import { ReportingModule } from '@app/main/reporting/reporting.module';
 import { SaasPricePackageModule } from '@app/main/saaSpricePackages/saas-price-package.module';
 import { DxListModule, DxTagBoxModule } from '@node_modules/devextreme-angular';
 import { StorageDetailsModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points-for-port-movement/storage-details/storage-details.component';
+import { TripDriversLogComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/trip-drivers-log-table/tripDriversLog.component';
 
 @NgModule({
   imports: [
@@ -704,6 +705,7 @@ import { StorageDetailsModalComponent } from '@app/main/shippingRequests/shippin
     ShippingRequestCardComponent,
     TruckFilterModalComponent,
     StorageDetailsModalComponent,
+    TripDriversLogComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
