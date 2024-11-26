@@ -36,18 +36,20 @@
                 (onRowClick)="onRowClick($event)"
               >
                 <dxo-editing mode="row" [allowUpdating]="true"></dxo-editing>
+                <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                <dxo-filter-builder-popup [position]="popupPosition"></dxo-filter-builder-popup>
 
                 <!-- Export to Excel Configuration -->
                 <dxo-export [enabled]="true" fileName="DriversCommissionsData"></dxo-export>
 
                 <!-- Columns Configuration -->
                 <dxi-column dataField="driverName" caption="Driver Name" dataType="string" [allowEditing]="false" [groupIndex]="1"></dxi-column>
-                <dxi-column dataField="driverId" caption="Driver ID" dataType="number" [allowEditing]="false"></dxi-column>
+                <!--                <dxi-column dataField="driverId" caption="Driver ID" dataType="number" [allowEditing]="false"></dxi-column>-->
                 <dxi-column dataField="commission" caption="Commission" dataType="number" [allowEditing]="true"></dxi-column>
                 <dxi-column dataField="assignedTruckPlateNumber" caption="Truck Plate Number" dataType="string" [allowEditing]="false"></dxi-column>
                 <dxi-column
                   dataField="creationTime"
-                  caption="Creation Date (Month-Year)"
+                  caption="Assign Date (Month-Year)"
                   dataType="date"
                   [allowEditing]="false"
                   [calculateDisplayValue]="getMonthYear"

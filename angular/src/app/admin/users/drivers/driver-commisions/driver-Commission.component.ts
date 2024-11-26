@@ -13,6 +13,7 @@ import { DxDataGridComponent } from 'devextreme-angular';
 export class DriversCommissionComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataGrid', { static: false }) dataGrid: DxDataGridComponent;
   dataSource: any = {};
+  popupPosition: any = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
 
   constructor(injector: Injector, private _tripAppService: TripDriversServiceProxy) {
     super(injector);
