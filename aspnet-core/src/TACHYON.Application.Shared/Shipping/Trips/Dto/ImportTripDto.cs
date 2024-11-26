@@ -6,7 +6,7 @@ using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public class ImportTripDto : ICreateOrEditTripDtoBase
+    public class ImportTripDto : ICreateOrEditTripDtoBase 
     {
         public int Id { get; set; }
         public string BulkUploadRef { get; set; }
@@ -62,6 +62,19 @@ namespace TACHYON.Shipping.Trips.Dto
         #region SAAS
         public int? GoodCategoryId { get; set; }
         public string GoodCategory { get; set; }
+
+         public string ShipperActor { get; set; }
+         public string ContainerNumber { get; set; }
+
+         public string ShipperReference { get; set; }
+
+        /// <summary>
+        /// shipper add his invoice number manually, this updated currently to booking number 
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
+
+        
+
         #endregion
     }
 }

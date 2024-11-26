@@ -6,6 +6,7 @@ using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Actors;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.DataExporting.Excel;
@@ -23,17 +24,19 @@ namespace TACHYON.Shipping.Trips.Importing
     {
         private readonly TachyonExcelDataReaderHelper _tachyonExcelDataReaderHelper;
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
+        private readonly IRepository<Actor> _actorRepository;
         private readonly UserManager _userManager;
 
         private long? ShippingRequestId;
         private bool IsSingleDropRequest;
         private bool IsDedicatedRequest;
 
-        public ShipmentListExcelDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, ShippingRequestTripManager shippingRequestTripManager, UserManager userManager)
+        public ShipmentListExcelDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, ShippingRequestTripManager shippingRequestTripManager, UserManager userManager, IRepository<Actor> actorRepository)
         {
             _tachyonExcelDataReaderHelper = tachyonExcelDataReaderHelper;
             _shippingRequestTripManager = shippingRequestTripManager;
             _userManager = userManager;
+            _actorRepository = actorRepository;
         }
 
         public List<ImportTripDto> GetShipmentsFromExcel(byte[] fileBytes, long? shippingRequestId, bool isSingleDropRequest, bool isDedicatedRequest)
@@ -218,6 +221,24 @@ namespace TACHYON.Shipping.Trips.Importing
                         var goodCategoryId = GetGoodCategoryId(goodCategory, exceptionMessage);
                         if (goodCategoryId != null)
                             trip.GoodCategoryId = goodCategoryId;
+
+
+                        //16
+                        var actorShipperName = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                        row, 16, "Actor Shipper", exceptionMessage);
+                        var actorShipperId = GetActorShipperId(actorShipperName, exceptionMessage);
+                        
+                        //17
+                        trip.ContainerNumber= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 17, "Container Number", exceptionMessage);
+
+                        //18
+                        trip.ShipperReference= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 18, "Shipper Reference", exceptionMessage);
+
+                        //19
+                        trip.ShipperInvoiceNo= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 19, "Booking number", exceptionMessage);
                     }
                   
                 }
@@ -250,8 +271,46 @@ namespace TACHYON.Shipping.Trips.Importing
                         {
                             trip.ReceiverId = GetReceiverId(receiver, exceptionMessage, trip.DestinationFacilityId.Value, false);
                         }
+
+                        //11
+                        var actorShipperName = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                        row, 11, "Actor Shipper", exceptionMessage);
+                        var actorShipperId = GetActorShipperId(actorShipperName, exceptionMessage);
+                        
+                        //12
+                        trip.ContainerNumber= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 12, "Container Number", exceptionMessage);
+
+                        //13
+                        trip.ShipperReference= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 13, "Shipper Reference", exceptionMessage);
+
+                        //14
+                        trip.ShipperInvoiceNo= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 14, "Booking number", exceptionMessage);
+                    }else{
+                        
+                        //9
+                        var actorShipperName = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                        row, 9, "Actor Shipper", exceptionMessage);
+                        var actorShipperId = GetActorShipperId(actorShipperName, exceptionMessage);
+                        
+                        //10
+                        trip.ContainerNumber= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 10, "Container Number", exceptionMessage);
+
+                        //11
+                        trip.ShipperReference= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 11, "Shipper Reference", exceptionMessage);
+
+                        //12
+                        trip.ShipperInvoiceNo= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                            row, 12, "Booking number", exceptionMessage);
                     }
                 }
+
+               
+                
 
                  _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
 
@@ -300,6 +359,23 @@ namespace TACHYON.Shipping.Trips.Importing
                 return receiver;
 
             exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart(isSender ? "Sender" : "Receiver"));
+            return null;
+        }
+
+        private int? GetActorShipperId(string text, StringBuilder exceptionMessage)
+        {
+            if (text.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+
+            var actor = _actorRepository.FirstOrDefault(x => x.CompanyName == text);
+
+            if (actor != null)
+                return actor.Id;
+
+            exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("ActorShipperInvalid"));
             return null;
         }
 

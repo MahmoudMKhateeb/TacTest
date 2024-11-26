@@ -66,7 +66,7 @@ namespace TACHYON.Shipping.Trips.Importing
             await DisableTenancyFiltersIfTachyonDealer();
             if(!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.ImportFunctionality))
             {
-                throw new UserFriendlyException(L("YouDonnotHaveAccessToImportFunctionality"));
+                throw new UserFriendlyException(L("YouDon'tHaveAccessToImportFunctionality"));
             }
             List<ImportTripDto> trips;
             if (importShipmentFromExcelInput.ShippingRequestId != null)
