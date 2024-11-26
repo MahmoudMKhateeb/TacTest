@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { RedemptionCodesComponent } from './redemption/redemptionCodes/redemptionCodes.component';
 import { RedeemCodesComponent } from './redemption/redeemCodes/redeemCodes.component';
@@ -37,6 +37,7 @@ import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
 import { waybillsComponent } from './waybills/waybills';
 import { ActorInvoiceListComponent } from '@app/main/Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
 import { ActorSubmitInvoicesComponent } from '@app/main/Invoices/actor-submit-invoices/actor-submit-invoices.component';
+import { DriversCommissionComponent } from '@app/admin/users/drivers/driver-commisions/driver-Commission.component';
 
 @NgModule({
   imports: [
@@ -68,6 +69,7 @@ import { ActorSubmitInvoicesComponent } from '@app/main/Invoices/actor-submit-in
           { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' } },
           { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },
           { path: 'drivers', component: DriversComponent, data: { permission: 'Pages.Administration.Drivers' } },
+          { path: 'driversCommission', component: DriversCommissionComponent, data: { permission: 'Pages.Administration.Drivers' } },
           { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Administration.Roles' } },
           { path: 'auditLogs', component: AuditLogsComponent, data: { permission: 'Pages.Administration.AuditLogs' } },
           { path: 'maintenance', component: MaintenanceComponent, data: { permission: 'Pages.Administration.Host.Maintenance' } },

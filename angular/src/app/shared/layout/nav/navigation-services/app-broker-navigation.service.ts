@@ -86,6 +86,17 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
           new AppMenuItem('Trucks', 'Pages.Trucks', '', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined),
           new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           // new AppMenuItem('VasPrices', 'Pages.VasPrices', '', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined),
+          new AppMenuItem(
+            'DriversCommission',
+            'Pages.Administration.Drivers',
+            '',
+            '/app/admin/driversCommission',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
         ],
         undefined,
         undefined

@@ -177,6 +177,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.ReportDefinitionServiceProxy,
     ApiServiceProxies.ReportServiceProxy,
     ApiServiceProxies.SaasPricePackageServiceProxy,
+    ApiServiceProxies.TripDriversServiceProxy,
 
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
