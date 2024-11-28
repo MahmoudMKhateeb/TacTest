@@ -1,5 +1,23 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-#exit 1 # Commit will be aborted
-cd angular && npx lint-staged -v -d -r
+# Run lint-staged for Angular
+cd angular || { echo "❌ Failed to change to 'angular' directory. Aborting."; exit 1; }
+npx lint-staged -v -d -r || { echo "❌ lint-staged failed. Aborting commit."; exit 1; }
+cd .. || { echo "❌ Failed to return to root directory. Aborting."; exit 1; }
+
+# Find and format staged .cs files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.cs$' || true)
+
+if [ -z "$STAGED_FILES" ]; then
+  echo "⚠️ No staged C# files found. Skipping formatting."
+  exit 0
+fi
+
+for FILE in $STAGED_FILES; do
+  dotnet csharpier "$FILE" || { echo "❌ Failed to format: $FILE. Aborting commit."; exit 1; }
+  git add "$FILE"
+done
+
+echo "🎉 Pre-commit checks passed. All files are formatted!"
+exit 0
