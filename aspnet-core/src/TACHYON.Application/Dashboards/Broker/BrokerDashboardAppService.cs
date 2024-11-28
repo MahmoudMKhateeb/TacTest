@@ -328,22 +328,25 @@ namespace TACHYON.Dashboards.Broker
 
         public async Task<List<GetDueDateInDaysOutput>> GetNextDocumentsDueDate(ActorTypesEnum type)
         {
-            var documents = await _documentFileRepository.GetAll().Where(x =>
+            var documents = await _documentFileRepository.GetAll()
+                .Where(x =>
                     x.IsAccepted && x.ExpirationDate.HasValue  &&
-                    x.ActorFk.ActorType == type).Select(x=> new {ExpirationDate = x.ExpirationDate.Value,x.ActorFk.CompanyName}).ToListAsync();
+                    x.ActorFk.ActorType == type)
+                .Select(x=> new {ExpirationDate = x.ExpirationDate.Value,x.ActorFk.CompanyName})
+                .ToListAsync();
 
 
             var count = documents.Count();
 
-            var RemainingDays = 0;
+            var remainingDays = 0;
             var dto = new List<GetDueDateInDaysOutput>();
             if (count == 1)
             {
-                var expiredDate = documents.FirstOrDefault().ExpirationDate.Date;
-                RemainingDays = documents.FirstOrDefault() != null ? (expiredDate - Clock.Now.Date).Days : 0;
-                if (RemainingDays < 0) RemainingDays = 0;
+                var expiredDate = documents.FirstOrDefault()!.ExpirationDate.Date;
+                remainingDays = documents.FirstOrDefault() != null ? (expiredDate - Clock.Now.Date).Days : 0;
+                if (remainingDays < 0) remainingDays = 0;
 
-                dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
+                dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = remainingDays == 1 ? "Day" : remainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
             }
             else if (count == 0)
             {
@@ -354,11 +357,11 @@ namespace TACHYON.Dashboards.Broker
                 foreach (var document in documents)
                 {
                     var expiredDate = document.ExpirationDate.Date;
-                    RemainingDays = (expiredDate - Clock.Now.Date).Days;
+                    remainingDays = (expiredDate - Clock.Now.Date).Days;
 
-                    if (RemainingDays < 0) RemainingDays = 0;
+                    if (remainingDays < 0) remainingDays = 0;
 
-                    dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
+                    dto.Add(new GetDueDateInDaysOutput { Count = 1, TimeUnit = remainingDays == 1 ? "Day" : remainingDays + " Days", IsExpired = expiredDate < Clock.Now.Date });
                 }
             }
 
