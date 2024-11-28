@@ -164,10 +164,17 @@
             ></dxi-column>
             <dxi-column dataField="transportType" caption="{{ 'TransportType' | localize }}"></dxi-column>
             <dxi-column dataField="truckType" caption="{{ 'TrucksType' | localize }}"></dxi-column>
-            <dxi-column dataField="numberOfTrucks" caption="{{ 'NumberOfTrucks' | localize }}"></dxi-column>
+            <dxi-column
+              *ngIf="this.searchInput.requestFlag == ShippingRequestFlag.Dedicated"
+              dataField="numberOfTrucks"
+              caption="{{ 'NumberOfTrucks' | localize }}"
+            ></dxi-column>
             <dxi-column cellTemplate="shippingTypeCellTemplate" dataField="shippingTypeId" caption="{{ 'ShippingType' | localize }}"></dxi-column>
             <dxi-column dataField="originCity" caption="{{ 'Origin' | localize }}"></dxi-column>
-            <dxi-column dataField="destinationCity" caption="{{ 'ServiceArea' | localize }}"></dxi-column>
+            <dxi-column
+              dataField="destinationCity"
+              caption="{{ (this.searchInput.requestFlag == ShippingRequestFlag.Normal ? 'Destination' : 'ServiceArea') | localize }}"
+            ></dxi-column>
             <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}"></dxi-column>
             <dxi-column dataField="creationTime" caption="{{ 'CreationDate' | localize }}" dataType="date"></dxi-column>
             <dxi-column
