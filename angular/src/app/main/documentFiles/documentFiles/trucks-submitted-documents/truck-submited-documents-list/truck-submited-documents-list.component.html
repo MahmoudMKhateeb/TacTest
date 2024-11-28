@@ -1,15 +1,15 @@
 <dx-data-grid
-  style="height: 45vw"
   #grid
-  id="dataGrid"
   [dataSource]="dataSource"
   [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
+  [rowAlternationEnabled]="true"
+  [showBorders]="true"
   [showColumnLines]="true"
   [showRowLines]="false"
-  [showBorders]="true"
-  [rowAlternationEnabled]="true"
-  keyExpr="id"
   [wordWrapEnabled]="true"
+  id="dataGrid"
+  keyExpr="id"
+  style="height: 45vw"
 >
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
@@ -24,15 +24,13 @@
     <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
   </dxo-summary>
 
-  <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
-  <dxi-column dataField="truckPlateNumber" caption="{{ l('PlateNumber') }}"></dxi-column>
-  <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime"></dxi-column>
-  <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
-  <dxi-column dataField="expirationDate" caption="{{ l('ExpirationDate') }}" dataType="date" cellTemplate="cellTemplateStatus"></dxi-column>
-  <dxi-column dataField="extn" caption="{{ l('Extn') }}" [allowFiltering]="false"></dxi-column>
-  <dxi-column dataField="isAccepted" caption="{{ l('IsAccepted') }}"></dxi-column>
-  <dxi-column dataField="isRejected" caption="{{ l('IsRejected') }}"></dxi-column>
-  <dxi-column dataField="number" caption="{{ l('Number') }}"></dxi-column>
+  <dxi-column [allowFiltering]="false" [allowSorting]="false" [width]="50" cellTemplate="cellTemplateActions"></dxi-column>
+  <dxi-column caption="{{ l('PlateNumber') }}" dataField="truckPlateNumber"></dxi-column>
+  <dxi-column caption="{{ l('SubmittingTime') }}" dataField="creationTime" dataType="datetime"></dxi-column>
+  <dxi-column [allowGrouping]="false" caption="{{ l('DatatableDocumentName') }}" dataField="documentTypeName"></dxi-column>
+  <dxi-column caption="{{ l('ExpirationDate') }}" cellTemplate="cellTemplateStatus" dataField="expirationDate" dataType="date"></dxi-column>
+  <dxi-column [allowFiltering]="false" caption="{{ l('Extn') }}" dataField="extn"></dxi-column>
+  <dxi-column caption="{{ l('Number') }}" dataField="number"></dxi-column>
 
   <div *dxTemplate="let data of 'cellTemplateStatus'">
     <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | date }}</span>
@@ -40,19 +38,19 @@
   </div>
 
   <div *dxTemplate="let options of 'cellTemplateActions'">
-    <div class="btn-group dropdown" dropdown container="body">
-      <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+    <div class="btn-group dropdown" container="body" dropdown>
+      <a class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle href="javascript:">
         <span class="svg-icon svg-icon-md">
           <svg
+            height="24px"
+            version="1.1"
+            viewBox="0 0 24 24"
+            width="24px"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            version="1.1"
           >
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <rect x="0" y="0" width="24" height="24"></rect>
+            <g fill="none" fill-rule="evenodd" stroke="none" stroke-width="1">
+              <rect height="24" width="24" x="0" y="0"></rect>
               <path
                 d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
                 fill="#000000"
@@ -61,18 +59,18 @@
           </svg>
         </span>
       </a>
-      <ul class="dropdown-menu" *dropdownMenu>
+      <ul *dropdownMenu class="dropdown-menu">
         <li>
-          <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(options.data, entityType, isHost)">{{
+          <a (click)="viewDocumentFileModal.show(options.data, entityType, isHost)" class="dropdown-item" href="javascript:">{{
             l('ViewDetails')
           }}</a>
         </li>
         <li>
-          <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data)">{{ l('Download') }}</a>
+          <a (click)="downloadDocument(options.data)" class="dropdown-item" href="javascript:">{{ l('Download') }}</a>
         </li>
         <li>
           <a
-            href="javascript:;"
+            (click)="createOrEditDocumentFileModal.show(entityIdFilter, entityType, options.data.id)"
             *ngIf="
               permission.isGranted('Pages.DocumentFiles.Edit') &&
               options.data.documentEntityDisplayName != 'Tenant' &&
@@ -80,31 +78,31 @@
               !options.data.isRejected
             "
             class="dropdown-item"
-            (click)="createOrEditDocumentFileModal.show(entityIdFilter, entityType, options.data.id)"
+            href="javascript:"
             >{{ l('Edit') }}</a
           >
         </li>
         <li>
-          <a href="javascript:;" *ngIf="!options.data.isAccepted && isHost" class="dropdown-item" (click)="acceptDocumentFile(options.data.id)">{{
+          <a (click)="acceptDocumentFile(options.data.id)" *ngIf="!options.data.isAccepted && isHost" class="dropdown-item" href="javascript:">{{
             l('Accept')
           }}</a>
         </li>
         <li>
           <a
-            href="javascript:;"
+            (click)="rejectionReasonModal.show(options.data.id, options.data.documentTypeDisplayName, options.data.submitterTenatTenancyName)"
             *ngIf="!options.data.isRejected && isHost"
             class="dropdown-item"
-            (click)="rejectionReasonModal.show(options.data.id, options.data.documentTypeDisplayName, options.data.submitterTenatTenancyName)"
+            href="javascript:"
             >{{ l('Reject') }}</a
           >
         </li>
 
         <li>
           <a
-            href="javascript:;"
+            (click)="viewRejectionReasonModal.show(options.data.documentTypeDisplayName, options.data.rejectionReason)"
             *ngIf="!options.data.isAccepted && options.data.isRejected && isHost"
             class="dropdown-item"
-            (click)="viewRejectionReasonModal.show(options.data.documentTypeDisplayName, options.data.rejectionReason)"
+            href="javascript:"
             >{{ l('ViewRejectionReason') }}</a
           >
         </li>
