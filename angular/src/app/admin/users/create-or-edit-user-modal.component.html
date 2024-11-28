@@ -1,7 +1,6 @@
 <div
   appBsModal
   #createOrEditModal="bs-modal"
-  (onShown)="onShown()"
   class="modal fade"
   tabindex="-1"
   role="dialog"
@@ -166,6 +165,25 @@
                   <span class="text-muted">{{ 'ChooseNationality' | localize }}</span>
                 </div>
               </div>
+              <!--                Actor Shipper id-->
+              <div class="form-group">
+                <div class="form-group">
+                  <label for="Nationality">{{ 'ActorShipper' | localize }}</label>
+                  <dx-select-box
+                    id="actorShipperid"
+                    name="actorShipperid"
+                    [(value)]="user.shipperActorId"
+                    [dataSource]="AllActorsShippers"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    placeholder="{{ l('ActorShipper') }}"
+                  >
+                  </dx-select-box>
+                  <span class="text-muted">{{ 'SelectActorShipper' | localize }}</span>
+                </div>
+              </div>
+
+              <!--                end Actor Shipper Id-->
               <div class="form-group">
                 <label for="UserName">{{ 'UserName' | localize }}<span class="required-fileds"> *</span></label>
                 <dx-text-box
@@ -214,7 +232,7 @@
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
-                  <label for="Password">{{ 'Password' | localize }}<span class="required-fileds"> *</span> </label>
+                  <label for="Password">{{ 'Password' | localize }}<span *ngIf="!user.id" class="required-fileds"> *</span> </label>
                   <dx-text-box
                     id="Password"
                     name="Password"
@@ -241,7 +259,7 @@
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
-                  <label for="PasswordRepeat">{{ 'PasswordRepeat' | localize }}<span class="required-fileds"> *</span> </label>
+                  <label for="PasswordRepeat">{{ 'PasswordRepeat' | localize }}<span *ngIf="!user.id" class="required-fileds"> *</span> </label>
                   <dx-text-box
                     id="PasswordRepeat"
                     name="PasswordRepeat"
@@ -263,6 +281,7 @@
                         [validationCallback]="validatePassword"
                       ></dxi-validation-rule>
                       <dxi-validation-rule
+                        *ngIf="user.password"
                         type="compare"
                         [comparisonTarget]="passwordComparison"
                         message="{{ 'PasswordRepeat' | localize }}: {{ 'PasswordsDontMatch' | localize }}"
@@ -331,9 +350,10 @@
                 </dx-validator>
               </div>
             </tab>
-            <tab *ngIf="!creatDriver" class="pt-5" heading="{{ 'OrganizationUnits' | localize }}">
-              <organization-unit-tree [cascadeSelectEnabled]="false" #organizationUnitTree></organization-unit-tree>
-            </tab>
+            <!--             removed by task 6744 -->
+            <!--            <tab *ngIf="!creatDriver" class="pt-5" heading="{{ 'OrganizationUnits' | localize }}">-->
+            <!--              <organization-unit-tree [cascadeSelectEnabled]="false" #organizationUnitTree></organization-unit-tree>-->
+            <!--            </tab>-->
           </tabset>
           <div class="col-12 pt-4">
             <dx-validation-summary

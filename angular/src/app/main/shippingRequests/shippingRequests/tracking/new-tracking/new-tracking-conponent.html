@@ -241,7 +241,7 @@
                                 <span class="text-muted" *ngIf="point.endTime">{{point.endTime | momentFormat: 'DD/MM/YYYY'}}</span>
                               </div>
 
-                              <div class="btn-group mt-6" *ngIf="trip.driver ">
+                              <div class="btn-group mt-6" *ngIf="trip.driver  && !isShipperActor">
                                 <!--   Additional steps file transactions       -->
                                 <div
                                   class="d-inline-block"

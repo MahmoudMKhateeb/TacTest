@@ -235,7 +235,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button *ngIf="hasShipperClients" class="btn btn-primary blue" (click)="getPriceFromPricePackage()">
+        <button *ngIf="hasShipperClients && !isShipperActor" class="btn btn-primary blue" (click)="getPriceFromPricePackage()">
           <i class="fa fa-dollar-sign"></i> <span>{{ l('getPrice') }}</span>
         </button>
         <button

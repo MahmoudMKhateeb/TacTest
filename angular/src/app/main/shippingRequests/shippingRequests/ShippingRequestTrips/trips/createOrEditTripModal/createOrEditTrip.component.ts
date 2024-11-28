@@ -1646,8 +1646,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   loadFacilitiesInPointComponent() {
+    const selectedActorId = this._TripService.CreateOrEditShippingRequestTripDto?.shipperActorId;
+    const selectedActor = this.AllActorsShippers?.find((actor) => actor.id == selectedActorId?.toString());
+
     if (isNotNullOrUndefined(this.PointsComponent) && !this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
-      this.PointsComponent.loadFacilities();
+      this.PointsComponent.loadFacilities(selectedActor.isMySelf);
     }
   }
 

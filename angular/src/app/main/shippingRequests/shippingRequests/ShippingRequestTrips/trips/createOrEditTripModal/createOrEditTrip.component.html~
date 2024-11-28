@@ -122,7 +122,7 @@
                       [(value)]="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId"
                       [dataSource]="AllActorsShippers"
                       [searchEnabled]="true"
-                      (onValueChanged)="loadFacilitiesInPointComponent()"
+                      (onValueChanged)=" loadFacilitiesInPointComponent()"
                       displayExpr="displayName"
                       valueExpr="id"
                       placeholder="{{ l('SelectActor') }}"

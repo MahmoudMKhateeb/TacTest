@@ -5,7 +5,7 @@
       [title]="(shipmentType === 'normalShipment' ? 'ShipmentTracking' : 'DirectShipmentTracking') | localize"
       [description]="'' | localize"
     >
-      <div role="actions">
+      <div role="actions" *ngIf="!isShipperActor">
         <button *ngIf="showNormalView" (click)="showAsTable()" class="btn btn-dark mr-2"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
         <button *ngIf="!showNormalView" (click)="showAsList()" class="btn btn-dark mr-2"><i class="fas fa-list"></i> {{ l('ShowAsList') }}</button>
         <div class="btn-group">

@@ -61,7 +61,7 @@
             </li>
           </ul>
         </div>
-        <button (click)="showAsList()" class="btn btn-dark"><i class="fas fa-list"></i> {{ 'ShowAsList' | localize }}</button>
+        <button (click)="showAsList()" class="btn btn-dark" *ngIf="!isShipperActor"><i class="fas fa-list"></i> {{ 'ShowAsList' | localize }}</button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
 

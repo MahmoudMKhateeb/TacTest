@@ -115,29 +115,29 @@
                 </dx-text-box>
               </div>
 
-              <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group col-md-12">
-                <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
-                <div
-                  [ngClass]="{
-                    'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
-                  }"
-                >
-                  <dx-select-box
-                    name="fActorShipper"
-                    [(ngModel)]="facility.shipperActorId"
-                    [dataSource]="AllActorsShippers"
-                    [searchEnabled]="true"
-                    displayExpr="displayName"
-                    valueExpr="id"
-                    required
-                    placeholder="{{ l('SelectActor') }}"
-                  >
-                    <dx-validator [validationGroup]="'createFacilityGroup'">
-                      <dxi-validation-rule type="required" message="{{ l('Actor') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
-                    </dx-validator>
-                  </dx-select-box>
-                </div>
-              </div>
+              <!--              <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group col-md-12">-->
+              <!--                <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>-->
+              <!--                <div-->
+              <!--                  [ngClass]="{-->
+              <!--                    'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers-->
+              <!--                  }"-->
+              <!--                >-->
+              <!--                  <dx-select-box-->
+              <!--                    name="fActorShipper"-->
+              <!--                    [(ngModel)]="facility.shipperActorId"-->
+              <!--                    [dataSource]="AllActorsShippers"-->
+              <!--                    [searchEnabled]="true"-->
+              <!--                    displayExpr="displayName"-->
+              <!--                    valueExpr="id"-->
+              <!--                    required-->
+              <!--                    placeholder="{{ l('SelectActor') }}"-->
+              <!--                  >-->
+              <!--                    <dx-validator [validationGroup]="'createFacilityGroup'">-->
+              <!--                      <dxi-validation-rule type="required" message="{{ l('Actor') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>-->
+              <!--                    </dx-validator>-->
+              <!--                  </dx-select-box>-->
+              <!--                </div>-->
+              <!--              </div>-->
 
               <div class="form-group col-md-6">
                 <label>{{ l('Country') }} <span class="required-fileds">*</span></label>

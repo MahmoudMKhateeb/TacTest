@@ -11,6 +11,8 @@ import {
   UserServiceProxy,
   SelectItemDto,
   NationalitiesServiceProxy,
+  ShippingRequestsServiceProxy,
+  ActorSelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } from '../shared/organization-unit-tree.component';
@@ -89,12 +91,14 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     },
     validationRequestsCallbacks: this.callbacks,
   };
+  AllActorsShippers: ActorSelectItemDto[];
 
   constructor(
     injector: Injector,
     private _userService: UserServiceProxy,
     private _profileService: ProfileServiceProxy,
-    private _nationalitiesServiceProxy: NationalitiesServiceProxy
+    private _nationalitiesServiceProxy: NationalitiesServiceProxy,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
     that = this;
@@ -116,6 +120,8 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
 
       this.allOrganizationUnits = userResult.allOrganizationUnits;
       this.memberedOrganizationUnits = userResult.memberedOrganizationUnits;
+      (this.user.shipperActorId as any) = userResult.user?.shipperActorId?.toString();
+      (this.user.nationalityId as any) = userResult.user?.nationalityId?.toString();
 
       this.getProfilePicture(userId);
 
@@ -135,6 +141,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
         this.modal.show();
       });
     });
+    this.getActorShippersForCms();
   }
 
   setPasswordComplexityInfo(): void {
@@ -179,16 +186,17 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     });
   }
 
-  onShown(): void {
-    this.organizationUnitTree.data = <IOrganizationUnitsTreeComponentData>{
-      allOrganizationUnits: this.allOrganizationUnits,
-      selectedOrganizationUnits: this.memberedOrganizationUnits,
-    };
-
-    document.getElementById('Name').focus();
-  }
+  // onShown(): void {
+  //   this.organizationUnitTree.data = <IOrganizationUnitsTreeComponentData>{
+  //     allOrganizationUnits: this.allOrganizationUnits,
+  //     selectedOrganizationUnits: this.memberedOrganizationUnits,
+  //   };
+  //
+  //   document.getElementById('Name').focus();
+  // }
 
   save(): void {
+    console.log('Save Was Fired');
     let input = new CreateOrUpdateUserInput();
 
     input.user = this.user;
@@ -196,7 +204,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     input.sendActivationEmail = this.sendActivationEmail;
     input.assignedRoleNames = _.map(_.filter(this.roles, { isAssigned: true, inheritedFromOrganizationUnit: false }), (role) => role.roleName);
 
-    input.organizationUnits = this.organizationUnitTree.getSelectedOrganizations();
+    // input.organizationUnits = this.organizationUnitTree.getSelectedOrganizations();
 
     this.saving = true;
     this._userService
@@ -353,5 +361,12 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
       return;
     }
     this.staticTabs.tabs[0].active = true;
+  }
+
+  getActorShippersForCms() {
+    this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
+      this.AllActorsShippers = result;
+      // this.AllActorsShippers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
+    });
   }
 }
