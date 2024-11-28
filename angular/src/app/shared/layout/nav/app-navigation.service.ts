@@ -24,16 +24,19 @@ export class AppNavigationService {
   ) {}
 
   getMenu(): AppMenu {
+    const isShipperClient = !!this._appSessionService.user.shipperActorId;
     const isHost = /* (!this.isEnabled('App.Carrier') && !this.isEnabled('App.Shipper')) || */ !this._appSessionService.tenantId;
     const isCarrier = this.isEnabled('App.Carrier') || this.isEnabled('App.CarrierAsASaas');
-    const isShipper = this.isEnabled('App.Shipper');
+    const isShipper = this.isEnabled('App.Shipper') && !isShipperClient;
     const isTMS = this.isEnabled('App.TachyonDealer');
-    const isBroker = this.isEnabled('App.ShipperClients') && this.isEnabled('App.CarrierClients');
+    const isBroker = this.isEnabled('App.ShipperClients') && this.isEnabled('App.CarrierClients') && !isShipperClient;
     console.log('isHost', isHost);
     console.log('isCarrier', isCarrier);
     console.log('isShipper', isShipper);
     console.log('isTMS', isTMS);
     console.log('isBroker', isBroker);
+    console.log('isShipperClient', isShipperClient);
+
     let menu = isHost
       ? this.appHostNavService.getMenu()
       : isBroker
@@ -44,6 +47,8 @@ export class AppNavigationService {
       ? this.appShipperNavService.getMenu()
       : isTMS
       ? this.appTMSNavService.getMenu()
+      : isShipperClient
+      ? this.appBrokerNavService.getMenu()
       : undefined;
     return menu;
     // let menu = new AppMenu('MainMenu', 'MainMenu', [

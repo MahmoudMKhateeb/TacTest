@@ -122,6 +122,7 @@
                       [(value)]="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId"
                       [dataSource]="AllActorsShippers"
                       [searchEnabled]="true"
+                      (onValueChanged)="loadFacilitiesInPointComponent()"
                       displayExpr="displayName"
                       valueExpr="id"
                       placeholder="{{ l('SelectActor') }}"
@@ -131,7 +132,7 @@
                   <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
                 </div>
               </div>
-              <div class="col-6" [hidden]="!this.feature.isEnabled('App.CarrierClients')">
+              <div class="col-6" [hidden]="!this.feature.isEnabled('App.CarrierClients') || this.isShipperActor">
                 <div class="form-group">
                   <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span> </label>
                   <div

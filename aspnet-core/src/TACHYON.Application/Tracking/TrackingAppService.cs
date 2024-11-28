@@ -34,6 +34,7 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Abp.Extensions;
+using TACHYON.Common;
 
 namespace TACHYON.Tracking
 {
@@ -51,6 +52,7 @@ namespace TACHYON.Tracking
         private readonly AdditionalStepWorkflowProvider _stepWorkflowProvider;
         private readonly IRepository<InvoiceTrip, long> _InvoiceTripRepository;
         private readonly IRepository<SubmitInvoiceTrip, long> _SubmitInvoiceTripRepository;
+        private readonly TachyonAppSession _tachyonAppSession;
 
         public TrackingAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -63,7 +65,8 @@ namespace TACHYON.Tracking
             IRepository<ShippingRequestTripAccident> accidentRepository,
             AdditionalStepWorkflowProvider stepWorkflowProvider,
             IRepository<InvoiceTrip, long> invoiceTripRepository,
-            IRepository<SubmitInvoiceTrip, long> submitInvoiceTripRepository)
+            IRepository<SubmitInvoiceTrip, long> submitInvoiceTripRepository,
+            TachyonAppSession tachyonAppSession)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _RoutPointRepository = routPointRepository;
@@ -76,6 +79,7 @@ namespace TACHYON.Tracking
             _stepWorkflowProvider = stepWorkflowProvider;
             _InvoiceTripRepository = invoiceTripRepository;
             _SubmitInvoiceTripRepository = submitInvoiceTripRepository;
+            _tachyonAppSession = tachyonAppSession;
         }
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
@@ -100,11 +104,15 @@ namespace TACHYON.Tracking
             var isTMS = await IsTachyonDealer();
 
             bool hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
+            
             DisableTenancyFilters();
+            DisableShipperActorFilter();
+
             var query = await (await GetTrip(input))
                 .Where(x => input.TrackingMode == ShipmentTrackingMode.Mixed ||
                             (input.TrackingMode == ShipmentTrackingMode.NormalShipment && x.ShippingRequestId.HasValue) ||
                             (input.TrackingMode == ShipmentTrackingMode.DirectShipment && !x.ShippingRequestId.HasValue))
+                            .Where(x=> x.ShipperActorId == _tachyonAppSession.ActorShipperId || x.ShippingRequestFk.ShipperActorId == _tachyonAppSession.ActorShipperId || !_tachyonAppSession.ActorShipperId.HasValue) 
                 .AsNoTracking()
                 .OrderBy(input.Sorting ?? "id desc").PageBy(input).Select(src => new TrackingListDto
             {
@@ -334,6 +342,7 @@ namespace TACHYON.Tracking
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
+            DisableShipperActorFilter(); // todo throw exception if shipper actor is not the current user actor shipper.
 
             var hasCarrierClient = await IsEnabledAsync(AppFeatures.CarrierClients);
 

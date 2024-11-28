@@ -15,7 +15,7 @@ using TACHYON.Trucks.TrucksTypes;
 namespace TACHYON.Saas.SaasPricePackages
 {
      [Table("SaasPricePackages")]
-    public class SaasPricePackage: FullAuditedEntity<long>, IMustHaveTenant
+    public class SaasPricePackage: FullAuditedEntity<long>, IMustHaveTenant ,IMayHaveShipperActor
     {
         public string PricePackageReference { get; set; }
 
@@ -52,5 +52,6 @@ namespace TACHYON.Saas.SaasPricePackages
          public TripLoadingTypeEnum? tripLoadingType{ get; set; }
 
          public RoundTripType? RoundTripType { get; set; }
+        public int? ShipperActorId {get;set;}
     }
 }

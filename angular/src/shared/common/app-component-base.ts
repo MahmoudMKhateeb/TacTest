@@ -302,6 +302,12 @@ export abstract class AppComponentBase {
   get isSab(): boolean {
     return this.feature.isEnabled('App.Sab');
   }
+  get hasCMS(): boolean {
+    return this.feature.isEnabled('App.CMS');
+  }
+  get isShipperActor(): boolean {
+    return !!this.appSession.user.shipperActorId;
+  }
   IfOther(items: any, id: any) {
     if (id != undefined) {
       return items?.filter((x) => x.id == id && x.isOther).length > 0;

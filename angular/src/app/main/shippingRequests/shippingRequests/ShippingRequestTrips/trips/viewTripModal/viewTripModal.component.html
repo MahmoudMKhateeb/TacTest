@@ -106,7 +106,7 @@
             </div>
           </div>
 
-          <div class="col-6" *ngIf="_TripService?.CreateOrEditShippingRequestTripDto">
+          <div class="col-6" *ngIf="_TripService?.CreateOrEditShippingRequestTripDto && !this.isShipperActor">
             <div class="form-group">
               <label>{{ l('ActorCarrier') }}</label>
               <div>

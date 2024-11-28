@@ -47,6 +47,9 @@ export class CustomTimelineComponent extends AppComponentBase implements OnInit,
   }
 
   isClickable(point: TrackingRoutePointDto, event: CustomStep): { class: string; canClick: boolean; isUploadStep?: boolean } {
+    if (this.isShipperActor) {
+      return { class: 'p-disabled', canClick: false };
+    }
     if (this.shippingType != ShippingTypeEnum.ImportPortMovements && this.shippingType != ShippingTypeEnum.ExportPortMovements) {
       return { class: '', canClick: false };
     }

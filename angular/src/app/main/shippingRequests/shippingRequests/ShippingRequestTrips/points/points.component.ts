@@ -106,11 +106,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   /**
    * loads Facilities with validation on it related to source and destination in SR
    */
-  loadFacilities() {
+  loadFacilities(isActorMySelf?: Boolean) {
     if (!isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
       // direct trip
       this._routStepsServiceProxy
-        .getAllFacilitiesForDirectTrip()
+        .getAllFacilitiesForDirectTrip(isActorMySelf ? undefined : this._tripService.CreateOrEditShippingRequestTripDto.shipperActorId)
         .pipe(
           finalize(() => {
             this.facilityLoading = false;

@@ -48,6 +48,7 @@ namespace TACHYON.EntityFrameworkCore
             Configuration.UnitOfWork.RegisterFilter("IHasIsDrafted", true);
             Configuration.UnitOfWork.RegisterFilter(TACHYONDataFilters.HaveInvoiceStatus,true);
             Configuration.UnitOfWork.RegisterFilter(TACHYONDataFilters.ActiveReportDefinition,true);
+            Configuration.UnitOfWork.RegisterFilter(TACHYONDataFilters.ShipperActorFilter,true);
 
             // Uncomment below line to write change logs for the entities below:
             Configuration.EntityHistory.Selectors.Add("TACHYONEntities", EntityHistoryHelper.TrackedTypes);

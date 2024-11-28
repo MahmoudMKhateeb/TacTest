@@ -1916,6 +1916,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
+                    b.Property<int?>("ShipperActorId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("ShouldChangePasswordOnNextLogin")
                         .HasColumnType("bit");
 
@@ -6911,6 +6914,9 @@ namespace TACHYON.Migrations
 
                     b.Property<byte?>("RoundTripType")
                         .HasColumnType("tinyint");
+
+                    b.Property<int?>("ShipperActorId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ShippingTypeId")
                         .HasColumnType("int");

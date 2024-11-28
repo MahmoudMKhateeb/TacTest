@@ -277,7 +277,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         undefined
       ),
       //  ---------------------------------------------------------------------------------------------------------------------
-      new AppMenuItem('ClientsAndTransporters', 'Pages.Administration.Actors', 'User Management.svg', '/app/main/actors/actors', [], []),
+      new AppMenuItem('ClientsAndTransporters', 'Pages.Administration.Actors.View', 'User Management.svg', '/app/main/actors/actors', [], []),
 
       //start of Settings
       new AppMenuItem(

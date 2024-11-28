@@ -213,6 +213,8 @@ namespace TACHYON.Shipping.Trips
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput input)
         {
             DisableTenancyFilters();
+            DisableShipperActorFilter();
+            
             var isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
 
             var request = await _shippingRequestRepository.GetAll()
@@ -326,14 +328,21 @@ namespace TACHYON.Shipping.Trips
         }
 
         /// <summary>
-        /// Retrieves a shipping request trip for view. The results include detailed trip information such as trip dates, status, assigned driver, truck, origin and destination 
-        /// facilities, waybill number, and various financial and reference details. The results also include the manifest data, appointment data, and clearance prices for each route point.
+        /// Retrieves the details of a shipping request trip for viewing purposes.
         /// </summary>
-        /// <param name="id">The ID of the shipping request trip.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a ShippingRequestsTripForViewDto object.</returns>
+        /// <param name="id">The unique identifier of the shipping request trip.</param>
+        /// <returns>A DTO containing the detailed view of the shipping request trip.</returns>
+        /// <remarks>
+        /// This method fetches the trip data, including route points with appointments and clearance VAS,
+        /// trip manifest data, destination cities, document attachments, notes count, and assigns relevant
+        /// permissions for assigning drivers and trucks. It checks if the current session is a Tachyon dealer 
+        /// or matches the carrier tenant ID to determine permissions.
+        /// </remarks>
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)
         {
             DisableTenancyFilters();
+            DisableShipperActorFilter();
+            
             //var trip = await _shippingRequestTripRepository.GetAllIncluding(x => x.ShippingRequestFk).Where(x=>x.Id==id).FirstOrDefaultAsync();
             var trip = await GetTrip(id);
             var shippingRequestTrip = await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(trip);

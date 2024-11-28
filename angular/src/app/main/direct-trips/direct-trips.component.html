@@ -2,7 +2,7 @@
   <!-- [description]="'DocumentTypesHeaderInfo' | localize" -->
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Waybills' | localize">
-      <div role="actions">
+      <div role="actions" *ngIf="isGranted('Pages.ShippingRequestTrips.Create')">
         <!--        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>-->
 
         <button (click)="AddNewTripModal.show()" class="btn btn-primary blue mr-2"><i class="fa fa-plus"></i> {{ l('NewShipment') }}</button>
@@ -249,7 +249,7 @@
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(options.data.id)">{{ l('View') }}</a>
                     </li>
-                    <li>
+                    <li *ngIf="!isShipperActor">
                       <a class="dropdown-item" (click)="showEdit(options.data.id)">{{ l('Edit') }}</a>
                     </li>
                   </ul>
