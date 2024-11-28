@@ -1,8 +1,9 @@
-﻿using Abp.Application.Features;
+using Abp.Application.Features;
 using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Localization.Sources;
@@ -114,8 +115,8 @@ namespace TACHYON.Invoices.ActorInvoices
         private async Task<List<InvoiceItemDto>> GetActorInvoiceItems (long invoiceId)
         {
 
-            
-            var invoiceTrips = await (from trip in _tripRepository.GetAll().AsNoTracking()
+            var invoiceTrips = await (
+                from trip in _tripRepository.GetAll().AsNoTracking()
                 where trip.ActorInvoiceId == invoiceId
                 select new
                 {
@@ -127,6 +128,9 @@ namespace TACHYON.Invoices.ActorInvoices
                     TruckType = trip.AssignedTruckFk.TrucksTypeFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName,
                     Source = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.OriginCityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.OriginFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
                     Destination = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.DestinationCityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
+                    Destinations = trip.ShippingRequestId.HasValue
+                        ? trip.ShippingRequestFk.ShippingRequestDestinationCities.Select(c => c.CityFk)
+                        : trip.ShippingRequestDestinationCities.Select(c => c.CityFk),
                     DateWork = trip.EndWorking.HasValue ? trip.EndWorking.Value.ToString("dd MMM, yyyy")  : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
                     Remarks = trip.ShippingRequestId.HasValue ? (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops
                         ? LocalizationSource.GetString("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops)
@@ -163,7 +167,7 @@ namespace TACHYON.Invoices.ActorInvoices
                     WayBillNumber = trip.WaybillNumber,
                     TruckType = trip.TruckType,
                     Source = trip.Source,
-                    Destination = trip.Destination,
+                    Destination = !string.IsNullOrEmpty(trip.Destination)? trip.Destination : trip.Destinations.FirstOrDefault()?.DisplayName,
                     DateWork = trip.DateWork,
                     Remarks = trip.Remarks
                 };
