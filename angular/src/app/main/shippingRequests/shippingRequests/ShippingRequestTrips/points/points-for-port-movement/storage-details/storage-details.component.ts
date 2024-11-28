@@ -112,16 +112,8 @@ export class StorageDetailsModalComponent extends AppComponentBase implements On
       cancelButtonText: this.l('No'),
     }).then((result) => {
       if (result.value) {
-        const observables = [];
-        if (changeDriver) {
-          observables.push(this._shippingRequestTripsService.replaceDriver(driverId, tripId));
-        }
-        if (changeTruck) {
-          observables.push(this._shippingRequestTripsService.replaceTruck(truckId, tripId));
-        }
-
-        // Execute all service calls
-        forkJoin(observables).subscribe(() => {
+        // Call the service to replace driver or truck
+        this._shippingRequestTripsService.replaceDriverOrTruck(driverId, truckId, tripId).subscribe(() => {
           this.close();
           this.notify.info(this.l('Saved'));
           this.usedIn === 'createOrEdit'

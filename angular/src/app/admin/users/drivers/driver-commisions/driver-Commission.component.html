@@ -1,0 +1,75 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!-- [description]="'DriversHeaderInfo' | localize" -->
+    <sub-header [title]="'DriversCommissions' | localize"> </sub-header>
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="mt-2">
+              <!-- Data Grid for Drivers Commission -->
+              <dx-data-grid
+                #dataGrid
+                id="dataGrid"
+                [dataSource]="dataSource"
+                [remoteOperations]="{ sorting: true, paging: true, filtering: true }"
+                [showColumnLines]="true"
+                [showRowLines]="false"
+                [showBorders]="true"
+                [rowAlternationEnabled]="true"
+                [allowColumnReordering]="true"
+                [allowColumnResizing]="true"
+                [groupPanel]="{ visible: true }"
+                [filterRow]="{ visible: true }"
+                [headerFilter]="{ visible: true }"
+                [searchPanel]="{ visible: true, width: 240, placeholder: 'Search...' }"
+                [scrolling]="{ mode: 'infinite' }"
+                [grouping]="{ autoExpandAll: true }"
+                [summary]="{
+                  groupItems: [
+                    { column: 'driverName', summaryType: 'count', displayFormat: '{0} records' },
+                    { column: 'commission', summaryType: 'sum', displayFormat: 'Total Commission: {0}' }
+                  ]
+                }"
+                keyExpr="id"
+                (onRowUpdating)="updateRow($event)"
+                (onRowClick)="onRowClick($event)"
+              >
+                <dxo-editing mode="row" [allowUpdating]="true"></dxo-editing>
+                <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                <dxo-filter-builder-popup [position]="popupPosition"></dxo-filter-builder-popup>
+
+                <!-- Export to Excel Configuration -->
+                <dxo-export [enabled]="true" fileName="DriversCommissionsData"></dxo-export>
+
+                <!-- Columns Configuration -->
+                <dxi-column dataField="driverName" caption="Driver Name" dataType="string" [allowEditing]="false" [groupIndex]="1"></dxi-column>
+                <!--                <dxi-column dataField="driverId" caption="Driver ID" dataType="number" [allowEditing]="false"></dxi-column>-->
+                <dxi-column dataField="commission" caption="Commission" dataType="number" [allowEditing]="true"></dxi-column>
+                <dxi-column dataField="assignedTruckPlateNumber" caption="Truck Plate Number" dataType="string" [allowEditing]="false"></dxi-column>
+                <dxi-column
+                  dataField="creationTime"
+                  caption="Assign Date (Month-Year)"
+                  dataType="date"
+                  [allowEditing]="false"
+                  [calculateDisplayValue]="getMonthYear"
+                  [sortOrder]="'desc'"
+                  [groupIndex]="0"
+                ></dxi-column>
+                <dxi-column
+                  dataField="shippingRequestReferenceNumber"
+                  caption="Shipping Request Reference"
+                  dataType="string"
+                  [allowEditing]="false"
+                ></dxi-column>
+                <dxi-column dataField="tripWaybillNumber" caption="Trip Waybill Number" dataType="string" [allowEditing]="false"></dxi-column>
+                <dxi-column dataField="totalWorkingHours" caption="Total Working Hours" dataType="number" [allowEditing]="false"></dxi-column>
+                <dxi-column dataField="distanceCovered" caption="Distance Covered" dataType="number" [allowEditing]="false"></dxi-column>
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

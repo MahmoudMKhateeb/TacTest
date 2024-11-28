@@ -1341,6 +1341,14 @@
                 [isEdit]="isEdit"
                 #PointsComponent
               ></PointsComponent>
+              <!--trip drivers log-->
+              <tripDrivers-log-table
+                *ngIf="isSaab"
+                [isEditOrView]="isEdit"
+                [roundTripType]="_TripService.CreateOrEditShippingRequestTripDto.roundTripType"
+                [tripId]="this._TripService.activeTripId"
+              ></tripDrivers-log-table>
+              <!-- end drivers logs-->
               <!--  end:: RouteSteps -->
               <dx-validator [validationGroup]="'shippingRequestTripsGroup'" [adapter]="adapterConfig">
                 <dxi-validation-rule type="required" message="{{ 'IncompleteTripPoint' | localize }}"> </dxi-validation-rule>

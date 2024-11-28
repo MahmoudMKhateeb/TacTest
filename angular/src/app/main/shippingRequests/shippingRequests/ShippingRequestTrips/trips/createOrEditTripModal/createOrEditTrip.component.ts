@@ -37,6 +37,7 @@ import {
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripDriverStatus,
   ShippingRequestTripFlag,
   ShippingTypeEnum,
   TemplateSelectItemDto,
@@ -357,7 +358,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
       this.loading = true;
       this.isEdit = true;
-
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         // this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
         // this.delaySetInputs(res);
@@ -1785,4 +1785,5 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.notify.success(this.l('success'));
     });
   }
+  // driverStatusEnum = this.enumToArray.transform(ShippingRequestTripDriverStatus);
 }

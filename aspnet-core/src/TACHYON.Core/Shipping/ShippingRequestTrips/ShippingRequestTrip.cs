@@ -1,5 +1,6 @@
 using Abp;
 using Abp.Auditing;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Audited]
     [Table("ShippingRequestTrips")]
-    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated, IMayHaveShipperActor, IMayHaveCarrierActor , ICanBeExcludedFromBayanIntegration
+    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated, IMayHaveShipperActor, IMayHaveCarrierActor, ICanBeExcludedFromBayanIntegration
     {
         /// <summary>
         /// the carrier who will take this Trip
@@ -61,7 +62,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public DateTime? ExpectedDeliveryTime { get; set; }
         public long? AssignedDriverUserId { get; set; }
 
-        public long? ReplacesDriverId {get;set;}
+        public long? ReplacesDriverId { get; set; }
         [ForeignKey("ReplacesDriverId")] public User ReplacesDriverFk { get; set; }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [ForeignKey("AssignedTruckId")] public Truck AssignedTruckFk { get; set; }
 
 
-          public long? ReplacedTruckId { get; set; }
+        public long? ReplacedTruckId { get; set; }
         [ForeignKey("ReplacedTruckId")] public Truck ReplacedTruckFk { get; set; }
 
 
@@ -273,19 +274,19 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public SalesOfficeTypeEnum SalesOfficeType { get; set; }
         public int Quantity { get; set; }
         public int DriverWorkingHour { get; set; }
-        public int Distance  { get; set; }
-        public int DriverCommission {get;set;}
+        public int Distance { get; set; }
+        public int DriverCommission { get; set; }
 
         public int ReplacedDriverWorkingHour { get; set; }
-        public int ReplacedDriverDistance  { get; set; }
-        public int ReplacedDriverCommission {get;set;}
+        public int ReplacedDriverDistance { get; set; }
+        public int ReplacedDriverCommission { get; set; }
         public string SabOrderId { get; set; }
         public DateTime? ContainerReturnDate { get; set; }
-        public bool? IsContainerReturned {get;set;}
+        public bool? IsContainerReturned { get; set; }
 
         #endregion
 
-         /// <summary>
+        /// <summary>
         /// This reference shipper add it manually
         /// </summary>
         public string ShipperReference { get; set; }
@@ -294,5 +295,52 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// shipper add his invoice number manually, this updated currently to booking number 
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
+
+        // One-to-many relationship with DriverAssignment
+        public virtual ICollection<TripDriver> TripDrivers { get; set; }
+        
     }
+
+
+    [Table("TripDrivers")]
+    public class TripDriver : FullAuditedEntity<long> ,IPassivable
+    {
+        public long DriverId { get; set; }
+
+        [ForeignKey("DriverId")]
+        public User Driver { get; set; }
+
+        /// <summary>
+        /// Driver status for this particular trip
+        /// </summary>
+        public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+
+        /// <summary>
+        /// Total working hours logged by the driver
+        /// </summary>
+        public int TotalWorkingHours { get; set; }
+
+        /// <summary>
+        /// Distance covered by the driver
+        /// </summary>
+        public decimal DistanceCovered { get; set; }
+
+        /// <summary>
+        /// Commission amount for the driver
+        /// </summary>
+        public decimal Commission { get; set; }
+
+        public int? ShippingRequestTripId { get; set; }
+
+        public bool IsActive { get ; set ; }
+
+        public long? TruckId { get; set; }
+        [ForeignKey("TruckId")] public Truck TruckFk { get; set; }
+
+        [ForeignKey("ShippingRequestTripId")]
+        public ShippingRequestTrip ShippingRequestTrip { get; set; }
+        
+    }
+
+
 }

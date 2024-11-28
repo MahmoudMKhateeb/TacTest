@@ -38,6 +38,7 @@ using TACHYON.Tracking.AdditionalSteps;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Url;
+using TACHYON.WebHooks;
 using TACHYON.WorkFlows;
 
 namespace TACHYON.Tracking
@@ -71,6 +72,8 @@ namespace TACHYON.Tracking
         private readonly BayanIntegrationManagerV3 _banIntegrationManagerV3;
         private readonly AdditionalStepWorkflowProvider _stepWorkflowProvider;
 
+        private readonly AppWebhookPublisher _webhookPublisher;
+
 
         public IAbpSession AbpSession { set; get; }
 
@@ -97,7 +100,8 @@ namespace TACHYON.Tracking
             PenaltyManager penaltyManager,
             BayanIntegrationManagerV3 banIntegrationManagerV3,
             AdditionalStepWorkflowProvider stepWorkflowProvider,
-            IRepository<AdditionalStepTransition, long> additionalStepTransition)
+            IRepository<AdditionalStepTransition, long> additionalStepTransition,
+            AppWebhookPublisher webhookPublisher)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -743,6 +747,7 @@ namespace TACHYON.Tracking
             _banIntegrationManagerV3 = banIntegrationManagerV3;
             _stepWorkflowProvider = stepWorkflowProvider;
             _additionalStepTransition = additionalStepTransition;
+            _webhookPublisher = webhookPublisher;
         }
 
         #endregion
@@ -1876,6 +1881,9 @@ namespace TACHYON.Tracking
                 if (allPointsCompleted)
                 {
                     trip.Status = ShippingRequestTripStatus.Delivered;
+                     // Publish Delivered Trip Updated Webhook
+                    await _webhookPublisher.PublishDeliveredTripUpdatedWebhook(point.ShippingRequestTripId);
+
                     if (trip.ShippingRequestId != null) { await ChangeShippingRequestStatusIfAllTripsDone(trip); }
                     await CloseLastTransitionInComplete(trip.Id);
                     await NotificationWhenShipmentDelivered(point, currentUser);

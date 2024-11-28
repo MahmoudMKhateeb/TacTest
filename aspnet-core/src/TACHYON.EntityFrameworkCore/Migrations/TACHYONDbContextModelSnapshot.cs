@@ -8255,6 +8255,69 @@ namespace TACHYON.Migrations
                     b.ToTable("ShippingRequestTripTransitions");
                 });
 
+            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.TripDriver", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Commission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DistanceCovered")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("DriverId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("DriverStatus")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("ShippingRequestTripId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalWorkingHours")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("TruckId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("ShippingRequestTripId");
+
+                    b.HasIndex("TruckId");
+
+                    b.ToTable("TripDrivers");
+                });
+
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestUpdates.ShippingRequestUpdate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -11914,6 +11977,23 @@ namespace TACHYON.Migrations
                         .HasForeignKey("ToPointId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.TripDriver", b =>
+                {
+                    b.HasOne("TACHYON.Authorization.Users.User", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "ShippingRequestTrip")
+                        .WithMany("TripDrivers")
+                        .HasForeignKey("ShippingRequestTripId");
+
+                    b.HasOne("TACHYON.Trucks.Truck", "TruckFk")
+                        .WithMany()
+                        .HasForeignKey("TruckId");
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestUpdates.ShippingRequestUpdate", b =>

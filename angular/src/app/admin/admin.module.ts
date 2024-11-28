@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -180,6 +180,7 @@ import { DxDropDownBoxModule } from '@node_modules/devextreme-angular/ui/drop-do
 import { DxSchedulerModule } from '@node_modules/devextreme-angular/ui/scheduler';
 import { DxPopupModule } from '@node_modules/devextreme-angular/ui/popup';
 import { DxScrollViewModule } from '@node_modules/devextreme-angular/ui/scroll-view';
+import { DriversCommissionComponent } from '@app/admin/users/drivers/driver-commisions/driver-Commission.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
@@ -367,6 +368,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     UnitOfMeasureTranslationsComponent,
     // ActorInvoiceDemandModelComponent
     DriverFilterModalComponent,
+    DriversCommissionComponent,
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],

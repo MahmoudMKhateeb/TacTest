@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
+using Abp.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TACHYON.Documents.DocumentFiles.Dtos;
@@ -91,5 +93,45 @@ namespace TACHYON.Shipping.Trips.Dto
         public int ReplacedDriverDistance  { get; set; }
         public int ReplacedDriverCommission {get;set;}
         public long? ReplacesDriverId {get;set;}
+    }
+
+
+    public class TripDriverForViewDto : FullAuditedEntityDto<long>, IPassivable
+    {
+        public long DriverId { get; set; }
+
+        public string DriverName { get; set; }
+
+        /// <summary>
+        /// Driver status for this particular trip
+        /// </summary>
+        public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+
+        /// <summary>
+        /// Total working hours logged by the driver
+        /// </summary>
+        public int TotalWorkingHours { get; set; }
+
+        /// <summary>
+        /// Distance covered by the driver
+        /// </summary>
+        public decimal DistanceCovered { get; set; }
+
+        /// <summary>
+        /// Commission amount for the driver
+        /// </summary>
+        public decimal Commission { get; set; }
+
+        public int? ShippingRequestTripId { get; set; }
+
+        public bool IsActive { get; set; }
+
+
+        public string AssignedTruckPlateNumber { get; set; }
+
+        public long? TruckId { get; set; }
+
+        public long? TripWaybillNumber { get; set; }
+        public string ShippingRequestReferenceNumber { get; set; }
     }
 }

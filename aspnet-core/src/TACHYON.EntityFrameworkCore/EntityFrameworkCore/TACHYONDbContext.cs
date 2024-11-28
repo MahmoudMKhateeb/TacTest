@@ -117,6 +117,7 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TripDriver> TripDrivers { get; set; }
         public virtual DbSet<RedemptionCode> RedemptionCodes { get; set; }
         
         public virtual DbSet<SaasPricePackage> SaasPricePackages { get; set; }

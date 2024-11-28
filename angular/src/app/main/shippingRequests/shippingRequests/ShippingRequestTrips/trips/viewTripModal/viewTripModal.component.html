@@ -1013,6 +1013,15 @@
           ></PointsComponent>
           <!--  end:: RouteSteps -->
           <!--end::Body-->
+          <!--    drivers log table-->
+          <tripDrivers-log-table
+            *ngIf="isSab"
+            [isEditOrView]="true"
+            [roundTripType]="
+              _TripService.CreateOrEditShippingRequestTripDto?.roundTripType || _TripService.GetShippingRequestForViewOutput?.roundTripType
+            "
+            [tripId]="this._TripService?.activeTripId || this._TripService.CreateOrEditShippingRequestTripDto?.id"
+          ></tripDrivers-log-table>
         </div>
       </div>
       <div class="modal-footer">
