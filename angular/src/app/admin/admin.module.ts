@@ -222,7 +222,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AgmCoreModule,
     MultiSelectModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
+      apiKey: 'dummy',
       libraries: ['places'],
     }),
     DxDataGridModule,
