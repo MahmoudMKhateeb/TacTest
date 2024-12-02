@@ -1,6 +1,0 @@
-﻿namespace TACHYON.MultiTenancy.HostDashboard.Dto
-{
-    public class GetEditionStatisticsInput : DashboardInputBase
-    {
-    }
-}
